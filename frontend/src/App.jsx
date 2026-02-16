@@ -9,11 +9,15 @@ import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 
-/* public pages */
+/* public auth pages */
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ResetLinkSent from "./pages/ResetLinkSent";
+import PasswordUpdated from "./pages/PasswordUpdated";
+
+/* public shop pages */
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -34,15 +38,23 @@ import AdminCreateProduct from "./pages/admin/AdminCreateProduct";
 export default function App() {
   return (
     <Routes>
-      {/* ===== PUBLIC ===== */}
+
+      {/* ================= PUBLIC AUTH ================= */}
       <Route element={<PublicLayout />}>
+
+        {/* Login / Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Password Flow */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-link-sent" element={<ResetLinkSent />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/password-updated" element={<PasswordUpdated />} />
+
       </Route>
 
-      {/* ===== PUBLIC SHOP ===== */}
+      {/* ================= PUBLIC SHOP ================= */}
       <Route element={<CustomerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -50,7 +62,7 @@ export default function App() {
         <Route path="/cart" element={<Cart />} />
       </Route>
 
-      {/* ===== CUSTOMER ===== */}
+      {/* ================= CUSTOMER PROTECTED ================= */}
       <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
         <Route element={<CustomerLayout />}>
           <Route path="/checkout" element={<Checkout />} />
@@ -58,7 +70,7 @@ export default function App() {
         </Route>
       </Route>
 
-      {/* ===== ADMIN ===== */}
+      {/* ================= ADMIN PROTECTED ================= */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -70,8 +82,9 @@ export default function App() {
         </Route>
       </Route>
 
-      {/* ===== FALLBACK ===== */}
+      {/* ================= FALLBACK ================= */}
       <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }
