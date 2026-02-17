@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   // ======================
-  // Restore session ONCE
+  // Restore session
   // ======================
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -26,7 +26,6 @@ export function AuthProvider({ children }) {
           role: decoded.role,
         });
       } catch (err) {
-        console.error("Invalid token", err);
         localStorage.removeItem("token");
         setUser(null);
       }
@@ -61,6 +60,17 @@ export function AuthProvider({ children }) {
   };
 
   // ======================
+  // Register
+  // ======================
+  const register = async (name, email, password) => {
+    await api.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
+  };
+
+  // ======================
   // Logout
   // ======================
   const logout = () => {
@@ -73,6 +83,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     login,
+    register, // ✅ added
     logout,
     isAuthenticated: Boolean(user),
     isAdmin: user?.role === "admin",
@@ -85,9 +96,6 @@ export function AuthProvider({ children }) {
   );
 }
 
-// ======================
-// Hook
-// ======================
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

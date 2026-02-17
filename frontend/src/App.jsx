@@ -14,7 +14,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import ResetLinkSent from "./pages/ResetLinkSent";
 import PasswordUpdated from "./pages/PasswordUpdated";
 
 /* public shop pages */
@@ -42,13 +41,11 @@ export default function App() {
       {/* ================= PUBLIC AUTH ================= */}
       <Route element={<PublicLayout />}>
 
-        {/* Login / Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Password Flow */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-link-sent" element={<ResetLinkSent />} />
+
+        {/* IMPORTANT FIX */}
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/password-updated" element={<PasswordUpdated />} />
 
@@ -82,7 +79,7 @@ export default function App() {
         </Route>
       </Route>
 
-      {/* ================= FALLBACK ================= */}
+      {/* ================= 404 ================= */}
       <Route path="*" element={<Navigate to="/" replace />} />
 
     </Routes>
