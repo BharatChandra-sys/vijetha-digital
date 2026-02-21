@@ -27,6 +27,10 @@ This system was designed to introduce:
 - Payment integration workflow
 - Secure token storage and validation
 
+## System Flow
+
+Client → API Request → Authentication → Business Logic → Database → Response
+
 ## Order Lifecycle Design
 
 The order status follows a structured flow:
@@ -69,3 +73,4 @@ This separation makes the project more scalable and easier to maintain.
 - Logging and monitoring system
 - Better error handling for production use
 - Performance optimization
+
