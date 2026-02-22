@@ -1,5 +1,3 @@
-// src/pages/ForgotPassword.jsx
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
@@ -17,7 +15,7 @@ export default function ForgotPassword() {
     try {
       await api.post("/auth/forgot-password", { email });
 
-      // ✅ redirect to confirmation page
+      // ✅ This route MUST exist in App.jsx
       navigate("/reset-link-sent");
 
     } catch (err) {

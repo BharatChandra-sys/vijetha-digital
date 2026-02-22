@@ -15,6 +15,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PasswordUpdated from "./pages/PasswordUpdated";
+import ResetLinkSent from "./pages/ResetLinkSent"; // ✅ ADD THIS
 
 /* public shop pages */
 import Home from "./pages/Home";
@@ -45,8 +46,9 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* IMPORTANT FIX */}
+        {/* Password Reset Flow */}
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/reset-link-sent" element={<ResetLinkSent />} />
         <Route path="/password-updated" element={<PasswordUpdated />} />
 
       </Route>

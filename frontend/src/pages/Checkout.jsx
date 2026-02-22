@@ -19,6 +19,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (authLoading || !cartLoaded) return;
+
     if (!user) navigate("/login");
     else if (items.length === 0) navigate("/cart");
   }, [authLoading, cartLoaded, user, items, navigate]);
@@ -32,15 +33,15 @@ export default function Checkout() {
     try {
       setPaying(true);
 
-      // ✅ SEND REAL EXTRAS TO BACKEND
+      // ✅ Safe order payload
       const orderPayload = {
         items: items.map((i) => ({
-          width_ft: i.config.width / 12,
-          height_ft: i.config.height / 12,
-          material: i.config.material,
+          width_ft: (i.config?.width || 0) / 12,
+          height_ft: (i.config?.height || 0) / 12,
+          material: i.config?.material || "",
           quantity: i.quantity,
-          lamination: !!i.config.lamination,
-          frame: !!i.config.frame,
+          lamination: !!i.config?.lamination,
+          frame: !!i.config?.frame,
         })),
       };
 
@@ -49,11 +50,11 @@ export default function Checkout() {
 
       const rzp = new window.Razorpay({
         key: payment.key,
-        amount: payment.amount * 100,
+        amount: payment.amount, // ✅ FIXED (NO *100)
         currency: "INR",
         order_id: payment.razorpay_order_id,
         name: "Vijetha Digital",
-        handler: () => {
+        handler: function () {
           clearCart();
           navigate("/orders");
         },
@@ -71,6 +72,7 @@ export default function Checkout() {
   return (
     <Container>
       <div className="py-12 max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((i, idx) => (
@@ -80,9 +82,10 @@ export default function Checkout() {
                   <p className="font-semibold">{i.name}</p>
 
                   <p className="text-sm text-gray-600">
-                    {i.config.width}" × {i.config.height}" · {i.config.material}
-                    {i.config.lamination && " · Lamination"}
-                    {i.config.frame && " · Frame"}
+                    {i.config?.width}" × {i.config?.height}" ·{" "}
+                    {i.config?.material}
+                    {i.config?.lamination && " · Lamination"}
+                    {i.config?.frame && " · Frame"}
                   </p>
                 </div>
 
@@ -121,6 +124,7 @@ export default function Checkout() {
             {paying ? "Processing…" : "Pay Now"}
           </Button>
         </Card>
+
       </div>
     </Container>
   );
