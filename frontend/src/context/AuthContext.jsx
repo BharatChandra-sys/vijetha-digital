@@ -1,5 +1,3 @@
-// src/context/AuthContext.jsx
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +10,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ======================
-  // Restore session
-  // ======================
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
 
     if (token) {
       try {
@@ -25,8 +20,8 @@ export function AuthProvider({ children }) {
           email: decoded.sub,
           role: decoded.role,
         });
-      } catch (err) {
-        localStorage.removeItem("token");
+      } catch {
+        localStorage.clear();
         setUser(null);
       }
     }
@@ -34,16 +29,16 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  // ======================
-  // Login
-  // ======================
   const login = async (email, password, redirectTo = "/") => {
     const res = await api.post("/auth/login", { email, password });
 
-    const token = res.data.access_token;
-    localStorage.setItem("token", token);
+    const accessToken = res.data.access_token;
+    const refreshToken = res.data.refresh_token;
 
-    const decoded = jwtDecode(token);
+    localStorage.setItem("access_token", accessToken);
+    localStorage.setItem("refresh_token", refreshToken);
+
+    const decoded = jwtDecode(accessToken);
 
     const userData = {
       email: decoded.sub,
@@ -59,9 +54,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ======================
-  // Register
-  // ======================
   const register = async (name, email, password) => {
     await api.post("/auth/register", {
       name,
@@ -70,27 +62,24 @@ export function AuthProvider({ children }) {
     });
   };
 
-  // ======================
-  // Logout
-  // ======================
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     setUser(null);
     navigate("/login", { replace: true });
   };
 
-  const value = {
-    user,
-    loading,
-    login,
-    register, // ✅ added
-    logout,
-    isAuthenticated: Boolean(user),
-    isAdmin: user?.role === "admin",
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        isAuthenticated: Boolean(user),
+        isAdmin: user?.role === "admin",
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
