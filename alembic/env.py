@@ -9,7 +9,7 @@ from alembic import context
 sys.path.append(os.getcwd())
 
 # Import Base
-from app.db.session import Base
+from app.db.base import Base
 
 # Import existing models so Alembic detects them
 import app.models.user

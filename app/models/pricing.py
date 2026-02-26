@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Numeric
 from app.db.base import Base
 
 
@@ -7,7 +7,8 @@ class MaterialRate(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
-    rate_per_sqft = Column(Float, nullable=False)
+
+    rate_per_sqft = Column(Numeric(12, 2), nullable=False)
 
 
 class ExtraRate(Base):
@@ -15,4 +16,5 @@ class ExtraRate(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
-    price = Column(Float, nullable=False)
+
+    price = Column(Numeric(12, 2), nullable=False)

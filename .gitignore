@@ -1,44 +1,50 @@
 # =========================
-# Node / Frontend
-# =========================
-node_modules/
-dist/
-
-# =========================
-# Python / Backend
+# Python
 # =========================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+
+# Virtual Environments
 venv/
 .venv/
+env/
+
+# Environment variables
 .env
 .env.*
+!.env.example
 
 # =========================
-# Python tooling
+# Python Tooling
 # =========================
 .pytest_cache/
 .mypy_cache/
+.coverage
+htmlcov/
 
 # =========================
-# Logs & Runtime Artifacts
+# Alembic
+# =========================
+alembic/__pycache__/
+
+# =========================
+# Logs
 # =========================
 *.log
 backend.log
 backend_restart.log
-frontend.log
 
 # =========================
-# Local Databases
+# Databases
 # =========================
-test.db
 *.sqlite
 *.sqlite3
+*.db
 
 # =========================
-# OS / Editor
+# OS / Editors
 # =========================
 .DS_Store
 .vscode/
+.idea/

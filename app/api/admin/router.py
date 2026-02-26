@@ -133,3 +133,13 @@ def delete_extra(
     db.delete(extra)
     db.commit()
     return {"message": "Deleted"}
+
+@router.get("/admin/revenue")
+def revenue_stats(db: Session = Depends(get_db)):
+
+    return {
+        "total_revenue": float(get_total_revenue(db)),
+        "today_revenue": float(get_today_revenue(db)),
+        "month_revenue": float(get_month_revenue(db)),
+        "year_revenue": float(get_year_revenue(db)),
+    }
