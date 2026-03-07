@@ -24,19 +24,21 @@ from app.api.payments.router import router as payment_router
 
 app = FastAPI(title=settings.APP_NAME)
 
-# ---- RATE LIMITING ----
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.add_middleware(SlowAPIMiddleware)
-
-# ---- CORS ----
+# ---- CORS (MUST BE FIRST) ----
+# CORS middleware MUST be added first to handle preflight OPTIONS requests
+# before other middleware (like rate limiting) can reject them
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+# ---- RATE LIMITING (AFTER CORS) ----
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 @app.on_event("startup")
 def on_startup():

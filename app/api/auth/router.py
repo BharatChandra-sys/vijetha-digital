@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import Optional
 
 from app.db.session import get_db
 from app.schemas.auth import (
@@ -20,6 +22,8 @@ from app.core.security import (
     create_access_token,
 )
 from app.core.rate_limiter import limiter
+from app.api.auth.dependencies import get_current_user
+from app.models.user import User
 
 router = APIRouter(
     prefix="/auth",
@@ -47,13 +51,11 @@ def login(
     data: LoginRequest,
     db: Session = Depends(get_db),
 ):
-    # login_user must return:
-    # {
-    #   access_token,
-    #   refresh_token,
-    #   token_type
-    # }
-    return login_user(db, data)
+    # Extract client IP address
+    ip_address = request.client.host if request.client else None
+    
+    # login_user returns access_token, refresh_token, token_type, and user info
+    return login_user(db, data, ip_address=ip_address)
 
 
 # =========================
@@ -61,8 +63,14 @@ def login(
 # =========================
 
 @router.post("/refresh")
-def refresh_token(data: dict):
-
+def refresh_token(
+    data: dict,
+    db: Session = Depends(get_db),
+):
+    """
+    Refresh access token using a valid refresh token.
+    Validates user status before issuing new token.
+    """
     refresh_token = data.get("refresh_token")
 
     if not refresh_token:
@@ -73,12 +81,43 @@ def refresh_token(data: dict):
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    email = payload.get("sub")
+    # Extract user_id from token
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        raise HTTPException(status_code=401, detail="Malformed token payload")
 
-    new_access_token = create_access_token({
-        "sub": email,
-        "role": payload.get("role")
-    })
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    # Validate user still exists and is active
+    from app.models.user import User, UserStatus
+    from datetime import datetime
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    # Check account status
+    if user.status in {UserStatus.SUSPENDED, UserStatus.INACTIVE}:
+        raise HTTPException(
+            status_code=403,
+            detail="Account is not active"
+        )
+    
+    # Check if account is locked
+    if user.account_locked_until and user.account_locked_until > datetime.utcnow():
+        raise HTTPException(
+            status_code=403,
+            detail="Account is locked"
+        )
+
+    # Issue new access token
+    new_access_token = create_access_token(
+        user_id=user_id,
+        role=user.role.value,
+    )
 
     return {
         "access_token": new_access_token,
@@ -132,3 +171,58 @@ def reset_user_password(
             status_code=400,
             detail="Invalid or expired token"
         )
+
+
+# =========================
+# PROFILE
+# =========================
+
+class ProfileUpdateRequest(BaseModel):
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+
+
+@router.get("/me")
+def get_profile(
+    current_user: User = Depends(get_current_user),
+):
+    iam_roles = [r.slug for r in current_user.roles_assigned if r.is_active]
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "phone": current_user.phone,
+        "role": current_user.role.value,
+        "iam_roles": iam_roles,
+        "status": current_user.status.value,
+        "created_at": current_user.created_at,
+        "last_login_at": current_user.last_login_at,
+    }
+
+
+@router.put("/me")
+def update_profile(
+    data: ProfileUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if data.full_name is not None:
+        full_name = data.full_name.strip()
+        if not full_name:
+            raise HTTPException(status_code=400, detail="Name cannot be empty")
+        current_user.full_name = full_name
+
+    if data.phone is not None:
+        current_user.phone = data.phone.strip() or None
+
+    db.commit()
+    db.refresh(current_user)
+
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "phone": current_user.phone,
+        "role": current_user.role.value,
+        "status": current_user.status.value,
+    }

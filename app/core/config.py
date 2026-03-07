@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic_settings import BaseSettings
 
 
@@ -8,6 +9,10 @@ class Settings(BaseSettings):
 
     # Database (MANDATORY)
     DATABASE_URL: str
+
+    # Schema management
+    # Keep False when using Alembic migrations (recommended)
+    AUTO_CREATE_SCHEMA_ON_STARTUP: bool = False
 
     # Frontend URL for CORS
     FRONTEND_URL: str
@@ -29,6 +34,12 @@ class Settings(BaseSettings):
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str
     RAZORPAY_WEBHOOK_SECRET: str
+
+    # SMTP (optional — required only for password reset emails)
+    SMTP_HOST: Optional[str] = None
+    SMTP_PORT: int = 587
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
 
     class Config:
         env_file = ".env"

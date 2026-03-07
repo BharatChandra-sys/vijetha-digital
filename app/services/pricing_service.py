@@ -34,7 +34,7 @@ def calculate_price(
     if not material_rate:
         raise ValueError("Material rate not configured")
 
-    base_unit_price = area * material_rate.rate_per_sqft
+    base_unit_price = area * float(material_rate.rate_per_sqft)
 
     # 3️⃣ Extras (flat price)
     extras_unit_price = 0.0
@@ -42,12 +42,12 @@ def calculate_price(
     if lamination:
         extra = db.query(ExtraRate).filter(ExtraRate.name == "lamination").first()
         if extra:
-            extras_unit_price += extra.price
+            extras_unit_price += float(extra.price)
 
     if frame:
         extra = db.query(ExtraRate).filter(ExtraRate.name == "frame").first()
         if extra:
-            extras_unit_price += extra.price
+            extras_unit_price += float(extra.price)
 
     # 4️⃣ Final price
     unit_price = base_unit_price + extras_unit_price

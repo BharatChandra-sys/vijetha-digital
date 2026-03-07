@@ -7,7 +7,7 @@ from fastapi import APIRouter, Request, Header, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.models.order import Order
+from app.models.order import Order, OrderStatus, PaymentStatus
 from app.core.config import settings
 from app.services.payment_service import create_payment_order
 from app.api.auth.dependencies import get_current_user
@@ -29,7 +29,7 @@ def create_payment(
 ):
     order = db.query(Order).filter(
         Order.id == order_id,
-        Order.user_email == user["sub"],  # 🔒 OWNER CHECK
+        Order.user_id == user.id,  # 🔒 OWNER CHECK
     ).first()
 
     if not order:
@@ -38,7 +38,7 @@ def create_payment(
     return create_payment_order(
         db=db,
         order_id=order.id,
-        user_email=order.user_email,
+        user_id=user.id,
     )
 
 
@@ -100,14 +100,15 @@ async def razorpay_webhook(
         return {"status": "order_not_found"}
 
     # 🔒 4️⃣ VERIFY AMOUNT MATCHES ORDER
-    expected_amount = int(order.total_price * 100) 
+    expected_amount = int(float(order.total_price) * 100)
 
     if paid_amount != expected_amount:
         return {"status": "amount_mismatch"}
 
     # 5️⃣ IDEMPOTENT UPDATE
-    if order.status != "paid":
-        order.status = "paid"
+    if order.payment_status != PaymentStatus.paid:
+        order.payment_status = PaymentStatus.paid
+        order.status = OrderStatus.confirmed
         db.commit()
 
     return {"status": "ok"}

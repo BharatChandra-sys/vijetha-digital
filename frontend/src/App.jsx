@@ -26,6 +26,7 @@ import Cart from "./pages/Cart";
 /* customer pages */
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
+import Profile from "./pages/Profile";
 
 /* admin pages */
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -66,6 +67,13 @@ export default function App() {
         <Route element={<CustomerLayout />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
+        </Route>
+      </Route>
+
+      {/* ================= PROFILE (customer + admin) ================= */}
+      <Route element={<ProtectedRoute allowedRoles={["customer", "admin"]} />}>
+        <Route element={<CustomerLayout />}>
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
 

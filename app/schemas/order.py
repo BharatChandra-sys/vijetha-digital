@@ -29,8 +29,10 @@ class OrderItemResponse(BaseModel):
 
 class OrderResponse(BaseModel):
     id: int
-    user_email: str
+    user_id: int
     status: str
+    payment_status: str
+    subtotal: float
     total_price: float
     items: List[OrderItemResponse]
 

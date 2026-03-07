@@ -15,7 +15,7 @@ def place_order(
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
-    return create_order(db, user["sub"], data.items)
+    return create_order(db, user.id, data.items)
 
 
 @router.get("")
@@ -23,4 +23,4 @@ def my_orders(
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
-    return get_user_orders(db, user["sub"])
+    return get_user_orders(db, user.id)

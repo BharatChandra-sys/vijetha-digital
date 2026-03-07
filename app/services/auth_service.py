@@ -1,83 +1,253 @@
-from sqlalchemy.orm import Session
-from fastapi import HTTPException
+"""
+Production-grade authentication service.
+Includes account lockout, failed login tracking, and security best practices.
+"""
 
-from app.models.user import User
+from typing import Dict, Any, Optional
+from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
+from fastapi import HTTPException, status
+
+from app.models.user import User, UserRole, UserStatus
 from app.schemas.auth import RegisterRequest, LoginRequest
 from app.core.security import (
     hash_password,
     verify_password,
     create_access_token,
-    create_refresh_token,   # ✅ added
+    create_refresh_token,
 )
 from app.core.config import settings
 
+# Security constants
+MAX_FAILED_LOGIN_ATTEMPTS = 5
+ACCOUNT_LOCKOUT_DURATION_MINUTES = 30
 
-# =========================
+
+# ============================================================================
 # REGISTER
-# =========================
+# ============================================================================
 
-def register_user(db: Session, data: RegisterRequest):
+def register_user(
+    db: Session,
+    data: RegisterRequest,
+    created_by_id: Optional[int] = None,
+) -> Dict[str, str]:
+    """
+    Register a new user account.
+    
+    Args:
+        db: Database session
+        data: Registration request data
+        created_by_id: Optional ID of admin who created this user
+        
+    Returns:
+        Success message dict
+        
+    Raises:
+        400: User already exists
+    """
     email = data.email.strip().lower()
 
+    # Check if user already exists
     existing = db.query(User).filter(User.email == email).first()
     if existing:
         raise HTTPException(
-            status_code=400,
-            detail="User already exists"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User already exists",
         )
 
-    # STRICT admin rule
-    if email == settings.ADMIN_EMAIL.strip().lower():
-        role = "admin"
-    else:
-        role = "customer"
+    # Determine role (bootstrap admin if this is the admin email)
+    role = (
+        UserRole.ADMIN
+        if email == settings.ADMIN_EMAIL.strip().lower()
+        else UserRole.CUSTOMER
+    )
 
+    # Extract full_name from request (field is 'name' in RegisterRequest)
+    full_name = data.name.strip() if data.name else email.split('@')[0]
+
+    # Create new user
     user = User(
         email=email,
-        password=hash_password(data.password),
+        full_name=full_name,
+        hashed_password=hash_password(data.password),
         role=role,
+        status=UserStatus.ACTIVE,
+        created_by=created_by_id,
+        failed_login_attempts=0,
     )
 
     db.add(user)
     db.commit()
     db.refresh(user)
 
-    return {"message": "User registered successfully"}
+    return {
+        "message": "User registered successfully",
+        "user_id": str(user.id),
+    }
 
 
-# =========================
+# ============================================================================
 # LOGIN
-# =========================
+# ============================================================================
 
-def login_user(db: Session, data: LoginRequest):
+def login_user(
+    db: Session,
+    data: LoginRequest,
+    ip_address: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Authenticate user and return JWT tokens.
+    
+    Implements account lockout after 5 failed attempts.
+    
+    Args:
+        db: Database session
+        data: Login credentials
+        ip_address: Optional IP address of the request
+        
+    Returns:
+        Dict with access_token, refresh_token, and user info
+        
+    Raises:
+        401: Invalid credentials
+        403: Account locked or inactive
+    """
     email = data.email.strip().lower()
 
+    # Find user
     user = db.query(User).filter(User.email == email).first()
 
-    if not user or not verify_password(data.password, user.password):
+    if not user:
+        # Don't reveal whether user exists
         raise HTTPException(
-            status_code=401,
-            detail="Invalid credentials"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
         )
 
-    # ✅ Short-lived access token
+    # Check if account is locked
+    if user.account_locked_until and user.account_locked_until > datetime.utcnow():
+        lockout_remaining = user.account_locked_until - datetime.utcnow()
+        minutes_remaining = int(lockout_remaining.total_seconds() / 60) + 1
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Account is locked for {minutes_remaining} more minutes due to multiple failed login attempts",
+        )
+
+    # Check account status
+    if user.status == UserStatus.SUSPENDED:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account has been suspended. Please contact support.",
+        )
+    
+    if user.status == UserStatus.INACTIVE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is inactive. Please contact support.",
+        )
+
+    # Verify password
+    if not verify_password(data.password, user.hashed_password):
+        # Increment failed login attempts
+        user.failed_login_attempts = (user.failed_login_attempts or 0) + 1
+        user.last_failed_login_at = datetime.utcnow()
+        
+        # Lock account if too many failed attempts
+        if user.failed_login_attempts >= MAX_FAILED_LOGIN_ATTEMPTS:
+            user.account_locked_until = datetime.utcnow() + timedelta(
+                minutes=ACCOUNT_LOCKOUT_DURATION_MINUTES
+            )
+            user.account_locked_reason = "Multiple failed login attempts"
+            db.commit()
+            
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Account locked for {ACCOUNT_LOCKOUT_DURATION_MINUTES} minutes due to multiple failed login attempts",
+            )
+        
+        db.commit()
+        
+        # Show remaining attempts
+        attempts_remaining = MAX_FAILED_LOGIN_ATTEMPTS - user.failed_login_attempts
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid email or password. {attempts_remaining} attempts remaining.",
+        )
+
+    # Successful login - reset failed attempts
+    user.failed_login_attempts = 0
+    user.last_failed_login_at = None
+    user.account_locked_until = None
+    user.account_locked_reason = None
+    user.last_login_at = datetime.utcnow()
+    user.last_login_ip = ip_address
+    
+    db.commit()
+    db.refresh(user)
+
+    # Create tokens
     access_token = create_access_token(
-        {
-            "sub": user.email,
-            "role": user.role,
-        }
+        user_id=user.id,
+        role=user.role.value,
     )
 
-    # ✅ Long-lived refresh token
     refresh_token = create_refresh_token(
-        {
-            "sub": user.email,
-            "role": user.role,
-        }
+        user_id=user.id,
+        role=user.role.value,
     )
+
+    # Get IAM roles
+    iam_roles = [role.slug for role in user.roles_assigned if role.is_active]
 
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role.value,  # Legacy role
+            "iam_roles": iam_roles,  # New IAM roles
+            "status": user.status.value,
+        },
+    }
+
+
+# ============================================================================
+# UNLOCK ACCOUNT (Admin function)
+# ============================================================================
+
+def unlock_account(db: Session, user_id: int, admin_id: int) -> Dict[str, str]:
+    """
+    Unlock a locked user account (admin only).
+    
+    Args:
+        db: Database session
+        user_id: ID of user to unlock
+        admin_id: ID of admin performing unlock
+        
+    Returns:
+        Success message
+        
+    Raises:
+        404: User not found
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    user.failed_login_attempts = 0
+    user.last_failed_login_at = None
+    user.account_locked_until = None
+    user.account_locked_reason = None
+    
+    db.commit()
+    
+    return {
+        "message": f"Account for {user.email} has been unlocked",
     }

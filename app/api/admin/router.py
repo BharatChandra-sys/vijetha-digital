@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.admin_guard import admin_required
+# the original admin_guard module was removed; the logic now lives in auth dependencies
+from app.api.auth.dependencies import admin_required, get_current_user
 from app.db.session import get_db
 
 from app.schemas.product import ProductCreate, ProductResponse
@@ -10,23 +11,53 @@ from app.schemas.admin_pricing import MaterialCreate, ExtraCreate
 from app.services.product_service import create_product, delete_product
 from app.services.order_service import get_all_orders, update_order_status
 from app.services.admin_pricing_service import add_material, add_extra
+from app.services.revenue_service import (
+    get_total_revenue,
+    get_today_revenue,
+    get_month_revenue,
+    get_year_revenue,
+)
 
 from app.models.pricing import MaterialRate, ExtraRate
 from app.models.user import User
 
-# 🔒 ADMIN ROUTER — ALL ROUTES PROTECTED
+# Import IAM routers
+from app.api.admin import users as users_routes
+from app.api.admin import roles as roles_routes
+
+# 🔒 ADMIN ROUTER
 router = APIRouter(
     prefix="/admin",
     tags=["admin"],
-    dependencies=[Depends(admin_required)],
 )
+
+# Include IAM routes
+router.include_router(users_routes.router)
+router.include_router(roles_routes.router)
 
 # ---------- ADMIN DASHBOARD ----------
 @router.get("/dashboard")
-def admin_dashboard(current_user: User = Depends(admin_required)):
+def admin_dashboard(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    from app.services.rbac_service import RBACService
+    
+    # Check if user has admin-level permissions
+    is_admin = RBACService.has_any_role(
+        db,
+        current_user.id,
+        ["super_admin", "admin", "manager"]
+    )
+    
+    if not is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
     return {
-        "message": "Welcome admin",
+        "message": "Welcome to Admin Dashboard",
         "admin_email": current_user.email,
+        "user_id": current_user.id,
+        "roles": [r.name for r in current_user.roles_assigned],
     }
 
 
@@ -35,6 +66,7 @@ def admin_dashboard(current_user: User = Depends(admin_required)):
 def add_product(
     data: ProductCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return create_product(
         db,
@@ -48,6 +80,7 @@ def add_product(
 def remove_product(
     product_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     try:
         delete_product(db, product_id)
@@ -60,6 +93,7 @@ def remove_product(
 @router.get("/orders")
 def all_orders(
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return get_all_orders(db)
 
@@ -69,6 +103,7 @@ def change_order_status(
     order_id: int,
     status: str,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     try:
         return update_order_status(db, order_id, status)
@@ -81,6 +116,7 @@ def change_order_status(
 def create_material(
     data: MaterialCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return add_material(db, data.name, data.rate_per_sqft)
 
@@ -88,6 +124,7 @@ def create_material(
 @router.get("/materials")
 def list_materials(
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return db.query(MaterialRate).all()
 
@@ -96,6 +133,7 @@ def list_materials(
 def delete_material(
     material_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     material = db.get(MaterialRate, material_id)
     if not material:
@@ -110,6 +148,7 @@ def delete_material(
 def create_extra(
     data: ExtraCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return add_extra(db, data.name, data.price)
 
@@ -117,6 +156,7 @@ def create_extra(
 @router.get("/extras")
 def list_extras(
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     return db.query(ExtraRate).all()
 
@@ -125,6 +165,7 @@ def list_extras(
 def delete_extra(
     extra_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
 ):
     extra = db.get(ExtraRate, extra_id)
     if not extra:
@@ -134,9 +175,11 @@ def delete_extra(
     db.commit()
     return {"message": "Deleted"}
 
-@router.get("/admin/revenue")
-def revenue_stats(db: Session = Depends(get_db)):
-
+@router.get("/revenue")
+def revenue_stats(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
     return {
         "total_revenue": float(get_total_revenue(db)),
         "today_revenue": float(get_today_revenue(db)),

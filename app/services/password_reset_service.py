@@ -58,7 +58,7 @@ def reset_password(db: Session, token: str, new_password: str):
     if not user:
         raise ValueError("Invalid or expired token")
 
-    user.password = hash_password(new_password)
+    user.hashed_password = hash_password(new_password)
     user.reset_token = None
     user.reset_token_expiry = None
 

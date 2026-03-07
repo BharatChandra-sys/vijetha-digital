@@ -1,3 +1,4 @@
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -12,7 +13,17 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class UserInToken(BaseModel):
+    id: int
+    email: str
+    full_name: str
+    role: str
+    iam_roles: List[str] = []
+    status: str
+
+
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    user: Optional[UserInToken] = None

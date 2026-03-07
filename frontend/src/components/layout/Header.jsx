@@ -14,18 +14,22 @@ export default function Header() {
     navigate("/login", { replace: true });
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Avatar: first letter of name if available, else email
+  const avatarLetter = user
+    ? (user.full_name?.[0] || user.email?.[0] || "?").toUpperCase()
+    : "?";
+
+  const displayName = user?.full_name || user?.email || "";
 
   return (
     <header className="border-b bg-white">
@@ -67,46 +71,48 @@ export default function Header() {
                 className="flex items-center space-x-2 border rounded-md px-3 py-2 text-sm hover:bg-gray-100"
               >
                 <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-xs font-bold">
-                  {user.email[0].toUpperCase()}
+                  {avatarLetter}
                 </div>
-                <span className="hidden sm:block">
-                  {user.email}
+                <span className="hidden sm:block max-w-[120px] truncate">
+                  {displayName}
                 </span>
               </button>
 
               {/* Dropdown */}
               {open && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border rounded-md shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-60 bg-white border rounded-md shadow-lg z-50">
 
                   {/* User info */}
                   <div className="px-4 py-3 border-b">
-                    <p className="text-sm font-medium">
-                      Signed in as
+                    <p className="text-sm font-semibold truncate">
+                      {user.full_name || "User"}
                     </p>
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-xs text-gray-500 truncate mt-0.5">
                       {user.email}
                     </p>
+                    <span className="inline-block mt-1.5 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full capitalize">
+                      {user.role}
+                    </span>
                   </div>
 
                   {/* Menu items */}
                   <div className="py-1 text-sm">
-                    {user.role === "customer" && (
-                      <>
-                        <Link
-                          to="/orders"
-                          onClick={() => setOpen(false)}
-                          className="block px-4 py-2 hover:bg-gray-100"
-                        >
-                          My Orders
-                        </Link>
+                    <Link
+                      to="/profile"
+                      onClick={() => setOpen(false)}
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      My Profile
+                    </Link>
 
-                        <button
-                          disabled
-                          className="block w-full text-left px-4 py-2 text-gray-400 cursor-not-allowed"
-                        >
-                          Payments
-                        </button>
-                      </>
+                    {user.role === "customer" && (
+                      <Link
+                        to="/orders"
+                        onClick={() => setOpen(false)}
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        My Orders
+                      </Link>
                     )}
 
                     {isAdmin && (

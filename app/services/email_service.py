@@ -1,24 +1,16 @@
 import smtplib
-import os
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+from app.core.config import settings
+
 
 def send_email(to_email: str, subject: str, html_content: str):
-    # 🔥 Load environment variables at runtime
-    SMTP_HOST = os.getenv("SMTP_HOST")
-    SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-    SMTP_USER = os.getenv("SMTP_USER")
-    SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-
-    print("------ EMAIL DEBUG START ------")
-    print("SMTP_HOST:", SMTP_HOST)
-    print("SMTP_PORT:", SMTP_PORT)
-    print("SMTP_USER:", SMTP_USER)
-    print("SMTP_PASSWORD exists:", bool(SMTP_PASSWORD))
-    print("Sending to:", to_email)
-    print("------ EMAIL DEBUG END --------")
+    SMTP_HOST = settings.SMTP_HOST
+    SMTP_PORT = settings.SMTP_PORT
+    SMTP_USER = settings.SMTP_USER
+    SMTP_PASSWORD = settings.SMTP_PASSWORD
 
     if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
         raise RuntimeError("SMTP credentials not configured properly")
@@ -43,18 +35,12 @@ def send_email(to_email: str, subject: str, html_content: str):
         server.login(SMTP_USER, SMTP_PASSWORD)
         server.send_message(msg)
 
-        print("✅ EMAIL SENT SUCCESSFULLY")
-
     except smtplib.SMTPAuthenticationError as e:
-        print("❌ AUTH ERROR — Check Gmail App Password")
         raise e
 
     except Exception as e:
-        print("❌ EMAIL ERROR:", str(e))
         raise e
 
     finally:
-        try:
+        if "server" in locals():
             server.quit()
-        except:
-            pass

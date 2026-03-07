@@ -24,3 +24,13 @@ export const resetPassword = async (token, newPassword) => {
     new_password: newPassword,
   });
 };
+
+export const getProfile = async () => {
+  const res = await api.get("/auth/me");
+  return res.data;
+};
+
+export const updateProfile = async (data) => {
+  const res = await api.put("/auth/me", data);
+  return res.data;
+};
