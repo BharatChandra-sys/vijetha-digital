@@ -15,6 +15,7 @@ from app.db.base import Base
 import app.models.user
 import app.models.product
 import app.models.order
+import app.models.review
 
 # Alembic config
 config = context.config

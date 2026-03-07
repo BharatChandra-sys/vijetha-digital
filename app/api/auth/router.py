@@ -12,6 +12,7 @@ from app.schemas.auth import (
 from app.services.auth_service import (
     register_user,
     login_user,
+    google_login_or_register,
 )
 from app.services.password_reset_service import (
     request_password_reset,
@@ -53,9 +54,26 @@ def login(
 ):
     # Extract client IP address
     ip_address = request.client.host if request.client else None
-    
+
     # login_user returns access_token, refresh_token, token_type, and user info
     return login_user(db, data, ip_address=ip_address)
+
+
+# =========================
+# GOOGLE OAUTH
+# =========================
+
+class GoogleAuthRequest(BaseModel):
+    google_token: str
+
+
+@router.post("/google", response_model=TokenResponse)
+def google_auth(
+    data: GoogleAuthRequest,
+    db: Session = Depends(get_db),
+):
+    """Sign in or register via Google OAuth access token."""
+    return google_login_or_register(db, data.google_token)
 
 
 # =========================

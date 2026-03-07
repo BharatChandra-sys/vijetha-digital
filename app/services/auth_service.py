@@ -7,6 +7,8 @@ from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+import secrets
+import httpx
 
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.auth import RegisterRequest, LoginRequest
@@ -245,9 +247,113 @@ def unlock_account(db: Session, user_id: int, admin_id: int) -> Dict[str, str]:
     user.last_failed_login_at = None
     user.account_locked_until = None
     user.account_locked_reason = None
-    
+
     db.commit()
-    
+
     return {
         "message": f"Account for {user.email} has been unlocked",
+    }
+
+
+# ============================================================================
+# GOOGLE OAUTH
+# ============================================================================
+
+def google_login_or_register(db: Session, google_token: str) -> Dict[str, Any]:
+    """
+    Sign in or register a user via Google OAuth access token.
+
+    Verifies the token by calling Google's userinfo endpoint, then finds or
+    creates a local account linked to the Google email.
+
+    Args:
+        db: Database session
+        google_token: Access token returned by Google OAuth (implicit flow)
+
+    Returns:
+        Dict with access_token, refresh_token, and user info
+
+    Raises:
+        401: Invalid or expired Google token
+        403: Account suspended or inactive
+    """
+    # Verify token with Google and get user info
+    try:
+        with httpx.Client(timeout=10.0) as client:
+            resp = client.get(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                headers={"Authorization": f"Bearer {google_token}"},
+            )
+    except httpx.RequestError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Could not reach Google servers. Please try again.",
+        )
+
+    if resp.status_code != 200:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired Google token.",
+        )
+
+    info = resp.json()
+    email = info.get("email", "").strip().lower()
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Google account does not have a verified email.",
+        )
+
+    name = info.get("name") or email.split("@")[0]
+
+    # Find existing user or create a new one
+    user = db.query(User).filter(User.email == email).first()
+
+    if not user:
+        user = User(
+            email=email,
+            full_name=name,
+            # Google users have no password — store a random unusable hash
+            hashed_password=hash_password(secrets.token_urlsafe(32)),
+            role=UserRole.CUSTOMER,
+            status=UserStatus.ACTIVE,
+            failed_login_attempts=0,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        if user.status == UserStatus.SUSPENDED:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account has been suspended. Please contact support.",
+            )
+        if user.status == UserStatus.INACTIVE:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account is inactive. Please contact support.",
+            )
+
+    # Update last login
+    user.last_login_at = datetime.utcnow()
+    db.commit()
+    db.refresh(user)
+
+    # Issue JWTs
+    access_token = create_access_token(user_id=user.id, role=user.role.value)
+    refresh_token = create_refresh_token(user_id=user.id, role=user.role.value)
+    iam_roles = [r.slug for r in user.roles_assigned if r.is_active]
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role.value,
+            "iam_roles": iam_roles,
+            "status": user.status.value,
+        },
     }

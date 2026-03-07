@@ -65,6 +65,33 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const loginWithGoogle = async (googleToken, redirectTo = "/") => {
+    const res = await api.post("/auth/google", { google_token: googleToken });
+
+    const { access_token, refresh_token, user: userInfo } = res.data;
+
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+
+    const userData = {
+      id: userInfo.id,
+      email: userInfo.email,
+      full_name: userInfo.full_name,
+      role: userInfo.role,
+      iam_roles: userInfo.iam_roles || [],
+      status: userInfo.status,
+    };
+
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+    setUser(userData);
+
+    if (userData.role === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+    } else {
+      navigate(redirectTo, { replace: true });
+    }
+  };
+
   const register = async (name, email, password) => {
     await api.post("/auth/register", { name, email, password });
   };
@@ -90,6 +117,7 @@ export function AuthProvider({ children }) {
         user,
         loading,
         login,
+        loginWithGoogle,
         register,
         logout,
         updateUserInfo,

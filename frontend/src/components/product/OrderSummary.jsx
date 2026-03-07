@@ -1,15 +1,16 @@
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function OrderSummary({ config, price }) {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAddToCart = () => {
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`, { replace: true });
       return;
     }
 

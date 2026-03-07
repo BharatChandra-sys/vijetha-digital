@@ -1,15 +1,17 @@
 // src/components/auth/ProtectedRoute.jsx
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ProtectedRoute({ allowedRoles }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) return null;
 
-  // Not logged in
+  // Not logged in — redirect to login with return path
   if (!user) {
-    return <Navigate to="/login" replace />;
+    const returnPath = location.pathname + location.search;
+    return <Navigate to={`/login?redirect=${encodeURIComponent(returnPath)}`} replace />;
   }
 
   // Role not allowed

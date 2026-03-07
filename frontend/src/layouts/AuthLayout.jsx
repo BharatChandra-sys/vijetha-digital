@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function AuthLayout({
   children,
   leftTag,
@@ -48,13 +50,22 @@ export default function AuthLayout({
         </div>
 
         {/* Footer Branding */}
-        <div className="relative z-10 flex items-center gap-4 mt-auto">
-          <div className="w-9 h-9 rounded-lg bg-[#3B2F63] flex items-center justify-center shadow-lg">
-            <span className="text-white text-lg font-semibold">P</span>
+        <div className="relative z-10 mt-auto space-y-4">
+          <div className="flex items-center gap-3">
+            <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-10 w-10 rounded-xl object-cover shadow-lg flex-shrink-0" />
+            <span className="tracking-[0.25em] text-xs uppercase font-bold">
+              Vijetha Digital
+            </span>
           </div>
-          <span className="tracking-[0.25em] text-xs uppercase font-bold">
-            Vijetha Digital
-          </span>
+          
+          {/* Footer Links */}
+          <div className="flex gap-4 text-xs text-[#3B2F63]/60">
+            <Link to="/terms" className="hover:text-[#3B2F63] transition-colors">Terms of Service</Link>
+            <span className="text-[#3B2F63]/30">·</span>
+            <Link to="/privacy-policy" className="hover:text-[#3B2F63] transition-colors">Privacy Policy</Link>
+            <span className="text-[#3B2F63]/30">·</span>
+            <Link to="/contact" className="hover:text-[#3B2F63] transition-colors">Contact Us</Link>
+          </div>
         </div>
       </div>
 

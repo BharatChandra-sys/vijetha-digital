@@ -21,7 +21,7 @@ api.interceptors.response.use(
 
       if (!refreshToken) {
         localStorage.clear();
-        window.location.href = "/login";
+        window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
         return Promise.reject(error);
       }
 
@@ -38,7 +38,7 @@ api.interceptors.response.use(
         return axios(error.config);
       } catch {
         localStorage.clear();
-        window.location.href = "/login";
+        window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
       }
     }
 

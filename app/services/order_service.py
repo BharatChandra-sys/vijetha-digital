@@ -3,6 +3,7 @@ from fastapi import HTTPException
 
 from app.models.order import Order, OrderStatus, PaymentStatus
 from app.models.order_item import OrderItem
+from app.models.product import Product
 from app.services.pricing_service import calculate_price
 
 
@@ -10,7 +11,7 @@ from app.services.pricing_service import calculate_price
 def create_order(db: Session, user_id: int, items):
     """
     Create order for logged-in user (id-based ownership)
-    Initial status is placed, payment_status is pending
+    Supports both standard product items and custom signage items.
     """
 
     order = Order(
@@ -30,31 +31,52 @@ def create_order(db: Session, user_id: int, items):
     grand_total = 0.0
 
     for item in items:
-        price = calculate_price(
-            db=db,
-            width_ft=item.width_ft,
-            height_ft=item.height_ft,
-            material=item.material,
-            quantity=item.quantity,
-            lamination=item.lamination,
-            frame=item.frame,
-        )
+        if item.product_id is not None:
+            # Standard product — look up price from DB (never trust client)
+            product = db.query(Product).filter(
+                Product.id == item.product_id,
+                Product.is_active == True,
+            ).first()
+            if not product:
+                raise HTTPException(status_code=404, detail=f"Product {item.product_id} not found")
 
-        order_item = OrderItem(
-            order_id=order.id,
-            width_ft=item.width_ft,
-            height_ft=item.height_ft,
-            material=item.material,
-            quantity=item.quantity,
-            unit_price=price["unit_price"],
-            total_price=price["total_price"],
-        )
+            unit_price = float(product.base_price)
+            total_price = round(unit_price * item.quantity, 2)
+
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=product.id,
+                quantity=item.quantity,
+                unit_price=unit_price,
+                total_price=total_price,
+            )
+        else:
+            # Custom signage item — use pricing engine
+            price = calculate_price(
+                db=db,
+                width_ft=item.width_ft,
+                height_ft=item.height_ft,
+                material=item.material,
+                quantity=item.quantity,
+                lamination=item.lamination,
+                frame=item.frame,
+            )
+
+            order_item = OrderItem(
+                order_id=order.id,
+                width_ft=item.width_ft,
+                height_ft=item.height_ft,
+                material=item.material,
+                quantity=item.quantity,
+                unit_price=price["unit_price"],
+                total_price=price["total_price"],
+            )
 
         db.add(order_item)
-        grand_total += price["total_price"]
+        grand_total += float(order_item.total_price)
 
     order.subtotal = round(grand_total, 2)
-    order.total_price = round(grand_total, 2)  # total = subtotal + tax + shipping - discount
+    order.total_price = round(grand_total, 2)
 
     db.commit()
     db.refresh(order)

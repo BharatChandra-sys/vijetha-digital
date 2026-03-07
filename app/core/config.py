@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     SMTP_USER: Optional[str] = None
     SMTP_PASSWORD: Optional[str] = None
 
+    # Google OAuth (optional — fill in before deploying)
+    GOOGLE_CLIENT_ID: Optional[str] = None
+
     class Config:
         env_file = ".env"
         extra = "ignore"

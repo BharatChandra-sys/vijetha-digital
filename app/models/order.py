@@ -7,6 +7,7 @@ from sqlalchemy import (
     Enum,
     Index,
     CheckConstraint,
+    String,
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -85,6 +86,22 @@ class Order(Base):
 
     paid_at = Column(
         DateTime,
+        nullable=True,
+    )
+
+    # Tracking & Invoice fields
+    tracking_number = Column(
+        String(100),
+        nullable=True,
+    )
+
+    tracking_url = Column(
+        String(500),
+        nullable=True,
+    )
+
+    invoice_url = Column(
+        String(500),
         nullable=True,
     )
 

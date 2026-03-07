@@ -31,7 +31,7 @@ export default function AdminCreateProduct() {
 
       alert("Product created successfully");
       setProduct({ name: "", category: "", base_price: "" });
-    } catch (e) {
+    } catch {
       alert("Failed to create product");
     } finally {
       setLoading(false);

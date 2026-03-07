@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, Numeric
+from sqlalchemy import Column, Integer, ForeignKey, Numeric, String
 from sqlalchemy.orm import relationship
 from app.db.base import Base
-from sqlalchemy import String
+
 
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -9,6 +9,7 @@ class OrderItem(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     order_id = Column(Integer, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=True)
 
     width_ft = Column(Numeric(10, 2), nullable=True)
     height_ft = Column(Numeric(10, 2), nullable=True)
@@ -20,3 +21,4 @@ class OrderItem(Base):
     total_price = Column(Numeric(12, 2), nullable=False)
 
     order = relationship("Order", back_populates="items")
+    product = relationship("Product", lazy="joined")

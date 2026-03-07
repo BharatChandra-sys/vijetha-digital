@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
 import api from "../api/axios";
 
@@ -35,6 +35,18 @@ export default function ForgotPassword() {
       leftSubtitle="Enter your email and we’ll send you a secure reset link."
     >
       <div className="w-full max-w-md">
+
+        {/* Go to Home Link */}
+        <div className="mb-6">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-1 text-sm text-[#3B2F63]/60 hover:text-[#3B2F63] transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            <span>Back to Home</span>
+          </Link>
+        </div>
+
         <h2 className="text-2xl font-bold mb-2">
           Forgot{" "}
           <span className="relative inline-block">

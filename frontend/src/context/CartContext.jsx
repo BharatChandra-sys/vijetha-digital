@@ -7,40 +7,29 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
   const [cartLoaded, setCartLoaded] = useState(false);
 
-  // Load cart
   useEffect(() => {
     const saved = localStorage.getItem(CART_KEY);
     if (saved) {
-      try {
-        setItems(JSON.parse(saved));
-      } catch {
-        setItems([]);
-      }
+      try { setItems(JSON.parse(saved)); } catch { setItems([]); }
     }
     setCartLoaded(true);
   }, []);
 
-  // Persist cart
   useEffect(() => {
     if (!cartLoaded) return;
     localStorage.setItem(CART_KEY, JSON.stringify(items));
   }, [items, cartLoaded]);
 
-  // ✅ Merge duplicate items instead of blindly pushing
   const addToCart = (item) => {
     setItems((prev) => {
       const existingIndex = prev.findIndex(
-        (i) =>
-          i.product_id === item.product_id &&
-          JSON.stringify(i.config) === JSON.stringify(item.config)
+        (i) => i.product_id === item.product_id && JSON.stringify(i.config) === JSON.stringify(item.config)
       );
-
       if (existingIndex !== -1) {
         const updated = [...prev];
         updated[existingIndex].quantity += item.quantity;
         return updated;
       }
-
       return [...prev, item];
     });
   };
@@ -49,31 +38,26 @@ export function CartProvider({ children }) {
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const updateQuantity = (index, newQty) => {
+    if (newQty < 1) return;
+    setItems((prev) => prev.map((item, i) => i === index ? { ...item, quantity: newQty } : item));
+  };
+
   const clearCart = () => {
     setItems([]);
     localStorage.removeItem(CART_KEY);
   };
 
-  // ✅ Safe total calculation
   const total = useMemo(() => {
     return items.reduce((sum, i) => {
       const price = Number(i.unit_price) || 0;
-      const qty = Number(i.quantity) || 0;
+      const qty   = Number(i.quantity)   || 0;
       return sum + price * qty;
     }, 0);
   }, [items]);
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        cartLoaded,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        total,
-      }}
-    >
+    <CartContext.Provider value={{ items, cartLoaded, addToCart, removeFromCart, updateQuantity, clearCart, total }}>
       {children}
     </CartContext.Provider>
   );

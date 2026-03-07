@@ -21,6 +21,7 @@ from app.api.products.router import router as product_router
 from app.api.orders.router import router as order_router
 from app.api.pricing.router import router as pricing_router
 from app.api.payments.router import router as payment_router
+from app.api.reviews.router import router as review_router
 
 app = FastAPI(title=settings.APP_NAME)
 
@@ -48,7 +49,9 @@ def on_startup():
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(admin_router, prefix="/api/v1")
 app.include_router(product_router)
 app.include_router(order_router)
 app.include_router(pricing_router)
 app.include_router(payment_router)
+app.include_router(review_router)

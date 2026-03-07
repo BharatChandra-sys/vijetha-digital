@@ -25,6 +25,9 @@ from app.models.user import User
 from app.api.admin import users as users_routes
 from app.api.admin import roles as roles_routes
 
+# Import Dashboard router
+from app.api.v1.admin import dashboard_router
+
 # 🔒 ADMIN ROUTER
 router = APIRouter(
     prefix="/admin",
@@ -34,6 +37,9 @@ router = APIRouter(
 # Include IAM routes
 router.include_router(users_routes.router)
 router.include_router(roles_routes.router)
+
+# Include Dashboard routes (Products, Orders, Staff Management)
+router.include_router(dashboard_router)
 
 # ---------- ADMIN DASHBOARD ----------
 @router.get("/dashboard")

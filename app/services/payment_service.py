@@ -16,6 +16,7 @@ def create_payment_order(
     db: Session,
     order_id: int,
     user_id: int,
+    amount_percent: int = 100,
 ):
     # 1️⃣ Fetch order
     order = (
@@ -34,14 +35,30 @@ def create_payment_order(
     if order.payment_status == PaymentStatus.paid:
         raise HTTPException(status_code=400, detail="Order already paid")
 
+    if order.status == OrderStatus.cancelled:
+        raise HTTPException(status_code=400, detail="Cannot pay for a cancelled order")
+
     if order.total_price < MIN_RAZORPAY_AMOUNT:
         raise HTTPException(
             status_code=400,
             detail="Order amount too low for payment",
         )
 
+    if amount_percent not in (50, 100):
+        raise HTTPException(
+            status_code=400,
+            detail="amount_percent must be either 50 or 100",
+        )
+
     # 3️⃣ Create Razorpay order
-    amount_paise = int(float(order.total_price) * 100)
+    payable_amount = float(order.total_price) * (amount_percent / 100)
+    amount_paise = int(round(payable_amount * 100))
+    if amount_paise < 100:
+        raise HTTPException(
+            status_code=400,
+            detail="Payable amount too low for payment",
+        )
+
     try:
         razorpay_order = client.order.create({
             "amount": amount_paise,  # paise
@@ -65,6 +82,7 @@ def create_payment_order(
         "order_id": order.id,
         "razorpay_order_id": razorpay_order["id"],
         "amount": amount_paise,  # paise
+        "amount_percent": amount_percent,
         "currency": "INR",
         "key": settings.RAZORPAY_KEY_ID,
     }

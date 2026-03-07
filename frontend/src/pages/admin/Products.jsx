@@ -13,7 +13,22 @@ export default function AdminProducts() {
   };
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+
+    api
+      .get("/products")
+      .then((res) => {
+        if (!cancelled) {
+          setProducts(res.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load admin products", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const remove = async (id) => {
