@@ -247,13 +247,21 @@ async def create_product_endpoint(
         if image:
             if not image.filename:
                 raise HTTPException(status_code=400, detail="Invalid image filename")
+            
+            if image.content_type not in ["image/jpeg", "image/png", "image/webp"]:
+                raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed")
+            
+            image_content = await image.read()
+            if len(image_content) > 5 * 1024 * 1024:
+                raise HTTPException(status_code=400, detail="Image size must be less than 5MB")
+
             file_ext = image.filename.split('.')[-1]
             unique_filename = f"product_{uuid.uuid4()}.{file_ext}"
             file_path = os.path.join(settings.UPLOAD_DIR, "products", unique_filename)
             
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, "wb") as f:
-                f.write(await image.read())
+                f.write(image_content)
             
             image_url = f"/uploads/products/{unique_filename}"
         
@@ -339,13 +347,21 @@ async def update_product(
         if image:
             if not image.filename:
                 raise HTTPException(status_code=400, detail="Invalid image filename")
+            
+            if image.content_type not in ["image/jpeg", "image/png", "image/webp"]:
+                raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed")
+            
+            image_content = await image.read()
+            if len(image_content) > 5 * 1024 * 1024:
+                raise HTTPException(status_code=400, detail="Image size must be less than 5MB")
+
             file_ext = image.filename.split('.')[-1]
             unique_filename = f"product_{uuid.uuid4()}.{file_ext}"
             file_path = os.path.join(settings.UPLOAD_DIR, "products", unique_filename)
             
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, "wb") as f:
-                f.write(await image.read())
+                f.write(image_content)
             
             product.image_url = f"/uploads/products/{unique_filename}"
         
@@ -537,16 +553,21 @@ async def upload_invoice(
         if not invoice.filename:
             raise HTTPException(status_code=400, detail="Invalid invoice file")
         
-        file_ext = invoice.filename.split('.')[-1]
-        if file_ext.lower() not in ['pdf', 'png', 'jpg', 'jpeg']:
+        if invoice.content_type not in ["application/pdf", "image/jpeg", "image/png"]:
             raise HTTPException(status_code=400, detail="Only PDF, PNG, JPG files allowed")
+        
+        invoice_content = await invoice.read()
+        if len(invoice_content) > 5 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="Invoice size must be less than 5MB")
+        
+        file_ext = invoice.filename.split('.')[-1]
         
         unique_filename = f"invoice_{order.id}_{uuid.uuid4()}.{file_ext}"
         file_path = os.path.join(settings.UPLOAD_DIR, "invoices", unique_filename)
         
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "wb") as f:
-            f.write(await invoice.read())
+            f.write(invoice_content)
         
         order.invoice_url = f"/uploads/invoices/{unique_filename}"
         order.updated_at = datetime.utcnow()

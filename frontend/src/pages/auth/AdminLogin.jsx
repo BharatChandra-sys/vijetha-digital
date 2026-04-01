@@ -5,7 +5,6 @@ import AuthLayout from "../../layouts/AuthLayout";
 
 export default function AdminLogin() {
   const { login } = useAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,8 +12,8 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (error) {
-      const timer = setTimeout(() => setError(""), 5000);
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => setError(""), 5000);
+      return () => clearTimeout(t);
     }
   }, [error]);
 
@@ -25,7 +24,7 @@ export default function AdminLogin() {
     try {
       await login(email, password, "/admin/dashboard", "admin");
     } catch (err) {
-      setError(err?.response?.data?.detail || "Invalid email or password");
+      setError(err?.response?.data?.detail || "Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -35,81 +34,89 @@ export default function AdminLogin() {
     <AuthLayout
       leftTag="ADMIN ACCESS"
       leftTitle="Vijetha Digital"
-      leftSubtitle="Secure sign-in for administrative control and full platform operations."
+      leftSubtitle="Secure administrative portal. Full platform control and operations management."
     >
-      <div className="w-full max-w-md">
-        <div className="mb-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1 text-sm text-plum-deep/60 hover:text-plum-deep transition-colors"
-          >
+      <div className="w-full max-w-[360px]">
+        <div className="mb-5">
+          <Link to="/" className="inline-flex items-center gap-1 text-[0.8125rem] text-text-muted hover:text-plum-deep transition-colors">
             <span className="material-symbols-outlined text-base">arrow_back</span>
-            <span>Back to Home</span>
+            Back to Home
           </Link>
         </div>
 
-        <header className="mb-8">
-          <h2 className="text-3xl font-bold text-text-dark mb-2">
+        {/* Admin badge */}
+        <div className="flex items-center gap-2 mb-5 p-2.5 bg-plum-deep/5 border border-plum-deep/10 rounded-lg">
+          <span className="material-symbols-outlined text-plum-deep text-base">admin_panel_settings</span>
+          <span className="text-[0.75rem] font-bold text-plum-deep uppercase tracking-wider">Administrator Portal</span>
+        </div>
+
+        <header className="mb-5">
+          <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
             Admin{" "}
             <span className="relative inline-block">
               Login
-              <span className="absolute left-0 bottom-[-3px] w-full h-[3px] bg-coral-accent"></span>
+              <span className="absolute left-0 bottom-0 w-full h-[2px] bg-coral-accent rounded-full" />
             </span>
           </h2>
-          <p className="text-text-muted">Sign in to manage dashboards, staff access, and system settings.</p>
+          <p className="text-[0.8125rem] text-text-muted">Restricted access. Authorised personnel only.</p>
         </header>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>
+          <div className="mb-4 flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-[0.8125rem] text-red-600">
+            <span className="material-symbols-outlined text-base flex-shrink-0">error</span>
+            {error}
+          </div>
         )}
 
-        <form onSubmit={submit} className="space-y-6">
+        <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted">Admin Email</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Admin Email</label>
             <input
               type="email"
               required
+              autoComplete="username"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               placeholder="admin@vijetha.com"
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none"
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
           </div>
-
           <div>
-            <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted">Password</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Password</label>
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none"
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Enter admin password"
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
-          </div>
-
-          <div className="text-right">
-            <Link
-              to="/admin/forgot-password"
-              className="text-plum-deep text-sm font-semibold hover:text-coral-accent transition-colors"
-            >
-              Forgot password?
-            </Link>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold text-base shadow-[0_12px_24px_-8px_rgba(59,47,99,0.5)] hover:bg-[#2D244C] transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? "Signing In…" : "Sign In to Admin"}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-gray-500">
+        {/* Security note — no forgot password for admin */}
+        <div className="mt-5 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="flex items-start gap-2">
+            <span className="material-symbols-outlined text-amber-600 text-base flex-shrink-0 mt-0.5">lock</span>
+            <p className="text-[0.75rem] text-amber-800 leading-snug">
+              Admin password reset is disabled for security. Contact the system owner to reset credentials.
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-5 text-center text-[0.8125rem] text-text-muted">
           Staff member?{" "}
           <Link to="/staff/login" className="text-plum-deep font-bold hover:text-coral-accent transition-colors">
-            Staff Login
+            Staff Login →
           </Link>
         </p>
       </div>

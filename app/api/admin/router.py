@@ -196,3 +196,91 @@ def revenue_stats(
         "month_revenue": float(get_month_revenue(db)),
         "year_revenue": float(get_year_revenue(db)),
     }
+
+
+# ---------- ACCESS LOGS (Security Monitoring) ----------
+@router.get("/access-logs")
+def get_access_logs(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+    action: str = None,
+    ip: str = None,
+    limit: int = 100,
+):
+    """View access logs for security monitoring. Admin only."""
+    from app.models.access_log import AccessLog
+    query = db.query(AccessLog).order_by(AccessLog.created_at.desc())
+    if action:
+        query = query.filter(AccessLog.action == action)
+    if ip:
+        query = query.filter(AccessLog.ip_address == ip)
+    logs = query.limit(min(limit, 500)).all()
+    return [
+        {
+            "id": l.id,
+            "action": l.action,
+            "success": l.success,
+            "email": l.email,
+            "ip_address": l.ip_address,
+            "device": l.device_type,
+            "browser": l.browser,
+            "os": l.os_name,
+            "endpoint": l.endpoint,
+            "detail": l.detail,
+            "created_at": l.created_at.isoformat() if l.created_at else None,
+        }
+        for l in logs
+    ]
+
+
+@router.get("/access-logs/failed-logins")
+def get_failed_logins(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+    hours: int = 24,
+):
+    """View recent failed login attempts. Admin only."""
+    from app.services.access_log_service import get_failed_logins as _get
+    logs = _get(db, hours=hours)
+    return [
+        {
+            "email": l.email,
+            "ip_address": l.ip_address,
+            "device": l.device_type,
+            "browser": l.browser,
+            "os": l.os_name,
+            "detail": l.detail,
+            "created_at": l.created_at.isoformat() if l.created_at else None,
+        }
+        for l in logs
+    ]
+
+
+# ---------- MAINTENANCE MODE ----------
+@router.get("/maintenance")
+def get_maintenance_status(
+    current_user: User = Depends(admin_required),
+):
+    """Get current maintenance mode status."""
+    from app.core.maintenance import is_maintenance_active, get_maintenance_message
+    return {
+        "active": is_maintenance_active(),
+        "message": get_maintenance_message(),
+    }
+
+
+@router.post("/maintenance")
+def set_maintenance_mode(
+    data: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Enable or disable maintenance mode. Admin only."""
+    from app.core.maintenance import set_maintenance
+    active = bool(data.get("active", False))
+    message = data.get("message", "")
+    set_maintenance(active, message or None)
+    return {
+        "active": active,
+        "message": message or "Maintenance mode updated",
+    }

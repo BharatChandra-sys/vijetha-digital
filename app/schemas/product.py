@@ -1,14 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
 class ProductCreate(BaseModel):
-    name: str
-    category: str
+    name: str = Field(..., max_length=255)
+    category: str = Field(..., max_length=100)
     base_price: float
-    description: Optional[str] = None
-    unit: Optional[str] = None
-    image_url: Optional[str] = None
+    description: Optional[str] = Field(None, max_length=2000)
+    unit: Optional[str] = Field(None, max_length=50)
+    image_url: Optional[str] = Field(None, max_length=1000)
 
 
 class ProductResponse(BaseModel):

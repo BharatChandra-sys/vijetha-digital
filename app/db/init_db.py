@@ -9,6 +9,7 @@ from app.models.order_item import OrderItem
 from app.models.pricing import MaterialRate, ExtraRate
 from app.models.staff import Staff
 from app.models.iam import Role, Permission, RoleAssignmentLog, PermissionAccessLog
+from app.models.token_blacklist import TokenBlacklist
 
 
 def init_db():

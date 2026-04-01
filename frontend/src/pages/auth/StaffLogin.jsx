@@ -48,8 +48,8 @@ export default function StaffLogin() {
           </Link>
         </div>
 
-        <header className="mb-8">
-          <h2 className="text-3xl font-bold text-text-dark mb-2">
+        <header className="mb-5">
+          <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
             Staff{" "}
             <span className="relative inline-block">
               Login
@@ -72,7 +72,7 @@ export default function StaffLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="staff@vijetha.com"
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none"
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
           </div>
 
@@ -84,7 +84,7 @@ export default function StaffLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none"
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
           </div>
 
@@ -100,7 +100,7 @@ export default function StaffLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold text-base shadow-[0_12px_24px_-8px_rgba(59,47,99,0.5)] hover:bg-[#2D244C] transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>

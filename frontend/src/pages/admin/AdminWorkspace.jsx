@@ -31,6 +31,13 @@ const cards = [
     icon: "vpn_key",
     color: "from-[#F8F7F4] to-[#F0EEEB]",
   },
+  {
+    title: "Security Logs",
+    desc: "View IP addresses, login attempts & access history.",
+    to: "/admin/security",
+    icon: "security",
+    color: "from-[#F8F7F4] to-[#F0EEEB]",
+  },
 ];
 
 export default function AdminWorkspace() {

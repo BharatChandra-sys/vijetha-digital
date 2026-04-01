@@ -18,6 +18,7 @@ import app.models.order
 import app.models.review
 import app.models.staff
 import app.models.iam
+import app.models.token_blacklist
 
 # Alembic config
 config = context.config

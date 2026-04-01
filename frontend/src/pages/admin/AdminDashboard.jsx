@@ -203,209 +203,125 @@ export default function AdminDashboard() {
   }, [globalSearchQuery, showGlobalSearch]);
 
   return (
-    <div className="min-h-screen bg-warm-white font-display">
-      <div className="max-w-[1400px] mx-auto">
-        <section className="bg-white border border-stone-border rounded-2xl shadow-card-enhanced overflow-hidden">
-          <div className="px-6 lg:px-8 py-5 border-b border-stone-border bg-warm-white/80">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-10 w-10 rounded-xl object-cover shadow-sm" />
-                <div>
-                  <h1 className="text-2xl font-extrabold text-plum-deep tracking-tight">Admin Dashboard</h1>
-                  <p className="text-sm text-text-muted">Operations, products, orders, staff and business metrics</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setRefreshTick((v) => v + 1)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-border text-plum-deep hover:bg-stone-light font-semibold text-sm"
-                >
-                  <span className="material-symbols-outlined text-base">refresh</span>
-                  Refresh
-                </button>
-                <button
-                  onClick={() => setShowGlobalSearch(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white font-semibold text-sm transition-colors"
-                >
-                  <span className="material-symbols-outlined text-base">search</span>
-                  Search
-                </button>
-                <button
-                  onClick={() => navigate("/")}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-plum-deep text-white hover:bg-plum-light font-semibold text-sm"
-                >
-                  <span className="material-symbols-outlined text-base">home</span>
-                  Back Home
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr]">
-            <aside className="bg-white border-r border-stone-border p-4">
-              <nav className="space-y-1">
-                {[
-                  { id: "overview", label: "Overview", icon: "insights" },
-                  { id: "products", label: "Products", icon: "inventory_2" },
-                  { id: "orders", label: "Orders", icon: "receipt_long" },
-                  { id: "staff", label: "Staff", icon: "groups" },
-                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full text-left rounded-lg px-3 py-2.5 font-semibold text-sm transition-colors inline-flex items-center gap-3 ${tabClass(activeTab === item.id)}`}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </aside>
-
-            <main className="p-5 lg:p-8 bg-[#fbf9f4] min-h-[70vh]">
-              {loading ? (
-                <div className="h-[50vh] flex items-center justify-center">
-                  <div className="inline-flex items-center gap-3 text-plum-deep font-semibold">
-                    <span className="material-symbols-outlined animate-spin">autorenew</span>
-                    Loading dashboard...
-                  </div>
-                </div>
-              ) : null}
-
-              {!loading && activeTab === "overview" ? <OverviewTab stats={stats} /> : null}
-              {!loading && activeTab === "products" ? <ProductsTab onSaved={() => setRefreshTick((v) => v + 1)} /> : null}
-              {!loading && activeTab === "orders" ? <OrdersTab onUpdated={() => setRefreshTick((v) => v + 1)} /> : null}
-              {!loading && activeTab === "staff" ? <StaffTab /> : null}
-              {!loading && activeTab === "staffAccess" ? <StaffAccessTab /> : null}
-            </main>
-          </div>
-        </section>
-
-        {/* Global Search Modal */}
-        {showGlobalSearch && (
-          <div className="fixed inset-0 flex items-start justify-center z-[9999] pt-20">
-            <div className="absolute inset-0 bg-black/40" onClick={() => setShowGlobalSearch(false)}></div>
-            
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
-              {/* Search Input */}
-              <div className="sticky top-0 bg-white border-b border-stone-border p-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-plum-deep text-2xl">search</span>
-                  <input
-                    type="text"
-                    placeholder="Search products, orders, customers..."
-                    value={globalSearchQuery}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                    autoFocus
-                    className="flex-1 outline-none text-lg text-plum-deep placeholder:text-text-muted"
-                  />
-                  <button onClick={() => setShowGlobalSearch(false)} className="text-text-muted hover:text-plum-deep">
-                    <span className="material-symbols-outlined">close</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Search Results */}
-              <div className="overflow-y-auto max-h-[calc(80vh-80px)] p-4">
-                {searchLoading ? (
-                  <div className="text-center py-8 text-text-muted">
-                    <span className="material-symbols-outlined animate-spin text-3xl">autorenew</span>
-                  </div>
-                ) : !globalSearchQuery.trim() ? (
-                  <div className="text-center py-8 text-text-muted">
-                    <span className="material-symbols-outlined text-4xl mb-2">search</span>
-                    <p>Start typing to search products and orders</p>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {/* Products Results */}
-                    {searchResults.products.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-bold text-text-muted uppercase tracking-wide mb-3">Products ({searchResults.products.length})</h3>
-                        <div className="space-y-2">
-                          {searchResults.products.map(product => (
-                            <button
-                              key={product.id}
-                              onClick={() => {
-                                setActiveTab("products");
-                                setShowGlobalSearch(false);
-                                setGlobalSearchQuery("");
-                              }}
-                              className="w-full text-left p-3 rounded-lg border border-stone-border hover:bg-stone-light transition-colors"
-                            >
-                              <div className="flex items-center gap-3">
-                                {product.imageUrl ? (
-                                  <img src={product.imageUrl} alt={product.name} className="w-12 h-12 object-cover rounded" />
-                                ) : (
-                                  <div className="w-12 h-12 bg-stone-light rounded flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-text-muted">inventory_2</span>
-                                  </div>
-                                )}
-                                <div className="flex-1">
-                                  <p className="font-semibold text-plum-deep">{product.name}</p>
-                                  <p className="text-sm text-text-muted">{product.category} • {fmtCurrency(product.basePrice)}</p>
-                                </div>
-                                <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                  product.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                                }`}>
-                                  {product.isActive ? "Active" : "Paused"}
-                                </span>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Orders Results */}
-                    {searchResults.orders.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-bold text-text-muted uppercase tracking-wide mb-3">Orders ({searchResults.orders.length})</h3>
-                        <div className="space-y-2">
-                          {searchResults.orders.map(order => (
-                            <button
-                              key={order.id}
-                              onClick={() => {
-                                setActiveTab("orders");
-                                setShowGlobalSearch(false);
-                                setGlobalSearchQuery("");
-                              }}
-                              className="w-full text-left p-3 rounded-lg border border-stone-border hover:bg-stone-light transition-colors"
-                            >
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="font-semibold text-plum-deep">Order #{order.id}</p>
-                                  <p className="text-sm text-text-muted">{order.customerName} • {order.customerEmail}</p>
-                                  <p className="text-xs text-text-muted mt-1">{new Date(order.createdAt).toLocaleDateString()}</p>
-                                </div>
-                                <div className="text-right">
-                                  <p className="font-bold text-plum-deep">{fmtCurrency(order.totalAmount)}</p>
-                                  <span className="inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold bg-blue-100 text-blue-700">
-                                    {STATUS_LABELS[order.status] || order.status}
-                                  </span>
-                                </div>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* No Results */}
-                    {searchResults.products.length === 0 && searchResults.orders.length === 0 && (
-                      <div className="text-center py-8 text-text-muted">
-                        <span className="material-symbols-outlined text-4xl mb-2">search_off</span>
-                        <p>No results found for "{globalSearchQuery}"</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="font-display">
+      {/* Page header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-[1.375rem] font-bold text-plum-deep">Overview</h1>
+          <p className="text-[0.8125rem] text-text-muted">Business metrics and operations summary</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setRefreshTick(v => v + 1)}
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg border border-stone-border text-[0.8125rem] font-semibold text-plum-deep hover:bg-stone-light transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">refresh</span>
+            Refresh
+          </button>
+          <button
+            onClick={() => setShowGlobalSearch(true)}
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-plum-deep text-white text-[0.8125rem] font-semibold hover:bg-plum-light transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">search</span>
+            Search
+          </button>
+        </div>
       </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="w-8 h-8 border-2 border-plum-deep border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <OverviewTab stats={stats} />
+      )}
+
+      {/* Global Search Modal */}
+      {showGlobalSearch && (
+        <div className="fixed inset-0 flex items-start justify-center z-[9999] pt-16 px-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowGlobalSearch(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[80vh] overflow-hidden dropdown-enter">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-stone-border">
+              <span className="material-symbols-outlined text-plum-deep/50 text-xl">search</span>
+              <input
+                type="text"
+                placeholder="Search products, orders, customers…"
+                value={globalSearchQuery}
+                onChange={e => setGlobalSearchQuery(e.target.value)}
+                autoFocus
+                className="flex-1 outline-none text-[0.9375rem] text-plum-deep placeholder:text-text-muted"
+              />
+              <button onClick={() => setShowGlobalSearch(false)} className="text-text-muted hover:text-plum-deep transition-colors">
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[calc(80vh-60px)] p-4">
+              {searchLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="w-6 h-6 border-2 border-plum-deep border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : !globalSearchQuery.trim() ? (
+                <div className="text-center py-10 text-text-muted">
+                  <span className="material-symbols-outlined text-4xl block mb-2 opacity-30">search</span>
+                  <p className="text-[0.875rem]">Type to search products and orders</p>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {searchResults.products.length > 0 && (
+                    <div>
+                      <p className="text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">Products</p>
+                      <div className="space-y-1.5">
+                        {searchResults.products.map(p => (
+                          <button key={p.id} onClick={() => { navigate("/admin/products"); setShowGlobalSearch(false); }}
+                            className="w-full flex items-center gap-3 p-3 rounded-lg border border-stone-border hover:bg-stone-light transition-colors text-left">
+                            <div className="w-10 h-10 rounded-lg bg-stone-light flex items-center justify-center flex-shrink-0 overflow-hidden">
+                              {p.imageUrl ? <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" /> :
+                                <span className="material-symbols-outlined text-text-muted text-lg">inventory_2</span>}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[0.875rem] font-semibold text-plum-deep truncate">{p.name}</p>
+                              <p className="text-[0.75rem] text-text-muted">{p.category} · ₹{Number(p.basePrice).toLocaleString("en-IN")}</p>
+                            </div>
+                            <span className={`text-[0.6875rem] font-bold px-2 py-0.5 rounded-full ${p.isActive ? "bg-green-100 text-green-700" : "bg-stone-light text-text-muted"}`}>
+                              {p.isActive ? "Active" : "Paused"}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {searchResults.orders.length > 0 && (
+                    <div>
+                      <p className="text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">Orders</p>
+                      <div className="space-y-1.5">
+                        {searchResults.orders.map(o => (
+                          <button key={o.id} onClick={() => { navigate("/admin/orders"); setShowGlobalSearch(false); }}
+                            className="w-full flex items-center justify-between p-3 rounded-lg border border-stone-border hover:bg-stone-light transition-colors text-left">
+                            <div>
+                              <p className="text-[0.875rem] font-semibold text-plum-deep">Order #{o.id}</p>
+                              <p className="text-[0.75rem] text-text-muted">{o.customerName} · {o.customerEmail}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[0.875rem] font-bold text-plum-deep">₹{Number(o.totalAmount).toLocaleString("en-IN")}</p>
+                              <span className="text-[0.6875rem] font-bold text-blue-600">{o.status}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {searchResults.products.length === 0 && searchResults.orders.length === 0 && (
+                    <div className="text-center py-10 text-text-muted">
+                      <span className="material-symbols-outlined text-4xl block mb-2 opacity-30">search_off</span>
+                      <p className="text-[0.875rem]">No results for "{globalSearchQuery}"</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

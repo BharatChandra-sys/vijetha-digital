@@ -7,49 +7,50 @@
 
 body {
   font-family: var(--font-sans);
-  color: #1C1C1C;
+  color: #111318;
   font-size: 16px;
   line-height: 1.6;
 }
 
 /* Headings - Production Scale */
 h1 {
-  font-size: 2.75rem; /* 44px */
+  font-size: 2.75rem;
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
+  color: #1A1F3C;
 }
 
 @media (min-width: 1024px) {
-  h1 {
-    font-size: 3rem; /* 48px */
-  }
+  h1 { font-size: 3rem; }
 }
 
 h2 {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
+  color: #1A1F3C;
 }
 
 h3 {
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.4;
+  color: #1A1F3C;
 }
 
 h4 {
-  font-size: 1.125rem; /* 18px */
+  font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.5;
+  color: #1A1F3C;
 }
 
-/* Body text */
 p {
-  font-size: 1rem; /* 16px */
+  font-size: 1rem;
   line-height: 1.65;
-  color: #6E6E73;
+  color: #5A5A65;
 }
 
 /* Helper / meta text */

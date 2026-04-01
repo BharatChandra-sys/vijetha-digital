@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, Field
 from typing import List, Optional
 
 
@@ -8,7 +8,7 @@ class OrderItemCreate(BaseModel):
     # Custom signage item
     width_ft: Optional[float] = None
     height_ft: Optional[float] = None
-    material: Optional[str] = None
+    material: Optional[str] = Field(None, max_length=100)
     lamination: bool = False
     frame: bool = False
     # Common

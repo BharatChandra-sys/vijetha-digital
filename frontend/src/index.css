@@ -4,8 +4,8 @@
 
 body {
   font-family: 'Manrope', 'Inter', sans-serif;
-  background-color: #F8F7F4;
-  color: #1C1C1C;
+  background-color: #F9F8F6;
+  color: #111318;
 }
 
 /* ── Material Symbols ── */
@@ -26,8 +26,8 @@ body {
 .plum-glow-bg {
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(59,47,99,0.15) 0%,
-    rgba(255,107,107,0.10) 40%,
+    rgba(26,31,60,0.12) 0%,
+    rgba(232,67,26,0.08) 40%,
     transparent 70%
   );
 }
@@ -36,8 +36,8 @@ body {
 .cta-glow-bg {
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(255,107,107,0.30) 0%,
-    rgba(59,47,99,0.00) 70%
+    rgba(232,67,26,0.25) 0%,
+    rgba(26,31,60,0.00) 70%
   );
 }
 
@@ -58,7 +58,7 @@ body {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 4px;
-  background-color: #FF6B6B;
+  background-color: #E8431A;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
@@ -87,28 +87,28 @@ body {
 /* ── Search panel scrollbar (template aligned) ── */
 .search-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 47, 99, 0.55) rgba(59, 47, 99, 0.09);
+  scrollbar-color: rgba(26, 31, 60, 0.55) rgba(26, 31, 60, 0.09);
 }
 .search-scrollbar::-webkit-scrollbar {
   width: 10px;
 }
 .search-scrollbar::-webkit-scrollbar-track {
-  background: rgba(59, 47, 99, 0.08);
+  background: rgba(26, 31, 60, 0.08);
   border-radius: 12px;
 }
 .search-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(59, 47, 99, 0.62) 0%, rgba(95, 76, 153, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(26, 31, 60, 0.62) 0%, rgba(47, 54, 96, 0.75) 100%);
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.5);
 }
 .search-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(59, 47, 99, 0.80) 0%, rgba(95, 76, 153, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(26, 31, 60, 0.80) 0%, rgba(47, 54, 96, 0.95) 100%);
 }
 
 /* ── Global scrollbar (all pages) ── */
 html, body {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 47, 99, 0.55) rgba(59, 47, 99, 0.10);
+  scrollbar-color: rgba(26, 31, 60, 0.45) rgba(26, 31, 60, 0.08);
 }
 
 *::-webkit-scrollbar {
@@ -117,18 +117,18 @@ html, body {
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(59, 47, 99, 0.08);
+  background: rgba(26, 31, 60, 0.06);
   border-radius: 12px;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(59, 47, 99, 0.62) 0%, rgba(95, 76, 153, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(26, 31, 60, 0.50) 0%, rgba(47, 54, 96, 0.65) 100%);
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(59, 47, 99, 0.80) 0%, rgba(95, 76, 153, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(26, 31, 60, 0.70) 0%, rgba(47, 54, 96, 0.85) 100%);
 }
 
 /* ── Hide scrollbar (used on horizontal timeline) ── */
@@ -153,18 +153,20 @@ html, body {
 
 /* ── Radio pill (product detail configurator) ── */
 .option-radio:checked + div {
-  border-color: #3B2F63 !important;
-  background-color: #3B2F63 !important;
-  box-shadow: 0 8px 16px -4px rgba(59,47,99,0.3);
+  border-color: #1A1F3C !important;
+  background-color: #1A1F3C !important;
+  box-shadow: 0 8px 16px -4px rgba(26,31,60,0.3);
   transform: translateY(-1px);
 }
 .option-radio:checked + div .check-icon { opacity: 1 !important; transform: scale(1) !important; }
 .option-radio:checked + div .opt-sub { color: rgba(255,255,255,0.85) !important; }
 .option-radio:checked + div .opt-main { color: #ffffff !important; }
 
-/* ── Global interaction polish ── */
-*, *::before, *::after {
-  -webkit-tap-highlight-color: transparent;
+/* ── Fix chromatic aberration on text ── */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Smooth page transitions */
@@ -174,9 +176,21 @@ a, button {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Minimum touch target size (44px) */
-button, a, [role="button"] {
+/* Minimum touch target size (44px) — only for interactive elements without explicit sizing */
+button:not([class*="h-"]):not([class*="w-"]) {
   min-height: 44px;
+}
+
+/* Ensure buttons with w-full display correctly */
+button[class*="w-full"] {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon-only and small buttons keep inline-flex */
+button:not([class*="w-full"]) {
   display: inline-flex;
   align-items: center;
 }
@@ -189,7 +203,7 @@ p a, footer a, nav a {
 
 /* Focus ring — accessible but not ugly */
 :focus-visible {
-  outline: 2px solid #3B2F63;
+  outline: 2px solid #1A1F3C;
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -246,4 +260,36 @@ p a, footer a, nav a {
 
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out both;
+}
+
+/* ── Dropdown pop-in animation ── */
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-enter {
+  animation: dropdownIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top right;
+}
+
+/* ── Slide in from right (order detail panel) ── */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Global interaction polish ── */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent;
 }

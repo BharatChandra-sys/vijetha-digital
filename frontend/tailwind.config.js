@@ -8,19 +8,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        "plum-deep":    "#3B2F63",
-        "plum-darker":  "#2A2149",
-        "plum-light":   "#4F4080",
-        "plum-hover":   "#2D244C",
-        "warm-white":   "#F8F7F4",
-        "coral-accent": "#FF6B6B",
-        "coral-dark":   "#E85A5A",
-        "stone-light":  "#F1EEE8",
-        "stone-border": "#E6E3DD",
-        "beige-warm":   "#F3EFE7",
-        "text-dark":    "#1C1C1C",
-        "text-muted":   "#6E6E73",
-        "sidebar-bg":   "#E8E6E3",
+        // ── Primary brand — matches logo navy ──
+        "brand-navy":    "#1A1F3C",   // logo dark navy (primary)
+        "brand-navy-2":  "#252B4A",   // slightly lighter navy
+        "brand-navy-3":  "#2F3660",   // medium navy for hover states
+        "brand-orange":  "#E8431A",   // logo orange-red (accent)
+        "brand-orange-2":"#D03A14",   // darker orange for hover
+
+        // ── Neutral surface ──
+        "warm-white":    "#F9F8F6",   // off-white background
+        "surface":       "#FFFFFF",   // card white
+        "surface-2":     "#F4F3F0",   // subtle grey surface
+        "border-light":  "#E8E6E2",   // light border
+        "border-mid":    "#D4D1CB",   // medium border
+
+        // ── Text ──
+        "text-primary":  "#111318",   // near-black
+        "text-secondary":"#5A5A65",   // muted grey
+        "text-hint":     "#9A9AA5",   // placeholder / hint
+
+        // ── Legacy aliases (keep for backward compat) ──
+        "plum-deep":    "#1A1F3C",
+        "plum-darker":  "#13172E",
+        "plum-light":   "#2F3660",
+        "plum-hover":   "#252B4A",
+        "coral-accent": "#E8431A",
+        "coral-dark":   "#D03A14",
+        "stone-light":  "#F4F3F0",
+        "stone-border": "#E8E6E2",
+        "beige-warm":   "#F0EDE7",
+        "text-dark":    "#111318",
+        "text-muted":   "#5A5A65",
+        "sidebar-bg":   "#ECEAE6",
       },
 
       fontFamily: {
@@ -28,17 +47,17 @@ export default {
       },
 
       boxShadow: {
-        "soft-plum":          "0 10px 20px rgba(59,47,99,0.12)",
-        "architectural":      "0 10px 40px -10px rgba(0,0,0,0.08)",
-        "architectural-lg":   "0 20px 60px -12px rgba(0,0,0,0.25)",
-        "architectural-xl":   "0 30px 70px -10px rgba(59,47,99,0.3)",
-        "card-default":       "0 10px 30px -10px rgba(0,0,0,0.08)",
-        "card-enhanced":      "0 15px 40px -10px rgba(0,0,0,0.12)",
-        "card-hover":         "0 25px 50px -12px rgba(59,47,99,0.15)",
-        "image-card":         "0 15px 30px -5px rgba(0,0,0,0.1)",
-        "product-card":       "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)",
-        "product-img-shadow": "0 8px 16px -4px rgba(0,0,0,0.1)",
-        "glow-coral":         "0 0 40px 10px rgba(255,107,107,0.3)",
+        "soft-plum":          "0 10px 20px rgba(26,31,60,0.12)",
+        "architectural":      "0 10px 40px -10px rgba(0,0,0,0.07)",
+        "architectural-lg":   "0 20px 60px -12px rgba(0,0,0,0.18)",
+        "architectural-xl":   "0 30px 70px -10px rgba(26,31,60,0.22)",
+        "card-default":       "0 2px 8px rgba(0,0,0,0.06)",
+        "card-enhanced":      "0 4px 16px rgba(0,0,0,0.08)",
+        "card-hover":         "0 12px 32px rgba(26,31,60,0.12)",
+        "image-card":         "0 8px 24px rgba(0,0,0,0.08)",
+        "product-card":       "0 1px 4px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)",
+        "product-img-shadow": "0 4px 12px rgba(0,0,0,0.08)",
+        "glow-coral":         "0 0 32px 8px rgba(232,67,26,0.25)",
       },
 
       backgroundImage: {

@@ -152,6 +152,16 @@ export default function Footer() {
           <Link to="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>
         </div>
       </div>
+
+      {/* Staff portal — subtle, bottom of footer */}
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2 flex justify-center">
+        <Link
+          to="/staff/login"
+          className="text-[0.6875rem] text-white/20 hover:text-white/50 transition-colors"
+        >
+          Staff Portal
+        </Link>
+      </div>
     </footer>
   );
 }

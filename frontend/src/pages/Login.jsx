@@ -19,6 +19,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
+  const resetSuccess = searchParams.get("reset") === "success";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,7 +57,7 @@ export default function Login() {
   };
 
   return (
-    <main className="flex h-screen overflow-hidden bg-[#F8F7F4] text-[#3B2F63] relative">
+    <main className="flex h-screen overflow-hidden bg-warm-white text-[#1A1F3C] relative">
 
       {/* Toast Notification - Top Center */}
       {(error || notice) && (
@@ -81,89 +82,130 @@ export default function Login() {
       )}
 
       {/* LEFT PANEL */}
-      <section className="hidden lg:flex lg:w-3/5 relative overflow-hidden bg-[#E9E4D9] p-16 flex-col justify-between">
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.05]">
-          <span className="text-[25rem] font-bold watermark-text tracking-widest text-[#3B2F63]">VIJETHA</span>
+      <section className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden bg-plum-deep p-14 xl:p-16 flex-col justify-between">
+        {/* Dot grid */}
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* Glow */}
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-coral-accent/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex-1 flex flex-col justify-center max-w-sm">
+          <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/50 mb-4">Welcome Back</p>
+          <div className="mb-5">
+            <h1 className="text-[2rem] xl:text-[2.25rem] font-bold text-white leading-tight">Vijetha Digital</h1>
+            <div className="w-10 h-[3px] bg-coral-accent mt-3 rounded-full" />
+          </div>
+          <p className="text-white/60 text-base leading-relaxed">Continue building powerful print experiences.</p>
+          <div className="mt-10 space-y-3">
+            {[
+              { icon: "verified_user", text: "500+ businesses trust us" },
+              { icon: "receipt_long",  text: "GST invoice on every order" },
+              { icon: "bolt",          text: "24–48h turnaround time" },
+            ].map(b => (
+              <div key={b.text} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-coral-accent text-base">{b.icon}</span>
+                </div>
+                <span className="text-[0.8125rem] text-white/70 font-medium">{b.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="relative z-10 max-w-md">
-          <p className="uppercase tracking-[0.2em] text-[12px] font-semibold text-[#3B2F63]/60 mb-4">Welcome Back</p>
-          <h1 className="text-5xl font-bold mb-6 text-[#3B2F63] relative">
-            Vijetha Digital
-            <span className="absolute bottom-[-12px] left-0 w-12 h-1 bg-[#FF6B5E]"></span>
-          </h1>
-          <p className="text-xl text-[#3B2F63]/70 leading-relaxed">Continue building powerful print experiences.</p>
-        </div>
-        <div className="relative z-10 flex items-center gap-4">
-          <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-12 w-12 rounded-xl object-cover shadow-lg flex-shrink-0" />
-          <span className="uppercase tracking-[0.25em] text-[13px] font-bold text-[#3B2F63]">Vijetha Digital</span>
+
+        <div className="relative z-10 flex items-center gap-3">
+          <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-9 w-9 rounded-xl object-cover flex-shrink-0" />
+          <span className="text-[0.75rem] tracking-[0.2em] uppercase font-bold text-white/70">Vijetha Digital</span>
         </div>
       </section>
 
       {/* RIGHT PANEL */}
-      <section className="w-full lg:w-2/5 flex items-center justify-center px-6 py-8 lg:px-16 bg-[#F8F7F4]">
-        <div className="w-full max-w-md">
+      <section className="w-full lg:w-[48%] xl:w-[45%] flex items-center justify-center px-5 py-8 bg-warm-white">
+        <div className="w-full max-w-[360px]">
 
-          {/* Go to Dashboard Link */}
-          <div className="mb-6">
-            <Link 
-              to="/" 
-              className="inline-flex items-center gap-1 text-sm text-[#3B2F63]/60 hover:text-[#3B2F63] transition-colors"
+          {/* Back link */}
+          <div className="mb-5">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1 text-[0.8125rem] text-plum-deep/50 hover:text-plum-deep transition-colors"
             >
               <span className="material-symbols-outlined text-base">arrow_back</span>
-              <span>Back to Home</span>
+              Back to Home
             </Link>
           </div>
 
-          <header className="mb-6">
-            <h2 className="text-3xl font-bold text-[#3B2F63] mb-2">
+          <header className="mb-5">
+            <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
               Sign{" "}
               <span className="relative inline-block">
                 In
-                <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#FF6B5E] rounded-full"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-coral-accent rounded-full" />
               </span>
             </h2>
-            <p className="text-[#3B2F63]/60">Access your dashboard and manage your orders.</p>
+            <p className="text-[0.8125rem] text-text-muted">Access your dashboard and manage your orders.</p>
           </header>
 
-          <form onSubmit={submit} className="space-y-5">
-            <div className="flex flex-col gap-2">
-              <label className="text-[11px] font-bold text-[#3B2F63]/60 uppercase tracking-wider">Email Address</label>
-              <input type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required
-                className="w-full p-4 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#3B2F63] focus:border-transparent outline-none transition-all placeholder:text-gray-300" />
+          {resetSuccess && (
+            <div className="mb-4 flex items-center gap-2 p-2.5 bg-green-50 border border-green-200 rounded-lg text-[0.8125rem] text-green-700">
+              <span className="material-symbols-outlined text-base flex-shrink-0">check_circle</span>
+              Password updated successfully. Sign in with your new password.
+            </div>
+          )}
+
+          <form onSubmit={submit} className="space-y-4">
+            <div>
+              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Email Address</label>
+              <input
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-[11px] font-bold text-[#3B2F63]/60 uppercase tracking-wider">Password</label>
-              <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                className="w-full p-4 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#3B2F63] focus:border-transparent outline-none transition-all placeholder:text-gray-300" />
+            <div>
+              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+              />
             </div>
 
-            <div className="flex flex-col gap-3">
-              <label className="flex items-start gap-2 cursor-pointer group text-sm">
-                <input type="checkbox" required className="rounded border-gray-300 text-[#3B2F63] focus:ring-[#3B2F63] mt-0.5 flex-shrink-0" />
-                <span className="text-[#3B2F63]/70 group-hover:text-[#3B2F63] transition-colors">
+            <div className="flex items-center justify-between gap-4">
+              <label className="flex items-center gap-2 cursor-pointer text-[0.8125rem] text-text-muted">
+                <input type="checkbox" required className="rounded border-stone-border text-plum-deep focus:ring-plum-deep/20 flex-shrink-0" />
+                <span>
                   I accept the{" "}
-                  <Link to="/terms" className="text-[#3B2F63] font-semibold hover:text-[#FF6B5E] underline">Terms and Conditions</Link>
-                  {" "}and{" "}
-                  <Link to="/privacy-policy" className="text-[#3B2F63] font-semibold hover:text-[#FF6B5E] underline">Privacy Policy</Link>
+                  <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Terms</Link>
+                  {" "}&amp;{" "}
+                  <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Privacy</Link>
                 </span>
               </label>
-              <div className="text-right">
-                <span onClick={() => navigate("/forgot-password")} className="text-[#3B2F63] text-sm font-semibold hover:text-[#FF6B5E] transition-colors cursor-pointer">
-                  Forgot password?
-                </span>
-              </div>
+              <span
+                onClick={() => navigate("/forgot-password")}
+                className="text-[0.8125rem] font-semibold text-plum-deep hover:text-coral-accent transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
+              >
+                Forgot?
+              </span>
             </div>
 
-            <button type="submit" className="w-full bg-[#3B2F63] text-white py-4 rounded-lg font-bold text-base shadow-[0_12px_24px_-8px_rgba(59,47,99,0.5)] hover:bg-[#2D244C] transition-all transform hover:-translate-y-0.5">
+            <button
+              type="submit"
+              className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum"
+            >
               Sign In
             </button>
           </form>
 
-          <div className="my-6 flex items-center gap-4">
-            <div className="flex-1 h-[1px] bg-gray-200"></div>
-            <span className="text-[12px] font-medium text-gray-400 whitespace-nowrap">or continue with</span>
-            <div className="flex-1 h-[1px] bg-gray-200"></div>
+          <div className="my-4 flex items-center gap-3">
+            <div className="flex-1 h-px bg-stone-border" />
+            <span className="text-[0.6875rem] font-medium text-text-muted whitespace-nowrap">or continue with</span>
+            <div className="flex-1 h-px bg-stone-border" />
           </div>
 
           {GOOGLE_CONFIGURED ? (
@@ -171,22 +213,25 @@ export default function Login() {
               label="Sign in with Google"
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
-              className="border-gray-200 hover:bg-gray-50 text-[#3B2F63]"
+              className="border-stone-border hover:bg-stone-light text-plum-deep"
             />
           ) : (
             <button
               type="button"
               onClick={() => { setNotice("Google Sign-In is coming soon. Please use email & password for now."); setError(""); }}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 py-4 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              className="w-full h-10 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-lg hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep"
             >
               {GOOGLE_LOGO}
-              <span className="text-[#3B2F63] font-medium">Sign in with Google</span>
+              Sign in with Google
             </button>
           )}
 
-          <p className="mt-8 text-center text-sm text-gray-500">
+          <p className="mt-5 text-center text-[0.8125rem] text-text-muted">
             Don't have an account?{" "}
-            <span onClick={() => navigate(redirectTo !== "/" ? `/register?redirect=${encodeURIComponent(redirectTo)}` : "/register")} className="text-[#3B2F63] font-bold hover:text-[#FF6B5E] transition-colors cursor-pointer">
+            <span
+              onClick={() => navigate(redirectTo !== "/" ? `/register?redirect=${encodeURIComponent(redirectTo)}` : "/register")}
+              className="text-plum-deep font-bold hover:text-coral-accent transition-colors cursor-pointer"
+            >
               Sign up
             </span>
           </p>

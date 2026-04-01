@@ -64,26 +64,30 @@ export default function Register() {
           </Link>
         </div>
 
-        <header className="mb-8">
-          <h2 className="text-3xl font-bold text-text-dark mb-2">
+        <header className="mb-5">
+          <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
             Create{" "}
             <span className="relative inline-block">
               Account
-              <span className="absolute left-0 bottom-[-3px] w-full h-[3px] bg-coral-accent"></span>
+              <span className="absolute left-0 bottom-0 w-full h-[2px] bg-coral-accent rounded-full" />
             </span>
           </h2>
-          <p className="text-text-muted">Sign up to start ordering premium print products.</p>
+          <p className="text-[0.8125rem] text-text-muted">Sign up to start ordering premium print products.</p>
         </header>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>
+          <div className="mb-3 flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-[0.8125rem] text-red-600">
+            <span className="material-symbols-outlined text-base flex-shrink-0">error</span>{error}
+          </div>
         )}
         {notice && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">{notice}</div>
+          <div className="mb-3 flex items-center gap-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-[0.8125rem] text-blue-700">
+            <span className="material-symbols-outlined text-base flex-shrink-0">info</span>{notice}
+          </div>
         )}
 
         {GOOGLE_CONFIGURED ? (
-          <div className="mb-5">
+          <div className="mb-4">
             <GoogleSignInButton
               label="Sign up with Google"
               onSuccess={handleGoogleSuccess}
@@ -95,59 +99,58 @@ export default function Register() {
           <button
             type="button"
             onClick={() => { setNotice("Google Sign-In is coming soon. Please fill in the form below to register."); setError(""); }}
-            className="w-full flex items-center justify-center gap-3 bg-white border border-stone-border py-3.5 rounded-lg hover:bg-stone-light transition-colors shadow-sm mb-5"
+            className="w-full h-10 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-lg hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep mb-4"
           >
             {GOOGLE_LOGO}
-            <span className="text-plum-deep font-medium">Sign up with Google</span>
+            Sign up with Google
           </button>
         )}
 
-        <div className="flex items-center gap-4 mb-5">
-          <div className="flex-1 h-[1px] bg-stone-border"></div>
-          <span className="text-[12px] font-medium text-text-muted whitespace-nowrap">or fill in details</span>
-          <div className="flex-1 h-[1px] bg-stone-border"></div>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1 h-px bg-stone-border" />
+          <span className="text-[0.6875rem] font-medium text-text-muted whitespace-nowrap">or fill in details</span>
+          <div className="flex-1 h-px bg-stone-border" />
         </div>
 
-        <form onSubmit={submit} className="space-y-6">
+        <form onSubmit={submit} className="space-y-3.5">
           <div>
-            <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted">Full Name</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Full Name</label>
             <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none" />
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
           </div>
 
           <div>
-            <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted">Email Address</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Email Address</label>
             <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none" />
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
           </div>
 
           <div>
-            <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted">Password</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Password</label>
             <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full mt-2 p-4 rounded-lg border border-stone-border focus:ring-2 focus:ring-plum-deep outline-none" />
+              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
           </div>
 
-          {/* Terms and Privacy Policy Checkbox */}
-          <div>
-            <label className="flex items-start gap-2 cursor-pointer group text-sm">
-              <input type="checkbox" required className="rounded border-gray-300 text-plum-deep focus:ring-plum-deep mt-0.5 flex-shrink-0" />
-              <span className="text-plum-deep/70 group-hover:text-plum-deep transition-colors">
-                I accept the{" "}
-                <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline">Terms and Conditions</Link>
-                {" "}and{" "}
-                <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline">Privacy Policy</Link>
-              </span>
-            </label>
-          </div>
+          <label className="flex items-center gap-2 cursor-pointer text-[0.8125rem] text-text-muted">
+            <input type="checkbox" required className="rounded border-stone-border text-plum-deep focus:ring-plum-deep/20 flex-shrink-0" />
+            <span>
+              I accept the{" "}
+              <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Terms</Link>
+              {" "}&amp;{" "}
+              <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Privacy</Link>
+            </span>
+          </label>
 
-          <button type="submit" className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold shadow-soft-plum hover:bg-[#2D244C] transition-all">
+          <button type="submit"
+            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum">
             Create Account
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-text-muted">
+        <p className="mt-4 text-center text-[0.8125rem] text-text-muted">
           Already have an account?{" "}
-          <span onClick={() => navigate(redirectTo !== "/" ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login")} className="text-plum-deep font-semibold cursor-pointer hover:text-coral-accent">
+          <span onClick={() => navigate(redirectTo !== "/" ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login")}
+            className="text-plum-deep font-semibold cursor-pointer hover:text-coral-accent transition-colors">
             Sign In
           </span>
         </p>

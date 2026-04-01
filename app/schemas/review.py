@@ -5,9 +5,9 @@ from datetime import datetime
 
 class ReviewCreate(BaseModel):
     rating: int = Field(..., ge=1, le=5)
-    title: Optional[str] = Field(None, max_length=200)
-    body: Optional[str] = None
-    image_urls: Optional[List[str]] = None
+    title: Optional[str] = Field(None, max_length=100)
+    body: Optional[str] = Field(None, max_length=1500)
+    image_urls: Optional[List[str]] = Field(None, max_length=5)
 
 
 class ReviewResponse(BaseModel):

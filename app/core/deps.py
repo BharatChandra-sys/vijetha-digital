@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.security import decode_access_token
 from app.db.session import get_db
 from app.models.user import User, UserStatus, UserRole
+from app.models.token_blacklist import TokenBlacklist
 from app.services.rbac_service import RBACService
 
 # ============================================================================
@@ -46,6 +47,16 @@ def get_current_user(
         )
     
     token = credentials.credentials
+    
+    # Check if token is blacklisted
+    is_blacklisted = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
+    if is_blacklisted:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has been revoked",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     payload = decode_access_token(token)
 
     if payload is None:
@@ -205,14 +216,15 @@ def require_super_admin(
 def require_permission(permission_key: str):
     """
     Require user to have a specific permission.
-    
-    Example:
-        @router.delete("/users/{id}", dependencies=[Depends(require_permission("user:delete"))])
+    Legacy admins (role=admin) bypass all permission checks automatically.
     """
     def check_permission(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
     ) -> User:
+        # Legacy admin always has all permissions
+        if current_user.role == UserRole.ADMIN:
+            return current_user
         if not RBACService.has_permission(db, current_user.id, permission_key):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -225,18 +237,17 @@ def require_permission(permission_key: str):
 def require_any_permission(permission_keys: List[str]):
     """
     Require user to have ANY of the specified permissions.
-    
-    Example:
-        @router.get("/dashboard", dependencies=[Depends(require_any_permission(["analytics:read", "report:read"]))])
+    Legacy admins bypass all permission checks.
     """
     def check_permissions(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
     ) -> User:
+        if current_user.role == UserRole.ADMIN:
+            return current_user
         for perm in permission_keys:
             if RBACService.has_permission(db, current_user.id, perm):
                 return current_user
-        
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"Requires one of: {', '.join(permission_keys)}",
@@ -247,14 +258,14 @@ def require_any_permission(permission_keys: List[str]):
 def require_all_permissions(permission_keys: List[str]):
     """
     Require user to have ALL of the specified permissions.
-    
-    Example:
-        @router.post("/critical", dependencies=[Depends(require_all_permissions(["user:create", "role:assign"]))])
+    Legacy admins bypass all permission checks.
     """
     def check_permissions(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
     ) -> User:
+        if current_user.role == UserRole.ADMIN:
+            return current_user
         for perm in permission_keys:
             if not RBACService.has_permission(db, current_user.id, perm):
                 raise HTTPException(
@@ -288,6 +299,11 @@ def get_current_user_optional(
     
     try:
         token = credentials.credentials
+        
+        is_blacklisted = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
+        if is_blacklisted:
+            return None
+
         payload = decode_access_token(token)
         
         if not payload:

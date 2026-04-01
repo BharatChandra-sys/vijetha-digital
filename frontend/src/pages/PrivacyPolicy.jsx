@@ -2,7 +2,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="font-display min-h-screen bg-warm-white">
       {/* Header */}
-      <section className="bg-gradient-to-r from-plum-deep to-plum-light py-16">
+      <section className="bg-plum-deep py-16">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-4xl font-extrabold text-white mb-2">Privacy Policy</h1>
           <p className="text-white/80">Effective Date: January 1, 2025</p>

@@ -16,6 +16,14 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Handle maintenance mode
+    if (error.response?.status === 503 && error.response?.data?.maintenance) {
+      if (!window.location.pathname.startsWith("/admin") && window.location.pathname !== "/maintenance") {
+        window.location.href = "/maintenance";
+      }
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401) {
       const refreshToken = localStorage.getItem("refresh_token");
       const userInfo = localStorage.getItem("user_info");

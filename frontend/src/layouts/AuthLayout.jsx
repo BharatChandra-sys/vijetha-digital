@@ -1,81 +1,77 @@
 import { Link } from "react-router-dom";
 
-export default function AuthLayout({
-  children,
-  leftTag,
-  leftTitle,
-  leftSubtitle,
-}) {
+export default function AuthLayout({ children, leftTag, leftTitle, leftSubtitle }) {
   return (
-    <main className="min-h-screen flex bg-[#F8F7F4] text-[#3B2F63] overflow-hidden">
+    <main className="min-h-screen flex bg-warm-white font-display overflow-hidden">
 
-      {/* LEFT PANEL */}
-      <div className="hidden lg:flex w-[55%] xl:w-[60%] relative bg-[#E9E4D9] overflow-hidden flex-col p-16">
+      {/* ── LEFT PANEL ── */}
+      <div className="hidden lg:flex w-[52%] xl:w-[55%] relative bg-plum-deep overflow-hidden flex-col p-14 xl:p-16">
 
-        {/* Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none select-none">
-          <span
-            className="text-[25rem] font-bold tracking-widest text-[#3B2F63]"
-            style={{
-              writingMode: "vertical-rl",
-              transform: "rotate(180deg)",
-            }}
-          >
-            VIJETHA
-          </span>
-        </div>
+        {/* Subtle dot grid background */}
+        <div
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
+        />
+
+        {/* Glow accent */}
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-coral-accent/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
 
         {/* Content */}
-        <div className="relative z-10 mt-[120px] max-w-md">
+        <div className="relative z-10 flex-1 flex flex-col justify-center max-w-sm">
           {leftTag && (
-            <p className="text-sm uppercase tracking-[2px] font-medium text-[#3B2F63]/70 mb-2">
+            <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/50 mb-4">
               {leftTag}
             </p>
           )}
-
           {leftTitle && (
-            <div className="relative mb-4">
-              <h1 className="text-[32px] font-semibold text-[#3B2F63] leading-tight">
+            <div className="mb-5">
+              <h1 className="text-[2rem] xl:text-[2.25rem] font-bold text-white leading-tight">
                 {leftTitle}
               </h1>
-              <div className="w-[50px] h-[2px] bg-[#FF6B5E] mt-2"></div>
+              <div className="w-10 h-[3px] bg-coral-accent mt-3 rounded-full" />
             </div>
           )}
-
           {leftSubtitle && (
-            <p className="text-[#3B2F63] font-light text-lg leading-relaxed opacity-90">
-              {leftSubtitle}
-            </p>
+            <p className="text-white/60 text-base leading-relaxed">{leftSubtitle}</p>
           )}
+
+          {/* Trust badges */}
+          <div className="mt-10 space-y-3">
+            {[
+              { icon: "verified_user", text: "500+ businesses trust us" },
+              { icon: "receipt_long",  text: "GST invoice on every order" },
+              { icon: "bolt",          text: "24–48h turnaround time" },
+            ].map(b => (
+              <div key={b.text} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-coral-accent text-base">{b.icon}</span>
+                </div>
+                <span className="text-[0.8125rem] text-white/70 font-medium">{b.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Footer Branding */}
-        <div className="relative z-10 mt-auto space-y-4">
+        {/* Footer branding */}
+        <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-10 w-10 rounded-xl object-cover shadow-lg flex-shrink-0" />
-            <span className="tracking-[0.25em] text-xs uppercase font-bold">
-              Vijetha Digital
-            </span>
+            <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-9 w-9 rounded-xl object-cover flex-shrink-0" />
+            <span className="text-[0.75rem] tracking-[0.2em] uppercase font-bold text-white/70">Vijetha Digital</span>
           </div>
-          
-          {/* Footer Links */}
-          <div className="flex gap-4 text-xs text-[#3B2F63]/60">
-            <Link to="/terms" className="hover:text-[#3B2F63] transition-colors">Terms of Service</Link>
-            <span className="text-[#3B2F63]/30">·</span>
-            <Link to="/privacy-policy" className="hover:text-[#3B2F63] transition-colors">Privacy Policy</Link>
-            <span className="text-[#3B2F63]/30">·</span>
-            <Link to="/contact" className="hover:text-[#3B2F63] transition-colors">Contact Us</Link>
+          <div className="flex gap-4 text-[0.6875rem] text-white/40">
+            <Link to="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
+            <Link to="/privacy-policy" className="hover:text-white/70 transition-colors">Privacy</Link>
           </div>
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
-      <div className="flex-1 lg:w-[45%] xl:w-[40%] flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[380px]">
+      {/* ── RIGHT PANEL ── */}
+      <div className="flex-1 flex items-center justify-center px-5 py-8 sm:px-8">
+        <div className="w-full max-w-[360px]">
           {children}
         </div>
       </div>
-
     </main>
   );
 }

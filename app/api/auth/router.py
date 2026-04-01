@@ -15,9 +15,11 @@ from app.services.auth_service import (
     google_login_or_register,
 )
 from app.services.password_reset_service import (
-    request_password_reset,
-    reset_password,
+    send_otp,
+    verify_otp,
+    reset_password_with_otp,
 )
+from app.services.access_log_service import log_event
 from app.core.security import (
     decode_refresh_token,
     create_access_token,
@@ -52,11 +54,76 @@ def login(
     data: LoginRequest,
     db: Session = Depends(get_db),
 ):
-    # Extract client IP address
     ip_address = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
 
-    # login_user returns access_token, refresh_token, token_type, and user info
-    return login_user(db, data, ip_address=ip_address, login_portal=data.login_portal)
+    try:
+        result = login_user(db, data, ip_address=ip_address, login_portal=data.login_portal)
+        # Log successful login
+        log_event(
+            db,
+            action="login_success",
+            success=True,
+            user_id=result["user"]["id"],
+            email=result["user"]["email"],
+            ip_address=ip_address,
+            user_agent=ua,
+            endpoint="/auth/login",
+            method="POST",
+            detail=f"portal={data.login_portal}",
+        )
+        return result
+    except Exception as exc:
+        # Log failed login
+        log_event(
+            db,
+            action="login_failed",
+            success=False,
+            email=data.email,
+            ip_address=ip_address,
+            user_agent=ua,
+            endpoint="/auth/login",
+            method="POST",
+            detail=str(getattr(exc, "detail", str(exc))),
+        )
+        raise
+
+
+@router.post("/logout")
+def logout(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Server-side logout.
+    Invalidates the current JWT access token by adding it to a blacklist.
+    """
+    auth = request.headers.get("Authorization")
+    if auth and auth.lower().startswith("bearer "):
+        token = auth.split(" ", 1)[1]
+        from app.models.token_blacklist import TokenBlacklist
+
+        exists = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
+        if not exists:
+            db.add(TokenBlacklist(token=token))
+            db.commit()
+            
+            ip_address = request.client.host if request.client else None
+            ua = request.headers.get("user-agent", "")
+            log_event(
+                db,
+                action="logout_success",
+                success=True,
+                user_id=current_user.id,
+                email=current_user.email,
+                ip_address=ip_address,
+                user_agent=ua,
+                endpoint="/auth/logout",
+                method="POST"
+            )
+
+    return {"message": "Logged out successfully"}
 
 
 # =========================
@@ -145,9 +212,93 @@ def refresh_token(
 
 
 # =========================
-# PASSWORD RESET
+# OTP PASSWORD RESET
 # =========================
 
+@router.post("/send-otp")
+@limiter.limit("3/minute")
+def send_reset_otp(
+    request: Request,
+    data: dict,
+    db: Session = Depends(get_db),
+):
+    """Send a 6-digit OTP to the user's email for password reset."""
+    email = data.get("email", "").strip()
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
+
+    send_otp(db, email)
+
+    log_event(db, action="otp_sent", success=True, email=email,
+              ip_address=ip, user_agent=ua, endpoint="/auth/send-otp", method="POST")
+
+    return {"message": "If the email exists, an OTP was sent"}
+
+
+@router.post("/verify-otp")
+@limiter.limit("5/minute")
+def verify_reset_otp(
+    request: Request,
+    data: dict,
+    db: Session = Depends(get_db),
+):
+    """Verify the OTP without consuming it."""
+    email = data.get("email", "").strip()
+    otp = data.get("otp", "").strip()
+
+    if not email or not otp:
+        raise HTTPException(status_code=400, detail="Email and OTP are required")
+
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
+
+    if not verify_otp(db, email, otp):
+        log_event(db, action="otp_verify_failed", success=False, email=email,
+                  ip_address=ip, user_agent=ua, endpoint="/auth/verify-otp", method="POST")
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+
+    log_event(db, action="otp_verified", success=True, email=email,
+              ip_address=ip, user_agent=ua, endpoint="/auth/verify-otp", method="POST")
+    return {"message": "OTP verified"}
+
+
+@router.post("/reset-password-otp")
+@limiter.limit("3/minute")
+def reset_password_otp(
+    request: Request,
+    data: dict,
+    db: Session = Depends(get_db),
+):
+    """Verify OTP and set new password in one step."""
+    email = data.get("email", "").strip()
+    otp = data.get("otp", "").strip()
+    new_password = data.get("new_password", "")
+
+    if not email or not otp or not new_password:
+        raise HTTPException(status_code=400, detail="Email, OTP, and new_password are required")
+
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
+
+    try:
+        reset_password_with_otp(db, email, otp, new_password)
+        log_event(db, action="password_reset_success", success=True, email=email,
+                  ip_address=ip, user_agent=ua, endpoint="/auth/reset-password-otp", method="POST")
+        return {"message": "Password updated successfully"}
+    except ValueError:
+        log_event(db, action="password_reset_failed", success=False, email=email,
+                  ip_address=ip, user_agent=ua, endpoint="/auth/reset-password-otp", method="POST",
+                  detail="Invalid or expired OTP")
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+
+
+# Keep old endpoints for backward compatibility (admin/staff portals still use them)
 @router.post("/forgot-password")
 @limiter.limit("2/minute")
 def forgot_password(
@@ -158,12 +309,8 @@ def forgot_password(
     email = data.get("email")
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
-
-    request_password_reset(db, email)
-
-    return {
-        "message": "If the email exists, a reset link was sent"
-    }
+    send_otp(db, email)
+    return {"message": "If the email exists, an OTP was sent"}
 
 
 @router.post("/reset-password")
@@ -173,23 +320,24 @@ def reset_user_password(
     data: dict,
     db: Session = Depends(get_db),
 ):
-    token = data.get("token")
-    new_password = data.get("new_password")
+    email = data.get("email", "").strip()
+    otp = data.get("otp", "").strip()
+    token = data.get("token", "").strip()
+    new_password = data.get("new_password", "")
 
-    if not token or not new_password:
-        raise HTTPException(
-            status_code=400,
-            detail="Token and new_password are required"
-        )
+    # Support both OTP and legacy token format
+    actual_otp = otp or token
+    if not actual_otp or not new_password:
+        raise HTTPException(status_code=400, detail="OTP/token and new_password are required")
 
-    try:
-        reset_password(db, token, new_password)
-        return {"message": "Password updated successfully"}
-    except ValueError:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid or expired token"
-        )
+    if email:
+        try:
+            reset_password_with_otp(db, email, actual_otp, new_password)
+            return {"message": "Password updated successfully"}
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+    else:
+        raise HTTPException(status_code=400, detail="Email is required")
 
 
 # =========================

@@ -531,7 +531,7 @@ export default function Header() {
           />
 
           <div className="flex items-center gap-1.5">
-            {/* Mobile: search + cart always visible */}
+            {/* Mobile only: search icon (hidden on lg+) */}
             <button
               onClick={() => setShowSearch((v) => !v)}
               className="flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
@@ -540,6 +540,7 @@ export default function Header() {
               <span className="material-symbols-outlined text-[1.375rem]">search</span>
             </button>
 
+            {/* Mobile only: cart icon (hidden on lg+) */}
             <Link
               to="/cart"
               className="relative flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
@@ -564,41 +565,60 @@ export default function Header() {
                   {avatarLetter}
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-architectural-lg">
-                    <div className="border-b border-stone-border bg-stone-light/50 px-4 py-3">
-                      <p className="truncate text-sm font-bold text-plum-deep">{user.full_name || "User"}</p>
-                      <p className="mt-0.5 truncate text-xs text-text-muted">{user.email}</p>
-                    </div>
-                    <div className="py-1 text-sm font-medium">
-                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
-                        <span className="material-symbols-outlined text-base text-text-muted">person</span> My Profile
-                      </Link>
-                      {user.role === "customer" && (
-                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
-                          <span className="material-symbols-outlined text-base text-text-muted">receipt_long</span> My Orders
+                  <>
+                    {/* Backdrop to close on outside tap */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setDropdownOpen(false)}
+                    />
+                    <div
+                      className="fixed z-50 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter"
+                      style={{ top: 60, right: 12, minWidth: 192, maxWidth: "calc(100vw - 24px)" }}
+                    >
+                      <div className="px-4 py-2.5 border-b border-stone-border/60 bg-stone-light/40">
+                        <p className="text-[0.875rem] font-bold text-plum-deep leading-tight truncate">{user.full_name || "User"}</p>
+                        <p className="text-[0.6875rem] text-text-muted mt-0.5 truncate">{user.email}</p>
+                      </div>
+                      <div className="py-1">
+                        <Link to="/profile" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">person</span>
+                          My Profile
                         </Link>
-                      )}
-                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
-                        <span className="material-symbols-outlined text-base text-text-muted">shopping_cart</span>
-                        Cart {cartCount > 0 && <span className="ml-auto text-xs font-bold text-coral-accent">{cartCount}</span>}
-                      </Link>
-                      {isAdmin && (
-                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
-                          <span className="material-symbols-outlined text-base text-text-muted">admin_panel_settings</span> Admin
+                        {user.role === "customer" && (
+                          <Link to="/orders" onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">receipt_long</span>
+                            My Orders
+                          </Link>
+                        )}
+                        <Link to="/cart" onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">shopping_cart</span>
+                          Cart {cartCount > 0 && <span className="ml-auto text-[0.6875rem] font-bold text-coral-accent">{cartCount}</span>}
                         </Link>
-                      )}
+                        {isAdmin && (
+                          <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">admin_panel_settings</span>
+                            Admin
+                          </Link>
+                        )}
+                      </div>
+                      <div className="border-t border-stone-border/60">
+                        <button onClick={handleLogout}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-[0.875rem] font-semibold text-red-500 hover:bg-red-50 transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] flex-shrink-0">logout</span>
+                          Log Out
+                        </button>
+                      </div>
                     </div>
-                    <div className="border-t border-stone-border">
-                      <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50">
-                        <span className="material-symbols-outlined text-base">logout</span> Log Out
-                      </button>
-                    </div>
-                  </div>
+                  </>
                 )}
               </div>
             )}
 
-            {/* Desktop: search button */}
+            {/* Desktop only: search button (lg+) */}
             <button
               ref={searchButtonRef}
               onClick={() => setShowSearch((v) => !v)}
@@ -613,7 +633,7 @@ export default function Header() {
               <span className="material-symbols-outlined text-[1.25rem]">search</span>
             </button>
 
-            {/* Desktop: cart */}
+            {/* Desktop only: cart (lg+) */}
             <Link to="/cart" className="relative hidden p-2 text-plum-deep transition-colors hover:text-coral-accent lg:flex">
               <span className="material-symbols-outlined text-[1.25rem]">shopping_cart</span>
               {cartCount > 0 && (
@@ -649,33 +669,33 @@ export default function Header() {
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-architectural-lg">
-                    <div className="border-b border-stone-border bg-stone-light/50 px-4 py-3">
-                      <p className="truncate text-sm font-bold text-plum-deep">{user.full_name || "User"}</p>
-                      <p className="mt-0.5 truncate text-xs text-text-muted">{user.email}</p>
+                  <div className="absolute right-0 z-50 mt-1.5 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter">
+                    <div className="px-4 py-2.5 border-b border-stone-border/60 bg-stone-light/40">
+                      <p className="text-[0.875rem] font-bold text-plum-deep leading-tight truncate max-w-[180px]">{user.full_name || "User"}</p>
+                      <p className="text-[0.6875rem] text-text-muted mt-0.5 truncate max-w-[180px]">{user.email}</p>
                     </div>
-                    <div className="py-1 text-sm font-medium">
-                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark transition-colors hover:bg-stone-light">
-                        <span className="material-symbols-outlined text-base text-text-muted">person</span> My Profile
+                    <div className="py-1">
+                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                        <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">person</span>My Profile
                       </Link>
                       {user.role === "customer" && (
-                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark transition-colors hover:bg-stone-light">
-                          <span className="material-symbols-outlined text-base text-text-muted">receipt_long</span> My Orders
+                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">receipt_long</span>My Orders
                         </Link>
                       )}
-                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark transition-colors hover:bg-stone-light">
-                        <span className="material-symbols-outlined text-base text-text-muted">shopping_cart</span>
-                        Cart {cartCount > 0 && <span className="ml-auto text-xs font-bold text-coral-accent">{cartCount}</span>}
+                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                        <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">shopping_cart</span>
+                        Cart {cartCount > 0 && <span className="ml-auto text-[0.6875rem] font-bold text-coral-accent">{cartCount}</span>}
                       </Link>
                       {isAdmin && (
-                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark transition-colors hover:bg-stone-light">
-                          <span className="material-symbols-outlined text-base text-text-muted">admin_panel_settings</span> Admin
+                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">admin_panel_settings</span>Admin
                         </Link>
                       )}
                     </div>
-                    <div className="border-t border-stone-border">
-                      <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50">
-                        <span className="material-symbols-outlined text-base">logout</span> Log Out
+                    <div className="border-t border-stone-border/60">
+                      <button onClick={handleLogout} className="flex w-full items-center gap-2.5 px-4 py-2 text-[0.875rem] font-semibold text-red-500 hover:bg-red-50 transition-colors">
+                        <span className="material-symbols-outlined text-[1.125rem] flex-shrink-0">logout</span>Log Out
                       </button>
                     </div>
                   </div>

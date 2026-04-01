@@ -176,11 +176,11 @@ export default function Home() {
               { icon: "verified_user",  stat: "100%",   label: "Quality Guaranteed"  },
             ].map(t => (
               <div key={t.label} className="flex flex-col items-center text-center gap-1.5 p-3 sm:p-4 rounded-[12px] bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-card-default transition-all duration-200">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-[10px] bg-plum-deep/5 flex items-center justify-center">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-[8px] bg-plum-deep/5 flex items-center justify-center">
                   <span className="material-symbols-outlined text-plum-deep text-lg sm:text-xl">{t.icon}</span>
                 </div>
-                <span className="text-[1.375rem] sm:text-[1.75rem] font-black text-plum-deep tracking-tight leading-none">{t.stat}</span>
-                <span className="text-[0.625rem] sm:text-[0.8125rem] font-semibold text-text-muted leading-tight">{t.label}</span>
+                <span className="text-[1.25rem] sm:text-[1.625rem] font-black text-plum-deep tracking-tight leading-none">{t.stat}</span>
+                <span className="text-[0.625rem] sm:text-[0.75rem] font-semibold text-text-muted leading-tight">{t.label}</span>
               </div>
             ))}
           </div>
@@ -200,16 +200,15 @@ export default function Home() {
               View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 stagger-children">
             {SERVICES.map(svc => (
               <div key={svc.title} onClick={() => navigate("/products")}
-                className="group coral-top-border bg-warm-white p-4 sm:p-6 rounded-[12px] shadow-card-enhanced hover:shadow-card-hover border border-transparent hover:border-stone-border cursor-pointer transition-all duration-200">
-                <div className="w-10 h-10 bg-white rounded-[10px] flex items-center justify-center shadow-sm mb-3 group-hover:bg-plum-deep transition-colors duration-200">
-                  <span className="material-symbols-outlined text-plum-deep group-hover:text-white text-xl">{svc.icon}</span>
+                className="group coral-top-border bg-warm-white p-4 rounded-[12px] shadow-card-default hover:shadow-card-hover border border-stone-border/60 hover:border-stone-border cursor-pointer transition-all duration-200 active:scale-[0.98]">
+                <div className="w-9 h-9 bg-white rounded-[8px] flex items-center justify-center shadow-sm mb-3 group-hover:bg-plum-deep transition-colors duration-200 flex-shrink-0">
+                  <span className="material-symbols-outlined text-plum-deep group-hover:text-white text-lg">{svc.icon}</span>
                 </div>
-                {/* H3: 18px mobile, 20px desktop */}
-                <h3 className="text-[1rem] sm:text-[1.125rem] font-semibold text-plum-darker mb-1.5 leading-snug">{svc.title}</h3>
-                <p className="text-[0.75rem] sm:text-[0.8125rem] text-text-muted leading-relaxed hidden sm:block">{svc.desc}</p>
+                <h3 className="text-[0.875rem] sm:text-[1rem] font-semibold text-plum-deep mb-1 leading-snug">{svc.title}</h3>
+                <p className="text-[0.6875rem] sm:text-[0.8125rem] text-text-muted leading-relaxed line-clamp-2">{svc.desc}</p>
               </div>
             ))}
           </div>

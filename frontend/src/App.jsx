@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import MaintenanceOverlay from "./components/MaintenanceOverlay";
 
 /* Scroll to top on every route change */
 function ScrollToTop() {
@@ -66,6 +67,10 @@ import AdminCreateProduct from "./pages/admin/AdminCreateProduct";
 import AdminWorkspace     from "./pages/admin/AdminWorkspace";
 import Staff              from "./pages/admin/Staff";
 import StaffAccess        from "./pages/admin/StaffAccess";
+import SecurityLogs       from "./pages/admin/SecurityLogs";
+import Reports            from "./pages/admin/Reports";
+import SiteSettings       from "./pages/admin/SiteSettings";
+import Maintenance        from "./pages/Maintenance";
 
 /* staff pages */
 import OperationsDashboard from "./pages/staff/OperationsDashboard";
@@ -77,8 +82,12 @@ import StaffProducts from "./pages/staff/StaffProducts";
 export default function App() {
   return (
     <>
+    <MaintenanceOverlay />
     <ScrollToTop />
     <Routes>
+
+      {/* ===== MAINTENANCE PAGE ===== */}
+      <Route path="/maintenance" element={<Maintenance />} />
 
       {/* ===== NEW AUTH PORTALS (Full-screen, no layout) ===== */}
       <Route path="/admin/login" element={<AdminLogin />} />
@@ -143,6 +152,9 @@ export default function App() {
           <Route path="/admin/workspace"    element={<AdminWorkspace />} />
           <Route path="/admin/staff"        element={<Staff />} />
           <Route path="/admin/staff-access" element={<StaffAccess />} />
+          <Route path="/admin/security"     element={<SecurityLogs />} />
+          <Route path="/admin/reports"      element={<Reports />} />
+          <Route path="/admin/settings"     element={<SiteSettings />} />
         </Route>
       </Route>
 
