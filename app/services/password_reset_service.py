@@ -23,14 +23,14 @@ def request_password_reset(db: Session, email: str):
     raw_token = secrets.token_urlsafe(32)
 
     user.reset_token = _hash_token(raw_token)
-    user.reset_token_expiry = datetime.utcnow() + timedelta(minutes=30)
+    user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
 
     db.commit()
 
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
-    # ✅ Route matches frontend
-    reset_link = f"{FRONTEND_URL}/reset-password/{raw_token}"
+    # ✅ Route matches frontend (query param format)
+    reset_link = f"{FRONTEND_URL}/reset-password?token={raw_token}"
 
     send_email(
         to_email=user.email,
@@ -42,7 +42,7 @@ def request_password_reset(db: Session, email: str):
             Click here to reset your password
           </a>
         </p>
-        <p>This link expires in 30 minutes.</p>
+        <p>This link expires in 1 hour.</p>
         """
     )
 

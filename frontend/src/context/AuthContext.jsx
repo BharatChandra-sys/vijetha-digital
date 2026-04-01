@@ -38,8 +38,12 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = async (email, password, redirectTo = "/") => {
-    const res = await api.post("/auth/login", { email, password });
+  const login = async (email, password, redirectTo = "/", loginPortal = "customer") => {
+    const res = await api.post("/auth/login", {
+      email,
+      password,
+      login_portal: loginPortal,
+    });
 
     const { access_token, refresh_token, user: userInfo } = res.data;
 
@@ -58,15 +62,23 @@ export function AuthProvider({ children }) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
     setUser(userData);
 
+    // Role-based navigation
     if (userData.role === "admin") {
       navigate("/admin/dashboard", { replace: true });
+    } else if (userData.iam_roles && userData.iam_roles.length > 0) {
+      // Staff with IAM roles go to staff workspace
+      navigate("/staff/workspace", { replace: true });
     } else {
+      // Regular customers or users without IAM roles
       navigate(redirectTo, { replace: true });
     }
   };
 
-  const loginWithGoogle = async (googleToken, redirectTo = "/") => {
-    const res = await api.post("/auth/google", { google_token: googleToken });
+  const loginWithGoogle = async (googleToken, redirectTo = "/", loginPortal = "customer") => {
+    const res = await api.post("/auth/google", {
+      google_token: googleToken,
+      login_portal: loginPortal,
+    });
 
     const { access_token, refresh_token, user: userInfo } = res.data;
 
@@ -85,9 +97,14 @@ export function AuthProvider({ children }) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
     setUser(userData);
 
+    // Role-based navigation
     if (userData.role === "admin") {
       navigate("/admin/dashboard", { replace: true });
+    } else if (userData.iam_roles && userData.iam_roles.length > 0) {
+      // Staff with IAM roles go to staff workspace
+      navigate("/staff/workspace", { replace: true });
     } else {
+      // Regular customers or users without IAM roles
       navigate(redirectTo, { replace: true });
     }
   };
@@ -97,11 +114,22 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    const wasAdmin = user?.role === "admin";
+    const hadIamRoles = user?.iam_roles && user.iam_roles.length > 0;
+    
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem(USER_STORAGE_KEY);
     setUser(null);
-    navigate("/login", { replace: true });
+    
+    // Redirect to appropriate login portal
+    if (wasAdmin) {
+      navigate("/admin/login", { replace: true });
+    } else if (hadIamRoles) {
+      navigate("/staff/login", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
+    }
   };
 
   // Call this after a successful profile update to sync header

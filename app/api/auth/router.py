@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Literal
 
 from app.db.session import get_db
 from app.schemas.auth import (
@@ -56,7 +56,7 @@ def login(
     ip_address = request.client.host if request.client else None
 
     # login_user returns access_token, refresh_token, token_type, and user info
-    return login_user(db, data, ip_address=ip_address)
+    return login_user(db, data, ip_address=ip_address, login_portal=data.login_portal)
 
 
 # =========================
@@ -65,6 +65,7 @@ def login(
 
 class GoogleAuthRequest(BaseModel):
     google_token: str
+    login_portal: Literal["customer", "staff", "admin"] = "customer"
 
 
 @router.post("/google", response_model=TokenResponse)
@@ -73,7 +74,7 @@ def google_auth(
     db: Session = Depends(get_db),
 ):
     """Sign in or register via Google OAuth access token."""
-    return google_login_or_register(db, data.google_token)
+    return google_login_or_register(db, data.google_token, data.login_portal)
 
 
 # =========================

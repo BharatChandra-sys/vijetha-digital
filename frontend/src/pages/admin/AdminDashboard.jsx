@@ -13,6 +13,8 @@ const PRODUCT_CATEGORIES = [
 const PRODUCT_TYPE_OPTIONS = [
   "Standard",
   "Premium",
+                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
+                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
   "Economy",
   "Indoor",
   "Outdoor",
@@ -247,6 +249,7 @@ export default function AdminDashboard() {
                   { id: "products", label: "Products", icon: "inventory_2" },
                   { id: "orders", label: "Orders", icon: "receipt_long" },
                   { id: "staff", label: "Staff", icon: "groups" },
+                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -274,6 +277,7 @@ export default function AdminDashboard() {
               {!loading && activeTab === "products" ? <ProductsTab onSaved={() => setRefreshTick((v) => v + 1)} /> : null}
               {!loading && activeTab === "orders" ? <OrdersTab onUpdated={() => setRefreshTick((v) => v + 1)} /> : null}
               {!loading && activeTab === "staff" ? <StaffTab /> : null}
+              {!loading && activeTab === "staffAccess" ? <StaffAccessTab /> : null}
             </main>
           </div>
         </section>
@@ -1663,9 +1667,10 @@ function StaffTab() {
             <label className="block">
               <span className="text-sm font-semibold text-plum-deep">Status</span>
               <select value={form.status} onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))} className="mt-1 w-full rounded-lg border border-stone-border px-3 py-2">
+                <option value="invited">Invited</option>
                 <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="on_leave">On Leave</option>
+                <option value="suspended">Suspended</option>
+                <option value="offboarded">Offboarded</option>
               </select>
             </label>
           </div>
@@ -1719,7 +1724,9 @@ function StaffTab() {
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                           s.status === "active"
                             ? "bg-green-100 text-green-700"
-                            : s.status === "on_leave"
+                            : s.status === "invited"
+                            ? "bg-blue-100 text-blue-700"
+                            : s.status === "suspended"
                             ? "bg-amber-100 text-amber-700"
                             : "bg-gray-200 text-gray-700"
                         }`}>
@@ -1743,6 +1750,703 @@ function StaffTab() {
             </table>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function StaffAccessTab() {
+  const navigate = useNavigate();
+  const [staff, setStaff] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [iamReadiness, setIamReadiness] = useState(null);
+  const [roleHistory, setRoleHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [linkUserInput, setLinkUserInput] = useState("");
+  const [filterText, setFilterText] = useState("");
+  const [userSearch, setUserSearch] = useState("");
+  const [userCandidates, setUserCandidates] = useState([]);
+  const [searchingUsers, setSearchingUsers] = useState(false);
+  const [showDangerousOnly, setShowDangerousOnly] = useState(false);
+  const [notice, setNotice] = useState({ type: "info", text: "" });
+  
+  // Bulk assignment mode
+  const [bulkMode, setBulkMode] = useState(false);
+  const [selectedStaffIds, setSelectedStaffIds] = useState([]);
+  const [bulkRoles, setBulkRoles] = useState([]);
+
+  const selectedStaff = useMemo(() => staff.find((s) => s.id === selectedStaffId) || null, [staff, selectedStaffId]);
+
+  const roleCatalog = useMemo(() => {
+    return roles
+      .map((role) => {
+        const dangerousPermissionCount = (role.permissions || []).filter((p) => p.is_dangerous).length;
+        return {
+          ...role,
+          dangerousPermissionCount,
+          permissionCount: (role.permissions || []).length,
+        };
+      })
+      .filter((role) => (showDangerousOnly ? role.dangerousPermissionCount > 0 : true));
+  }, [roles, showDangerousOnly]);
+
+  const filteredStaff = useMemo(() => {
+    const q = filterText.trim().toLowerCase();
+    if (!q) return staff;
+    return staff.filter((s) => {
+      return (
+        s.name?.toLowerCase().includes(q) ||
+        s.email?.toLowerCase().includes(q) ||
+        s.position?.toLowerCase().includes(q) ||
+        s.userEmail?.toLowerCase().includes(q) ||
+        String(s.userId || "").includes(q)
+      );
+    });
+  }, [staff, filterText]);
+
+  const desiredRoleSet = useMemo(() => new Set(selectedRoles), [selectedRoles]);
+
+  const roleDiff = useMemo(() => {
+    const current = selectedStaff?.iamRoles || [];
+    const toAssign = selectedRoles.filter((r) => !current.includes(r));
+    const toRevoke = current.filter((r) => !selectedRoles.includes(r));
+    return { toAssign, toRevoke };
+  }, [selectedRoles, selectedStaff]);
+
+  const changed = roleDiff.toAssign.length > 0 || roleDiff.toRevoke.length > 0;
+
+  const pushNotice = (type, text) => {
+    setNotice({ type, text });
+  };
+
+  const loadRoleHistory = useCallback(async (userId) => {
+    if (!userId) {
+      setRoleHistory([]);
+      return;
+    }
+
+    setLoadingHistory(true);
+    try {
+      const res = await api.get(`/api/v1/admin/users/${userId}/role-history`, {
+        params: { limit: 10 },
+      });
+      setRoleHistory(res.data || []);
+    } catch (error) {
+      console.error("Failed to load role history", error);
+      setRoleHistory([]);
+    } finally {
+      setLoadingHistory(false);
+    }
+  }, []);
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [staffRes, rolesRes, readinessRes] = await Promise.all([
+        api.get("/api/v1/admin/dashboard/staff"),
+        api.get("/api/v1/admin/roles"),
+        api.get("/api/v1/admin/dashboard/iam/readiness"),
+      ]);
+
+      const staffData = staffRes.data || [];
+      setStaff(staffData);
+      setRoles((rolesRes.data || []).filter((r) => r.is_active));
+      setIamReadiness(readinessRes.data || null);
+
+      setSelectedStaffId((prevId) => {
+        if (prevId && staffData.some((s) => s.id === prevId)) {
+          return prevId;
+        }
+        if (staffData.length === 0) {
+          return null;
+        }
+        const firstLinked = staffData.find((s) => s.userId);
+        const fallback = firstLinked || staffData[0];
+        setSelectedRoles(fallback.iamRoles || []);
+        setLinkUserInput(fallback.userId ? String(fallback.userId) : "");
+        return fallback.id;
+      });
+
+      pushNotice("success", "Access data refreshed.");
+    } catch (error) {
+      console.error("Failed to load IAM access data", error);
+      pushNotice("error", "Failed to load staff access data.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    if (selectedStaff) {
+      setSelectedRoles(selectedStaff.iamRoles || []);
+      setLinkUserInput(selectedStaff.userId ? String(selectedStaff.userId) : "");
+      loadRoleHistory(selectedStaff.userId);
+    }
+  }, [selectedStaff, loadRoleHistory]);
+
+  useEffect(() => {
+    const q = userSearch.trim();
+    if (q.length < 2) {
+      setUserCandidates([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setSearchingUsers(true);
+      try {
+        const res = await api.get("/api/v1/admin/users", {
+          params: { limit: 50 },
+        });
+
+        const query = q.toLowerCase();
+        const candidates = (res.data || []).filter((u) => {
+          return (
+            u.email?.toLowerCase().includes(query) ||
+            u.full_name?.toLowerCase().includes(query) ||
+            String(u.id).includes(query)
+          );
+        });
+        setUserCandidates(candidates.slice(0, 8));
+      } catch (error) {
+        console.error("Failed to search users", error);
+        setUserCandidates([]);
+      } finally {
+        setSearchingUsers(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [userSearch]);
+
+  const toggleRole = (slug) => {
+    setSelectedRoles((prev) => (prev.includes(slug) ? prev.filter((r) => r !== slug) : [...prev, slug]));
+  };
+
+  const applyPreset = (preset) => {
+    if (preset === "delivery") {
+      setSelectedRoles(["driver", "helper"]);
+      return;
+    }
+    if (preset === "operations") {
+      setSelectedRoles(["manager", "helper"]);
+      return;
+    }
+    if (preset === "support") {
+      setSelectedRoles(["helper"]);
+    }
+  };
+
+  const saveRoleAssignments = async () => {
+    if (!selectedStaff) return;
+    if (!selectedStaff.userId) {
+      pushNotice("error", "Link this staff member to a user account first.");
+      return;
+    }
+
+    const { toAssign, toRevoke } = roleDiff;
+    if (toAssign.length === 0 && toRevoke.length === 0) {
+      pushNotice("info", "No role changes to save.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      for (const roleSlug of toAssign) {
+        await api.post(`/api/v1/admin/users/${selectedStaff.userId}/roles`, {
+          role_slug: roleSlug,
+          reason: "Assigned from Staff Access panel",
+        });
+      }
+
+      for (const roleSlug of toRevoke) {
+        await api.delete(`/api/v1/admin/users/${selectedStaff.userId}/roles/${roleSlug}`, {
+          params: { reason: "Updated from Staff Access panel" },
+        });
+      }
+
+      await loadData();
+      await loadRoleHistory(selectedStaff.userId);
+      pushNotice("success", "Role assignments updated successfully.");
+    } catch (error) {
+      console.error("Failed to save role assignments", error);
+      pushNotice("error", error?.response?.data?.detail || "Failed to save role assignments.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const saveBulkRoleAssignments = async () => {
+    if (selectedStaffIds.length === 0) {
+      pushNotice("error", "Select at least one staff member for bulk assignment.");
+      return;
+    }
+
+    if (bulkRoles.length === 0) {
+      pushNotice("error", "Select at least one role to assign.");
+      return;
+    }
+
+    const linkedStaff = staff.filter(s => selectedStaffIds.includes(s.id) && s.userId);
+    if (linkedStaff.length === 0) {
+      pushNotice("error", "None of the selected staff members are linked to user accounts.");
+      return;
+    }
+
+    setSaving(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      for (const staffMember of linkedStaff) {
+        try {
+          for (const roleSlug of bulkRoles) {
+            // Skip if already has this role
+            if (!staffMember.iamRoles.includes(roleSlug)) {
+              await api.post(`/api/v1/admin/users/${staffMember.userId}/roles`, {
+                role_slug: roleSlug,
+                reason: "Bulk assigned from Staff Access panel",
+              });
+            }
+          }
+          successCount++;
+        } catch (error) {
+          console.error(`Failed to assign roles to ${staffMember.name}`, error);
+          failCount++;
+        }
+      }
+
+      await loadData();
+      
+      if (failCount === 0) {
+        pushNotice("success", `Bulk role assignment successful for ${successCount} staff member(s).`);
+      } else {
+        pushNotice("error", `Completed with issues: ${successCount} succeeded, ${failCount} failed.`);
+      }
+      
+      // Reset bulk mode
+      setSelectedStaffIds([]);
+      setBulkRoles([]);
+    } catch (error) {
+      console.error("Failed to complete bulk assignment", error);
+      pushNotice("error", "Bulk assignment failed.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const linkUserToStaff = async (userIdOverride) => {
+    if (!selectedStaff) return;
+    const numericUserId = userIdOverride || Number(linkUserInput);
+    if (!Number.isInteger(numericUserId) || numericUserId <= 0) {
+      pushNotice("error", "Enter a valid numeric User ID.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await api.put(`/api/v1/admin/dashboard/staff/${selectedStaff.id}`, {
+        user_id: numericUserId,
+      });
+      await loadData();
+      pushNotice("success", `Staff linked to user #${numericUserId}.`);
+    } catch (error) {
+      console.error("Failed to link staff account", error);
+      pushNotice("error", error?.response?.data?.detail || "Failed to link staff account.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="p-8 text-sm text-text-muted">Loading staff access controls...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h2 className="text-2xl font-extrabold text-plum-deep tracking-tight">Staff Access Control Center</h2>
+          <p className="text-sm text-text-muted">Role mapping, account linking, audit history, and secure IAM controls</p>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => {
+              setBulkMode(!bulkMode);
+              setSelectedStaffIds([]);
+              setBulkRoles([]);
+            }}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm ${
+              bulkMode 
+                ? "bg-amber-500 text-white hover:bg-amber-600" 
+                : "border border-stone-border text-plum-deep hover:bg-stone-light"
+            }`}
+          >
+            <span className="material-symbols-outlined text-base">checklist</span>
+            {bulkMode ? "Exit Bulk Mode" : "Bulk Assign"}
+          </button>
+          <button
+            onClick={() => navigate("/staff/operations")}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-border text-plum-deep hover:bg-stone-light font-semibold text-sm"
+          >
+            <span className="material-symbols-outlined text-base">factory</span>
+            Operations View
+          </button>
+          <button
+            onClick={() => navigate("/staff/delivery")}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-border text-plum-deep hover:bg-stone-light font-semibold text-sm"
+          >
+            <span className="material-symbols-outlined text-base">local_shipping</span>
+            Delivery View
+          </button>
+          <button
+            onClick={loadData}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-plum-deep text-white hover:bg-plum-light font-semibold text-sm"
+          >
+            <span className="material-symbols-outlined text-base">refresh</span>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      {notice.text ? (
+        <div
+          className={`rounded-xl border px-4 py-3 text-sm font-medium ${
+            notice.type === "success"
+              ? "border-green-200 bg-green-50 text-green-700"
+              : notice.type === "error"
+              ? "border-red-200 bg-red-50 text-red-700"
+              : "border-blue-200 bg-blue-50 text-blue-700"
+          }`}
+        >
+          {notice.text}
+        </div>
+      ) : null}
+
+      {bulkMode && (
+        <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-extrabold text-plum-deep">Bulk Role Assignment Mode</h3>
+              <p className="text-sm text-text-muted">Select staff members and assign roles to all at once</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  const linkedStaffIds = staff.filter(s => s.userId).map(s => s.id);
+                  setSelectedStaffIds(linkedStaffIds);
+                }}
+                className="px-3 py-1.5 rounded-lg border border-stone-border text-plum-deep hover:bg-white font-semibold text-xs"
+              >
+                Select All Linked
+              </button>
+              <button
+                onClick={() => setSelectedStaffIds([])}
+                className="px-3 py-1.5 rounded-lg border border-stone-border text-plum-deep hover:bg-white font-semibold text-xs"
+              >
+                Clear Selection
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-semibold text-plum-deep mb-2">Selected Staff ({selectedStaffIds.length})</p>
+              <div className="flex flex-wrap gap-2">
+                {selectedStaffIds.length === 0 ? (
+                  <span className="text-xs text-text-muted">No staff selected</span>
+                ) : (
+                  staff.filter(s => selectedStaffIds.includes(s.id)).map(s => (
+                    <span key={s.id} className="px-2 py-1 rounded-full bg-plum-deep text-white text-xs font-semibold">
+                      {s.name}
+                    </span>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-plum-deep mb-2">Roles to Assign ({bulkRoles.length})</p>
+              <div className="flex flex-wrap gap-2">
+                {roles.map(role => (
+                  <button
+                    key={role.slug}
+                    onClick={() => {
+                      setBulkRoles(prev => 
+                        prev.includes(role.slug) 
+                          ? prev.filter(r => r !== role.slug) 
+                          : [...prev, role.slug]
+                      );
+                    }}
+                    className={`px-3 py-1.5 rounded-lg border text-xs font-semibold ${
+                      bulkRoles.includes(role.slug)
+                        ? "bg-plum-deep text-white border-plum-deep"
+                        : "border-stone-border text-plum-deep hover:bg-white"
+                    }`}
+                  >
+                    {role.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button
+            disabled={saving || selectedStaffIds.length === 0 || bulkRoles.length === 0}
+            onClick={saveBulkRoleAssignments}
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-amber-600 text-white hover:bg-amber-700 font-bold text-sm disabled:opacity-60"
+          >
+            <span className="material-symbols-outlined text-base">group_add</span>
+            {saving ? "Processing..." : `Assign ${bulkRoles.length} role(s) to ${selectedStaffIds.length} staff member(s)`}
+          </button>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-5">
+        <div className="bg-white rounded-xl border border-stone-border shadow-sm p-4 space-y-4">
+          <div className="rounded-lg border border-stone-border bg-warm-white p-3">
+            <p className="text-xs uppercase tracking-wide font-bold text-text-muted">IAM Readiness</p>
+            <p className={`mt-1 text-sm font-bold ${iamReadiness?.status === "healthy" ? "text-green-700" : "text-amber-700"}`}>
+              {(iamReadiness?.status || "unknown").toUpperCase()}
+            </p>
+            <p className="text-xs text-text-muted mt-1">
+              Roles: {iamReadiness?.metrics?.roles ?? "-"} | Permissions: {iamReadiness?.metrics?.permissions ?? "-"}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="rounded-lg border border-stone-border p-2.5">
+              <p className="text-xs text-text-muted">Linked Staff</p>
+              <p className="text-xl font-black text-plum-deep">{staff.filter((s) => s.userId).length}</p>
+            </div>
+            <div className="rounded-lg border border-stone-border p-2.5">
+              <p className="text-xs text-text-muted">Unlinked</p>
+              <p className="text-xl font-black text-amber-700">{staff.filter((s) => !s.userId).length}</p>
+            </div>
+          </div>
+
+          <input
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            placeholder="Search by name, role, email, user id"
+            className="w-full rounded-lg border border-stone-border px-3 py-2 text-sm"
+          />
+
+          <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
+            {filteredStaff.map((member) => {
+              const isSelected = selectedStaffId === member.id;
+              const isBulkSelected = bulkMode && selectedStaffIds.includes(member.id);
+              
+              return (
+                <div key={member.id} className="flex items-center gap-2">
+                  {bulkMode && (
+                    <input
+                      type="checkbox"
+                      checked={isBulkSelected}
+                      onChange={() => {
+                        setSelectedStaffIds(prev =>
+                          prev.includes(member.id)
+                            ? prev.filter(id => id !== member.id)
+                            : [...prev, member.id]
+                        );
+                      }}
+                      className="w-4 h-4 text-plum-deep border-stone-border rounded cursor-pointer"
+                    />
+                  )}
+                  
+                  <button
+                    onClick={() => !bulkMode && setSelectedStaffId(member.id)}
+                    className={`flex-1 text-left rounded-lg border px-3 py-2 transition-colors ${
+                      isSelected && !bulkMode 
+                        ? "border-plum-deep bg-plum-deep text-white" 
+                        : isBulkSelected 
+                        ? "border-amber-400 bg-amber-50" 
+                        : "border-stone-border hover:bg-stone-light"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className={`font-semibold text-sm ${isSelected && !bulkMode ? "text-white" : "text-plum-deep"}`}>{member.name}</p>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${isSelected && !bulkMode ? "bg-white/20 text-white" : "bg-stone-light text-text-muted"}`}>
+                        {member.iamRoles?.length || 0} roles
+                      </span>
+                    </div>
+                    <p className={`text-xs ${isSelected && !bulkMode ? "text-white/80" : "text-text-muted"}`}>{member.position}</p>
+                    <p className={`text-[11px] mt-1 ${isSelected && !bulkMode ? "text-white/85" : member.userId ? "text-green-700" : "text-red-600"}`}>
+                      {member.userId ? `Linked User #${member.userId}` : "No linked user"}
+                    </p>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="bg-white rounded-xl border border-stone-border shadow-sm p-5 space-y-4">
+            {!selectedStaff ? (
+              <p className="text-sm text-text-muted">Select a staff member to manage access.</p>
+            ) : (
+              <>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                  <div>
+                    <h3 className="text-xl font-extrabold text-plum-deep">{selectedStaff.name}</h3>
+                    <p className="text-sm text-text-muted">{selectedStaff.position} | {selectedStaff.userEmail || "No linked user email"}</p>
+                  </div>
+                  <button
+                    disabled={saving || !changed}
+                    onClick={saveRoleAssignments}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-plum-deep text-white hover:bg-plum-light font-semibold text-sm disabled:opacity-60"
+                  >
+                    <span className="material-symbols-outlined text-base">verified_user</span>
+                    {saving ? "Saving..." : "Save Access Changes"}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-[220px_1fr_auto] gap-3 items-end">
+                  <label className="block">
+                    <span className="text-sm font-semibold text-plum-deep">Link User ID</span>
+                    <input
+                      value={linkUserInput}
+                      onChange={(e) => setLinkUserInput(e.target.value)}
+                      placeholder="e.g. 12"
+                      className="mt-1 w-full rounded-lg border border-stone-border px-3 py-2 text-sm"
+                    />
+                  </label>
+                  <div>
+                    <span className="text-xs text-text-muted">Search users by email/name (permission-based)</span>
+                    <input
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      placeholder="Type at least 2 chars"
+                      className="mt-1 w-full rounded-lg border border-stone-border px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <button
+                    onClick={() => linkUserToStaff()}
+                    disabled={saving}
+                    className="h-[42px] px-4 rounded-lg border border-stone-border text-plum-deep hover:bg-stone-light font-semibold text-sm disabled:opacity-60"
+                  >
+                    Link Manual ID
+                  </button>
+                </div>
+
+                {searchingUsers ? <p className="text-xs text-text-muted">Searching users...</p> : null}
+                {userCandidates.length > 0 ? (
+                  <div className="rounded-lg border border-stone-border p-2 max-h-[150px] overflow-y-auto">
+                    {userCandidates.map((u) => (
+                      <button
+                        key={u.id}
+                        onClick={() => {
+                          setLinkUserInput(String(u.id));
+                          linkUserToStaff(u.id);
+                        }}
+                        className="w-full text-left px-2.5 py-2 rounded hover:bg-stone-light"
+                      >
+                        <p className="text-sm font-semibold text-plum-deep">{u.full_name} <span className="text-xs text-text-muted">(#{u.id})</span></p>
+                        <p className="text-xs text-text-muted">{u.email}</p>
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+
+                <div className="rounded-lg border border-stone-border bg-warm-white p-3">
+                  <p className="text-xs uppercase tracking-wide font-bold text-text-muted">Change Preview</p>
+                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs font-semibold text-green-700">Will Assign ({roleDiff.toAssign.length})</p>
+                      <p className="text-xs text-text-muted mt-1">{roleDiff.toAssign.join(", ") || "None"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-red-700">Will Revoke ({roleDiff.toRevoke.length})</p>
+                      <p className="text-xs text-text-muted mt-1">{roleDiff.toRevoke.join(", ") || "None"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={() => setSelectedRoles(roleCatalog.map((r) => r.slug))} className="px-3 py-1.5 rounded-md border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Select visible roles</button>
+                  <button onClick={() => setSelectedRoles([])} className="px-3 py-1.5 rounded-md border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Clear all</button>
+                  <button onClick={() => setShowDangerousOnly((v) => !v)} className={`px-3 py-1.5 rounded-md border text-xs font-semibold ${showDangerousOnly ? "border-red-300 bg-red-50 text-red-700" : "border-stone-border text-plum-deep hover:bg-stone-light"}`}>Dangerous only</button>
+                  <button onClick={() => applyPreset("delivery")} className="px-3 py-1.5 rounded-md border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Preset: Delivery</button>
+                  <button onClick={() => applyPreset("operations")} className="px-3 py-1.5 rounded-md border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Preset: Operations</button>
+                  <button onClick={() => applyPreset("support")} className="px-3 py-1.5 rounded-md border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Preset: Support</button>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-plum-deep mb-3">Role Matrix</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {roleCatalog.map((role) => {
+                      const checked = desiredRoleSet.has(role.slug);
+                      const hasDanger = role.dangerousPermissionCount > 0;
+                      return (
+                        <label
+                          key={role.slug}
+                          className={`flex items-start gap-3 rounded-lg border px-3 py-2 cursor-pointer transition-colors ${checked ? "border-plum-deep bg-plum-50" : "border-stone-border hover:bg-stone-light"}`}
+                        >
+                          <input type="checkbox" checked={checked} onChange={() => toggleRole(role.slug)} className="mt-1" />
+                          <span className="w-full">
+                            <span className="flex items-center justify-between gap-2">
+                              <span className="block font-semibold text-sm text-plum-deep">{role.name}</span>
+                              {hasDanger ? <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">dangerous</span> : null}
+                            </span>
+                            <span className="block text-xs text-text-muted">{role.slug}</span>
+                            <span className="block text-[11px] text-text-muted mt-1">{role.permissionCount} perms | {role.dangerousPermissionCount} critical</span>
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="bg-white rounded-xl border border-stone-border shadow-sm p-5">
+            <div className="flex items-center justify-between gap-2">
+              <h4 className="text-sm font-extrabold text-plum-deep uppercase tracking-wide">Recent Access Audit</h4>
+              {selectedStaff?.userId ? <span className="text-xs text-text-muted">User #{selectedStaff.userId}</span> : null}
+            </div>
+            {loadingHistory ? (
+              <p className="text-sm text-text-muted mt-3">Loading role history...</p>
+            ) : roleHistory.length === 0 ? (
+              <p className="text-sm text-text-muted mt-3">No role assignment activity found for this user.</p>
+            ) : (
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-stone-light/60 text-plum-deep">
+                    <tr>
+                      <th className="px-3 py-2 text-left font-bold">Action</th>
+                      <th className="px-3 py-2 text-left font-bold">Role ID</th>
+                      <th className="px-3 py-2 text-left font-bold">Reason</th>
+                      <th className="px-3 py-2 text-left font-bold">When</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roleHistory.map((log) => (
+                      <tr key={log.id} className="border-t border-stone-border/70">
+                        <td className="px-3 py-2">
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${log.action === "assigned" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-text-muted">{log.role_id}</td>
+                        <td className="px-3 py-2 text-text-muted">{log.reason || "-"}</td>
+                        <td className="px-3 py-2 text-text-muted">{fmtShortDate(log.created_at)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,12 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, EmailStr, Field
+
+
+class IAMRoleInfo(BaseModel):
+    """IAM Role information for responses"""
+    id: int
+    name: str  # slug like "manager", "driver"
+    display_name: str  # human-readable like "Operations Manager"
 
 
 class RegisterRequest(BaseModel):
@@ -11,6 +18,7 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    login_portal: Literal["customer", "staff", "admin"] = "customer"
 
 
 class UserInToken(BaseModel):
@@ -18,7 +26,7 @@ class UserInToken(BaseModel):
     email: str
     full_name: str
     role: str
-    iam_roles: List[str] = []
+    iam_roles: List[IAMRoleInfo] = []
     status: str
 
 

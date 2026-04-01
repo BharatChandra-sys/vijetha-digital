@@ -38,7 +38,7 @@ export default function Register() {
 
   const handleGoogleSuccess = async (accessToken) => {
     setError(""); setNotice("");
-    await loginWithGoogle(accessToken, redirectTo);
+    await loginWithGoogle(accessToken, redirectTo, "customer");
   };
 
   const handleGoogleError = (err) => {

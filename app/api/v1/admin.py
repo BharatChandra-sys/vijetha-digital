@@ -4,7 +4,7 @@ Handles: Products, Orders, Staff Management for Admin Panel
 """
 
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func
 from sqlalchemy import inspect
 from typing import Optional
@@ -20,6 +20,7 @@ from app.models.user import User
 from app.api.auth.dependencies import admin_required
 from app.core.config import settings
 from app.services.order_service import update_order_status as safe_update_order_status
+from app.services.iam_readiness_service import IAMReadinessService
 
 dashboard_router = APIRouter(prefix="/dashboard", tags=["admin-dashboard"])
 
@@ -46,6 +47,7 @@ class StaffCreateRequest(BaseModel):
     name: str
     position: str
     phone: str
+    user_id: Optional[int] = None
     email: Optional[str] = None
     department: Optional[str] = None
     status: str = "active"
@@ -55,9 +57,32 @@ class StaffUpdateRequest(BaseModel):
     name: Optional[str] = None
     position: Optional[str] = None
     phone: Optional[str] = None
+    user_id: Optional[int] = None
+    unlink_user: bool = False
     email: Optional[str] = None
     department: Optional[str] = None
     status: Optional[str] = None
+
+
+def _validate_staff_status(status_value: Optional[str]) -> Optional[str]:
+    if status_value is None:
+        return None
+    allowed = {"invited", "active", "suspended", "offboarded"}
+    if status_value not in allowed:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid staff status '{status_value}'. Allowed: {', '.join(sorted(allowed))}",
+        )
+    return status_value
+
+
+def _resolve_staff_user(db: Session, user_id: Optional[int]) -> Optional[User]:
+    if user_id is None:
+        return None
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Linked user not found")
+    return user
 
 # ============================================
 # DASHBOARD ENDPOINTS
@@ -185,6 +210,15 @@ def get_revenue_trend(
         "days": days,
         "points": points,
     }
+
+
+@dashboard_router.get("/iam/readiness")
+def get_iam_readiness(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Operational IAM readiness report used before role-based staff rollout."""
+    return IAMReadinessService.build_report(db)
 
 # ============================================
 # PRODUCT MANAGEMENT ENDPOINTS
@@ -538,12 +572,20 @@ def create_staff_member(
     try:
         from app.models.staff import Staff
         _ensure_staff_table(db)
+        _validate_staff_status(payload.status)
+
+        linked_user = _resolve_staff_user(db, payload.user_id)
+        if payload.user_id is not None:
+            existing = db.query(Staff).filter(Staff.user_id == payload.user_id).first()
+            if existing:
+                raise HTTPException(status_code=400, detail="This user is already linked to another staff profile")
         
         new_staff = Staff(
+            user_id=payload.user_id,
             name=payload.name,
             position=payload.position,
             phone=payload.phone,
-            email=payload.email,
+            email=payload.email or (linked_user.email if linked_user else None),
             department=payload.department,
             status=payload.status,
             created_at=datetime.utcnow()
@@ -571,10 +613,15 @@ def list_staff(
         from app.models.staff import Staff
         _ensure_staff_table(db)
         
-        staff_members = db.query(Staff).all()
+        staff_members = db.query(Staff).options(selectinload(Staff.user).selectinload(User.roles_assigned)).all()
         return [
             {
                 "id": s.id,
+                "userId": s.user_id,
+                "userEmail": s.user.email if s.user else None,
+                "userFullName": s.user.full_name if s.user else None,
+                "userStatus": s.user.status.value if s.user and s.user.status else None,
+                "iamRoles": [r.slug for r in s.user.roles_assigned] if s.user else [],
                 "name": s.name,
                 "position": s.position,
                 "phone": s.phone,
@@ -602,6 +649,23 @@ def update_staff(
         staff = db.query(Staff).filter(Staff.id == staff_id).first()
         if not staff:
             raise HTTPException(status_code=404, detail="Staff member not found")
+
+        _validate_staff_status(payload.status)
+
+        if payload.unlink_user and payload.user_id is not None:
+            raise HTTPException(status_code=400, detail="Provide either user_id or unlink_user, not both")
+
+        if payload.unlink_user:
+            staff.user_id = None
+
+        if payload.user_id is not None:
+            linked_user = _resolve_staff_user(db, payload.user_id)
+            existing = db.query(Staff).filter(Staff.user_id == payload.user_id, Staff.id != staff_id).first()
+            if existing:
+                raise HTTPException(status_code=400, detail="This user is already linked to another staff profile")
+            staff.user_id = payload.user_id
+            if payload.email is None:
+                staff.email = linked_user.email
         
         if payload.name is not None:
             staff.name = payload.name

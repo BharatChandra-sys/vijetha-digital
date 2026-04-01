@@ -18,10 +18,26 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       const refreshToken = localStorage.getItem("refresh_token");
+      const userInfo = localStorage.getItem("user_info");
+      
+      // Determine which login portal to redirect to
+      let loginPath = "/login";
+      if (userInfo) {
+        try {
+          const user = JSON.parse(userInfo);
+          if (user.role === "admin") {
+            loginPath = "/admin/login";
+          } else if (user.iam_roles && user.iam_roles.length > 0) {
+            loginPath = "/staff/login";
+          }
+        } catch (e) {
+          // Invalid JSON, use default
+        }
+      }
 
       if (!refreshToken) {
         localStorage.clear();
-        window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = loginPath + "?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
         return Promise.reject(error);
       }
 
@@ -38,7 +54,7 @@ api.interceptors.response.use(
         return axios(error.config);
       } catch {
         localStorage.clear();
-        window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = loginPath + "?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
       }
     }
 

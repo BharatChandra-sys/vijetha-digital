@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getProfile, updateProfile } from "../api/auth";
 import { User, Mail, Phone, Calendar, Edit2, Save, X, CheckCircle, AlertCircle, Eye, EyeOff } from "lucide-react";
@@ -16,6 +16,8 @@ function formatDate(iso) {
 export default function Profile() {
   const { user, isAuthenticated, updateUserInfo } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isStaffContext = location.pathname.startsWith("/staff");
 
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -110,11 +112,21 @@ export default function Profile() {
         
         {/* Header Section */}
         <div className="mb-12">
-          <nav className="flex items-center text-xs text-text-muted mb-4">
-            <Link to="/" className="hover:text-plum-deep transition-colors font-medium">Home</Link>
-            <span className="material-symbols-outlined text-xs mx-2">chevron_right</span>
-            <span className="text-plum-deep font-bold">My Profile</span>
-          </nav>
+          {isStaffContext ? (
+            <button
+              onClick={() => navigate("/staff/workspace")}
+              className="inline-flex items-center gap-1 text-sm font-medium text-text-muted hover:text-plum-deep transition-colors mb-4"
+            >
+              <span className="material-symbols-outlined text-lg">arrow_back</span>
+              Back to Workspace
+            </button>
+          ) : (
+            <nav className="flex items-center text-xs text-text-muted mb-4">
+              <Link to="/" className="hover:text-plum-deep transition-colors font-medium">Home</Link>
+              <span className="material-symbols-outlined text-xs mx-2">chevron_right</span>
+              <span className="text-plum-deep font-bold">My Profile</span>
+            </nav>
+          )}
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl lg:text-5xl font-extrabold text-plum-deep tracking-tight mb-2">My Profile</h1>
@@ -142,7 +154,9 @@ export default function Profile() {
                   <p className="text-sm text-text-muted text-center mt-1 truncate max-w-xs">{profile.email}</p>
                   <div className="mt-3 inline-flex items-center gap-2 bg-plum-50 px-3 py-1 rounded-full border border-plum-100">
                     <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-xs font-semibold text-plum-700 uppercase">{profile.role}</span>
+                    <span className="text-xs font-semibold text-plum-700 uppercase">
+                      {profile.iam_roles?.length > 0 ? profile.iam_roles.join(", ") : profile.role}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -161,7 +175,9 @@ export default function Profile() {
                     <User className="w-4 h-4 text-plum-600" />
                     Account Type
                   </span>
-                  <span className="font-semibold text-plum-700 capitalize">{profile.role}</span>
+                  <span className="font-semibold text-plum-700 capitalize">
+                    {profile.iam_roles?.length > 0 ? "Staff" : profile.role}
+                  </span>
                 </div>
               </div>
             </div>
@@ -169,7 +185,7 @@ export default function Profile() {
             {/* Quick Links */}
             <div className="space-y-3">
               <Link 
-                to="/orders" 
+                to={isStaffContext ? "/staff/orders" : "/orders"} 
                 className="block bg-white rounded-xl border-2 border-plum-100 p-4 hover:border-plum-300 hover:shadow-lg transition-all group"
               >
                 <div className="flex items-center justify-between">
@@ -187,7 +203,7 @@ export default function Profile() {
               </Link>
               
               <Link 
-                to="/products" 
+                to={isStaffContext ? "/staff/products" : "/products"} 
                 className="block bg-white rounded-xl border-2 border-coral-100 p-4 hover:border-coral-300 hover:shadow-lg transition-all group"
               >
                 <div className="flex items-center justify-between">

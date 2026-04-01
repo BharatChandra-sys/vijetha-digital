@@ -96,6 +96,13 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    staff_profile = relationship(
+        "Staff",
+        back_populates="user",
+        uselist=False,
+        lazy="select",
+    )
+
     # IAM relationships - many-to-many
     roles_assigned = relationship(
         "Role",

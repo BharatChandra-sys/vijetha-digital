@@ -13,10 +13,13 @@ import PublicLayout    from "./layouts/PublicLayout";
 import HomeLayout      from "./layouts/HomeLayout";
 import CustomerLayout  from "./layouts/CustomerLayout";
 import AdminLayout     from "./layouts/AdminLayout";
+import StaffLayout     from "./layouts/StaffLayout";
 
 /* guards */
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute     from "./components/auth/AdminRoute";
+import StaffRoute     from "./components/auth/StaffRoute";
+import IamRoleRoute   from "./components/auth/IamRoleRoute";
 
 /* public auth pages */
 import Login          from "./pages/Login";
@@ -25,6 +28,13 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword  from "./pages/ResetPassword";
 import PasswordUpdated from "./pages/PasswordUpdated";
 import ResetLinkSent  from "./pages/ResetLinkSent";
+
+/* new auth portal pages */
+import AdminLogin from "./pages/auth/AdminLogin";
+import StaffLogin from "./pages/auth/StaffLogin";
+import AdminForgotPassword from "./pages/auth/AdminForgotPassword";
+import StaffForgotPassword from "./pages/auth/StaffForgotPassword";
+import ResetPasswordNew from "./pages/auth/ResetPassword";
 
 /* public shop pages */
 import Home          from "./pages/Home";
@@ -53,6 +63,16 @@ import AdminMaterials     from "./pages/admin/Materials";
 import AdminExtras        from "./pages/admin/Extras";
 import AdminProducts      from "./pages/admin/Products";
 import AdminCreateProduct from "./pages/admin/AdminCreateProduct";
+import AdminWorkspace     from "./pages/admin/AdminWorkspace";
+import Staff              from "./pages/admin/Staff";
+import StaffAccess        from "./pages/admin/StaffAccess";
+
+/* staff pages */
+import OperationsDashboard from "./pages/staff/OperationsDashboard";
+import DeliveryDashboard from "./pages/staff/DeliveryDashboard";
+import StaffWorkspace from "./pages/staff/StaffWorkspace";
+import StaffOrders from "./pages/staff/StaffOrders";
+import StaffProducts from "./pages/staff/StaffProducts";
 
 export default function App() {
   return (
@@ -60,7 +80,14 @@ export default function App() {
     <ScrollToTop />
     <Routes>
 
-      {/* ===== PUBLIC AUTH ===== */}
+      {/* ===== NEW AUTH PORTALS (Full-screen, no layout) ===== */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/staff/login" element={<StaffLogin />} />
+      <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+      <Route path="/staff/forgot-password" element={<StaffForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPasswordNew />} />
+
+      {/* ===== PUBLIC AUTH (Legacy, kept for compatibility) ===== */}
       <Route element={<PublicLayout />}>
         <Route path="/login"                    element={<Login />} />
         <Route path="/register"                 element={<Register />} />
@@ -94,6 +121,9 @@ export default function App() {
           <Route path="/orders"                    element={<Orders />} />
           <Route path="/orders/:orderId"            element={<TrackOrder />} />
           <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+          <Route path="/admin/workspace" element={<AdminWorkspace />} />
+          <Route path="/admin/staff" element={<Staff />} />
+          <Route path="/admin/staff-access" element={<StaffAccess />} />
         </Route>
       </Route>
 
@@ -113,6 +143,18 @@ export default function App() {
           <Route path="/admin/extras"       element={<AdminExtras />} />
           <Route path="/admin/products"     element={<AdminProducts />} />
           <Route path="/admin/products/new" element={<AdminCreateProduct />} />
+        </Route>
+      </Route>
+
+      {/* ===== STAFF WORKSPACE ===== */}
+      <Route element={<StaffRoute />}>
+        <Route element={<StaffLayout />}>
+          <Route path="/staff/workspace" element={<StaffWorkspace />} />
+          <Route path="/staff/orders" element={<StaffOrders />} />
+          <Route path="/staff/products" element={<StaffProducts />} />
+          <Route path="/staff/profile" element={<Profile />} />
+          <Route path="/staff/operations" element={<OperationsDashboard />} />
+          <Route path="/staff/delivery" element={<DeliveryDashboard />} />
         </Route>
       </Route>
 

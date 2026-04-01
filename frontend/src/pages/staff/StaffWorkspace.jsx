@@ -1,65 +1,68 @@
-import Container from "../../components/layout/Container";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useMemo } from "react";
+import Container from "../../components/layout/Container";
 
-export default function Dashboard() {
+export default function StaffWorkspace() {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const modules = [
-    {
-      id: "orders",
-      title: "Orders Management",
-      description: "View, track, and manage all customer orders and their statuses",
-      icon: "shopping_cart",
-      path: "/admin/orders",
-      color: "from-blue-500 to-cyan-600",
-      accent: "#3B82F6",
-    },
-    {
-      id: "products",
-      title: "Products Catalog",
-      description: "Manage product inventory, categories, pricing, and descriptions",
-      icon: "inventory_2",
-      path: "/admin/products",
-      color: "from-purple-500 to-pink-600",
-      accent: "#A855F7",
-    },
-    {
-      id: "add-product",
-      title: "Create Product",
-      description: "Add new products to your inventory with detailed specifications",
-      icon: "add_circle",
-      path: "/admin/products/new",
-      color: "from-green-500 to-emerald-600",
-      accent: "#10B981",
-    },
-    {
-      id: "reports",
-      title: "Analytics & Reports",
-      description: "View sales reports, revenue metrics, and business analytics",
-      icon: "assessment",
-      path: "/admin/reports",
-      color: "from-orange-500 to-red-600",
-      accent: "#F97316",
-    },
-    {
-      id: "settings",
-      title: "System Settings",
-      description: "Configure system preferences, staff roles, and access controls",
-      icon: "settings",
-      path: "/admin/settings",
-      color: "from-slate-600 to-slate-800",
-      accent: "#475569",
-    },
-  ];
+  const modules = useMemo(() => [
+      {
+        id: "operations",
+        title: "Operations Dashboard",
+        description: "Manage production jobs, track printing progress, quality checks, and dispatch readiness",
+        icon: "precision_manufacturing",
+        path: "/staff/operations",
+        color: "from-blue-500 to-cyan-600",
+        accent: "#3B82F6",
+      },
+      {
+        id: "delivery",
+        title: "Delivery Dashboard",
+        description: "Track delivery trips, manage shipments, and update real-time delivery status",
+        icon: "local_shipping",
+        path: "/staff/delivery",
+        color: "from-green-500 to-emerald-600",
+        accent: "#10B981",
+      },
+      {
+        id: "orders",
+        title: "Order Tracking",
+        description: "View all customer orders, track status updates, and monitor fulfillment progress",
+        icon: "receipt_long",
+        path: "/staff/orders",
+        color: "from-orange-500 to-red-600",
+        accent: "#F97316",
+      },
+      {
+        id: "products",
+        title: "Products Catalog",
+        description: "Browse product inventory, view specifications, categories, and current pricing",
+        icon: "inventory_2",
+        path: "/staff/products",
+        color: "from-purple-500 to-pink-600",
+        accent: "#A855F7",
+      },
+      {
+        id: "settings",
+        title: "Account Settings",
+        description: "View and update your profile details, password, and notification preferences",
+        icon: "settings",
+        path: "/staff/profile",
+        color: "from-slate-600 to-slate-800",
+        accent: "#475569",
+      },
+    ], []);
 
   return (
     <Container>
       <div className="py-12 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-[#1C1C1C] mb-2">Admin Dashboard</h1>
+          <h1 className="text-4xl font-bold text-[#1C1C1C] mb-2">Staff Workspace</h1>
           <p className="text-[#6E6E73]">
-            Manage your business operations, from orders to products and staff control
+            Manage production operations, delivery tracking, and order fulfillment
           </p>
         </div>
 
@@ -122,49 +125,49 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Quick Stats */}
+        {/* Quick Actions */}
         <div className="mt-12 pt-8 border-t-2 border-[#E6E3DD]">
           <h2 className="text-lg font-bold text-[#1C1C1C] mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
-              onClick={() => navigate("/admin/products/new")}
+              onClick={() => navigate("/staff/operations")}
               className="p-4 rounded-lg bg-[#3B2F63] text-white font-semibold hover:bg-[#2D244C] transition-colors flex items-center gap-2"
             >
-              <span className="material-symbols-outlined">add</span>
-              <span>New Product</span>
+              <span className="material-symbols-outlined">precision_manufacturing</span>
+              <span>Production Board</span>
             </button>
             <button
-              onClick={() => navigate("/admin/orders")}
+              onClick={() => navigate("/staff/delivery")}
               className="p-4 rounded-lg bg-[#FF6B5E]/10 text-[#FF6B5E] font-semibold hover:bg-[#FF6B5E]/20 transition-colors flex items-center gap-2 border-2 border-[#FF6B5E]/30"
             >
-              <span className="material-symbols-outlined">shopping_cart</span>
+              <span className="material-symbols-outlined">local_shipping</span>
+              <span>Delivery Board</span>
+            </button>
+            <button
+              onClick={() => navigate("/staff/orders")}
+              className="p-4 rounded-lg bg-[#10B981]/10 text-[#10B981] font-semibold hover:bg-[#10B981]/20 transition-colors flex items-center gap-2 border-2 border-[#10B981]/30"
+            >
+              <span className="material-symbols-outlined">receipt_long</span>
               <span>View Orders</span>
             </button>
             <button
-              onClick={() => navigate("/admin/products")}
-              className="p-4 rounded-lg bg-[#10B981]/10 text-[#10B981] font-semibold hover:bg-[#10B981]/20 transition-colors flex items-center gap-2 border-2 border-[#10B981]/30"
-            >
-              <span className="material-symbols-outlined">inventory_2</span>
-              <span>Products</span>
-            </button>
-            <button
-              onClick={() => navigate("/admin/settings")}
+              onClick={() => navigate("/staff/profile")}
               className="p-4 rounded-lg bg-[#6B7280]/10 text-[#6B7280] font-semibold hover:bg-[#6B7280]/20 transition-colors flex items-center gap-2 border-2 border-[#6B7280]/30"
             >
               <span className="material-symbols-outlined">settings</span>
-              <span>System Settings</span>
+              <span>Account Settings</span>
             </button>
           </div>
         </div>
 
-        {/* Admin Info */}
+        {/* Staff Info */}
         <div className="mt-8 p-6 rounded-xl bg-gradient-to-r from-[#3B2F63]/5 to-[#FF6B5E]/5 border-2 border-[#E6E3DD]">
           <div className="flex gap-3">
-            <span className="material-symbols-outlined text-[#3B2F63] flex-shrink-0 text-2xl">admin_panel_settings</span>
+            <span className="material-symbols-outlined text-[#3B2F63] flex-shrink-0 text-2xl">badge</span>
             <div>
-              <h3 className="font-bold text-[#1C1C1C] mb-1">Admin Control Center</h3>
+              <h3 className="font-bold text-[#1C1C1C] mb-1">Staff Control Center</h3>
               <p className="text-sm text-[#6E6E73]">
-                You have full control over all system modules. Staff members can access workspaces assigned by you. Monitor operations, manage inventory, and oversee customer orders from this dashboard.
+                Welcome to your workspace hub. Access production operations, delivery management, and order tracking from here. Your assigned roles determine which modules are available. Contact your administrator for additional workspace access.
               </p>
             </div>
           </div>

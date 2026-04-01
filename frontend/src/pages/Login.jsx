@@ -40,7 +40,7 @@ export default function Login() {
     e.preventDefault();
     setError(""); setNotice("");
     try {
-      await login(email, password, redirectTo);
+      await login(email, password, redirectTo, "customer");
     } catch (err) {
       setError(err?.response?.data?.detail || "Invalid email or password");
     }
@@ -48,7 +48,7 @@ export default function Login() {
 
   const handleGoogleSuccess = async (accessToken) => {
     setError(""); setNotice("");
-    await loginWithGoogle(accessToken, redirectTo);
+    await loginWithGoogle(accessToken, redirectTo, "customer");
   };
 
   const handleGoogleError = (err) => {

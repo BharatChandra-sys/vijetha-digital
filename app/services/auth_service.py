@@ -25,6 +25,54 @@ MAX_FAILED_LOGIN_ATTEMPTS = 5
 ACCOUNT_LOCKOUT_DURATION_MINUTES = 30
 
 
+def _has_active_iam_roles(user: User) -> bool:
+    return any(role.is_active for role in user.roles_assigned)
+
+
+def _enforce_login_portal_access(user: User, login_portal: str) -> None:
+    portal = (login_portal or "customer").strip().lower()
+    has_iam_roles = _has_active_iam_roles(user)
+
+    if portal == "admin":
+        if user.role != UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin portal access is restricted to admins only.",
+            )
+        return
+
+    if portal == "staff":
+        if user.role == UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admins must sign in through the Admin portal.",
+            )
+        if not has_iam_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Staff portal access requires staff role assignment.",
+            )
+        return
+
+    if portal == "customer":
+        if user.role == UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin accounts must sign in through Admin Login.",
+            )
+        if has_iam_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Staff accounts must sign in through Staff Login.",
+            )
+        return
+
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Invalid login portal",
+    )
+
+
 # ============================================================================
 # REGISTER
 # ============================================================================
@@ -97,6 +145,7 @@ def login_user(
     db: Session,
     data: LoginRequest,
     ip_address: Optional[str] = None,
+    login_portal: str = "customer",
 ) -> Dict[str, Any]:
     """
     Authenticate user and return JWT tokens.
@@ -177,6 +226,9 @@ def login_user(
             detail=f"Invalid email or password. {attempts_remaining} attempts remaining.",
         )
 
+    # Enforce strict portal access rules (admin/staff/customer)
+    _enforce_login_portal_access(user, login_portal)
+
     # Successful login - reset failed attempts
     user.failed_login_attempts = 0
     user.last_failed_login_at = None
@@ -199,8 +251,15 @@ def login_user(
         role=user.role.value,
     )
 
-    # Get IAM roles
-    iam_roles = [role.slug for role in user.roles_assigned if role.is_active]
+    # Get IAM roles with full details
+    iam_roles = [
+        {
+            "id": role.id,
+            "name": role.slug,  # e.g., "manager", "driver"
+            "display_name": role.name,  # e.g., "Operations Manager"
+        }
+        for role in user.roles_assigned if role.is_active
+    ]
 
     return {
         "access_token": access_token,
@@ -211,7 +270,7 @@ def login_user(
             "email": user.email,
             "full_name": user.full_name,
             "role": user.role.value,  # Legacy role
-            "iam_roles": iam_roles,  # New IAM roles
+            "iam_roles": iam_roles,  # New IAM roles with full details
             "status": user.status.value,
         },
     }
@@ -259,7 +318,11 @@ def unlock_account(db: Session, user_id: int, admin_id: int) -> Dict[str, str]:
 # GOOGLE OAUTH
 # ============================================================================
 
-def google_login_or_register(db: Session, google_token: str) -> Dict[str, Any]:
+def google_login_or_register(
+    db: Session,
+    google_token: str,
+    login_portal: str = "customer",
+) -> Dict[str, Any]:
     """
     Sign in or register a user via Google OAuth access token.
 
@@ -334,6 +397,9 @@ def google_login_or_register(db: Session, google_token: str) -> Dict[str, Any]:
                 detail="Account is inactive. Please contact support.",
             )
 
+    # Enforce portal access rules for social sign-in too
+    _enforce_login_portal_access(user, login_portal)
+
     # Update last login
     user.last_login_at = datetime.utcnow()
     db.commit()
@@ -342,7 +408,14 @@ def google_login_or_register(db: Session, google_token: str) -> Dict[str, Any]:
     # Issue JWTs
     access_token = create_access_token(user_id=user.id, role=user.role.value)
     refresh_token = create_refresh_token(user_id=user.id, role=user.role.value)
-    iam_roles = [r.slug for r in user.roles_assigned if r.is_active]
+    iam_roles = [
+        {
+            "id": r.id,
+            "name": r.slug,
+            "display_name": r.name,
+        }
+        for r in user.roles_assigned if r.is_active
+    ]
 
     return {
         "access_token": access_token,

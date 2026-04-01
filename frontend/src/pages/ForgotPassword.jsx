@@ -1,82 +1,120 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
-import api from "../api/axios";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await api.post("/auth/forgot-password", { email });
-
-      // ✅ This route MUST exist in App.jsx
-      navigate("/reset-link-sent");
-
-    } catch (err) {
-      alert(
-        err?.response?.data?.detail ||
-        "Failed to send reset link."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  const portals = [
+    {
+      id: "admin",
+      title: "Admin Account",
+      description: "Reset your admin account password and regain access",
+      icon: "admin_panel_settings",
+      path: "/admin/forgot-password",
+      accentColor: "#FF6B5E",
+    },
+    {
+      id: "staff",
+      title: "Staff Account",
+      description: "Reset your staff workspace password securely",
+      icon: "work",
+      path: "/staff/forgot-password",
+      accentColor: "#3B2F63",
+    },
+    {
+      id: "customer",
+      title: "Customer Account",
+      description: "Reset your customer portal password",
+      icon: "person",
+      path: "/login",
+      accentColor: "#6B7280",
+    },
+  ];
 
   return (
     <AuthLayout
       leftTag="ACCOUNT RECOVERY"
-      leftTitle="Reset Access"
-      leftSubtitle="Enter your email and we’ll send you a secure reset link."
+      leftTitle="Select Your Portal"
+      leftSubtitle="Choose which account type you'd like to recover."
     >
-      <div className="w-full max-w-md">
-
-        {/* Go to Home Link */}
-        <div className="mb-6">
-          <Link 
-            to="/" 
-            className="inline-flex items-center gap-1 text-sm text-[#3B2F63]/60 hover:text-[#3B2F63] transition-colors"
-          >
-            <span className="material-symbols-outlined text-base">arrow_back</span>
-            <span>Back to Home</span>
-          </Link>
-        </div>
+      <div className="w-full max-w-2xl">
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-1 text-sm text-[#3B2F63]/60 hover:text-[#3B2F63] transition-colors mb-8"
+        >
+          <span className="material-symbols-outlined text-base">arrow_back</span>
+          <span>Back to Home</span>
+        </Link>
 
         <h2 className="text-2xl font-bold mb-2">
-          Forgot{" "}
+          Reset{" "}
           <span className="relative inline-block">
             Password
             <span className="absolute left-0 bottom-[-2px] w-full h-[2px] bg-[#FF6B5E]" />
           </span>
         </h2>
 
-        <p className="text-sm text-[#6E6E73] mb-6">
-          Enter your registered email address.
+        <p className="text-sm text-[#6E6E73] mb-8">
+          Select your account portal to receive a secure password reset link.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            required
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-[#E6E3DD] rounded-md focus:ring-2 focus:ring-[#3B2F63]"
-          />
+        {/* Portal Cards */}
+        <div className="space-y-4">
+          {portals.map((portal) => (
+            <button
+              key={portal.id}
+              onClick={() => navigate(portal.path)}
+              className="w-full group relative overflow-hidden rounded-xl bg-gradient-to-br from-[#F8F7F4] to-[#F0EEEB] border-2 border-[#E6E3DD] hover:border-[#FF6B5E] p-6 transition-all hover:shadow-lg hover:scale-[1.01]"
+            >
+              {/* Corner accent line */}
+              <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-[#FF6B5E]/10 to-transparent rounded-br-2xl" />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#3B2F63] text-white py-3 rounded-md font-semibold shadow-md hover:bg-[#2D244C]"
-          >
-            {loading ? "Sending..." : "Send Reset Link"}
-          </button>
-        </form>
+              <div className="relative flex items-start gap-4">
+                {/* Icon */}
+                <div
+                  className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110"
+                  style={{
+                    backgroundColor: portal.accentColor + "15",
+                    border: `2px solid ${portal.accentColor}`,
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-2xl"
+                    style={{ color: portal.accentColor }}
+                  >
+                    {portal.icon}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 text-left min-w-0">
+                  <h3 className="font-bold text-[#1C1C1C] text-lg mb-1 group-hover:text-[#FF6B5E] transition-colors">
+                    {portal.title}
+                  </h3>
+                  <p className="text-sm text-[#6E6E73] mb-3">{portal.description}</p>
+
+                  {/* CTA */}
+                  <div className="inline-flex items-center gap-1 text-sm font-semibold text-[#3B2F63] group-hover:text-[#FF6B5E] transition-colors">
+                    <span>Request Reset Link</span>
+                    <span className="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform">
+                      arrow_forward
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Security Note */}
+        <div className="mt-8 p-4 rounded-lg bg-[#F0EEEB] border border-[#E6E3DD]">
+          <div className="flex gap-3">
+            <span className="material-symbols-outlined text-[#3B2F63] flex-shrink-0">security</span>
+            <p className="text-xs text-[#6E6E73]">
+              A secure reset link will be sent to your registered email address. The link expires after 1 hour for security.
+            </p>
+          </div>
+        </div>
       </div>
     </AuthLayout>
   );
