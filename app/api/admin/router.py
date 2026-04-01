@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
 # the original admin_guard module was removed; the logic now lives in auth dependencies
 from app.api.auth.dependencies import admin_required, get_current_user
@@ -104,15 +105,18 @@ def all_orders(
     return get_all_orders(db)
 
 
+class OrderStatusUpdate(BaseModel):
+    status: str
+
 @router.patch("/orders/{order_id}")
 def change_order_status(
     order_id: int,
-    status: str,
+    payload: OrderStatusUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required),
 ):
     try:
-        return update_order_status(db, order_id, status)
+        return update_order_status(db, order_id, payload.status)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 

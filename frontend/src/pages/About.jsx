@@ -16,25 +16,25 @@ const PRODUCT_CATEGORIES = [
     title: "Sign Boards",
     icon: "storefront",
     items: ["Vinyl Sign Board", "Glow Sign Board", "Aluminium Sign Board", "ACP Board", "LED Board", "Acrylic Letter Cutting", "Star Backlit", "Sandwich Board"],
-    img: "https://images.pexels.com/photos/1126384/pexels-photo-1126384.jpeg?auto=compress&cs=tinysrgb&w=600",
+    img: "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=600&q=80&auto=format&fit=crop",
   },
   {
     title: "Printing Services",
     icon: "print",
     items: ["Flex Print", "Star Flex Print", "Vinyl Print", "Cloth Print", "Radium Print", "Canvas Print", "Offset Printing", "Letterhead Printing", "Gift Voucher Printing", "Catalogue Printing"],
-    img: "https://images.pexels.com/photos/8381085/pexels-photo-8381085.jpeg?auto=compress&cs=tinysrgb&w=600",
+    img: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80&auto=format&fit=crop",
   },
   {
     title: "Banner Stands",
     icon: "flag",
     items: ["Roller Banner Stand", "Roll-up Banner Stand", "Promotional Banner Stand", "Heavy-Duty Banner Stand"],
-    img: "https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=600",
+    img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80&auto=format&fit=crop",
   },
   {
     title: "Demo Tents & Promos",
     icon: "holiday_village",
     items: ["Demo Tent 4×4×7", "Demo Tent 6×6×7", "Outdoor Demo Tent", "Promo Table", "Umbrella Print", "Cutout Sprint", "Blackout Flex", "Flute Board"],
-    img: "https://images.pexels.com/photos/270082/pexels-photo-270082.jpeg?auto=compress&cs=tinysrgb&w=600",
+    img: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80&auto=format&fit=crop",
   },
 ];
 
@@ -347,14 +347,14 @@ export default function About() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[
-              { src: "https://images.pexels.com/photos/1126384/pexels-photo-1126384.jpeg?auto=compress&cs=tinysrgb&w=500", label: "LED Sign Board" },
-              { src: "https://images.pexels.com/photos/8381085/pexels-photo-8381085.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Business Cards" },
-              { src: "https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Brochures" },
-              { src: "https://images.pexels.com/photos/270082/pexels-photo-270082.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Demo Tent Setup" },
-              { src: "https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Flex Printing" },
-              { src: "https://images.pexels.com/photos/6591440/pexels-photo-6591440.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Letterheads" },
-              { src: "https://images.pexels.com/photos/4792509/pexels-photo-4792509.jpeg?auto=compress&cs=tinysrgb&w=500", label: "Canvas Print" },
-              { src: "https://images.pexels.com/photos/935756/pexels-photo-935756.jpeg?auto=compress&cs=tinysrgb&w=500", label: "ACP Signage" },
+              { src: "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=500&q=80&auto=format&fit=crop", label: "LED Sign Board" },
+              { src: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80&auto=format&fit=crop", label: "Business Cards" },
+              { src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&q=80&auto=format&fit=crop", label: "Brochures" },
+              { src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=500&q=80&auto=format&fit=crop", label: "Demo Tent Setup" },
+              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80&auto=format&fit=crop", label: "Flex Printing" },
+              { src: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500&q=80&auto=format&fit=crop", label: "Letterheads" },
+              { src: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500&q=80&auto=format&fit=crop", label: "Canvas Print" },
+              { src: "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=500&q=80&auto=format&fit=crop", label: "ACP Signage" },
             ].map((img, i) => (
               <div key={i} className="group relative aspect-square rounded-xl overflow-hidden shadow-sm">
                 <img src={img.src} alt={img.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />

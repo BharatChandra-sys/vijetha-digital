@@ -341,60 +341,107 @@ export default function Header() {
     <>
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="relative h-full w-[80%] max-w-sm overflow-y-auto bg-white p-6 shadow-2xl">
-            <div className="mb-8 flex items-center justify-between">
-              <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2">
+          {/* Backdrop with blur */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
+            onClick={() => setMobileOpen(false)}
+          />
+          {/* Drawer with slide animation */}
+          <div className="relative h-full w-[82%] max-w-[320px] overflow-y-auto bg-white shadow-2xl flex flex-col slide-in-left">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-stone-border/60">
+              <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5">
                 <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-9 w-9 flex-shrink-0 rounded-xl object-cover shadow-sm" />
-                <span className="text-base font-bold tracking-tight text-plum-deep">VIJETHA DIGITAL</span>
+                <span className="text-sm font-bold tracking-tight text-plum-deep">VIJETHA DIGITAL</span>
               </Link>
-              <button onClick={() => setMobileOpen(false)}>
-                <span className="material-symbols-outlined text-plum-deep">close</span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-stone-light transition-colors"
+                aria-label="Close menu"
+              >
+                <span className="material-symbols-outlined text-plum-deep text-xl">close</span>
               </button>
             </div>
 
-            <nav className="mb-8 flex flex-col gap-1">
-              <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  setShowSearch(true);
-                }}
-                className="flex items-center gap-3 rounded-lg border-b border-stone-border/40 px-2 py-3 text-base font-semibold text-plum-deep transition-colors hover:bg-plum-deep/5"
-              >
-                <span className="material-symbols-outlined text-xl">search</span>
-                Search Products
-              </button>
+            {/* Search shortcut */}
+            <button
+              onClick={() => { setMobileOpen(false); setShowSearch(true); }}
+              className="mx-4 mt-4 flex items-center gap-3 rounded-xl border border-stone-border bg-stone-light/60 px-4 py-3 text-sm font-medium text-text-muted hover:border-plum-deep/30 hover:text-plum-deep transition-colors"
+            >
+              <span className="material-symbols-outlined text-lg text-plum-deep/50">search</span>
+              Search products…
+            </button>
 
+            {/* Nav links */}
+            <nav className="flex flex-col px-3 mt-4 flex-1">
               {[
-                { label: "Products", to: "/products" },
-                { label: "About", to: "/about" },
-                { label: "Contact", to: "/contact" },
-                { label: "Services", to: "/products" },
-                { label: "For Business", to: "/register" },
+                { label: "Products",     to: "/products",  icon: "inventory_2" },
+                { label: "About",        to: "/about",     icon: "info" },
+                { label: "Contact",      to: "/contact",   icon: "call" },
+                { label: "For Business", to: "/register",  icon: "business" },
               ].map((l) => (
                 <Link
                   key={l.label}
                   to={l.to}
                   onClick={() => setMobileOpen(false)}
-                  className="border-b border-stone-border/40 py-3 text-base font-semibold text-text-muted transition-colors hover:text-plum-deep"
+                  className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-base font-semibold text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors"
                 >
+                  <span className="material-symbols-outlined text-xl text-plum-deep/50">{l.icon}</span>
                   {l.label}
                 </Link>
               ))}
+
+              {user && (
+                <>
+                  <div className="h-px bg-stone-border/60 my-2 mx-3" />
+                  <Link to="/profile" onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-base font-semibold text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                    <span className="material-symbols-outlined text-xl text-plum-deep/50">person</span>
+                    My Profile
+                  </Link>
+                  {user.role === "customer" && (
+                    <Link to="/orders" onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-base font-semibold text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                      <span className="material-symbols-outlined text-xl text-plum-deep/50">receipt_long</span>
+                      My Orders
+                    </Link>
+                  )}
+                  <Link to="/cart" onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-base font-semibold text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                    <span className="material-symbols-outlined text-xl text-plum-deep/50">shopping_cart</span>
+                    Cart
+                    {cartCount > 0 && (
+                      <span className="ml-auto text-xs font-bold bg-coral-accent text-white rounded-full w-5 h-5 flex items-center justify-center">{cartCount}</span>
+                    )}
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin/dashboard" onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 px-3 py-3.5 rounded-xl text-base font-semibold text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                      <span className="material-symbols-outlined text-xl text-plum-deep/50">admin_panel_settings</span>
+                      Admin Dashboard
+                    </Link>
+                  )}
+                </>
+              )}
             </nav>
 
-            <div className="mt-auto space-y-3">
+            {/* Bottom CTA */}
+            <div className="px-4 pb-6 pt-4 border-t border-stone-border/60 space-y-3 mt-auto">
               {!user ? (
                 <>
-                  <Link to={loginUrl} onClick={() => setMobileOpen(false)} className="block w-full rounded-lg border border-plum-deep py-2.5 text-center font-semibold text-plum-deep">
+                  <Link to={loginUrl} onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center w-full h-11 rounded-xl border-2 border-plum-deep font-bold text-plum-deep hover:bg-plum-deep hover:text-white transition-all">
                     Log In
                   </Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="block w-full rounded-lg bg-coral-accent py-2.5 text-center font-bold text-white shadow-md">
+                  <Link to="/register" onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center w-full h-11 rounded-xl bg-coral-accent font-bold text-white shadow-md hover:bg-coral-dark transition-all">
                     Get Custom Quote
                   </Link>
                 </>
               ) : (
-                <button onClick={handleLogout} className="w-full py-2 text-left text-sm font-semibold text-red-600">
+                <button onClick={handleLogout}
+                  className="flex items-center gap-2 w-full h-11 px-3 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors">
+                  <span className="material-symbols-outlined text-base">logout</span>
                   Log Out
                 </button>
               )}
@@ -404,19 +451,19 @@ export default function Header() {
       )}
 
       <nav className="sticky top-0 z-40 border-b border-stone-border bg-warm-white/95 font-display backdrop-blur-md supports-[backdrop-filter]:bg-warm-white/80">
-        <div className="relative mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3 lg:px-10">
+        <div className="relative mx-auto flex max-w-[1280px] items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center lg:hidden">
             <button className="p-1 text-plum-deep transition-colors hover:text-coral-accent" onClick={() => setMobileOpen(true)}>
-              <span className="material-symbols-outlined text-3xl">menu</span>
+              <span className="material-symbols-outlined text-[1.625rem]">menu</span>
             </button>
           </div>
 
-          <Link to="/" className="mx-auto flex items-center gap-2 lg:mx-0">
-            <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-10 w-10 flex-shrink-0 rounded-xl object-cover shadow-sm" />
-            <span className="hidden text-lg font-bold tracking-tight text-plum-deep sm:block">VIJETHA DIGITAL</span>
+          <Link to="/" className="flex items-center gap-2 lg:mx-0">
+            <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-9 w-9 flex-shrink-0 rounded-xl object-cover shadow-sm" />
+            <span className="text-sm font-bold tracking-tight text-plum-deep">VIJETHA DIGITAL</span>
           </Link>
 
-          <div className={`hidden items-center gap-8 text-sm font-medium text-text-muted transition-all duration-300 lg:flex ${showSearch ? "pointer-events-none -translate-x-4 opacity-0" : "translate-x-0 opacity-100"}`}>
+          <div className={`hidden items-center gap-7 text-sm font-medium text-text-muted transition-all duration-300 lg:flex ${showSearch ? "pointer-events-none -translate-x-4 opacity-0" : "translate-x-0 opacity-100"}`}>
             <Link to="/products" className="transition-colors hover:text-plum-deep">Products</Link>
             <Link to="/about" className="transition-colors hover:text-plum-deep">About</Link>
             <Link to="/contact" className="transition-colors hover:text-plum-deep">Contact</Link>
@@ -483,11 +530,79 @@ export default function Header() {
             }}
           />
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            {/* Mobile: search + cart always visible */}
+            <button
+              onClick={() => setShowSearch((v) => !v)}
+              className="flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
+              aria-label="Search"
+            >
+              <span className="material-symbols-outlined text-[1.375rem]">search</span>
+            </button>
+
+            <Link
+              to="/cart"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
+              aria-label="Cart"
+            >
+              <span className="material-symbols-outlined text-[1.375rem]">shopping_cart</span>
+              {cartCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[9px] font-bold text-white leading-none">
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile: avatar if logged in */}
+            {user && (
+              <div className="relative lg:hidden" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  className="flex items-center justify-center w-8 h-8 rounded-full bg-plum-deep text-white text-xs font-bold"
+                  aria-label="Account"
+                >
+                  {avatarLetter}
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-architectural-lg">
+                    <div className="border-b border-stone-border bg-stone-light/50 px-4 py-3">
+                      <p className="truncate text-sm font-bold text-plum-deep">{user.full_name || "User"}</p>
+                      <p className="mt-0.5 truncate text-xs text-text-muted">{user.email}</p>
+                    </div>
+                    <div className="py-1 text-sm font-medium">
+                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
+                        <span className="material-symbols-outlined text-base text-text-muted">person</span> My Profile
+                      </Link>
+                      {user.role === "customer" && (
+                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
+                          <span className="material-symbols-outlined text-base text-text-muted">receipt_long</span> My Orders
+                        </Link>
+                      )}
+                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
+                        <span className="material-symbols-outlined text-base text-text-muted">shopping_cart</span>
+                        Cart {cartCount > 0 && <span className="ml-auto text-xs font-bold text-coral-accent">{cartCount}</span>}
+                      </Link>
+                      {isAdmin && (
+                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-text-dark hover:bg-stone-light">
+                          <span className="material-symbols-outlined text-base text-text-muted">admin_panel_settings</span> Admin
+                        </Link>
+                      )}
+                    </div>
+                    <div className="border-t border-stone-border">
+                      <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50">
+                        <span className="material-symbols-outlined text-base">logout</span> Log Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Desktop: search button */}
             <button
               ref={searchButtonRef}
               onClick={() => setShowSearch((v) => !v)}
-              className={`hidden rounded-full border p-2 transition-all sm:flex ${
+              className={`hidden rounded-full border p-2 transition-all lg:flex ${
                 showSearch
                   ? "pointer-events-none scale-90 border-plum-deep bg-plum-deep text-white opacity-0"
                   : "border-stone-border text-plum-deep hover:border-plum-deep/40 hover:text-coral-accent"
@@ -495,29 +610,31 @@ export default function Header() {
               title="Search products"
               aria-label="Search products"
             >
-              <span className="material-symbols-outlined">search</span>
+              <span className="material-symbols-outlined text-[1.25rem]">search</span>
             </button>
 
-            <Link to="/cart" className="relative hidden p-2 text-plum-deep transition-colors hover:text-coral-accent sm:flex">
-              <span className="material-symbols-outlined">shopping_cart</span>
+            {/* Desktop: cart */}
+            <Link to="/cart" className="relative hidden p-2 text-plum-deep transition-colors hover:text-coral-accent lg:flex">
+              <span className="material-symbols-outlined text-[1.25rem]">shopping_cart</span>
               {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[10px] font-bold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[9px] font-bold text-white">
                   {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}
             </Link>
 
+            {/* Desktop: login / user dropdown */}
             {!user ? (
               <>
-                <Link to={loginUrl} className="hidden text-sm font-semibold text-plum-deep transition-colors hover:text-coral-accent sm:block">
+                <Link to={loginUrl} className="hidden text-sm font-semibold text-plum-deep transition-colors hover:text-coral-accent lg:block">
                   Log In
                 </Link>
-                <Link to="/products" className="hidden transform rounded-full bg-coral-accent px-5 py-2.5 text-xs font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-coral-dark sm:block">
-                  Get Custom Quote
+                <Link to="/products" className="hidden rounded-full bg-coral-accent px-4 py-2 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-coral-dark lg:block">
+                  Get Quote
                 </Link>
               </>
             ) : (
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative hidden lg:block" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen((v) => !v)}
                   className="flex items-center gap-2 rounded-full border border-stone-border bg-white px-3 py-1.5 shadow-sm transition-colors hover:border-plum-deep/40"
@@ -525,14 +642,14 @@ export default function Header() {
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-plum-deep text-xs font-bold text-white">
                     {avatarLetter}
                   </div>
-                  <span className="hidden max-w-[100px] truncate text-sm font-semibold text-plum-deep sm:block">
+                  <span className="hidden max-w-[90px] truncate text-sm font-semibold text-plum-deep sm:block">
                     {user.full_name?.split(" ")[0] || user.email}
                   </span>
                   <span className="material-symbols-outlined text-sm text-text-muted">expand_more</span>
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-stone-border bg-white shadow-architectural-lg">
+                  <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-architectural-lg">
                     <div className="border-b border-stone-border bg-stone-light/50 px-4 py-3">
                       <p className="truncate text-sm font-bold text-plum-deep">{user.full_name || "User"}</p>
                       <p className="mt-0.5 truncate text-xs text-text-muted">{user.email}</p>
@@ -570,7 +687,7 @@ export default function Header() {
 
         {/* Interactive Results Panel */}
         <div ref={searchOverlayRef} className={`absolute left-0 right-0 top-full z-[45] bg-transparent transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${showSearch ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"}`}>
-          <div className="mx-auto w-full max-w-[1440px] px-3 pb-5 pt-4 sm:px-6 lg:px-10">
+          <div className="mx-auto w-full max-w-[1280px] px-3 pb-5 pt-4 sm:px-6 lg:px-8">
             <div ref={searchResultsCardRef} className={`relative flex ${dynamicPanelHeightClass} flex-col overflow-hidden rounded-3xl border border-stone-border/70 bg-warm-white/95 shadow-[0_16px_34px_rgba(26,22,46,0.14)] ring-1 ring-black/5 transition-all duration-300 ${!searchQuery.trim() ? "mx-auto w-full max-w-4xl" : ""}`}>
               <div className="border-b border-stone-border/50 p-3 lg:hidden">
                 <div className="relative flex items-center gap-2 rounded-xl border border-plum-deep/25 bg-white px-3 py-2">

@@ -44,6 +44,37 @@ export default {
       backgroundImage: {
         "dot-pattern": "radial-gradient(#CFC8BD 1px, transparent 1px)",
       },
+
+      fontSize: {
+        "display-xl": ["3rem",    { lineHeight: "1.1",  letterSpacing: "-0.025em", fontWeight: "800" }],
+        "display-lg": ["2.75rem", { lineHeight: "1.12", letterSpacing: "-0.02em",  fontWeight: "800" }],
+        "display-md": ["2rem",    { lineHeight: "1.2",  letterSpacing: "-0.015em", fontWeight: "700" }],
+        "h2":         ["2rem",    { lineHeight: "1.25", letterSpacing: "-0.01em",  fontWeight: "700" }],
+        "h3":         ["1.375rem",{ lineHeight: "1.4",  letterSpacing: "-0.005em", fontWeight: "600" }],
+        "body":       ["1rem",    { lineHeight: "1.65" }],
+        "caption":    ["0.8125rem",{ lineHeight: "1.5" }],
+      },
+
+      spacing: {
+        "4":  "4px",
+        "8":  "8px",
+        "12": "12px",
+        "16": "16px",
+        "24": "24px",
+        "32": "32px",
+        "48": "48px",
+        "64": "64px",
+      },
+
+      maxWidth: {
+        "container": "1200px",
+      },
+
+      borderRadius: {
+        "card":   "12px",
+        "btn":    "8px",
+        "pill":   "9999px",
+      },
     },
   },
 

@@ -73,6 +73,47 @@ class AddPermissionsRequest(BaseModel):
 
 
 # ============================================================================
+# LIST PERMISSIONS (MUST BE BEFORE /{role_slug} TO AVOID ROUTE CONFLICT)
+# ============================================================================
+
+@router.get("/permissions", response_model=List[PermissionResponse])
+def list_permissions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_permission("role:read")),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    category: Optional[str] = None,
+):
+    """
+    List all available permissions.
+    Requires: role:read permission
+    """
+    query = db.query(Permission).filter(Permission.is_active == True)
+
+    if category:
+        try:
+            cat = PermissionCategory(category)
+            query = query.filter(Permission.category == cat)
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid category: {category}")
+
+    permissions = query.offset(skip).limit(limit).all()
+
+    return [
+        {
+            "id": p.id,
+            "permission_key": p.permission_key,
+            "display_name": p.display_name,
+            "description": p.description,
+            "category": p.category.value,
+            "is_dangerous": p.is_dangerous,
+            "created_at": p.created_at,
+        }
+        for p in permissions
+    ]
+
+
+# ============================================================================
 # LIST ROLES
 # ============================================================================
 
@@ -397,44 +438,3 @@ def delete_role(
     db.commit()
 
     return None
-
-
-# ============================================================================
-# LIST PERMISSIONS
-# ============================================================================
-
-@router.get("/permissions", response_model=List[PermissionResponse])
-def list_permissions(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_permission("role:read")),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=100),
-    category: Optional[str] = None,
-):
-    """
-    List all available permissions.
-    Requires: role:read permission
-    """
-    query = db.query(Permission).filter(Permission.is_active == True)
-
-    if category:
-        try:
-            cat = PermissionCategory(category)
-            query = query.filter(Permission.category == cat)
-        except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid category: {category}")
-
-    permissions = query.offset(skip).limit(limit).all()
-
-    return [
-        {
-            "id": p.id,
-            "permission_key": p.permission_key,
-            "display_name": p.display_name,
-            "description": p.description,
-            "category": p.category.value,
-            "is_dangerous": p.is_dangerous,
-            "created_at": p.created_at,
-        }
-        for p in permissions
-    ]

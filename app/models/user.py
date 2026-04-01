@@ -104,18 +104,19 @@ class User(Base):
     )
 
     # IAM relationships - many-to-many
+    # Explicit joins required because user_roles has two FKs to users (user_id + assigned_by)
     roles_assigned = relationship(
         "Role",
-        secondary="user_roles",
+        secondary=user_role_association,
         primaryjoin=id == user_role_association.c.user_id,
         secondaryjoin="Role.id == user_roles.c.role_id",
         foreign_keys=[user_role_association.c.user_id, user_role_association.c.role_id],
         back_populates="users",
         lazy="selectin",
+        overlaps="users",
     )
 
     __table_args__ = (
-        Index('ix_users_email', 'email'),
         Index('ix_users_status', 'status'),
         Index('ix_users_created_at', 'created_at'),
         Index('ix_users_phone', 'phone'),

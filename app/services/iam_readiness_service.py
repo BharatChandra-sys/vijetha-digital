@@ -22,7 +22,8 @@ class IAMReadinessService:
 
     @staticmethod
     def build_report(db: Session) -> dict:
-        inspector = inspect(db.bind)
+        engine = db.get_bind()
+        inspector = inspect(engine)
         tables = set(inspector.get_table_names())
 
         permissions_count = db.query(Permission).filter(Permission.is_active == True).count()

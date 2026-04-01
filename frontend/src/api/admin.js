@@ -14,7 +14,7 @@ export const getAdminOrders = async () => {
 };
 
 export const updateOrderStatus = async (orderId, status) => {
-  const res = await api.patch(`/admin/orders/${orderId}?status=${status}`);
+  const res = await api.patch(`/admin/orders/${orderId}`, { status });
   return res.data;
 };
 

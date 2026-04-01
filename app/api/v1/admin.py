@@ -6,7 +6,6 @@ Handles: Products, Orders, Staff Management for Admin Panel
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Query
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func
-from sqlalchemy import inspect
 from typing import Optional
 from datetime import datetime, timedelta, date
 import os
@@ -28,10 +27,13 @@ dashboard_router = APIRouter(prefix="/dashboard", tags=["admin-dashboard"])
 def _ensure_staff_table(db: Session) -> None:
     """Create the staff table on demand if it doesn't exist yet."""
     from app.models.staff import Staff
+    from sqlalchemy import inspect as sqlalchemy_inspect
 
-    inspector = inspect(db.bind)
+    # Get engine from session
+    engine = db.get_bind()
+    inspector = sqlalchemy_inspect(engine)
     if not inspector.has_table(Staff.__tablename__):
-        Staff.__table__.create(bind=db.bind, checkfirst=True)
+        Staff.__table__.create(bind=engine, checkfirst=True)
 
 
 class OrderStatusUpdateRequest(BaseModel):
@@ -388,11 +390,13 @@ def list_all_orders(
     query = db.query(Order)
 
     if start_date:
-        query = query.filter(Order.created_at >= datetime.combine(start_date, datetime.min.time()))
+        from datetime import time as dt_time
+        query = query.filter(Order.created_at >= datetime.combine(start_date, dt_time.min))
 
     if end_date:
         # Inclusive end_date filter: include the whole day
-        end_exclusive = datetime.combine(end_date + timedelta(days=1), datetime.min.time())
+        from datetime import time as dt_time
+        end_exclusive = datetime.combine(end_date + timedelta(days=1), dt_time.min)
         query = query.filter(Order.created_at < end_exclusive)
 
     orders = query.order_by(Order.created_at.desc()).all()

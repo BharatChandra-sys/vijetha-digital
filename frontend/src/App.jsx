@@ -121,9 +121,6 @@ export default function App() {
           <Route path="/orders"                    element={<Orders />} />
           <Route path="/orders/:orderId"            element={<TrackOrder />} />
           <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-          <Route path="/admin/workspace" element={<AdminWorkspace />} />
-          <Route path="/admin/staff" element={<Staff />} />
-          <Route path="/admin/staff-access" element={<StaffAccess />} />
         </Route>
       </Route>
 
@@ -143,6 +140,9 @@ export default function App() {
           <Route path="/admin/extras"       element={<AdminExtras />} />
           <Route path="/admin/products"     element={<AdminProducts />} />
           <Route path="/admin/products/new" element={<AdminCreateProduct />} />
+          <Route path="/admin/workspace"    element={<AdminWorkspace />} />
+          <Route path="/admin/staff"        element={<Staff />} />
+          <Route path="/admin/staff-access" element={<StaffAccess />} />
         </Route>
       </Route>
 

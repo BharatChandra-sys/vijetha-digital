@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     # Google OAuth (optional — fill in before deploying)
     GOOGLE_CLIENT_ID: Optional[str] = None
 
+    # File uploads directory
+    UPLOAD_DIR: str = "uploads"
+
     class Config:
         env_file = ".env"
         extra = "ignore"

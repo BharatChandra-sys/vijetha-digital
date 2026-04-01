@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import secrets
 import hashlib
-import os
 from sqlalchemy.orm import Session
 
 from app.models.user import User
@@ -27,7 +26,8 @@ def request_password_reset(db: Session, email: str):
 
     db.commit()
 
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    from app.core.config import settings
+    FRONTEND_URL = settings.FRONTEND_URL
 
     # ✅ Route matches frontend (query param format)
     reset_link = f"{FRONTEND_URL}/reset-password?token={raw_token}"

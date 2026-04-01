@@ -227,10 +227,11 @@ class Role(Base):
         'User',
         secondary=user_role_association,
         primaryjoin=id == user_role_association.c.role_id,
-        secondaryjoin='User.id == user_roles.c.user_id',
+        secondaryjoin="User.id == user_roles.c.user_id",
         foreign_keys=[user_role_association.c.role_id, user_role_association.c.user_id],
         back_populates='roles_assigned',
-        lazy='selectin'
+        lazy='selectin',
+        overlaps="roles_assigned",
     )
     
     __table_args__ = (
