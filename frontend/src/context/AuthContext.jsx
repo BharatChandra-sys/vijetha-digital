@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -7,36 +7,37 @@ const AuthContext = createContext(null);
 
 const USER_STORAGE_KEY = "user_info";
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+function getInitialUser() {
+  const token = localStorage.getItem("access_token");
+  const storedUser = localStorage.getItem(USER_STORAGE_KEY);
 
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+  if (!token || !storedUser) {
+    return null;
+  }
 
-    if (token && storedUser) {
-      try {
-        // Verify token is not expired before trusting stored user
-        const decoded = jwtDecode(token);
-        const now = Math.floor(Date.now() / 1000);
-        if (decoded.exp && decoded.exp < now) {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          localStorage.removeItem(USER_STORAGE_KEY);
-          setUser(null);
-        } else {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch {
-        localStorage.clear();
-        setUser(null);
-      }
+  try {
+    const decoded = jwtDecode(token);
+    const now = Math.floor(Date.now() / 1000);
+    if (decoded.exp && decoded.exp < now) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem(USER_STORAGE_KEY);
+      return null;
     }
 
-    setLoading(false);
-  }, []);
+    return JSON.parse(storedUser);
+  } catch {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem(USER_STORAGE_KEY);
+    return null;
+  }
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(getInitialUser);
+  const [loading] = useState(false);
+  const navigate = useNavigate();
 
   const login = async (email, password, redirectTo = "/", loginPortal = "customer") => {
     const res = await api.post("/auth/login", {
@@ -158,6 +159,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

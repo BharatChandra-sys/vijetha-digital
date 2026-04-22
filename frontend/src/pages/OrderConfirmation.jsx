@@ -61,7 +61,7 @@ export default function OrderConfirmation() {
       }
     })();
     return () => { cancelled = true; };
-  }, [orderId, user, authLoading, navigate]);
+  }, [orderId, user, authLoading, navigate, location.pathname]);
 
   if (authLoading || loading) {
     return (

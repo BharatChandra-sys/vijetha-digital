@@ -44,8 +44,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState(null);
   const [payingOrderId, setPayingOrderId] = useState(null);
   const [toast, setToast] = useState(location.state?.paymentError || "");
 
@@ -64,8 +63,7 @@ export default function Orders() {
   }, [toast]);
 
   const fetchOrders = () => {
-    setLoading(true);
-    getMyOrders().then(setOrders).catch(console.error).finally(() => setLoading(false));
+    getMyOrders().then(setOrders).catch(() => setOrders([]));
   };
 
   useEffect(() => { fetchOrders(); }, []);
@@ -132,6 +130,9 @@ export default function Orders() {
     (order.payment_status === "pending" || order.payment_status === "failed") &&
     order.status !== "cancelled";
 
+  const loading = orders === null;
+  const safeOrders = orders || [];
+
   return (
     <div className="min-h-screen bg-warm-white font-display">
       <div className="max-w-[860px] mx-auto px-6 lg:px-10 py-10">
@@ -175,7 +176,7 @@ export default function Orders() {
         )}
 
         {/* Empty state */}
-        {!loading && orders.length === 0 && (
+        {!loading && safeOrders.length === 0 && (
           <div className="text-center py-24">
             <div className="w-20 h-20 rounded-full bg-stone-light flex items-center justify-center mb-6 mx-auto">
               <span className="material-symbols-outlined text-4xl text-plum-deep/30">receipt_long</span>
@@ -193,9 +194,9 @@ export default function Orders() {
         )}
 
         {/* Orders list */}
-        {!loading && orders.length > 0 && (
+        {!loading && safeOrders.length > 0 && (
           <div className="space-y-4">
-            {orders.map((order) => (
+            {safeOrders.map((order) => (
               <div key={order.id} className={`bg-white border rounded-[16px] p-5 shadow-product-card hover:shadow-card-hover transition-shadow ${canPay(order) ? "border-amber-200" : "border-stone-border/60"}`}>
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="space-y-1">

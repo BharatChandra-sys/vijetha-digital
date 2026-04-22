@@ -11,26 +11,26 @@ import { CartProvider } from "./context/CartContext";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-function Root() {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  );
-}
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {GOOGLE_CLIENT_ID ? (
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <Root />
+        <BrowserRouter>
+          <AuthProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </GoogleOAuthProvider>
     ) : (
-      <Root />
+      <BrowserRouter>
+        <AuthProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </AuthProvider>
+      </BrowserRouter>
     )}
   </React.StrictMode>
 );

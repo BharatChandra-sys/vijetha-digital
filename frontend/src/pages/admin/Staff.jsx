@@ -79,7 +79,7 @@ export default function Staff() {
       setDeleteId(null);
       await load();
       showToast("Staff member removed");
-    } catch (err) {
+    } catch {
       showToast("Delete failed", "error");
     }
   };

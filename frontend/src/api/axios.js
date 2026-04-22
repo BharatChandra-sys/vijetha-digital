@@ -3,7 +3,14 @@ import axios from "axios";
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
   withCredentials: false,
+  timeout: 15000,
 });
+
+function clearAuthStorage() {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user_info");
+}
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
@@ -38,13 +45,13 @@ api.interceptors.response.use(
           } else if (user.iam_roles && user.iam_roles.length > 0) {
             loginPath = "/staff/login";
           }
-        } catch (e) {
+        } catch {
           // Invalid JSON, use default
         }
       }
 
       if (!refreshToken) {
-        localStorage.clear();
+        clearAuthStorage();
         window.location.href = loginPath + "?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
         return Promise.reject(error);
       }
@@ -61,7 +68,7 @@ api.interceptors.response.use(
         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
         return axios(error.config);
       } catch {
-        localStorage.clear();
+        clearAuthStorage();
         window.location.href = loginPath + "?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
       }
     }

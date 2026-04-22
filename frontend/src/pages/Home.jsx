@@ -1,7 +1,6 @@
 import { useEffect, useState, Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProducts } from "../api/products";
-import { useAuth } from "../context/AuthContext";
 
 /* ── Icon-based services (matching Stitch design) ──────────────────── */
 const SERVICES = [
@@ -24,10 +23,8 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   useEffect(() => {
-    setLoading(true);
     getProducts()
       .then(setProducts)
       .catch(console.error)

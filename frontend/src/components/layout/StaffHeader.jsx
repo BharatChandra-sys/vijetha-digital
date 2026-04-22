@@ -35,8 +35,6 @@ export default function StaffHeader() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
-
   const handleLogout = () => {
     setDropdownOpen(false);
     setMobileOpen(false);
@@ -166,7 +164,7 @@ export default function StaffHeader() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+                className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
                   isActive(item.path)
                     ? "bg-plum-deep/10 text-plum-deep"
                     : "text-text-muted hover:text-plum-deep hover:bg-plum-deep/5"

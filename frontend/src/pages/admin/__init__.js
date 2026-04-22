@@ -1,21 +1,13 @@
-"""
-Admin Dashboard Pages
-Comprehensive admin interface for managing products, orders, and staff
-"""
-
-export { default as AdminDashboard } from './AdminDashboard';
-export { default as Orders } from './Orders';
-export { default as Products } from './Products';
-export { default as Materials } from './Materials';
-export { default as Extras } from './Extras';
-export { default as AdminCreateProduct } from './AdminCreateProduct';
-    StaffManagement,
-)
-
-__all__ = [
-    "AdminDashboard",
-    "DashboardOverview",
-    "ProductManagement",
-    "OrderManagement", 
-    "StaffManagement",
-]
+export { default as AdminCreateProduct } from "./AdminCreateProduct";
+export { default as AdminDashboard } from "./AdminDashboard";
+export { default as AdminWorkspace } from "./AdminWorkspace";
+export { default as Dashboard } from "./Dashboard";
+export { default as Extras } from "./Extras";
+export { default as Materials } from "./Materials";
+export { default as Orders } from "./Orders";
+export { default as Products } from "./Products";
+export { default as Reports } from "./Reports";
+export { default as SecurityLogs } from "./SecurityLogs";
+export { default as SiteSettings } from "./SiteSettings";
+export { default as Staff } from "./Staff";
+export { default as StaffAccess } from "./StaffAccess";

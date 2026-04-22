@@ -84,10 +84,6 @@ export default function AdminLayout() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname]);
-
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "Manrope, sans-serif", background: "#F5F4F1" }}>
 

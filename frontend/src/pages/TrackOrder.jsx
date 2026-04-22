@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getOrder, downloadInvoice } from "../api/orders";
@@ -72,7 +72,7 @@ export default function TrackOrder() {
     }
   };
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       const data = await getOrder(orderId);
       setOrder(data);
@@ -81,13 +81,13 @@ export default function TrackOrder() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) { navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`); return; }
     fetchOrder();
-  }, [orderId, user, authLoading, navigate]);
+  }, [user, authLoading, navigate, location.pathname, fetchOrder]);
 
   const canPay = order &&
     (order.payment_status === "pending" || order.payment_status === "failed") &&

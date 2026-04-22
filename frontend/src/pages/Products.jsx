@@ -103,7 +103,6 @@ export default function Products() {
   const activeCategory = searchParams.get("category") ?? "";
 
   useEffect(() => {
-    setLoading(true);
     getProducts().then(setProducts).catch(console.error).finally(() => setLoading(false));
   }, []);
 
@@ -150,9 +149,6 @@ export default function Products() {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [drawerOpen]);
-
-  // Reset page when filters change
-  useEffect(() => { setPage(1); }, [activeCategory]);
 
   return (
     <div className="min-h-screen bg-warm-white font-display">

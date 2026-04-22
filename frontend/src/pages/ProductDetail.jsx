@@ -110,6 +110,7 @@ export default function ProductDetail() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     getProducts().then(setAllProducts).catch(console.error).finally(() => setLoading(false));
   }, [id]);
@@ -118,6 +119,7 @@ export default function ProductDetail() {
 
   // Reset config when product changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFinish(0);
     setSizeIdx(0);
     setWidth("");
@@ -129,7 +131,7 @@ export default function ProductDetail() {
       const opts = getQtyOptions(product);
       setQty(opts ? opts[0] : 1);
     }
-  }, [id, product?.id]);
+  }, [id, product]);
 
   const related = useMemo(() => {
     if (!product) return [];

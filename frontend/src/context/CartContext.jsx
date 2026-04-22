@@ -3,17 +3,19 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 const CartContext = createContext(null);
 const CART_KEY = "vijetha_cart";
 
-export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
-  const [cartLoaded, setCartLoaded] = useState(false);
+function readInitialCart() {
+  const saved = localStorage.getItem(CART_KEY);
+  if (!saved) return [];
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem(CART_KEY);
-    if (saved) {
-      try { setItems(JSON.parse(saved)); } catch { setItems([]); }
-    }
-    setCartLoaded(true);
-  }, []);
+export function CartProvider({ children }) {
+  const [items, setItems] = useState(readInitialCart);
+  const cartLoaded = true;
 
   useEffect(() => {
     if (!cartLoaded) return;
@@ -63,6 +65,7 @@ export function CartProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCart() {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used inside CartProvider");

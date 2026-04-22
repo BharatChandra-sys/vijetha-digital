@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../api/axios";
 
@@ -16,7 +16,7 @@ export default function MaintenanceOverlay() {
     location.pathname.startsWith("/staff") ||
     location.pathname === "/maintenance";
 
-  const check = async () => {
+  const check = useCallback(async () => {
     if (isPrivateRoute) return;
     try {
       const res = await api.get("/status");
@@ -24,13 +24,16 @@ export default function MaintenanceOverlay() {
     } catch {
       setMaintenance(null);
     }
-  };
+  }, [isPrivateRoute]);
 
   useEffect(() => {
-    check();
-    const interval = setInterval(check, 30000);
+    const runCheck = () => {
+      void check();
+    };
+    runCheck();
+    const interval = setInterval(runCheck, 30000);
     return () => clearInterval(interval);
-  }, [location.pathname]);
+  }, [check]);
 
   // Don't show on admin/staff routes
   if (isPrivateRoute || !maintenance) return null;

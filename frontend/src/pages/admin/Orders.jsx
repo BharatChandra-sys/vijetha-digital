@@ -93,7 +93,7 @@ export default function AdminOrders() {
       });
       await load();
       showToast("Tracking info saved");
-    } catch (err) {
+    } catch {
       showToast("Failed", "error");
     } finally { setUpdating(false); }
   };

@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { useMemo } from "react";
 import Container from "../../components/layout/Container";
 
 export default function StaffWorkspace() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const modules = useMemo(() => [

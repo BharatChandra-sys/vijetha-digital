@@ -13,8 +13,6 @@ const PRODUCT_CATEGORIES = [
 const PRODUCT_TYPE_OPTIONS = [
   "Standard",
   "Premium",
-                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
-                  { id: "staffAccess", label: "Staff Access", icon: "admin_panel_settings" },
   "Economy",
   "Indoor",
   "Outdoor",
@@ -105,15 +103,8 @@ function statusBadgeClass(status) {
   return "bg-amber-100 text-amber-800";
 }
 
-function tabClass(active) {
-  return active
-    ? "bg-plum-deep text-white shadow-sm"
-    : "text-plum-deep hover:bg-stone-light";
-}
-
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
   const [refreshTick, setRefreshTick] = useState(0);
   const [stats, setStats] = useState({
@@ -855,7 +846,7 @@ function ProductsTab({ onSaved }) {
   );
 }
 
-function OrdersTab({ onUpdated }) {
+function OrdersTab() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("all");
@@ -868,7 +859,6 @@ function OrdersTab({ onUpdated }) {
   // Full Details Modal state
   const [showFullDetails, setShowFullDetails] = useState(false);
   const [fullOrderDetails, setFullOrderDetails] = useState(null);
-  const [detailsLoading, setDetailsLoading] = useState(false);
   
   // Tracking form state
   const [trackingForm, setTrackingForm] = useState({ tracking_number: "", tracking_url: "" });
@@ -982,7 +972,6 @@ function OrdersTab({ onUpdated }) {
   };
 
   const openFullDetails = async (orderId) => {
-    setDetailsLoading(true);
     try {
       const res = await api.get(`/api/v1/admin/dashboard/orders/${orderId}/details`);
       setFullOrderDetails(res.data);
@@ -994,8 +983,6 @@ function OrdersTab({ onUpdated }) {
     } catch (error) {
       console.error("Failed to load order details", error);
       showCustomNotification("Failed to load order details", "error");
-    } finally {
-      setDetailsLoading(false);
     }
   };
 

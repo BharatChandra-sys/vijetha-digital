@@ -1,8 +1,55 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import api from "../../api/axios";
+
+const normalizeText = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const stemToken = (token) => {
+  if (!token) return "";
+  if (token.endsWith("ies") && token.length > 4) return `${token.slice(0, -3)}y`;
+  if (token.endsWith("es") && token.length > 4) return token.slice(0, -2);
+  if (token.endsWith("s") && token.length > 3) return token.slice(0, -1);
+  return token;
+};
+
+const levenshteinDistance = (a, b) => {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+
+  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i += 1) dp[i][0] = i;
+  for (let j = 0; j <= b.length; j += 1) dp[0][j] = j;
+
+  for (let i = 1; i <= a.length; i += 1) {
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[a.length][b.length];
+};
+
+const tokenSimilarity = (a, b) => {
+  const left = stemToken(normalizeText(a));
+  const right = stemToken(normalizeText(b));
+  if (!left || !right) return 0;
+  if (left === right) return 1;
+  if (left.includes(right) || right.includes(left)) return 0.92;
+  const distance = levenshteinDistance(left, right);
+  return 1 - distance / Math.max(left.length, right.length);
+};
 
 export default function Header() {
   const { user, logout, isAdmin } = useAuth();
@@ -75,53 +122,6 @@ export default function Header() {
     }),
     []
   );
-
-  const normalizeText = (value) =>
-    String(value || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const stemToken = (token) => {
-    if (!token) return "";
-    if (token.endsWith("ies") && token.length > 4) return `${token.slice(0, -3)}y`;
-    if (token.endsWith("es") && token.length > 4) return token.slice(0, -2);
-    if (token.endsWith("s") && token.length > 3) return token.slice(0, -1);
-    return token;
-  };
-
-  const levenshteinDistance = (a, b) => {
-    if (a === b) return 0;
-    if (!a.length) return b.length;
-    if (!b.length) return a.length;
-
-    const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-    for (let i = 0; i <= a.length; i += 1) dp[i][0] = i;
-    for (let j = 0; j <= b.length; j += 1) dp[0][j] = j;
-
-    for (let i = 1; i <= a.length; i += 1) {
-      for (let j = 1; j <= b.length; j += 1) {
-        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1,
-          dp[i][j - 1] + 1,
-          dp[i - 1][j - 1] + cost
-        );
-      }
-    }
-    return dp[a.length][b.length];
-  };
-
-  const tokenSimilarity = (a, b) => {
-    const left = stemToken(normalizeText(a));
-    const right = stemToken(normalizeText(b));
-    if (!left || !right) return 0;
-    if (left === right) return 1;
-    if (left.includes(right) || right.includes(left)) return 0.92;
-    const distance = levenshteinDistance(left, right);
-    return 1 - distance / Math.max(left.length, right.length);
-  };
 
   const handleLogout = () => {
     setDropdownOpen(false);
@@ -216,7 +216,7 @@ export default function Header() {
     loadProductsOnce();
   }, [showSearch, productsLoaded]);
 
-  const performSearch = async (query) => {
+  const performSearch = useCallback(async (query) => {
     if (!query.trim()) {
       setSearchResults([]);
       return;
@@ -311,7 +311,7 @@ export default function Header() {
     } finally {
       setSearchLoading(false);
     }
-  };
+  }, [allProducts, keywordSynonyms, searchablePages]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -321,7 +321,7 @@ export default function Header() {
     }, 240);
 
     return () => clearTimeout(debounce);
-  }, [searchQuery, showSearch, productsLoaded, allProducts]);
+  }, [searchQuery, showSearch, performSearch]);
 
   const closeSearch = () => {
     setShowSearch(false);

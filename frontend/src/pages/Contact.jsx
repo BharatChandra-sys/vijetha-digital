@@ -34,7 +34,7 @@ export default function Contact() {
         subject: "",
         message: "",
       });
-    } catch (err) {
+    } catch {
       setError("Failed to send message. Please try again or contact us directly.");
     } finally {
       setSubmitting(false);
