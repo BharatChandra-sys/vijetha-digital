@@ -236,10 +236,10 @@ export default function Products() {
           <div className="flex items-center gap-0.5 overflow-x-auto no-scrollbar">
             {["", ...CATEGORIES].map(cat => (
               <button key={cat || "all"} onClick={() => handleCategory(cat)}
-                className={`whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-[0.75rem] sm:text-[0.8125rem] font-semibold transition-all duration-150 border-b-2 ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-3 text-[0.75rem] sm:text-[0.8125rem] font-semibold transition-all duration-150 border-b-2 relative ${
                   activeCategory === cat
-                    ? "border-plum-deep text-plum-deep"
-                    : "border-transparent text-text-muted hover:text-plum-deep hover:border-plum-deep/30"
+                    ? "border-coral-accent text-plum-deep"
+                    : "border-transparent text-text-muted hover:text-plum-deep hover:border-plum-deep/20"
                 }`}>
                 {cat || "All"}
               </button>
@@ -559,7 +559,7 @@ function ProductCard({ product, navigate }) {
               </div>
             </div>
             <button
-              className="inline-flex items-center justify-center h-8 sm:h-9 px-2.5 sm:px-4 bg-plum-deep text-white hover:bg-plum-light font-bold rounded-[8px] transition-all text-[0.6875rem] sm:text-[0.8125rem] active:scale-[0.97] flex-shrink-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center h-8 sm:h-9 px-2.5 sm:px-4 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-[8px] transition-all text-[0.6875rem] sm:text-[0.8125rem] active:scale-[0.97] flex-shrink-0 whitespace-nowrap shadow-sm"
               onClick={e => { e.stopPropagation(); navigate(`/products/${product.id}`); }}
             >
               Order

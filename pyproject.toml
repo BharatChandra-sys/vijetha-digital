@@ -1,0 +1,24 @@
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+# E = pycodestyle errors, F = pyflakes, I = isort
+select = ["E", "F", "I"]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "F401",   # unused imports — too noisy during active dev
+    "E711",   # comparison to None — SQLAlchemy uses == None
+    "E712",   # comparison to True/False — SQLAlchemy uses == True
+]
+
+[tool.ruff.lint.per-file-ignores]
+"alembic/*" = ["E", "F", "I"]
+"tests/*"   = ["F811"]   # allow redefinition in test fixtures
+
+[tool.pytest.ini_options]
+asyncio_mode  = "auto"
+testpaths     = ["tests"]
+pythonpath    = ["."]
+python_files  = ["test_*.py"]
+python_functions = ["test_*"]

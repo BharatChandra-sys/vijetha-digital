@@ -1,0 +1,39 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Tests & dev tools
+tests/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pre-commit-config.yaml
+
+# Frontend (not needed in backend image)
+frontend/
+
+# Docs & scripts
+*.md
+docs/
+scripts/
+
+# Env files (secrets must come from runtime env / secrets manager)
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/

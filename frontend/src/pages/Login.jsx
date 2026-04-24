@@ -23,16 +23,14 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  // Auto-dismiss error/notice after 5 seconds
   useEffect(() => {
     if (error || notice) {
-      const timer = setTimeout(() => {
-        setError("");
-        setNotice("");
-      }, 5000);
+      const timer = setTimeout(() => { setError(""); setNotice(""); }, 5000);
       return () => clearTimeout(timer);
     }
   }, [error, notice]);
@@ -40,10 +38,13 @@ export default function Login() {
   const submit = async (e) => {
     e.preventDefault();
     setError(""); setNotice("");
+    setLoading(true);
     try {
       await login(email, password, redirectTo, "customer");
     } catch (err) {
       setError(err?.response?.data?.detail || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,23 +60,20 @@ export default function Login() {
   return (
     <main className="flex h-screen overflow-hidden bg-warm-white text-[#1A1F3C] relative">
 
-      {/* Toast Notification - Top Center */}
+      {/* Toast */}
       {(error || notice) && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-slide-down">
-          <div className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-2xl border ${
-            error 
-              ? 'bg-red-50 border-red-200 text-red-700' 
-              : 'bg-blue-50 border-blue-200 text-blue-700'
-          } min-w-[320px] max-w-md`}>
-            <span className="material-symbols-outlined flex-shrink-0">
-              {error ? 'error' : 'info'}
+          <div className={`flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl border ${
+            error
+              ? "bg-red-50 border-red-200 text-red-700"
+              : "bg-blue-50 border-blue-200 text-blue-700"
+          } min-w-[300px] max-w-md`}>
+            <span className="material-symbols-outlined flex-shrink-0 text-lg">
+              {error ? "error" : "info"}
             </span>
             <p className="text-sm font-medium flex-1">{error || notice}</p>
-            <button 
-              onClick={() => { setError(""); setNotice(""); }}
-              className="flex-shrink-0 hover:opacity-70 transition-opacity"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
+            <button onClick={() => { setError(""); setNotice(""); }} className="flex-shrink-0 hover:opacity-70 transition-opacity">
+              <span className="material-symbols-outlined text-base">close</span>
             </button>
           </div>
         </div>
@@ -83,10 +81,8 @@ export default function Login() {
 
       {/* LEFT PANEL */}
       <section className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden bg-plum-deep p-14 xl:p-16 flex-col justify-between">
-        {/* Dot grid */}
         <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
           style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-        {/* Glow */}
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-coral-accent/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex-1 flex flex-col justify-center max-w-sm">
@@ -119,22 +115,18 @@ export default function Login() {
       </section>
 
       {/* RIGHT PANEL */}
-      <section className="w-full lg:w-[48%] xl:w-[45%] flex items-center justify-center px-5 py-8 bg-warm-white">
+      <section className="w-full lg:w-[48%] xl:w-[45%] flex items-center justify-center px-5 py-8 bg-warm-white overflow-y-auto">
         <div className="w-full max-w-[360px]">
 
-          {/* Back link */}
-          <div className="mb-5">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1 text-[0.8125rem] text-plum-deep/50 hover:text-plum-deep transition-colors"
-            >
+          <div className="mb-6">
+            <Link to="/" className="inline-flex items-center gap-1 text-[0.8125rem] text-plum-deep/50 hover:text-plum-deep transition-colors">
               <span className="material-symbols-outlined text-base">arrow_back</span>
               Back to Home
             </Link>
           </div>
 
-          <header className="mb-5">
-            <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
+          <header className="mb-6">
+            <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1.5">
               Sign{" "}
               <span className="relative inline-block">
                 In
@@ -145,64 +137,96 @@ export default function Login() {
           </header>
 
           {resetSuccess && (
-            <div className="mb-4 flex items-center gap-2 p-2.5 bg-green-50 border border-green-200 rounded-lg text-[0.8125rem] text-green-700">
+            <div className="mb-5 flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl text-[0.8125rem] text-green-700">
               <span className="material-symbols-outlined text-base flex-shrink-0">check_circle</span>
-              Password updated successfully. Sign in with your new password.
+              Password updated. Sign in with your new password.
             </div>
           )}
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Email Address</label>
+              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                Email Address
+              </label>
               <input
                 type="email"
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+                autoComplete="email"
+                className="w-full h-11 px-3.5 text-sm rounded-xl border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
               />
             </div>
 
             <div>
-              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
-              />
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider">
+                  Password
+                </label>
+                <span
+                  onClick={() => navigate("/forgot-password")}
+                  className="text-[0.75rem] font-semibold text-plum-deep/60 hover:text-coral-accent transition-colors cursor-pointer"
+                >
+                  Forgot password?
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="w-full h-11 px-3.5 pr-10 text-sm rounded-xl border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors"
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  <span className="material-symbols-outlined text-lg">
+                    {showPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between gap-4">
-              <label className="flex items-center gap-2 cursor-pointer text-[0.8125rem] text-text-muted">
-                <input type="checkbox" required className="rounded border-stone-border text-plum-deep focus:ring-plum-deep/20 flex-shrink-0" />
-                <span>
-                  I accept the{" "}
-                  <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Terms</Link>
-                  {" "}&amp;{" "}
-                  <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Privacy</Link>
-                </span>
+            <div className="flex items-start gap-2.5 pt-1">
+              <input
+                type="checkbox"
+                id="terms-accept"
+                className="mt-0.5 rounded border-stone-border text-plum-deep focus:ring-plum-deep/20 flex-shrink-0 cursor-pointer"
+              />
+              <label htmlFor="terms-accept" className="text-[0.8125rem] text-text-muted cursor-pointer leading-snug">
+                I accept the{" "}
+                <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Terms</Link>
+                {" "}&amp;{" "}
+                <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Privacy Policy</Link>
               </label>
-              <span
-                onClick={() => navigate("/forgot-password")}
-                className="text-[0.8125rem] font-semibold text-plum-deep hover:text-coral-accent transition-colors cursor-pointer whitespace-nowrap flex-shrink-0"
-              >
-                Forgot?
-              </span>
             </div>
 
             <button
               type="submit"
-              className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum"
+              disabled={loading}
+              className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-2"
             >
-              Sign In
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                  </svg>
+                  Signing in…
+                </>
+              ) : "Sign In"}
             </button>
           </form>
 
-          <div className="my-4 flex items-center gap-3">
+          <div className="my-5 flex items-center gap-3">
             <div className="flex-1 h-px bg-stone-border" />
             <span className="text-[0.6875rem] font-medium text-text-muted whitespace-nowrap">or continue with</span>
             <div className="flex-1 h-px bg-stone-border" />
@@ -219,7 +243,7 @@ export default function Login() {
             <button
               type="button"
               onClick={() => { setNotice("Google Sign-In is coming soon. Please use email & password for now."); setError(""); }}
-              className="w-full h-10 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-lg hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep"
+              className="w-full h-11 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-xl hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep"
             >
               {GOOGLE_LOGO}
               Sign in with Google
@@ -232,7 +256,7 @@ export default function Login() {
               onClick={() => navigate(redirectTo !== "/" ? `/register?redirect=${encodeURIComponent(redirectTo)}` : "/register")}
               className="text-plum-deep font-bold hover:text-coral-accent transition-colors cursor-pointer"
             >
-              Sign up
+              Sign up free
             </span>
           </p>
 

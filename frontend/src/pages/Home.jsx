@@ -66,13 +66,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center h-11 px-7 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-lg shadow-soft-plum transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
+                className="inline-flex items-center justify-center h-12 px-8 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-lg shadow-md transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
               >
+                <span className="material-symbols-outlined text-base mr-1.5">inventory_2</span>
                 Explore Products
               </Link>
               <a
                 href="tel:+917942643004"
-                className="inline-flex items-center justify-center h-11 px-7 border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white font-bold rounded-lg transition-all text-sm"
+                className="inline-flex items-center justify-center h-12 px-7 border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white font-bold rounded-lg transition-all text-sm"
               >
                 <span className="material-symbols-outlined text-base mr-1.5">call</span>
                 Get Custom Quote
@@ -160,24 +161,24 @@ export default function Home() {
       </div>
 
       {/* ── TRUST SIGNALS ───────────────────────────────────────── */}
-      <section className="py-10 bg-white border-b border-stone-border z-10 relative">
+      <section className="py-8 bg-white border-b border-stone-border z-10 relative">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-[0.6875rem] font-bold uppercase tracking-widest text-text-muted/40 mb-6">
-            Trusted by businesses across Hyderabad since 2002
-          </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 stagger-children">
             {[
-              { icon: "groups",         stat: "500+",   label: "Happy Businesses"    },
-              { icon: "local_shipping", stat: "24–48h", label: "Turnaround Time"     },
-              { icon: "receipt_long",   stat: "GST",    label: "Tax Invoice"         },
-              { icon: "verified_user",  stat: "100%",   label: "Quality Guaranteed"  },
+              { icon: "groups",         stat: "500+",   label: "Happy Businesses",   sub: "Across Hyderabad"    },
+              { icon: "local_shipping", stat: "24–48h", label: "Turnaround Time",    sub: "Print to delivery"   },
+              { icon: "receipt_long",   stat: "GST",    label: "Tax Invoice",        sub: "On every order"      },
+              { icon: "verified_user",  stat: "100%",   label: "Quality Guaranteed", sub: "Or we reprint free"  },
             ].map(t => (
-              <div key={t.label} className="flex flex-col items-center text-center gap-1.5 p-3 sm:p-4 rounded-[12px] bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-card-default transition-all duration-200">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-[8px] bg-plum-deep/5 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-plum-deep text-lg sm:text-xl">{t.icon}</span>
+              <div key={t.label} className="flex items-center gap-3 p-4 rounded-[12px] bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-card-default transition-all duration-200">
+                <div className="w-10 h-10 rounded-[10px] bg-plum-deep/5 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-plum-deep text-xl">{t.icon}</span>
                 </div>
-                <span className="text-[1.25rem] sm:text-[1.625rem] font-black text-plum-deep tracking-tight leading-none">{t.stat}</span>
-                <span className="text-[0.625rem] sm:text-[0.75rem] font-semibold text-text-muted leading-tight">{t.label}</span>
+                <div className="min-w-0">
+                  <span className="text-[1.25rem] font-black text-plum-deep tracking-tight leading-none block">{t.stat}</span>
+                  <span className="text-[0.75rem] font-semibold text-text-muted leading-tight block">{t.label}</span>
+                  <span className="text-[0.625rem] text-text-hint leading-tight hidden sm:block">{t.sub}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -304,7 +305,13 @@ export default function Home() {
               { step: "04", icon: "local_shipping", title: "Fast Delivery",    desc: "We print and deliver to your doorstep within 24–48 hours." },
             ].map((s, i) => (
               <div key={s.step} className="relative flex flex-col items-start gap-3 p-4 sm:p-5 rounded-[12px] bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-card-default transition-all duration-200">
-                {i < 3 && <div className="hidden lg:block absolute top-7 -right-2 w-4 h-px bg-stone-border z-10" />}
+                {/* Connector arrow — desktop only */}
+                {i < 3 && (
+                  <div className="hidden lg:flex absolute top-7 -right-3 z-10 items-center">
+                    <div className="w-6 h-px bg-stone-border" />
+                    <span className="material-symbols-outlined text-stone-border/80 text-sm -ml-1">chevron_right</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <span className="text-[0.625rem] font-black text-coral-accent tracking-widest">{s.step}</span>
                   <div className="w-9 h-9 rounded-[10px] bg-plum-deep/5 flex items-center justify-center">

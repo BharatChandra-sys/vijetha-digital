@@ -176,6 +176,16 @@ a, button {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Toast slide-down animation ── */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Minimum touch target size (44px) — only for interactive elements without explicit sizing */
 button:not([class*="h-"]):not([class*="w-"]) {
   min-height: 44px;

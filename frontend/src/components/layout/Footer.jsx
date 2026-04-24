@@ -145,7 +145,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
-        <p>© 2002–2025 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.</p>
+        <p>© 2002–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.</p>
         <div className="flex gap-6">
           <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
           <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>

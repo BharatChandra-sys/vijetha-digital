@@ -33,3 +33,6 @@ python-dateutil
 pytest
 pytest-asyncio
 httpx
+
+# Dev / lint
+ruff
