@@ -48,16 +48,16 @@ Major gaps vs MasterPlan:
 - [x] Upgrade app/core/config.py to complete MasterPlan env contract
 - [x] Add JWT/access/refresh expiries, email token expiries, S3/AWS, mail, redis, sentry, GST/min order/file rules
 - [x] Add FIRST_ADMIN_* fields and keep existing ADMIN_* as fallback compatibility
-- [ ] Ensure .env.example includes all new fields
+- [x] Ensure .env.example includes all new fields
 
 ### 1.2 Security utilities
-- [ ] Expand app/core/security.py with:
-  - [ ] is_strong_password
-  - [ ] create_access_token(subject, extra_claims)
-  - [ ] create_refresh_token with jti
-  - [ ] decode_token
-  - [ ] email verification token helpers
-  - [ ] password reset token helpers
+- [x] Expand app/core/security.py with:
+  - [x] is_strong_password
+  - [x] create_access_token(subject, extra_claims)
+  - [x] create_refresh_token with jti
+  - [x] decode_token
+  - [x] email verification token helpers
+  - [x] password reset token helpers
 - [ ] Keep existing token functions as compatibility wrappers until callers are migrated
 
 ### 1.3 Async DB session migration (non-breaking)
@@ -76,7 +76,7 @@ Major gaps vs MasterPlan:
 
 ### 1.5 Exceptions module
 - [x] Create app/core/exceptions.py with all plan exception classes
-- [ ] Refactor services to raise AppException hierarchy (no raw HTTPException inside services)
+- [x] Refactor services to raise AppException hierarchy (no raw HTTPException inside services) — auth_service done
 - [ ] Keep HTTP mapping in global exception handlers
 
 ### 1.6 main.py refactor
@@ -101,21 +101,21 @@ Major gaps vs MasterPlan:
 - [x] audit_log.py
 
 ### 2.3 Existing model upgrades
+- [x] product.py: slug, specification options, turnaround options, SEO tags
 - [ ] user.py: account status, verification timestamps, security tracking, preferences, relations
-- [ ] product.py: slug, tiers, quantity breaks, specification options, turnaround options, SEO tags
 - [ ] order.py: richer status machine, delivery/tracking/audit timestamps, business order fields
 - [ ] order_item.py: product snapshots + print specs + custom specs
 - [ ] payment.py: full Razorpay/refund lifecycle fields
 - [ ] review.py: moderation flags and relations
 
 ### 2.4 Migration discipline
-- [ ] Generate incremental alembic revisions per domain (users/products/orders/payments/etc.)
+- [x] Generated incremental alembic revision: add_product_slug_seo_fields (also picks up new model tables)
 - [ ] Add data backfill scripts where new non-null fields are introduced
 - [ ] Maintain backward-compatible defaults for existing rows
 
 ## 3) Schema Completion (Phase 3)
 
-- [ ] Create app/schemas/common.py (paginated/message/error)
+- [x] Create app/schemas/common.py (paginated/message/error)
 - [ ] Expand auth schemas for refresh/verify/reset/change flows
 - [ ] Expand user/admin user view schemas
 - [ ] Add business schemas
