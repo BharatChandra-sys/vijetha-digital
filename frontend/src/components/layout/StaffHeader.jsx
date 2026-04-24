@@ -21,6 +21,8 @@ export default function StaffHeader() {
     { label: "Delivery", path: "/staff/delivery", icon: "local_shipping" },
     { label: "Orders", path: "/staff/orders", icon: "receipt_long" },
     { label: "Products", path: "/staff/products", icon: "inventory_2" },
+    { label: "Schedule", path: "/staff/schedule", icon: "calendar_month" },
+    { label: "Alerts", path: "/staff/notifications", icon: "notifications" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -130,6 +132,13 @@ export default function StaffHeader() {
                   >
                     <span className="material-symbols-outlined text-lg text-[#6E6E73]">person</span>
                     My Profile
+                  </button>
+                  <button
+                    onClick={() => { setDropdownOpen(false); navigate("/staff/notifications"); }}
+                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-[#F8F7F4] flex items-center gap-2 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-lg text-[#6E6E73]">notifications</span>
+                    Notifications
                   </button>
                   <div className="border-t border-[#E6E3DD] my-1" />
                   <button

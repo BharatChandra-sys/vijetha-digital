@@ -12,6 +12,7 @@ python-jose[cryptography]
 
 sqlalchemy
 psycopg2-binary
+asyncpg
 alembic
 
 python-multipart

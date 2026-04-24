@@ -51,6 +51,24 @@ export default function StaffWorkspace() {
         color: "from-slate-600 to-slate-800",
         accent: "#475569",
       },
+      {
+        id: "schedule",
+        title: "Shift Schedule",
+        description: "Track roster, shift leads, and team assignment windows for the day",
+        icon: "calendar_month",
+        path: "/staff/schedule",
+        color: "from-indigo-500 to-violet-600",
+        accent: "#6366F1",
+      },
+      {
+        id: "alerts",
+        title: "Notifications",
+        description: "Review job alerts, escalation notices, and assignment updates in one place",
+        icon: "notifications",
+        path: "/staff/notifications",
+        color: "from-amber-500 to-orange-600",
+        accent: "#F59E0B",
+      },
     ], []);
 
   return (
@@ -154,6 +172,20 @@ export default function StaffWorkspace() {
             >
               <span className="material-symbols-outlined">settings</span>
               <span>Account Settings</span>
+            </button>
+            <button
+              onClick={() => navigate("/staff/schedule")}
+              className="p-4 rounded-lg bg-[#6366F1]/10 text-[#6366F1] font-semibold hover:bg-[#6366F1]/20 transition-colors flex items-center gap-2 border-2 border-[#6366F1]/30"
+            >
+              <span className="material-symbols-outlined">calendar_month</span>
+              <span>Shift Schedule</span>
+            </button>
+            <button
+              onClick={() => navigate("/staff/notifications")}
+              className="p-4 rounded-lg bg-[#F59E0B]/10 text-[#B45309] font-semibold hover:bg-[#F59E0B]/20 transition-colors flex items-center gap-2 border-2 border-[#F59E0B]/30"
+            >
+              <span className="material-symbols-outlined">notifications</span>
+              <span>Alerts</span>
             </button>
           </div>
         </div>

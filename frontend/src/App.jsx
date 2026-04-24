@@ -78,6 +78,8 @@ import DeliveryDashboard from "./pages/staff/DeliveryDashboard";
 import StaffWorkspace from "./pages/staff/StaffWorkspace";
 import StaffOrders from "./pages/staff/StaffOrders";
 import StaffProducts from "./pages/staff/StaffProducts";
+import StaffNotifications from "./pages/staff/StaffNotifications";
+import StaffSchedule from "./pages/staff/StaffSchedule";
 
 export default function App() {
   return (
@@ -164,6 +166,8 @@ export default function App() {
           <Route path="/staff/workspace" element={<StaffWorkspace />} />
           <Route path="/staff/orders" element={<StaffOrders />} />
           <Route path="/staff/products" element={<StaffProducts />} />
+          <Route path="/staff/notifications" element={<StaffNotifications />} />
+          <Route path="/staff/schedule" element={<StaffSchedule />} />
           <Route path="/staff/profile" element={<Profile />} />
           <Route path="/staff/operations" element={<OperationsDashboard />} />
           <Route path="/staff/delivery" element={<DeliveryDashboard />} />
