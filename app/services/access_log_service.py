@@ -3,10 +3,11 @@ Access log service — records login attempts, OTP events,
 and sensitive actions with full device/IP context.
 """
 
-import re
 import logging
+import re
 from datetime import datetime
 from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from app.models.access_log import AccessLog

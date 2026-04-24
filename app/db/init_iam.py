@@ -5,13 +5,14 @@ Run this once after migrations.
 """
 
 from sqlalchemy.orm import Session
+
 from app.models.iam import (
-    Role,
+    ActionType,
     Permission,
-    RoleType,
     PermissionCategory,
     ResourceType,
-    ActionType,
+    Role,
+    RoleType,
 )
 
 # ============================================================================
@@ -288,7 +289,7 @@ def init_iam_system(db: Session) -> dict:
     
     db.commit()
     
-    print(f"\n✅ IAM System Initialized!")
+    print("\n✅ IAM System Initialized!")
     print(f"   Permissions: {stats['permissions_created']} created, {stats['permissions_skipped']} skipped")
     print(f"   Roles: {stats['roles_created']} created, {stats['roles_skipped']} skipped")
     

@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, status
-from sqlalchemy.orm import Session
 from typing import List
 
-from app.db.session import get_db
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
+from sqlalchemy.orm import Session
+
 from app.core.deps import get_current_user, get_current_user_optional
-from app.models.user import User
+from app.db.session import get_db
 from app.models.product import Product
+from app.models.user import User
 from app.schemas.review import ReviewCreate, ReviewResponse, ReviewSummary
 from app.services.review_service import (
     create_review,
-    get_reviews_for_product,
     get_review_summary,
+    get_reviews_for_product,
     get_user_review,
 )
 from app.services.upload_service import upload_file

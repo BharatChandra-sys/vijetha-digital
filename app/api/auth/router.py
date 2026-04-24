@@ -1,32 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from typing import Optional, Literal
+from typing import Literal, Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from app.api.auth.dependencies import get_current_user
+from app.core.rate_limiter import limiter
+from app.core.security import (
+    create_access_token,
+    decode_refresh_token,
+)
 from app.db.session import get_db
+from app.models.user import User
 from app.schemas.auth import (
-    RegisterRequest,
     LoginRequest,
+    RegisterRequest,
     TokenResponse,
 )
+from app.services.access_log_service import log_event
 from app.services.auth_service import (
-    register_user,
-    login_user,
     google_login_or_register,
+    login_user,
+    register_user,
 )
 from app.services.password_reset_service import (
+    reset_password_with_otp,
     send_otp,
     verify_otp,
-    reset_password_with_otp,
 )
-from app.services.access_log_service import log_event
-from app.core.security import (
-    decode_refresh_token,
-    create_access_token,
-)
-from app.core.rate_limiter import limiter
-from app.api.auth.dependencies import get_current_user
-from app.models.user import User
 
 router = APIRouter(
     prefix="/auth",
@@ -178,8 +179,9 @@ def refresh_token(
         raise HTTPException(status_code=401, detail="Invalid token payload")
 
     # Validate user still exists and is active
-    from app.models.user import User, UserStatus
     from datetime import datetime
+
+    from app.models.user import User, UserStatus
     
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

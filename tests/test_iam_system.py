@@ -5,8 +5,10 @@ They run in CI where the postgres service container is present.
 """
 
 import os
+
 import pytest
 from fastapi.testclient import TestClient
+
 
 # ── DB availability guard ─────────────────────────────────────────────
 def _db_available() -> bool:
@@ -80,9 +82,9 @@ class TestRBACService:
 
     @pytest.fixture(autouse=True)
     def setup(self):
+        from app.core.security import hash_password
         from app.db.session import SessionLocal
         from app.models import User, UserStatus
-        from app.core.security import hash_password
 
         self.db = SessionLocal()
         test_user = self.db.query(User).filter_by(email="rbac_test@test.com").first()
@@ -176,14 +178,14 @@ class TestAdminAPI:
 class TestIAMInitialization:
 
     def test_init_iam_system(self):
+        from app.db.init_iam import init_iam_system
         from app.db.session import SessionLocal
         from app.models import Permission, Role
-        from app.db.init_iam import init_iam_system
 
         db = SessionLocal()
         try:
             perm_count = db.query(Permission).count()
-            role_count = db.query(Role).count()
+            db.query(Role).count()  # ensure roles table is accessible
             if perm_count == 0:
                 stats = init_iam_system(db)
                 assert stats["permissions_created"] > 0

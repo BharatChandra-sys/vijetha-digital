@@ -4,14 +4,15 @@ Sends a 6-digit OTP via email, valid for 10 minutes.
 Falls back to console logging in dev mode if SMTP fails.
 """
 
-import random
 import hashlib
 import logging
+import random
 from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 
-from app.models.user import User
 from app.core.security import hash_password
+from app.models.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -117,41 +118,4 @@ def reset_password_with_otp(db: Session, email: str, otp: str, new_password: str
     logger.info(f"Password reset successfully for {email}")
 
 
-def verify_otp(db: Session, email: str, otp: str) -> bool:
-    """
-    Verify the OTP for the given email.
-    Returns True if valid, False otherwise.
-    Does NOT consume the OTP — call reset_password_with_otp to finalize.
-    """
-    user = db.query(User).filter(User.email == email.strip().lower()).first()
-    if not user:
-        return False
 
-    if not user.reset_token or not user.reset_token_expiry:
-        return False
-
-    if user.reset_token_expiry < datetime.utcnow():
-        return False
-
-    return user.reset_token == _hash_otp(otp.strip())
-
-
-def reset_password_with_otp(db: Session, email: str, otp: str, new_password: str) -> None:
-    """
-    Verify OTP and set new password in one step.
-    Raises ValueError on invalid/expired OTP.
-    """
-    if not verify_otp(db, email, otp):
-        raise ValueError("Invalid or expired OTP")
-
-    user = db.query(User).filter(User.email == email.strip().lower()).first()
-
-    user.hashed_password = hash_password(new_password)
-    user.reset_token = None
-    user.reset_token_expiry = None
-    # Reset failed login attempts on successful password change
-    user.failed_login_attempts = 0
-    user.account_locked_until = None
-    user.account_locked_reason = None
-
-    db.commit()

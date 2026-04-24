@@ -3,31 +3,33 @@ Admin Dashboard API Routes
 Handles: Products, Orders, Staff Management for Admin Panel
 """
 
-from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Query
-from sqlalchemy.orm import Session, selectinload
-from sqlalchemy import func
-from typing import Optional
-from datetime import datetime, timedelta, date
 import os
 import uuid
-from pydantic import BaseModel
+from datetime import date, datetime, timedelta
+from typing import Optional
 
-from app.db.session import get_db
-from app.models.product import Product
-from app.models.order import Order, OrderStatus
-from app.models.user import User
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from pydantic import BaseModel
+from sqlalchemy import func
+from sqlalchemy.orm import Session, selectinload
+
 from app.api.auth.dependencies import admin_required
 from app.core.config import settings
-from app.services.order_service import update_order_status as safe_update_order_status
+from app.db.session import get_db
+from app.models.order import Order, OrderStatus
+from app.models.product import Product
+from app.models.user import User
 from app.services.iam_readiness_service import IAMReadinessService
+from app.services.order_service import update_order_status as safe_update_order_status
 
 dashboard_router = APIRouter(prefix="/dashboard", tags=["admin-dashboard"])
 
 
 def _ensure_staff_table(db: Session) -> None:
     """Create the staff table on demand if it doesn't exist yet."""
-    from app.models.staff import Staff
     from sqlalchemy import inspect as sqlalchemy_inspect
+
+    from app.models.staff import Staff
 
     # Get engine from session
     engine = db.get_bind()

@@ -3,16 +3,17 @@ Production-grade dependency injection for authentication and authorization.
 Centralized, type-safe, and follows best practices.
 """
 
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
 from app.db.session import get_db
-from app.models.user import User, UserStatus, UserRole
 from app.models.token_blacklist import TokenBlacklist
+from app.models.user import User, UserRole, UserStatus
 from app.services.rbac_service import RBACService
 
 # ============================================================================

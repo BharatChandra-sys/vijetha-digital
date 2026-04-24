@@ -5,10 +5,12 @@ JWT token management, password hashing, and token helpers.
 
 import re
 import uuid
-from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
-from jose import jwt, JWTError
+from typing import Any, Dict, Optional
+
+from jose import JWTError, jwt
 from passlib.context import CryptContext
+
 from app.core.config import settings
 
 # Password hashing context

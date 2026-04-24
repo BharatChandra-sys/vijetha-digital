@@ -3,17 +3,18 @@ Admin API endpoints for IAM role management.
 Manage roles, permissions, and role-permission associations.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
-from app.db.session import get_db
-from app.models.user import User
-from app.models.iam import Role, Permission, RoleType, PermissionCategory
-from app.services.rbac_service import RBACService
-from app.api.auth.dependencies import get_current_user, require_permission
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from app.api.auth.dependencies import get_current_user, require_permission
+from app.db.session import get_db
+from app.models.iam import Permission, PermissionCategory, Role, RoleType
+from app.models.user import User
+from app.services.rbac_service import RBACService
 
 router = APIRouter(prefix="/roles", tags=["admin-roles"])
 

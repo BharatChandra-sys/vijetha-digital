@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, DateTime, Enum, Boolean, Index
-from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.db.base import Base
 import enum
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime, Enum, Index, Integer, String
+from sqlalchemy.orm import relationship
+
+from app.db.base import Base
 from app.models.iam import user_role_association
 
 

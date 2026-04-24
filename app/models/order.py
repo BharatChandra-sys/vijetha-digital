@@ -1,19 +1,20 @@
+import enum
+from datetime import datetime
+
 from sqlalchemy import (
-    Column,
-    Integer,
-    ForeignKey,
-    DateTime,
-    Numeric,
-    Enum,
-    Index,
     CheckConstraint,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
     String,
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.db.base import Base
-import enum
 
+from app.db.base import Base
 
 # =========================
 # ENUM DEFINITIONS

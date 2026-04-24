@@ -1,6 +1,7 @@
-from sqlalchemy.orm import Session
-from app.models.pricing import MaterialRate, ExtraRate
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
+
+from app.models.pricing import ExtraRate, MaterialRate
 
 
 def add_material(db: Session, name: str, rate: float):

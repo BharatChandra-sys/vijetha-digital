@@ -1,7 +1,9 @@
+from fastapi import Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from fastapi import Request
+
 from app.core.security import decode_access_token
+
 
 def get_rate_limit_key(request: Request) -> str:
     """Rate limit by IP and by authenticated user ID if logged in."""

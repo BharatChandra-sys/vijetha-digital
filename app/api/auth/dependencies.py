@@ -8,16 +8,16 @@ New code should import from app.core.deps directly.
 
 # Re-export all dependencies from core.deps
 from app.core.deps import (
-    get_current_user,
     get_current_active_user,
-    require_admin,
-    require_super_admin,
-    require_any_role,
-    require_all_roles,
-    require_permission,
-    require_any_permission,
-    require_all_permissions,
+    get_current_user,
     get_current_user_optional,
+    require_admin,
+    require_all_permissions,
+    require_all_roles,
+    require_any_permission,
+    require_any_role,
+    require_permission,
+    require_super_admin,
 )
 
 # Backward compatibility alias

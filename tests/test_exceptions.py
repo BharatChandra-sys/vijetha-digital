@@ -1,4 +1,4 @@
-from app.core.exceptions import OrderStateException, NotFoundException
+from app.core.exceptions import NotFoundException, OrderStateException
 
 
 def test_order_state_exception_details():

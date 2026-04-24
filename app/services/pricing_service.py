@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.pricing import MaterialRate, ExtraRate
+
+from app.models.pricing import ExtraRate, MaterialRate
 
 
 def calculate_price(

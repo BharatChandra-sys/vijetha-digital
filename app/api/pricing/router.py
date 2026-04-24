@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
+from app.core.rate_limiter import limiter
+from app.db.session import get_db
 from app.schemas.pricing import PriceRequest, PriceResponse
 from app.services.pricing_service import calculate_price
-from app.db.session import get_db
-from app.core.rate_limiter import limiter
 
 router = APIRouter(
     prefix="/pricing",

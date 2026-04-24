@@ -4,12 +4,14 @@ Run this after database migrations: python -m app.cli.iam_init
 """
 
 import sys
+
 from sqlalchemy.orm import Session
-from app.db.session import SessionLocal, engine
-from app.db.init_iam import init_iam_system
-from app.models.user import User, UserStatus
-from app.core.security import hash_password
+
 from app.core.config import settings
+from app.core.security import hash_password
+from app.db.init_iam import init_iam_system
+from app.db.session import SessionLocal, engine
+from app.models.user import User, UserStatus
 
 
 def init_iam():
@@ -60,7 +62,7 @@ def init_iam():
             db.commit()
             
             print(f"   ✓ Super admin created: {admin_email}")
-            print(f"   ⚠️  IMPORTANT: Change the default password!")
+            print("   ⚠️  IMPORTANT: Change the default password!")
         
         # Step 3: Display summary
         print("\n" + "="*75)

@@ -3,20 +3,21 @@ Production-level RBAC (Role-Based Access Control) service.
 Provides permission checking, role management, and audit logging.
 """
 
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
-from fastapi import HTTPException, status
 from datetime import datetime, timedelta
-from typing import List, Set, Optional
+from typing import List, Optional, Set
+
+from fastapi import HTTPException, status
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
 
 from app.models.iam import (
-    Role,
-    Permission,
-    RoleAssignmentLog,
-    PermissionAccessLog,
-    ResourceType,
     ActionType,
+    Permission,
+    PermissionAccessLog,
     PermissionCategory,
+    ResourceType,
+    Role,
+    RoleAssignmentLog,
     RoleType,
 )
 from app.models.user import User, UserStatus

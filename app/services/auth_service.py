@@ -3,28 +3,29 @@ Production-grade authentication service.
 Includes account lockout, failed login tracking, and security best practices.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
-from sqlalchemy.orm import Session
 import secrets
-import httpx
+from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
 
-from app.models.user import User, UserRole, UserStatus
-from app.schemas.auth import RegisterRequest, LoginRequest
-from app.core.security import (
-    hash_password,
-    verify_password,
-    create_access_token,
-    create_refresh_token,
-)
+import httpx
+from sqlalchemy.orm import Session
+
 from app.core.config import settings
 from app.core.exceptions import (
     ConflictException,
-    UnauthorizedException,
     ForbiddenException,
-    ValidationException,
     NotFoundException,
+    UnauthorizedException,
+    ValidationException,
 )
+from app.core.security import (
+    create_access_token,
+    create_refresh_token,
+    hash_password,
+    verify_password,
+)
+from app.models.user import User, UserRole, UserStatus
+from app.schemas.auth import LoginRequest, RegisterRequest
 
 # Security constants
 MAX_FAILED_LOGIN_ATTEMPTS = 5

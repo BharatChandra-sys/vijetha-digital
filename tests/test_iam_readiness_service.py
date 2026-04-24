@@ -1,10 +1,13 @@
 import os
+
 import pytest
 
 
 def _db_available() -> bool:
     try:
-        import psycopg2, re
+        import re
+
+        import psycopg2
         url = os.environ.get("DATABASE_URL", "")
         m = re.match(r"postgresql\+psycopg2://([^:]+):([^@]+)@([^:/]+):?(\d+)?/(.+)", url)
         if not m:

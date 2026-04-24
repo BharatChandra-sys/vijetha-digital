@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
-from app.schemas.order import OrderCreate, OrderResponse, OrderItemResponse
-from app.services.order_service import create_order, get_user_orders
-from app.services.invoice_service import generate_invoice_pdf
-from app.models.order import Order
-from app.db.session import get_db
 from app.api.auth.dependencies import get_current_user
+from app.db.session import get_db
+from app.models.order import Order
+from app.schemas.order import OrderCreate, OrderItemResponse, OrderResponse
+from app.services.invoice_service import generate_invoice_pdf
+from app.services.order_service import create_order, get_user_orders
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 

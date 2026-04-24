@@ -4,9 +4,10 @@ When enabled, all non-admin requests return 503.
 Toggle via environment variable or runtime flag.
 """
 
-import os
 import logging
+import os
 from typing import Callable
+
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware

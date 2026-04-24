@@ -3,15 +3,25 @@ Production-level Identity and Access Management (IAM) models.
 Supports role-based and permission-based access control.
 """
 
+import enum
+from datetime import datetime
+
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, ForeignKey, 
-    Table, Text, Index, Enum, UniqueConstraint
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Table,
+    Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.db.base import Base
-import enum
 
+from app.db.base import Base
 
 # ============================================================================
 # ENUMS

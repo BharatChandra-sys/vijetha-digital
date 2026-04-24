@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
+
 class Staff(Base):
     __tablename__ = "staff"
 

@@ -1,10 +1,19 @@
+from datetime import datetime
+
 from sqlalchemy import (
-    Column, Integer, String, Text, ForeignKey, DateTime, Boolean,
-    CheckConstraint, Index,
+    Boolean,
+    CheckConstraint,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from datetime import datetime
+
 from app.db.base import Base
 
 

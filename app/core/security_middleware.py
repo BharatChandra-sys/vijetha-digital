@@ -5,10 +5,11 @@ Production security middleware.
 - Suspicious request detection
 """
 
-import time
 import logging
 import re
+import time
 from typing import Callable
+
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp

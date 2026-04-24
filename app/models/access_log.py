@@ -3,8 +3,10 @@ Access log model — stores every login attempt and sensitive action
 with full context: IP, device, browser, OS, location hint.
 """
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Index, Text
 from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Index, Integer, String, Text
+
 from app.db.base import Base
 
 

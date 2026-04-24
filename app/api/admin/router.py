@@ -1,33 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
-# the original admin_guard module was removed; the logic now lives in auth dependencies
-from app.api.auth.dependencies import admin_required, get_current_user
-from app.db.session import get_db
-
-from app.schemas.product import ProductCreate, ProductResponse
-from app.schemas.admin_pricing import MaterialCreate, ExtraCreate
-
-from app.services.product_service import create_product, delete_product
-from app.services.order_service import get_all_orders, update_order_status
-from app.services.admin_pricing_service import add_material, add_extra
-from app.services.revenue_service import (
-    get_total_revenue,
-    get_today_revenue,
-    get_month_revenue,
-    get_year_revenue,
-)
-
-from app.models.pricing import MaterialRate, ExtraRate
-from app.models.user import User
+from app.api.admin import roles as roles_routes
 
 # Import IAM routers
 from app.api.admin import users as users_routes
-from app.api.admin import roles as roles_routes
+
+# the original admin_guard module was removed; the logic now lives in auth dependencies
+from app.api.auth.dependencies import admin_required, get_current_user
 
 # Import Dashboard router
 from app.api.v1.admin import dashboard_router
+from app.db.session import get_db
+from app.models.pricing import ExtraRate, MaterialRate
+from app.models.user import User
+from app.schemas.admin_pricing import ExtraCreate, MaterialCreate
+from app.schemas.product import ProductCreate, ProductResponse
+from app.services.admin_pricing_service import add_extra, add_material
+from app.services.order_service import get_all_orders, update_order_status
+from app.services.product_service import create_product, delete_product
+from app.services.revenue_service import (
+    get_month_revenue,
+    get_today_revenue,
+    get_total_revenue,
+    get_year_revenue,
+)
 
 # 🔒 ADMIN ROUTER
 router = APIRouter(
@@ -217,19 +215,19 @@ def get_access_logs(
     logs = query.limit(min(limit, 500)).all()
     return [
         {
-            "id": l.id,
-            "action": l.action,
-            "success": l.success,
-            "email": l.email,
-            "ip_address": l.ip_address,
-            "device": l.device_type,
-            "browser": l.browser,
-            "os": l.os_name,
-            "endpoint": l.endpoint,
-            "detail": l.detail,
-            "created_at": l.created_at.isoformat() if l.created_at else None,
+            "id": log.id,
+            "action": log.action,
+            "success": log.success,
+            "email": log.email,
+            "ip_address": log.ip_address,
+            "device": log.device_type,
+            "browser": log.browser,
+            "os": log.os_name,
+            "endpoint": log.endpoint,
+            "detail": log.detail,
+            "created_at": log.created_at.isoformat() if log.created_at else None,
         }
-        for l in logs
+        for log in logs
     ]
 
 
@@ -244,15 +242,15 @@ def get_failed_logins(
     logs = _get(db, hours=hours)
     return [
         {
-            "email": l.email,
-            "ip_address": l.ip_address,
-            "device": l.device_type,
-            "browser": l.browser,
-            "os": l.os_name,
-            "detail": l.detail,
-            "created_at": l.created_at.isoformat() if l.created_at else None,
+            "email": log.email,
+            "ip_address": log.ip_address,
+            "device": log.device_type,
+            "browser": log.browser,
+            "os": log.os_name,
+            "detail": log.detail,
+            "created_at": log.created_at.isoformat() if log.created_at else None,
         }
-        for l in logs
+        for log in logs
     ]
 
 
@@ -262,7 +260,7 @@ def get_maintenance_status(
     current_user: User = Depends(admin_required),
 ):
     """Get current maintenance mode status."""
-    from app.core.maintenance import is_maintenance_active, get_maintenance_message
+    from app.core.maintenance import get_maintenance_message, is_maintenance_active
     return {
         "active": is_maintenance_active(),
         "message": get_maintenance_message(),

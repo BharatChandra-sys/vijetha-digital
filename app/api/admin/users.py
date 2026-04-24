@@ -3,17 +3,19 @@ Admin API endpoints for IAM user management.
 Production-level endpoints with proper validation and audit logging.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
-from app.db.session import get_db
-from app.models.user import User, UserStatus
-from app.models.iam import Role, RoleAssignmentLog, Permission
-from app.services.rbac_service import RBACService
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel, EmailStr
+from sqlalchemy.orm import Session
+
 from app.api.auth.dependencies import get_current_user, require_permission
 from app.core.security import hash_password
+from app.db.session import get_db
+from app.models.iam import Permission, Role, RoleAssignmentLog
+from app.models.user import User, UserStatus
+from app.services.rbac_service import RBACService
 
 router = APIRouter(prefix="/users", tags=["admin-users"])
 
@@ -21,8 +23,6 @@ router = APIRouter(prefix="/users", tags=["admin-users"])
 # ============================================================================
 # SCHEMAS
 # ============================================================================
-
-from pydantic import BaseModel, EmailStr
 
 
 class UserAssignRoleRequest(BaseModel):
@@ -84,7 +84,7 @@ def list_users(
     current_user: User = Depends(require_permission("user:list")),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    status: Optional[str] = None,
+    status_filter: Optional[str] = Query(None, alias="status"),
     role_slug: Optional[str] = None,
 ):
     """
@@ -93,9 +93,9 @@ def list_users(
     """
     query = db.query(User)
 
-    if status:
+    if status_filter:
         try:
-            user_status = UserStatus(status)
+            user_status = UserStatus(status_filter)
             query = query.filter(User.status == user_status)
         except ValueError:
             raise HTTPException(status_code=400, detail=f"Invalid status: {status}")

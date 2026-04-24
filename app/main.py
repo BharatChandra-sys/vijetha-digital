@@ -1,9 +1,9 @@
-from pathlib import Path
-from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from datetime import datetime
+from pathlib import Path
 
 import redis
+from dotenv import load_dotenv
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -11,31 +11,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from slowapi import _rate_limit_exceeded_handler
 
+from app.api.admin.router import router as admin_router
+from app.api.auth.router import router as auth_router
+from app.api.health import router as health_router
+from app.api.orders.router import router as order_router
+from app.api.payments.router import router as payment_router
+from app.api.pricing.router import router as pricing_router
+from app.api.products.router import router as product_router
+from app.api.reviews.router import router as review_router
 from app.core.config import settings
-from app.core.rate_limiter import limiter
 from app.core.exceptions import AppException
-from app.core.security_middleware import SecurityHeadersMiddleware
 from app.core.maintenance import MaintenanceModeMiddleware
+from app.core.rate_limiter import limiter
+from app.core.security_middleware import SecurityHeadersMiddleware
 from app.db.init_db import init_db
 from app.db.session import engine
 from app.middleware.logging import RequestLoggingMiddleware
-
-from app.api.health import router as health_router
-from app.api.auth.router import router as auth_router
-from app.api.admin.router import router as admin_router
-from app.api.products.router import router as product_router
-from app.api.orders.router import router as order_router
-from app.api.pricing.router import router as pricing_router
-from app.api.payments.router import router as payment_router
-from app.api.reviews.router import router as review_router
 
 
 def _ensure_access_logs_table() -> None:
