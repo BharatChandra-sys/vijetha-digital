@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getProducts } from "../api/products";
+import ProductCard, { ProductCardSkeleton } from "../components/product/ProductCard";
 
 /* ── Static data ────────────────────────────────────────────────────── */
 
@@ -324,16 +325,9 @@ export default function Products() {
             {/* Grid */}
             <main className="flex-1">
               {loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
-                  {[...Array(8)].map((_,i) => (
-                    <div key={i} className="bg-white rounded-[12px] overflow-hidden border border-stone-border/50">
-                      <div className="aspect-[4/3] skeleton" />
-                      <div className="p-3 sm:p-4 space-y-2">
-                        <div className="h-3 skeleton rounded w-3/4" />
-                        <div className="h-3 skeleton rounded w-1/2" />
-                        <div className="h-8 skeleton rounded w-full mt-2" />
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <ProductCardSkeleton key={i} />
                   ))}
                 </div>
               ) : allFiltered.length === 0 ? (
@@ -366,7 +360,7 @@ export default function Products() {
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 stagger-children">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 stagger-children">
                     {visible.map(product => <ProductCard key={product.id} product={product} navigate={navigate} />)}
                   </div>
 
@@ -432,7 +426,7 @@ export default function Products() {
               <h2 className="text-[2rem] font-bold text-plum-deep mb-4 leading-tight tracking-[-0.01em]">Streamline Corporate Ordering</h2>
               <p className="text-base text-text-muted mb-7 leading-relaxed">Ensure brand consistency across all branches. Dedicated bulk pricing, account support &amp; monthly invoicing for high-volume needs.</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to="/register" className="inline-flex items-center justify-center h-11 px-7 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-[8px] shadow-soft-plum transition-all hover:-translate-y-0.5 text-sm">
+                <Link to="/register" className="inline-flex items-center justify-center h-11 px-7 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-[8px] transition-all hover:-translate-y-0.5 text-sm">
                   Open Business Account
                 </Link>
                 <a href="tel:+917942643004" className="inline-flex items-center justify-center h-11 px-7 border border-plum-deep text-plum-deep hover:bg-plum-deep/5 font-bold rounded-[8px] transition-all text-sm">
@@ -507,66 +501,4 @@ function SidebarContent({ priceFilters, togglePrice, bulkOnly, setBulkOnly }) {
   );
 }
 
-/* ── Product card ──────────────────────────────────────────────────── */
-function ProductCard({ product, navigate }) {
-  const badge = BADGE_MAP[product.name];
-  return (
-    <div
-      className="bg-white rounded-[12px] overflow-hidden shadow-product-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group border border-stone-border/50 flex flex-col h-full cursor-pointer active:scale-[0.98]"
-      onClick={() => navigate(`/products/${product.id}`)}
-    >
-      {/* Image — square-ish on mobile, 4:3 on desktop */}
-      <div className="aspect-square sm:aspect-[4/3] bg-stone-light relative overflow-hidden">
-        {product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="product-img w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-            <span className="material-symbols-outlined text-plum-deep/20 text-3xl">image</span>
-            <span className="text-[0.625rem] text-text-muted/50 font-medium text-center px-2 leading-tight">{product.category}</span>
-          </div>
-        )}
-        {badge && (
-          <div className={`absolute top-2 left-2 ${badge.cls} text-white text-[0.5625rem] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide shadow-sm`}>
-            {badge.label}
-          </div>
-        )}
-      </div>
 
-      {/* Content */}
-      <div className="p-2.5 sm:p-4 flex flex-col flex-1">
-        <span className="text-[0.5625rem] sm:text-[0.6875rem] font-semibold text-text-muted uppercase tracking-wide mb-0.5 truncate">{product.category}</span>
-        <h3 className="text-[0.8125rem] sm:text-[0.9375rem] font-bold text-plum-deep mb-1 group-hover:text-coral-accent transition-colors line-clamp-2 leading-snug">
-          {product.name}
-        </h3>
-        {product.description && (
-          <p className="text-[0.75rem] text-text-muted line-clamp-2 mb-2 leading-relaxed hidden sm:block">{product.description}</p>
-        )}
-
-        {/* Price + CTA */}
-        <div className="mt-auto pt-2 border-t border-stone-border/40">
-          <div className="flex items-center justify-between gap-1.5">
-            <div className="min-w-0">
-              <span className="text-[0.5625rem] text-text-muted font-medium hidden sm:block">From</span>
-              <div className="flex items-baseline gap-0.5 flex-wrap">
-                <span className="text-[0.9375rem] sm:text-[1.0625rem] font-extrabold text-plum-deep leading-none">
-                  &#8377;{Number(product.base_price).toLocaleString("en-IN")}
-                </span>
-                <span className="text-[0.5625rem] sm:text-[0.6875rem] text-text-muted hidden sm:inline">/ {product.unit || "unit"}</span>
-              </div>
-            </div>
-            <button
-              className="inline-flex items-center justify-center h-8 sm:h-9 px-2.5 sm:px-4 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-[8px] transition-all text-[0.6875rem] sm:text-[0.8125rem] active:scale-[0.97] flex-shrink-0 whitespace-nowrap shadow-sm"
-              onClick={e => { e.stopPropagation(); navigate(`/products/${product.id}`); }}
-            >
-              Order
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

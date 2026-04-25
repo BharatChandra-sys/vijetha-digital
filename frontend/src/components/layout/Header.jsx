@@ -531,22 +531,27 @@ export default function Header() {
           />
 
           <div className="flex items-center gap-1.5">
-            {/* Mobile only: search icon (hidden on lg+) */}
+            {/* Search — mobile shows always, desktop shows when search not open */}
             <button
+              ref={searchButtonRef}
               onClick={() => setShowSearch((v) => !v)}
-              className="flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
-              aria-label="Search"
+              className={`flex items-center justify-center w-9 h-9 rounded-full border transition-all ${
+                showSearch
+                  ? "pointer-events-none scale-90 border-plum-deep bg-plum-deep text-white opacity-0 hidden"
+                  : "border-transparent lg:border-stone-border text-plum-deep hover:text-coral-accent hover:bg-stone-light lg:hover:border-plum-deep/40"
+              }`}
+              aria-label="Search products"
             >
-              <span className="material-symbols-outlined text-[1.375rem]">search</span>
+              <span className="material-symbols-outlined text-[1.25rem]">search</span>
             </button>
 
-            {/* Mobile only: cart icon (hidden on lg+) */}
+            {/* Cart */}
             <Link
               to="/cart"
-              className="relative flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all lg:hidden"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full text-plum-deep hover:text-coral-accent hover:bg-stone-light transition-all"
               aria-label="Cart"
             >
-              <span className="material-symbols-outlined text-[1.375rem]">shopping_cart</span>
+              <span className="material-symbols-outlined text-[1.25rem]">shopping_cart</span>
               {cartCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[9px] font-bold text-white leading-none">
                   {cartCount > 9 ? "9+" : cartCount}
@@ -566,50 +571,35 @@ export default function Header() {
                 </button>
                 {dropdownOpen && (
                   <>
-                    {/* Backdrop to close on outside tap */}
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setDropdownOpen(false)}
-                    />
-                    <div
-                      className="fixed z-50 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter"
-                      style={{ top: 60, right: 12, minWidth: 192, maxWidth: "calc(100vw - 24px)" }}
-                    >
+                    <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
+                    <div className="fixed z-50 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter"
+                      style={{ top: 60, right: 12, minWidth: 192, maxWidth: "calc(100vw - 24px)" }}>
                       <div className="px-4 py-2.5 border-b border-stone-border/60 bg-stone-light/40">
                         <p className="text-[0.875rem] font-bold text-plum-deep leading-tight truncate">{user.full_name || "User"}</p>
                         <p className="text-[0.6875rem] text-text-muted mt-0.5 truncate">{user.email}</p>
                       </div>
                       <div className="py-1">
-                        <Link to="/profile" onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">person</span>
-                          My Profile
+                        <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">person</span>My Profile
                         </Link>
                         {user.role === "customer" && (
-                          <Link to="/orders" onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">receipt_long</span>
-                            My Orders
+                          <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">receipt_long</span>My Orders
                           </Link>
                         )}
-                        <Link to="/cart" onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                        <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
                           <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">shopping_cart</span>
                           Cart {cartCount > 0 && <span className="ml-auto text-[0.6875rem] font-bold text-coral-accent">{cartCount}</span>}
                         </Link>
                         {isAdmin && (
-                          <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">admin_panel_settings</span>
-                            Admin
+                          <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                            <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">admin_panel_settings</span>Admin
                           </Link>
                         )}
                       </div>
                       <div className="border-t border-stone-border/60">
-                        <button onClick={handleLogout}
-                          className="flex w-full items-center gap-3 px-4 py-2.5 text-[0.875rem] font-semibold text-red-500 hover:bg-red-50 transition-colors">
-                          <span className="material-symbols-outlined text-[1.125rem] flex-shrink-0">logout</span>
-                          Log Out
+                        <button onClick={handleLogout} className="flex w-full items-center gap-3 px-4 py-2.5 text-[0.875rem] font-semibold text-red-500 hover:bg-red-50 transition-colors">
+                          <span className="material-symbols-outlined text-[1.125rem] flex-shrink-0">logout</span>Log Out
                         </button>
                       </div>
                     </div>
@@ -617,31 +607,6 @@ export default function Header() {
                 )}
               </div>
             )}
-
-            {/* Desktop only: search button (lg+) */}
-            <button
-              ref={searchButtonRef}
-              onClick={() => setShowSearch((v) => !v)}
-              className={`hidden rounded-full border p-2 transition-all lg:flex ${
-                showSearch
-                  ? "pointer-events-none scale-90 border-plum-deep bg-plum-deep text-white opacity-0"
-                  : "border-stone-border text-plum-deep hover:border-plum-deep/40 hover:text-coral-accent"
-              }`}
-              title="Search products"
-              aria-label="Search products"
-            >
-              <span className="material-symbols-outlined text-[1.25rem]">search</span>
-            </button>
-
-            {/* Desktop only: cart (lg+) */}
-            <Link to="/cart" className="relative hidden p-2 text-plum-deep transition-colors hover:text-coral-accent lg:flex">
-              <span className="material-symbols-outlined text-[1.25rem]">shopping_cart</span>
-              {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[9px] font-bold text-white">
-                  {cartCount > 9 ? "9+" : cartCount}
-                </span>
-              )}
-            </Link>
 
             {/* Desktop: login / user dropdown */}
             {!user ? (

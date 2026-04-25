@@ -1,6 +1,7 @@
 import { useEffect, useState, Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProducts } from "../api/products";
+import ProductCarousel from "../components/product/ProductCarousel";
 
 /* ── Icon-based services (matching Stitch design) ──────────────────── */
 const SERVICES = [
@@ -66,16 +67,15 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center h-12 px-8 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-lg shadow-md transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
+                className="inline-flex items-center justify-center gap-2 h-11 px-7 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-[8px] shadow-sm transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm tracking-wide"
               >
-                <span className="material-symbols-outlined text-base mr-1.5">inventory_2</span>
                 Explore Products
               </Link>
               <a
                 href="tel:+917942643004"
-                className="inline-flex items-center justify-center h-12 px-7 border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white font-bold rounded-lg transition-all text-sm"
+                className="inline-flex items-center justify-center gap-2 h-11 px-7 border border-plum-deep/30 bg-white text-plum-deep hover:bg-plum-deep hover:text-white font-semibold rounded-[8px] transition-all text-sm"
               >
-                <span className="material-symbols-outlined text-base mr-1.5">call</span>
+                <span className="material-symbols-outlined text-[1.125rem] leading-none">call</span>
                 Get Custom Quote
               </a>
             </div>
@@ -117,7 +117,7 @@ export default function Home() {
             </div>
 
             {/* Floating badge — top right */}
-            <div className="absolute -top-3 -right-3 bg-plum-deep text-white rounded-xl shadow-soft-plum px-3 py-2 flex items-center gap-2">
+            <div className="absolute -top-3 -right-3 bg-plum-deep text-white rounded-xl px-3 py-2 flex items-center gap-2">
               <span className="material-symbols-outlined text-coral-accent text-base">verified</span>
               <span className="text-[0.75rem] font-bold">GST Invoice</span>
             </div>
@@ -201,12 +201,12 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 stagger-children">
             {SERVICES.map(svc => (
               <div key={svc.title} onClick={() => navigate("/products")}
-                className="group coral-top-border bg-warm-white p-4 rounded-[12px] shadow-card-default hover:shadow-card-hover border border-stone-border/60 hover:border-stone-border cursor-pointer transition-all duration-200 active:scale-[0.98]">
-                <div className="w-9 h-9 bg-white rounded-[8px] flex items-center justify-center shadow-sm mb-3 group-hover:bg-plum-deep transition-colors duration-200 flex-shrink-0">
-                  <span className="material-symbols-outlined text-plum-deep group-hover:text-white text-lg">{svc.icon}</span>
+                className="coral-top-border bg-white p-5 rounded-[12px] shadow-card-default hover:shadow-card-hover border border-stone-border/60 cursor-pointer transition-all duration-200 active:scale-[0.98] group">
+                <div className="w-11 h-11 bg-plum-deep/6 rounded-[10px] flex items-center justify-center mb-4 flex-shrink-0 transition-colors duration-200 group-hover:bg-plum-deep">
+                  <span className="material-symbols-outlined text-[1.375rem] transition-colors duration-200 text-plum-deep group-hover:text-white">{svc.icon}</span>
                 </div>
-                <h3 className="text-[0.875rem] sm:text-[1rem] font-semibold text-plum-deep mb-1 leading-snug">{svc.title}</h3>
-                <p className="text-[0.6875rem] sm:text-[0.8125rem] text-text-muted leading-relaxed line-clamp-2">{svc.desc}</p>
+                <h3 className="text-[0.9375rem] font-bold text-plum-deep mb-1.5 leading-snug">{svc.title}</h3>
+                <p className="text-[0.8125rem] text-text-muted leading-relaxed line-clamp-2">{svc.desc}</p>
               </div>
             ))}
           </div>
@@ -225,64 +225,12 @@ export default function Home() {
               View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white rounded-[12px] overflow-hidden border border-stone-border/50">
-                  <div className="aspect-[4/3] skeleton" />
-                  <div className="p-3 sm:p-5 space-y-2">
-                    <div className="h-4 skeleton rounded w-3/4" />
-                    <div className="h-3 skeleton rounded w-1/2" />
-                    <div className="h-8 skeleton rounded w-full mt-2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 stagger-children">
-              {popular.map((product, idx) => (
-                <div key={product.id} onClick={() => navigate(`/products/${product.id}`)}
-                  className="bg-white rounded-[12px] overflow-hidden shadow-product-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group border border-stone-border/50 cursor-pointer active:scale-[0.98]">
-                  <div className="aspect-[4/3] bg-stone-light relative overflow-hidden">
-                    {product.image_url ? (
-                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-stone-light">
-                        <span className="material-symbols-outlined text-plum-deep/20 text-4xl">image</span>
-                      </div>
-                    )}
-                    <div className={`absolute top-2 left-2 text-white text-[0.625rem] sm:text-[0.75rem] font-bold px-2 py-0.5 rounded-full shadow-sm ${idx === 1 ? "bg-plum-deep" : "bg-coral-accent"}`}>
-                      {BADGES[idx]}
-                    </div>
-                  </div>
-                  <div className="p-3 sm:p-5">
-                    <h3 className="text-[0.8125rem] sm:text-[1rem] font-bold text-plum-deep mb-1 group-hover:text-coral-accent transition-colors leading-snug line-clamp-2">{product.name}</h3>
-                    <p className="text-text-muted text-[0.75rem] mb-3 line-clamp-2 hidden sm:block">{product.description || product.category}</p>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <span className="text-[0.625rem] text-text-muted font-semibold uppercase tracking-wide hidden sm:block">From</span>
-                        <span className="text-[0.9375rem] sm:text-lg font-black text-plum-deep tracking-tight leading-none">
-                          &#8377;{Number(product.base_price).toLocaleString("en-IN")}
-                        </span>
-                        <span className="text-[0.625rem] text-text-muted ml-0.5 hidden sm:inline">/ {product.unit || "unit"}</span>
-                      </div>
-                      <button
-                        onClick={e => { e.stopPropagation(); navigate(`/products/${product.id}`); }}
-                        className="inline-flex items-center justify-center h-8 sm:h-10 px-3 sm:px-5 bg-plum-deep text-white hover:bg-plum-light font-bold rounded-[8px] transition-all text-[0.75rem] sm:text-sm active:scale-[0.97] flex-shrink-0"
-                      >
-                        Order
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <ProductCarousel products={popular} loading={loading} count={3} />
 
           <div className="text-center mt-10">
             <Link
               to="/products"
-              className="inline-flex items-center justify-center h-12 px-10 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-[8px] shadow-soft-plum transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
+              className="inline-flex items-center justify-center h-11 px-10 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-[8px] transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
             >
               Explore All Products
             </Link>
@@ -360,7 +308,7 @@ export default function Home() {
               </ul>
               <Link
                 to="/register"
-                className="inline-flex items-center justify-center h-12 px-8 bg-plum-deep text-white font-bold rounded-[8px] shadow-soft-plum hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
+                className="inline-flex items-center justify-center h-12 px-8 bg-plum-deep text-white font-bold rounded-[8px] hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm"
               >
                 Open Business Account
               </Link>

@@ -38,7 +38,7 @@ export default function ResetLinkSent() {
         {/* Button */}
         <button
           onClick={() => navigate("/login")}
-          className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold shadow-soft-plum hover:bg-[#2D244C] transition-all"
+          className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold hover:bg-[#2D244C] transition-all"
         >
           Back to Sign In
         </button>

@@ -11,38 +11,40 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Primary brand — matches logo navy ──
-        "brand-navy":    "#1A1F3C",   // logo dark navy (primary)
-        "brand-navy-2":  "#252B4A",   // slightly lighter navy
-        "brand-navy-3":  "#2F3660",   // medium navy for hover states
-        "brand-orange":  "#E8431A",   // logo orange-red (accent)
-        "brand-orange-2":"#D03A14",   // darker orange for hover
+        // ── PRIMARY — Deep Charcoal ──
+        "brand-navy":    "#1A2332",   // deep charcoal-navy (primary)
+        "brand-navy-2":  "#22304A",   // slightly lighter
+        "brand-navy-3":  "#2C3E55",   // hover state
 
-        // ── Neutral surface ──
-        "warm-white":    "#F9F8F6",   // off-white background
+        // ── ACCENT — Vermillion Red ──
+        "brand-orange":  "#C0392B",   // vermillion red CTA
+        "brand-orange-2":"#A93226",   // vermillion hover
+
+        // ── SURFACES ──
+        "warm-white":    "#F8F7F4",   // page background (warm paper)
         "surface":       "#FFFFFF",   // card white
-        "surface-2":     "#F4F3F0",   // subtle grey surface
-        "border-light":  "#E8E6E2",   // light border
-        "border-mid":    "#D4D1CB",   // medium border
+        "surface-2":     "#F2F1ED",   // subtle warm surface
+        "border-light":  "#E4E1DA",   // light warm border
+        "border-mid":    "#CCC9C0",   // medium border
 
-        // ── Text ──
-        "text-primary":  "#111318",   // near-black
-        "text-secondary":"#5A5A65",   // muted grey
-        "text-hint":     "#9A9AA5",   // placeholder / hint
+        // ── TEXT ──
+        "text-primary":  "#0F1923",   // near-black charcoal
+        "text-secondary":"#64748B",   // muted slate
+        "text-hint":     "#94A3B8",   // placeholder / hint
 
-        // ── Legacy aliases (keep for backward compat) ──
-        "plum-deep":    "#1A1F3C",
-        "plum-darker":  "#13172E",
-        "plum-light":   "#2F3660",
-        "plum-hover":   "#252B4A",
-        "coral-accent": "#E8431A",
-        "coral-dark":   "#D03A14",
-        "stone-light":  "#F4F3F0",
-        "stone-border": "#E8E6E2",
-        "beige-warm":   "#F0EDE7",
-        "text-dark":    "#111318",
-        "text-muted":   "#5A5A65",
-        "sidebar-bg":   "#ECEAE6",
+        // ── Legacy aliases — mapped to new palette ──
+        "plum-deep":    "#1A2332",
+        "plum-darker":  "#111B28",
+        "plum-light":   "#2C3E55",
+        "plum-hover":   "#22304A",
+        "coral-accent": "#C0392B",
+        "coral-dark":   "#A93226",
+        "stone-light":  "#F2F1ED",
+        "stone-border": "#E4E1DA",
+        "beige-warm":   "#EDE9E0",
+        "text-dark":    "#0F1923",
+        "text-muted":   "#64748B",
+        "sidebar-bg":   "#E8E6E0",
       },
 
       fontFamily: {
@@ -50,21 +52,21 @@ export default {
       },
 
       boxShadow: {
-        "soft-plum":          "0 10px 20px rgba(26,31,60,0.12)",
+        "soft-plum":          "0 10px 20px rgba(26,35,50,0.12)",
         "architectural":      "0 10px 40px -10px rgba(0,0,0,0.07)",
-        "architectural-lg":   "0 20px 60px -12px rgba(0,0,0,0.18)",
-        "architectural-xl":   "0 30px 70px -10px rgba(26,31,60,0.22)",
-        "card-default":       "0 2px 8px rgba(0,0,0,0.06)",
+        "architectural-lg":   "0 20px 60px -12px rgba(0,0,0,0.16)",
+        "architectural-xl":   "0 30px 70px -10px rgba(26,35,50,0.20)",
+        "card-default":       "0 2px 8px rgba(0,0,0,0.05)",
         "card-enhanced":      "0 4px 16px rgba(0,0,0,0.08)",
-        "card-hover":         "0 12px 32px rgba(26,31,60,0.12)",
+        "card-hover":         "0 12px 32px rgba(26,35,50,0.12)",
         "image-card":         "0 8px 24px rgba(0,0,0,0.08)",
         "product-card":       "0 1px 4px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)",
         "product-img-shadow": "0 4px 12px rgba(0,0,0,0.08)",
-        "glow-coral":         "0 0 32px 8px rgba(232,67,26,0.25)",
+        "glow-coral":         "0 0 32px 8px rgba(192,57,43,0.28)",
       },
 
       backgroundImage: {
-        "dot-pattern": "radial-gradient(#CFC8BD 1px, transparent 1px)",
+        "dot-pattern": "radial-gradient(#C8C4BB 1px, transparent 1px)",
       },
 
       fontSize: {

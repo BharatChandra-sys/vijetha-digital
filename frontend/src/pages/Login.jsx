@@ -212,7 +212,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-2"
+              className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

@@ -76,7 +76,7 @@ export default function Cart() {
         <p className="text-text-muted text-sm mb-8">Add products to your cart to get started.</p>
         <Link
           to="/products"
-          className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-light text-white font-bold py-3 px-8 rounded-full shadow-soft-plum transition-all text-sm uppercase tracking-wide"
+          className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-light text-white font-bold py-3 px-8 rounded-full transition-all text-sm uppercase tracking-wide"
         >
           <span className="material-symbols-outlined text-lg">storefront</span>
           Browse Products
@@ -268,7 +268,7 @@ export default function Cart() {
             </Link>
 
             {/* B2B CTA card */}
-            <div className="relative overflow-hidden bg-white rounded-[16px] p-8 shadow-soft-plum border border-plum-deep/10 mt-2">
+            <div className="relative overflow-hidden bg-white rounded-[16px] p-8 border border-plum-deep/10 mt-2">
               <div
                 className="absolute inset-0 opacity-40"
                 style={{ backgroundImage: "radial-gradient(#CFC8BD 1px, transparent 1px)", backgroundSize: "16px 16px" }}
@@ -352,7 +352,7 @@ export default function Cart() {
 
                 <button
                   onClick={() => navigate("/checkout")}
-                  className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-light shadow-soft-plum hover:shadow-card-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide focus:ring-4 focus:ring-plum-deep/30"
+                  className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-light hover:shadow-card-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide focus:ring-4 focus:ring-plum-deep/30"
                 >
                   Proceed to Checkout
                   <span className="material-symbols-outlined text-[20px]">arrow_forward</span>

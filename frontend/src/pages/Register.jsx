@@ -142,7 +142,7 @@ export default function Register() {
           </label>
 
           <button type="submit"
-            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] shadow-soft-plum">
+            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98]">
             Create Account
           </button>
         </form>

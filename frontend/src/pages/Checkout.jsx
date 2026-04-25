@@ -585,7 +585,7 @@ export default function Checkout() {
                 <button
                   onClick={handlePayment}
                   disabled={paying}
-                  className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-darker shadow-soft-plum hover:shadow-card-hover transition-all flex items-center justify-center gap-2 text-base uppercase tracking-wide focus:ring-4 focus:ring-plum-deep/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-darker shadow-soft-plum hover:shadow-card-hover transition-all flex items-center justify-center gap-2 text-base uppercase tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {paying ? (
                     <>

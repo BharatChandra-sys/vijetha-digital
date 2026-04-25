@@ -185,7 +185,7 @@ export default function Orders() {
             <p className="text-text-muted text-sm mb-8">Place your first order to see it here.</p>
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-3 px-8 rounded-full transition-all text-sm uppercase tracking-wide shadow-soft-plum"
+              className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-3 px-8 rounded-full transition-all text-sm uppercase tracking-wide"
             >
               <span className="material-symbols-outlined text-lg">print</span>
               Start Your Order

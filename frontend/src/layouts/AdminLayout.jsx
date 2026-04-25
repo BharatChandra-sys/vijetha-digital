@@ -48,7 +48,7 @@ function NavLink({ item, pathname, onClick }) {
       onClick={onClick}
       className={`flex items-center gap-3 px-4 py-2.5 text-[0.8125rem] font-semibold transition-all duration-150 ${
         active
-          ? "text-white bg-white/8 border-l-[3px] border-[#E8431A] pl-[13px]"
+          ? "text-white bg-white/8 border-l-[3px] border-[#C0392B] pl-[13px]"
           : "text-[#8286A9] hover:text-white hover:bg-white/5 border-l-[3px] border-transparent pl-[13px]"
       }`}
     >
@@ -85,7 +85,7 @@ export default function AdminLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "Manrope, sans-serif", background: "#F5F4F1" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "Manrope, sans-serif", background: "#F2F1ED" }}>
 
       {/* Mobile backdrop */}
       {sidebarOpen && (
@@ -104,7 +104,7 @@ export default function AdminLayout() {
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
-        style={{ width: 224, background: "#1A1F3C", flexShrink: 0 }}
+        style={{ width: 224, background: "#1A2332", flexShrink: 0 }}
       >
         {/* Brand — never scrolls */}
         <div className="flex-shrink-0 px-5 pt-6 pb-5 border-b border-white/8">
@@ -151,7 +151,7 @@ export default function AdminLayout() {
           </Link>
           <button
             onClick={() => logout()}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-[0.8125rem] font-semibold text-[#E8431A] hover:bg-white/5 transition-all border-l-[3px] border-transparent pl-[13px]">
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-[0.8125rem] font-semibold text-[#C0392B] hover:bg-white/5 transition-all border-l-[3px] border-transparent pl-[13px]">
             <span className="material-symbols-outlined" style={{ fontSize: 18 }}>logout</span>
             Sign Out
           </button>
@@ -160,7 +160,7 @@ export default function AdminLayout() {
         {/* User card — never scrolls */}
         <div className="flex-shrink-0 border-t border-white/8 p-3">
           <div className="flex items-center gap-2.5 px-2 py-2.5 rounded-xl bg-white/5">
-            <div className="w-8 h-8 rounded-full bg-[#E8431A] text-white text-xs font-black flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[#C0392B] text-white text-xs font-black flex items-center justify-center flex-shrink-0">
               {avatarLetter}
             </div>
             <div className="min-w-0">
@@ -184,7 +184,7 @@ export default function AdminLayout() {
           <button
             type="button"
             onClick={() => setSidebarOpen(v => !v)}
-            className="flex items-center justify-center text-[#1A1F3C] hover:text-[#E8431A] transition-colors flex-shrink-0"
+            className="flex items-center justify-center text-[#1A2332] hover:text-[#C0392B] transition-colors flex-shrink-0"
             style={{ width: 36, height: 36, background: "none", border: "none", cursor: "pointer", padding: 0 }}
             aria-label="Toggle sidebar"
           >
@@ -201,7 +201,7 @@ export default function AdminLayout() {
             {currentPage && (
               <>
                 <span className="material-symbols-outlined text-[#B0ADA8]" style={{ fontSize: 14 }}>chevron_right</span>
-                <span className="font-bold text-[#1A1F3C] truncate" style={{ fontSize: 13 }}>{currentPage.label}</span>
+                <span className="font-bold text-[#1A2332] truncate" style={{ fontSize: 13 }}>{currentPage.label}</span>
               </>
             )}
           </div>
@@ -215,12 +215,12 @@ export default function AdminLayout() {
               style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}
             >
               <div className="text-right hidden sm:block">
-                <p className="font-bold text-[#1A1F3C]" style={{ fontSize: 12, lineHeight: 1.2 }}>
+                <p className="font-bold text-[#1A2332]" style={{ fontSize: 12, lineHeight: 1.2 }}>
                   {user?.full_name?.split(" ")[0] || "Admin"}
                 </p>
                 <p className="text-[#9A9AA5]" style={{ fontSize: 10 }}>Administrator</p>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-[#1A1F3C] text-white font-black flex items-center justify-center flex-shrink-0"
+              <div className="w-8 h-8 rounded-xl bg-[#1A2332] text-white font-black flex items-center justify-center flex-shrink-0"
                 style={{ fontSize: 13 }}>
                 {avatarLetter}
               </div>
@@ -231,19 +231,19 @@ export default function AdminLayout() {
                 className="absolute right-0 top-full mt-2 bg-white rounded-xl border border-[#E8E6E2] overflow-hidden dropdown-enter"
                 style={{ width: 200, boxShadow: "0 8px 24px rgba(0,0,0,0.1)", zIndex: 50 }}
               >
-                <div className="px-4 py-3 border-b border-[#E8E6E2] bg-[#F5F4F1]">
-                  <p className="font-bold text-[#1A1F3C]" style={{ fontSize: 13 }}>{user?.full_name || "Admin"}</p>
+                <div className="px-4 py-3 border-b border-[#E8E6E2] bg-[#F2F1ED]">
+                  <p className="font-bold text-[#1A2332]" style={{ fontSize: 13 }}>{user?.full_name || "Admin"}</p>
                   <p className="text-[#9A9AA5] mt-0.5" style={{ fontSize: 11 }}>{user?.email}</p>
                 </div>
                 <div className="py-1">
                   <Link to="/profile" onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-[#1A1F3C] hover:bg-[#F5F4F1] transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-[#1A2332] hover:bg-[#F2F1ED] transition-colors"
                     style={{ fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
                     <span className="material-symbols-outlined text-[#9A9AA5]" style={{ fontSize: 16 }}>person</span>
                     My Profile
                   </Link>
                   <Link to="/" target="_blank" onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-[#1A1F3C] hover:bg-[#F5F4F1] transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-[#1A2332] hover:bg-[#F2F1ED] transition-colors"
                     style={{ fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
                     <span className="material-symbols-outlined text-[#9A9AA5]" style={{ fontSize: 16 }}>open_in_new</span>
                     View Site
@@ -252,7 +252,7 @@ export default function AdminLayout() {
                 <div className="border-t border-[#E8E6E2]">
                   <button
                     onClick={() => { setProfileOpen(false); logout(); }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[#E8431A] hover:bg-red-50 transition-colors"
+                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[#C0392B] hover:bg-red-50 transition-colors"
                     style={{ fontSize: 13, fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: 16 }}>logout</span>
                     Sign Out

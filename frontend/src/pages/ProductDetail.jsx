@@ -546,7 +546,7 @@ export default function ProductDetail() {
                     <span className="material-symbols-outlined text-[20px]">shopping_cart</span> Add to Cart
                   </button>
                   <button type="button" onClick={doAddToCart}
-                    className="flex-[1.5] bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-hover shadow-soft-plum transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide">
+                    className="flex-[1.5] bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide">
                     Order Now <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                   </button>
                 </div>
@@ -708,7 +708,7 @@ export default function ProductDetail() {
               <h2 className="text-2xl md:text-3xl font-bold text-plum-deep mb-3">Bulk Orders &amp; Corporate Accounts</h2>
               <p className="text-text-muted text-lg max-w-xl">Exclusive pricing tiers, dedicated account support &amp; simplified monthly invoicing for high-volume business needs.</p>
             </div>
-            <Link to="/register" className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-4 px-8 rounded-[12px] shadow-soft-plum transition-all transform hover:-translate-y-1 text-sm uppercase tracking-wide whitespace-nowrap">
+            <Link to="/register" className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-4 px-8 rounded-[12px] transition-all transform hover:-translate-y-1 text-sm uppercase tracking-wide whitespace-nowrap">
               Open Corporate Account <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </Link>
           </div>
@@ -943,7 +943,7 @@ function ReviewSection({ productId, user }) {
         {user && !myReview && !showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-2.5 px-6 rounded-xl transition-all text-sm shadow-soft-plum"
+            className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-2.5 px-6 rounded-xl transition-all text-sm"
           >
             <span className="material-symbols-outlined text-lg">rate_review</span> Write a Review
           </button>
@@ -1058,7 +1058,7 @@ function ReviewSection({ productId, user }) {
 
               <div className="flex gap-3">
                 <button type="submit" disabled={submitting || uploading}
-                  className="flex-1 bg-plum-deep hover:bg-plum-hover text-white font-bold py-3 rounded-xl transition-all text-sm shadow-soft-plum disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="flex-1 bg-plum-deep hover:bg-plum-hover text-white font-bold py-3 rounded-xl transition-all text-sm disabled:opacity-50 flex items-center justify-center gap-2">
                   {uploading ? (
                     <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading files…</>
                   ) : submitting ? (
