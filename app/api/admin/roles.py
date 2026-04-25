@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
 from app.api.auth.dependencies import get_current_user, require_permission
@@ -32,8 +32,7 @@ class PermissionResponse(BaseModel):
     is_dangerous: bool
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RoleResponse(BaseModel):
@@ -48,8 +47,7 @@ class RoleResponse(BaseModel):
     created_at: datetime
     permissions: List[PermissionResponse]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateRoleRequest(BaseModel):

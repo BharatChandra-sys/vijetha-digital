@@ -11,14 +11,25 @@ sys.path.append(os.getcwd())
 # Import Base
 from app.db.base import Base
 
-# Import existing models so Alembic detects them
-import app.models.user
-import app.models.product
+# Import ALL models so Alembic detects every table for autogenerate
+import app.models.access_log
+import app.models.address
+import app.models.audit_log
+import app.models.business_profile
+import app.models.coupon
+import app.models.iam
+import app.models.notification
 import app.models.order
+import app.models.order_file
+import app.models.order_item
+import app.models.order_timeline
+import app.models.payment
+import app.models.pricing
+import app.models.product
 import app.models.review
 import app.models.staff
-import app.models.iam
 import app.models.token_blacklist
+import app.models.user
 
 # Alembic config
 config = context.config

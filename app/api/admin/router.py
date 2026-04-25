@@ -2,10 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.api.admin import coupons as coupons_routes
+from app.api.admin import reviews_mod as reviews_mod_routes
 from app.api.admin import roles as roles_routes
+from app.api.admin import business as business_routes
 
 # Import IAM routers
 from app.api.admin import users as users_routes
+from app.api.admin import users_mgmt as users_mgmt_routes
 
 # the original admin_guard module was removed; the logic now lives in auth dependencies
 from app.api.auth.dependencies import admin_required, get_current_user
@@ -26,6 +30,7 @@ from app.services.revenue_service import (
     get_total_revenue,
     get_year_revenue,
 )
+from app.services import admin_service
 
 # 🔒 ADMIN ROUTER
 router = APIRouter(
@@ -36,6 +41,18 @@ router = APIRouter(
 # Include IAM routes
 router.include_router(users_routes.router)
 router.include_router(roles_routes.router)
+
+# Include user management routes
+router.include_router(users_mgmt_routes.router)
+
+# Include coupon management routes
+router.include_router(coupons_routes.router)
+
+# Include review moderation routes
+router.include_router(reviews_mod_routes.router)
+
+# Include business verification routes
+router.include_router(business_routes.router)
 
 # Include Dashboard routes (Products, Orders, Staff Management)
 router.include_router(dashboard_router)
@@ -194,6 +211,71 @@ def revenue_stats(
         "month_revenue": float(get_month_revenue(db)),
         "year_revenue": float(get_year_revenue(db)),
     }
+
+
+# ── Enhanced Dashboard Endpoints ──────────────────────────────────────
+
+@router.get("/dashboard/stats")
+def get_dashboard_stats_endpoint(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Get comprehensive dashboard statistics."""
+    return admin_service.get_dashboard_stats(db)
+
+
+@router.get("/revenue/trend")
+def get_revenue_trend_endpoint(
+    days: int = 30,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Get daily revenue trend."""
+    return admin_service.get_revenue_trend(db, days)
+
+
+@router.get("/dashboard/order-distribution")
+def get_order_distribution_endpoint(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Get order status distribution."""
+    return admin_service.get_order_status_distribution(db)
+
+
+@router.get("/dashboard/top-products")
+def get_top_products_endpoint(
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Get top-selling products."""
+    return admin_service.get_top_products(db, limit)
+
+
+@router.get("/exports/orders")
+def export_orders_endpoint(
+    start_date: str = None,
+    end_date: str = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(admin_required),
+):
+    """Export orders to CSV."""
+    from datetime import datetime
+    from fastapi.responses import StreamingResponse
+    
+    start = datetime.fromisoformat(start_date) if start_date else None
+    end = datetime.fromisoformat(end_date) if end_date else None
+    
+    csv_data = admin_service.export_orders_csv(db, start, end)
+    
+    return StreamingResponse(
+        iter([csv_data]),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": f"attachment; filename=orders_export_{datetime.utcnow().date()}.csv"
+        },
+    )
 
 
 # ---------- ACCESS LOGS (Security Monitoring) ----------

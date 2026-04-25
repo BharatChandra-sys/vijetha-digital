@@ -72,3 +72,14 @@ jobs:
 
       - name: Run tests
         run: pytest tests -q --tb=short
+
+      - name: Run tests with coverage
+        run: |
+          pip install pytest-cov
+          pytest tests --cov=app --cov-report=term --cov-report=xml --cov-fail-under=70
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

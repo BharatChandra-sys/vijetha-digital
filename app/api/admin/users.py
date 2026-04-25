@@ -7,11 +7,12 @@ from datetime import datetime
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from sqlalchemy.orm import Session
 
 from app.api.auth.dependencies import get_current_user, require_permission
 from app.core.security import hash_password
+from app.core.token_manager import TokenManager
 from app.db.session import get_db
 from app.models.iam import Permission, Role, RoleAssignmentLog
 from app.models.user import User, UserStatus
@@ -55,8 +56,7 @@ class UserResponse(BaseModel):
     created_at: datetime
     roles: List[dict]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RoleAssignmentLogResponse(BaseModel):
@@ -69,8 +69,7 @@ class RoleAssignmentLogResponse(BaseModel):
     expires_at: Optional[datetime]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 
@@ -305,6 +304,36 @@ def suspend_user(
     db.commit()
 
     return {"message": f"User {user.email} suspended", "reason": reason}
+
+
+# ============================================================================
+# REVOKE ALL USER TOKENS
+# ============================================================================
+
+@router.post("/{user_id}/revoke-tokens")
+def revoke_all_user_tokens(
+    user_id: int,
+    reason: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_permission("user:suspend")),
+):
+    """
+    Revoke all active tokens for a user (force logout).
+    Useful for security incidents or account compromise.
+    Requires: user:suspend permission
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Revoke all tokens using TokenManager
+    revoked_count = TokenManager.revoke_all_user_tokens(user_id)
+
+    return {
+        "message": f"All tokens revoked for user {user.email}",
+        "tokens_revoked": revoked_count,
+        "reason": reason
+    }
 
 
 # ============================================================================

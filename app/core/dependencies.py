@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from app.core.security import decode_access_token
+from app.core.token_manager import TokenManager
 from app.db.session import get_db
 from app.models.token_blacklist import TokenBlacklist
 from app.models.user import User, UserRole, UserStatus
@@ -20,6 +21,12 @@ def get_current_user(
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
 
+    # Check JTI validity (Redis-based tracking)
+    jti = payload.get("jti")
+    if jti and not TokenManager.is_jti_valid(jti):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token revoked or invalid")
+
+    # Legacy blacklist check (for backward compatibility during migration)
     blacklisted = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
     if blacklisted:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token revoked")

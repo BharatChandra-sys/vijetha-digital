@@ -41,12 +41,18 @@ class Review(Base):
     is_verified_purchase = Column(Boolean, default=False)
     is_visible = Column(Boolean, default=True)          # admin moderation
 
+    # Moderation
+    is_flagged = Column(Boolean, default=False)         # flagged for review
+    flagged_reason = Column(String(500), nullable=True)
+    moderated_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    moderated_at = Column(DateTime, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     product = relationship("Product", back_populates="reviews")
-    user = relationship("User", back_populates="reviews")
+    user = relationship("User", back_populates="reviews", foreign_keys=[user_id])
 
     __table_args__ = (
         CheckConstraint("rating >= 1 AND rating <= 5", name="rating_range"),

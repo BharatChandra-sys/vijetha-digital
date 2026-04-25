@@ -62,13 +62,14 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # JWT TOKEN CREATION
 # ============================================================================
 
-def create_access_token(user_id: int, role: str) -> str:
+def create_access_token(user_id: int, role: str, jti: Optional[str] = None) -> str:
     """
     Create a short-lived access token (15 minutes).
     
     Args:
         user_id: User's database ID
         role: User's role (for backward compatibility)
+        jti: Optional JWT ID for token tracking
         
     Returns:
         JWT access token string
@@ -82,13 +83,22 @@ def create_access_token(user_id: int, role: str) -> str:
         "exp": expire,        # Expiration timestamp
         "iat": datetime.utcnow(),  # Issued at
     }
+    
+    # Add JTI if provided (for token tracking and revocation)
+    if jti:
+        payload["jti"] = jti
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def create_refresh_token(user_id: int, role: str) -> str:
+def create_refresh_token(user_id: int, role: str, jti: Optional[str] = None) -> str:
     """
     Create a long-lived refresh token (7 days) with a unique jti for revocation.
+    
+    Args:
+        user_id: User's database ID
+        role: User's role
+        jti: Optional JWT ID for token tracking (auto-generated if not provided)
     """
     expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
 
@@ -96,7 +106,7 @@ def create_refresh_token(user_id: int, role: str) -> str:
         "sub": str(user_id),
         "role": role,
         "type": "refresh",
-        "jti": str(uuid.uuid4()),
+        "jti": jti or str(uuid.uuid4()),  # Use provided JTI or generate new one
         "exp": expire,
         "iat": datetime.utcnow(),
     }

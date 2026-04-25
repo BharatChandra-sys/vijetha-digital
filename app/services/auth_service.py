@@ -24,6 +24,7 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+from app.core.token_manager import TokenManager
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.auth import LoginRequest, RegisterRequest
 
@@ -206,16 +207,27 @@ def login_user(
     db.commit()
     db.refresh(user)
 
-    # Create tokens
+    # Create tokens with JTI tracking
+    access_jti = TokenManager.generate_jti()
+    refresh_jti = TokenManager.generate_jti()
+    
     access_token = create_access_token(
         user_id=user.id,
         role=user.role.value,
+        jti=access_jti,
     )
 
     refresh_token = create_refresh_token(
         user_id=user.id,
         role=user.role.value,
+        jti=refresh_jti,
     )
+    
+    # Store JTIs in Redis for tracking
+    from app.core.config import settings
+    TokenManager.store_jti(access_jti, user.id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+    TokenManager.store_jti(refresh_jti, user.id, "refresh", settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
+    TokenManager.store_refresh_token(refresh_token, user.id, refresh_jti, settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
 
     # Get IAM roles with full details
     iam_roles = [
@@ -353,9 +365,18 @@ def google_login_or_register(
     db.commit()
     db.refresh(user)
 
-    # Issue JWTs
-    access_token = create_access_token(user_id=user.id, role=user.role.value)
-    refresh_token = create_refresh_token(user_id=user.id, role=user.role.value)
+    # Issue JWTs with JTI tracking
+    access_jti = TokenManager.generate_jti()
+    refresh_jti = TokenManager.generate_jti()
+    
+    access_token = create_access_token(user_id=user.id, role=user.role.value, jti=access_jti)
+    refresh_token = create_refresh_token(user_id=user.id, role=user.role.value, jti=refresh_jti)
+    
+    # Store JTIs in Redis
+    from app.core.config import settings
+    TokenManager.store_jti(access_jti, user.id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+    TokenManager.store_jti(refresh_jti, user.id, "refresh", settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
+    TokenManager.store_refresh_token(refresh_token, user.id, refresh_jti, settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
     iam_roles = [
         {
             "id": r.id,

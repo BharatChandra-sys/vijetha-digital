@@ -10,6 +10,24 @@ from sqlalchemy.exc import SQLAlchemyError
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=BASE_DIR / ".env")
 
+# Initialize Sentry if DSN is configured
+from app.core.config import settings
+
+if settings.SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+    
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        environment=settings.ENV,
+        traces_sample_rate=0.1 if settings.ENV == "production" else 1.0,
+        integrations=[
+            FastApiIntegration(),
+            SqlalchemyIntegration(),
+        ],
+    )
+
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,46 +39,26 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.admin.router import router as admin_router
 from app.api.auth.router import router as auth_router
+from app.api.coupons.router import router as coupon_router
 from app.api.health import router as health_router
+from app.api.notifications.router import router as notification_router
 from app.api.orders.router import router as order_router
 from app.api.payments.router import router as payment_router
 from app.api.pricing.router import router as pricing_router
 from app.api.products.router import router as product_router
 from app.api.reviews.router import router as review_router
+from app.api.websocket import router as websocket_router
 from app.core.config import settings
 from app.core.exceptions import AppException
 from app.core.maintenance import MaintenanceModeMiddleware
+from app.core.metrics import get_metrics, update_db_pool_metrics
 from app.core.rate_limiter import limiter
 from app.core.security_middleware import SecurityHeadersMiddleware
 from app.db.init_db import init_db
 from app.db.session import engine
 from app.middleware.logging import RequestLoggingMiddleware
-
-
-def _ensure_access_logs_table() -> None:
-    with engine.begin() as conn:
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS access_logs (
-                id SERIAL PRIMARY KEY,
-                user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-                email VARCHAR(255),
-                action VARCHAR(100) NOT NULL,
-                success BOOLEAN NOT NULL DEFAULT TRUE,
-                detail TEXT,
-                ip_address VARCHAR(50),
-                user_agent VARCHAR(500),
-                device_type VARCHAR(20),
-                browser VARCHAR(50),
-                os_name VARCHAR(50),
-                endpoint VARCHAR(255),
-                method VARCHAR(10),
-                created_at TIMESTAMP NOT NULL DEFAULT NOW()
-            )
-        """))
-        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_access_logs_user_id ON access_logs (user_id)"))
-        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_access_logs_action ON access_logs (action)"))
-        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_access_logs_ip ON access_logs (ip_address)"))
-        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_access_logs_created_at ON access_logs (created_at)"))
+from app.middleware.metrics import MetricsMiddleware
+from app.middleware.deprecation import DeprecationMiddleware
 
 
 def _db_ok() -> bool:
@@ -85,9 +83,8 @@ def _redis_ok() -> bool:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    _ensure_access_logs_table()
-    app.state.redis_status = "ok" if _redis_ok() else "error"
     app.state.db_status = "ok" if _db_ok() else "error"
+    app.state.redis_status = "ok" if _redis_ok() else "error"
     yield
 
 
@@ -113,10 +110,16 @@ app.add_middleware(
     allowed_hosts=settings.TRUSTED_HOSTS,
 )
 
-# ---- SECURITY HEADERS + REQUEST AUDIT LOGGING ----
+# ---- SECURITY HEADERS ----
 app.add_middleware(SecurityHeadersMiddleware, env=settings.ENV)
 
-# ---- REQUEST LOGGING HEADERS ----
+# ---- METRICS COLLECTION ----
+app.add_middleware(MetricsMiddleware)
+
+# ---- DEPRECATION WARNINGS ----
+app.add_middleware(DeprecationMiddleware)
+
+# ---- REQUEST LOGGING (request-id + response-time headers) ----
 app.add_middleware(RequestLoggingMiddleware)
 
 # ---- MAINTENANCE MODE ----
@@ -128,6 +131,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 
+# ---- EXCEPTION HANDLERS ----
 @app.exception_handler(AppException)
 async def app_exception_handler(_, exc: AppException):
     return JSONResponse(
@@ -152,8 +156,23 @@ async def http_exception_handler(_, exc: HTTPException):
     )
 
 
-@app.get("/health")
+# ---- ROUTES ----
+app.include_router(health_router)
+app.include_router(auth_router)
+app.include_router(admin_router, prefix="/api/v1")
+app.include_router(product_router)
+app.include_router(order_router)
+app.include_router(pricing_router)
+app.include_router(payment_router)
+app.include_router(review_router)
+app.include_router(coupon_router)
+app.include_router(notification_router)
+app.include_router(websocket_router)
+
+
+@app.get("/health", tags=["health"])
 def health_check():
+    """Detailed health check with DB and Redis status."""
     db_state = "ok" if _db_ok() else "error"
     redis_state = "ok" if _redis_ok() else "error"
     app.state.db_status = db_state
@@ -166,12 +185,19 @@ def health_check():
         "timestamp": datetime.utcnow().isoformat() + "Z",
     }
 
-# ---- ROUTES ----
-app.include_router(health_router)
-app.include_router(auth_router)
-app.include_router(admin_router, prefix="/api/v1")
-app.include_router(product_router)
-app.include_router(order_router)
-app.include_router(pricing_router)
-app.include_router(payment_router)
-app.include_router(review_router)
+
+@app.get("/metrics", tags=["monitoring"])
+def metrics():
+    """
+    Prometheus metrics endpoint.
+    Returns metrics in Prometheus text format.
+    """
+    from fastapi.responses import PlainTextResponse
+    
+    # Update DB pool metrics before returning
+    update_db_pool_metrics(engine)
+    
+    return PlainTextResponse(
+        content=get_metrics().decode("utf-8"),
+        media_type="text/plain; version=0.0.4",
+    )

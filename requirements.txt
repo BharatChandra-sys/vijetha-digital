@@ -25,6 +25,12 @@ slowapi
 redis
 reportlab
 
+# Celery for background tasks
+celery[redis]
+
+# AWS S3 (optional)
+boto3
+
 loguru
 python-json-logger
 
@@ -33,6 +39,10 @@ python-dateutil
 pytest
 pytest-asyncio
 httpx
+
+# Monitoring
+prometheus-client
+sentry-sdk[fastapi]
 
 # Dev / lint
 ruff

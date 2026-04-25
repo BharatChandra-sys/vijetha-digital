@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, Index, Integer, String
+from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
@@ -81,6 +81,20 @@ class User(Base):
     account_locked_until = Column(DateTime, nullable=True)
     account_locked_reason = Column(String(500), nullable=True)
 
+    # Notification preferences (JSON: {"email": true, "sms": false, "push": true})
+    notification_preferences = Column(JSON, nullable=True, default=dict)
+
+    # Business/GST info (optional, for business customers)
+    gst_number = Column(String(20), nullable=True)
+    company_name = Column(String(255), nullable=True)
+
+    # Notes (admin-only internal notes)
+    admin_notes = Column(Text, nullable=True)
+
+    # Soft delete
+    is_deleted = Column(Boolean, default=False, nullable=False)
+    deleted_at = Column(DateTime, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     created_by = Column(Integer, nullable=True)  # Admin who created this user
@@ -96,6 +110,7 @@ class User(Base):
         "Review",
         back_populates="user",
         cascade="all, delete-orphan",
+        foreign_keys="Review.user_id",
     )
 
     staff_profile = relationship(

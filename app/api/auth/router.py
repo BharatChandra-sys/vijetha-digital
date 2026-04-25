@@ -10,6 +10,7 @@ from app.core.security import (
     create_access_token,
     decode_refresh_token,
 )
+from app.core.token_manager import TokenManager
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.auth import (
@@ -98,31 +99,42 @@ def logout(
 ):
     """
     Server-side logout.
-    Invalidates the current JWT access token by adding it to a blacklist.
+    Invalidates the current JWT access token using Redis JTI blacklist.
     """
     auth = request.headers.get("Authorization")
     if auth and auth.lower().startswith("bearer "):
         token = auth.split(" ", 1)[1]
+        
+        # Decode token to get JTI
+        from app.core.security import decode_access_token
+        payload = decode_access_token(token)
+        
+        if payload and payload.get("jti"):
+            jti = payload["jti"]
+            # Blacklist using TokenManager (Redis-based)
+            from app.core.config import settings
+            TokenManager.blacklist_token(jti, settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+        
+        # Legacy blacklist for backward compatibility
         from app.models.token_blacklist import TokenBlacklist
-
         exists = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
         if not exists:
             db.add(TokenBlacklist(token=token))
             db.commit()
             
-            ip_address = request.client.host if request.client else None
-            ua = request.headers.get("user-agent", "")
-            log_event(
-                db,
-                action="logout_success",
-                success=True,
-                user_id=current_user.id,
-                email=current_user.email,
-                ip_address=ip_address,
-                user_agent=ua,
-                endpoint="/auth/logout",
-                method="POST"
-            )
+        ip_address = request.client.host if request.client else None
+        ua = request.headers.get("user-agent", "")
+        log_event(
+            db,
+            action="logout_success",
+            success=True,
+            user_id=current_user.id,
+            email=current_user.email,
+            ip_address=ip_address,
+            user_agent=ua,
+            endpoint="/auth/logout",
+            method="POST"
+        )
 
     return {"message": "Logged out successfully"}
 
@@ -156,7 +168,7 @@ def refresh_token(
 ):
     """
     Refresh access token using a valid refresh token.
-    Validates user status before issuing new token.
+    Implements token rotation for enhanced security.
     """
     refresh_token = data.get("refresh_token")
 
@@ -168,8 +180,10 @@ def refresh_token(
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    # Extract user_id from token
+    # Extract user_id and jti from token
     user_id_str = payload.get("sub")
+    jti = payload.get("jti")
+    
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Malformed token payload")
 
@@ -177,6 +191,10 @@ def refresh_token(
         user_id = int(user_id_str)
     except (ValueError, TypeError):
         raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    # Check JTI validity (token rotation - can only use once)
+    if jti and not TokenManager.is_refresh_token_valid(user_id, jti):
+        raise HTTPException(status_code=401, detail="Refresh token already used or invalid")
 
     # Validate user still exists and is active
     from datetime import datetime
@@ -201,14 +219,35 @@ def refresh_token(
             detail="Account is locked"
         )
 
-    # Issue new access token
+    # Invalidate old refresh token (token rotation)
+    if jti:
+        TokenManager.invalidate_refresh_token(user_id, jti)
+
+    # Issue new tokens with new JTIs
+    new_access_jti = TokenManager.generate_jti()
+    new_refresh_jti = TokenManager.generate_jti()
+    
     new_access_token = create_access_token(
         user_id=user_id,
         role=user.role.value,
+        jti=new_access_jti,
     )
+    
+    new_refresh_token = create_access_token(  # Using create_access_token for refresh with longer expiry
+        user_id=user_id,
+        role=user.role.value,
+        jti=new_refresh_jti,
+    )
+    
+    # Store new JTIs
+    from app.core.config import settings
+    TokenManager.store_jti(new_access_jti, user_id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+    TokenManager.store_jti(new_refresh_jti, user_id, "refresh", settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
+    TokenManager.store_refresh_token(new_refresh_token, user_id, new_refresh_jti, settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400)
 
     return {
         "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
         "token_type": "bearer"
     }
 
@@ -349,6 +388,16 @@ def reset_user_password(
 class ProfileUpdateRequest(BaseModel):
     full_name: Optional[str] = None
     phone: Optional[str] = None
+    avatar_url: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    postal_code: Optional[str] = None
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
 
 
 @router.get("/me")
@@ -364,6 +413,12 @@ def get_profile(
         "role": current_user.role.value,
         "iam_roles": iam_roles,
         "status": current_user.status.value,
+        "avatar_url": current_user.avatar_url,
+        "address": current_user.address,
+        "city": current_user.city,
+        "state": current_user.state,
+        "postal_code": current_user.postal_code,
+        "email_verified": current_user.email_verified,
         "created_at": current_user.created_at,
         "last_login_at": current_user.last_login_at,
     }
@@ -375,23 +430,37 @@ def update_profile(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if data.full_name is not None:
-        full_name = data.full_name.strip()
-        if not full_name:
-            raise HTTPException(status_code=400, detail="Name cannot be empty")
-        current_user.full_name = full_name
+    from app.schemas.auth import ProfileUpdateRequest as ServiceProfileUpdate
+    from app.services.user_service import update_profile as svc_update
 
-    if data.phone is not None:
-        current_user.phone = data.phone.strip() or None
-
-    db.commit()
-    db.refresh(current_user)
-
+    svc_data = ServiceProfileUpdate(
+        full_name=data.full_name,
+        phone=data.phone,
+        avatar_url=data.avatar_url,
+        address=data.address,
+        city=data.city,
+        state=data.state,
+        postal_code=data.postal_code,
+    )
+    user = svc_update(db, current_user, svc_data)
     return {
-        "id": current_user.id,
-        "email": current_user.email,
-        "full_name": current_user.full_name,
-        "phone": current_user.phone,
-        "role": current_user.role.value,
-        "status": current_user.status.value,
+        "id": user.id,
+        "email": user.email,
+        "full_name": user.full_name,
+        "phone": user.phone,
+        "role": user.role.value,
+        "status": user.status.value,
+        "avatar_url": user.avatar_url,
     }
+
+
+@router.post("/change-password")
+def change_password(
+    data: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Change password for the authenticated user."""
+    from app.services.user_service import change_password as svc_change
+    svc_change(db, current_user, data.current_password, data.new_password)
+    return {"message": "Password changed successfully"}
