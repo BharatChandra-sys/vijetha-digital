@@ -1,0 +1,248 @@
+version: "3.9"
+
+# Production Docker Compose with SigNoz and Metabase
+# Optimized for 4GB RAM server
+
+services:
+  # ── PostgreSQL ──────────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vijetha}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-vijetha_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vijetha}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ── Redis ───────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # ── API (FastAPI) ───────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
+      REDIS_URL: redis://redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector:4317
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    expose:
+      - "8000"
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ── Celery Worker ───────────────────────────────────────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    command: ["celery", "-A", "app.celery_app", "worker", "--loglevel=info", "--concurrency=1"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # ── Celery Beat ─────────────────────────────────────────────────────
+  beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    command: ["celery", "-A", "app.celery_app", "beat", "--loglevel=info"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redis
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  # ── SigNoz Components ───────────────────────────────────────────────
+  signoz-clickhouse:
+    image: clickhouse/clickhouse-server:23.7-alpine
+    restart: unless-stopped
+    volumes:
+      - signoz_data:/var/lib/clickhouse/
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  signoz-otel-collector:
+    image: signoz/signoz-otel-collector:0.88.11
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./signoz-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+    depends_on:
+      - signoz-clickhouse
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  signoz-query-service:
+    image: signoz/query-service:0.38.0
+    restart: unless-stopped
+    command: ["-config=/root/config/prometheus.yml"]
+    environment:
+      - ClickHouseUrl=tcp://signoz-clickhouse:9000
+    depends_on:
+      - signoz-clickhouse
+    networks:
+      - backend
+      - frontend
+    expose:
+      - "8080"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  signoz-frontend:
+    image: signoz/frontend:0.38.0
+    restart: unless-stopped
+    depends_on:
+      - signoz-query-service
+    networks:
+      - frontend
+    expose:
+      - "3301"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  # ── Metabase ────────────────────────────────────────────────────────
+  metabase:
+    image: metabase/metabase:latest
+    restart: unless-stopped
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_DB:-vijetha_db}
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-vijetha}
+      MB_DB_PASS: ${POSTGRES_PASSWORD}
+      MB_DB_HOST: db
+      JAVA_OPTS: "-Xmx512m"
+    depends_on:
+      - db
+    volumes:
+      - metabase_data:/metabase-data
+    networks:
+      - backend
+      - frontend
+    expose:
+      - "3000"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  # ── Nginx ───────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_certs:/etc/letsencrypt:ro
+    depends_on:
+      - api
+      - signoz-frontend
+      - metabase
+    networks:
+      - frontend
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+volumes:
+  postgres_data:
+  redis_data:
+  signoz_data:
+  metabase_data:
+  certbot_www:
+  certbot_certs:
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge

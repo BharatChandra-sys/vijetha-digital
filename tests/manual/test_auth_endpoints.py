@@ -3,13 +3,18 @@ Comprehensive API endpoint testing script.
 Tests all authentication endpoints and their error cases.
 """
 
+import os
 import requests
 import json
 from datetime import datetime
+from dotenv import load_dotenv
 
-BASE_URL = "http://127.0.0.1:8000"
+# Load test environment variables
+load_dotenv(".env.test")
+
+BASE_URL = os.getenv("TEST_API_BASE_URL", "http://127.0.0.1:8000")
 TEST_EMAIL = f"test_admin_{datetime.now().strftime('%Y%m%d%H%M%S')}@vijetha.com"
-TEST_PASSWORD = "SecureTest123!"
+TEST_PASSWORD = os.getenv("TEST_USER_PASSWORD", "SecureTest123!")
 
 # ANSI color codes for pretty output
 GREEN = '\033[92m'

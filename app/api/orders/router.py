@@ -77,11 +77,16 @@ def place_order(
     db.commit()
     db.refresh(order)
 
-    # Fire notification (non-blocking — errors are swallowed)
+    # Fire notification (non-blocking — errors are logged)
     try:
         notify_order_placed(db, user.id, order.id)
-    except Exception:
-        pass
+    except Exception as e:
+        from loguru import logger
+        logger.error(
+            f"Failed to send order notification: {e}",
+            extra={"user_id": user.id, "order_id": order.id},
+            exc_info=True
+        )
 
     return _serialize_order(order)
 

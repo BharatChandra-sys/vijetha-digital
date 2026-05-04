@@ -1,9 +1,14 @@
+import os
 import requests
 import time
+from dotenv import load_dotenv
 
-BASE_URL = "http://127.0.0.1:8000"
+# Load test environment variables
+load_dotenv(".env.test")
+
+BASE_URL = os.getenv("TEST_API_BASE_URL", "http://127.0.0.1:8000")
 TEST_EMAIL = f"logout_test_{int(time.time())}@vijetha.com"
-TEST_PASSWORD = "SecureTest123!"
+TEST_PASSWORD = os.getenv("TEST_USER_PASSWORD", "SecureTest123!")
 
 # 1. Register
 print("Registering...")

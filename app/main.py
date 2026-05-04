@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+import os
 
 import redis
 from dotenv import load_dotenv
@@ -9,6 +10,36 @@ from sqlalchemy.exc import SQLAlchemyError
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+# OpenTelemetry instrumentation (for SigNoz)
+if os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
+    try:
+        from opentelemetry import trace
+        from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+        from opentelemetry.sdk.trace import TracerProvider
+        from opentelemetry.sdk.trace.export import BatchSpanProcessor
+        from opentelemetry.sdk.resources import Resource
+        from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+        from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+        
+        # Configure OpenTelemetry
+        resource = Resource.create({"service.name": "vijetha-digital-api"})
+        provider = TracerProvider(resource=resource)
+        processor = BatchSpanProcessor(
+            OTLPSpanExporter(
+                endpoint=os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"),
+                insecure=True
+            )
+        )
+        provider.add_span_processor(processor)
+        trace.set_tracer_provider(provider)
+        
+        OTEL_ENABLED = True
+    except ImportError:
+        OTEL_ENABLED = False
+        print("OpenTelemetry not installed. Install with: pip install opentelemetry-distro opentelemetry-exporter-otlp")
+else:
+    OTEL_ENABLED = False
 
 # Initialize Sentry if DSN is configured
 from app.core.config import settings
@@ -95,6 +126,17 @@ app = FastAPI(
     openapi_url="/openapi.json" if settings.ENV != "production" else None,
     lifespan=lifespan,
 )
+
+# Instrument FastAPI with OpenTelemetry if enabled
+if OTEL_ENABLED:
+    try:
+        FastAPIInstrumentor.instrument_app(app)
+        # Instrument SQLAlchemy (will be done after engine import)
+        from app.db.session import engine
+        SQLAlchemyInstrumentor().instrument(engine=engine)
+        print("✓ OpenTelemetry instrumentation enabled")
+    except Exception as e:
+        print(f"⚠ OpenTelemetry instrumentation failed: {e}")
 
 # ---- CORS (MUST BE FIRST) ----
 app.add_middleware(

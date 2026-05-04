@@ -7,13 +7,17 @@ Sets required env vars BEFORE any app module is imported, then provides:
   - Fixtures: db_session, client, auth_client, admin_client
 """
 import os
+from dotenv import load_dotenv
+
+# Load test environment variables first
+load_dotenv(".env.test")
 
 # ── Env vars must be set before any app import ────────────────────────
-os.environ.setdefault("DATABASE_URL",            "postgresql+psycopg2://postgres:admin123@localhost:5432/vijetha_db")
+os.environ.setdefault("DATABASE_URL",            os.getenv("TEST_DATABASE_URL", "postgresql+psycopg2://postgres:admin123@localhost:5432/vijetha_db"))
 os.environ.setdefault("FRONTEND_URL",            "http://localhost:5173")
 os.environ.setdefault("JWT_SECRET_KEY",          "supersecretkeychangeit")
-os.environ.setdefault("ADMIN_EMAIL",             "admin@vijetha.com")
-os.environ.setdefault("ADMIN_PASSWORD",          "admin123")
+os.environ.setdefault("ADMIN_EMAIL",             os.getenv("TEST_ADMIN_EMAIL", "admin@vijetha.com"))
+os.environ.setdefault("ADMIN_PASSWORD",          os.getenv("TEST_ADMIN_PASSWORD", "admin123"))
 os.environ.setdefault("CLOUDINARY_CLOUD_NAME",   "dypdndqyc")
 os.environ.setdefault("CLOUDINARY_API_KEY",      "422831496725844")
 os.environ.setdefault("CLOUDINARY_API_SECRET",   "MZ4J-RAcbCG-n8v1jghGJoCAJ9g")

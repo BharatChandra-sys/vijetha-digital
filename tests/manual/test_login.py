@@ -1,6 +1,11 @@
 """Test login endpoint"""
+import os
 import requests
 import json
+from dotenv import load_dotenv
+
+# Load test environment variables
+load_dotenv(".env.test")
 
 # Try different possible ports and paths
 endpoints = [
@@ -10,10 +15,10 @@ endpoints = [
     ("http://localhost:5000", "/api/auth/login"),
 ]
 
-# Test data
+# Test data from environment variables
 login_data = {
-    "email": "admin@vijetha.com",
-    "password": "admin123"
+    "email": os.getenv("TEST_ADMIN_EMAIL", "admin@vijetha.com"),
+    "password": os.getenv("TEST_ADMIN_PASSWORD", "admin123")
 }
 
 print("="*60)

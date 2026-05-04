@@ -1,0 +1,68 @@
+# Production Dependencies - Pinned Versions
+# Generated: 2026-05-04
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+gunicorn==21.2.0
+
+# Configuration
+python-dotenv==1.0.1
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0
+
+# Security
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Database
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+asyncpg==0.29.0
+alembic==1.13.1
+
+# File Handling
+python-multipart==0.0.6
+cloudinary==1.38.0
+
+# Payment
+razorpay==1.4.1
+
+# Rate Limiting
+slowapi==0.1.9
+
+# Cache & Queue
+redis==5.0.1
+celery[redis]==5.3.6
+
+# AWS (optional)
+boto3==1.34.34
+
+# Logging
+loguru==0.7.2
+python-json-logger==2.0.7
+
+# Utilities
+python-dateutil==2.8.2
+reportlab==4.0.9
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+
+# Monitoring
+prometheus-client==0.19.0
+sentry-sdk[fastapi]==1.40.0
+
+# OpenTelemetry (for SigNoz)
+opentelemetry-distro==0.45b0
+opentelemetry-exporter-otlp==1.24.0
+opentelemetry-instrumentation-fastapi==0.45b0
+opentelemetry-instrumentation-sqlalchemy==0.45b0
+opentelemetry-instrumentation-redis==0.45b0
+opentelemetry-instrumentation-celery==0.45b0
+
+# Dev / Lint
+ruff==0.1.15
