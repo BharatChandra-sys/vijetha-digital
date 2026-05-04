@@ -38,8 +38,22 @@ fi
 # Start deployment
 log "Starting deployment process..."
 
-# Step 1: Pre-deployment checks
-log "Step 1: Running pre-deployment checks..."
+# Step 1: Pre-deployment validation
+log "Step 1: Running production validation..."
+
+# Run validation script
+if [ -f "scripts/validate_production.py" ]; then
+    python3 scripts/validate_production.py
+    if [ $? -ne 0 ]; then
+        error "Production validation failed. Fix issues and try again."
+    fi
+    log "Production validation passed ✓"
+else
+    warn "Validation script not found, skipping..."
+fi
+
+# Step 2: Pre-deployment checks
+log "Step 2: Running pre-deployment checks..."
 
 # Check if .env exists
 if [ ! -f .env ]; then
@@ -63,8 +77,8 @@ fi
 
 log "Pre-deployment checks passed ✓"
 
-# Step 2: Backup
-log "Step 2: Creating backups..."
+# Step 3: Backup
+log "Step 3: Creating backups..."
 
 mkdir -p "$BACKUP_DIR"
 
@@ -84,42 +98,42 @@ cp .env "$BACKUP_DIR/env_backup_${TIMESTAMP}" || warn "Config backup failed"
 
 log "Backups completed ✓"
 
-# Step 3: Pull latest code
-log "Step 3: Pulling latest code..."
+# Step 4: Pull latest code
+log "Step 4: Pulling latest code..."
 git pull origin main || error "Git pull failed"
 log "Code updated ✓"
 
-# Step 4: Build new images
-log "Step 4: Building Docker images..."
+# Step 5: Build new images
+log "Step 5: Building Docker images..."
 $DOCKER_COMPOSE build || error "Docker build failed"
 log "Images built ✓"
 
-# Step 5: Run database migrations
-log "Step 5: Running database migrations..."
+# Step 6: Run database migrations
+log "Step 6: Running database migrations..."
 $DOCKER_COMPOSE run --rm api alembic upgrade head || error "Migration failed"
 log "Migrations completed ✓"
 
-# Step 6: Run data backfill
-log "Step 6: Running data backfill..."
+# Step 7: Run data backfill
+log "Step 7: Running data backfill..."
 $DOCKER_COMPOSE run --rm api python scripts/backfill_data.py || warn "Backfill had warnings"
 log "Backfill completed ✓"
 
-# Step 7: Stop old containers
-log "Step 7: Stopping old containers..."
+# Step 8: Stop old containers
+log "Step 8: Stopping old containers..."
 $DOCKER_COMPOSE down || warn "Failed to stop containers"
 log "Old containers stopped ✓"
 
-# Step 8: Start new containers
-log "Step 8: Starting new containers..."
+# Step 9: Start new containers
+log "Step 9: Starting new containers..."
 $DOCKER_COMPOSE up -d || error "Failed to start containers"
 log "New containers started ✓"
 
-# Step 9: Wait for services to be ready
-log "Step 9: Waiting for services to be ready..."
+# Step 10: Wait for services to be ready
+log "Step 10: Waiting for services to be ready..."
 sleep 10
 
-# Step 10: Health check
-log "Step 10: Running health checks..."
+# Step 11: Health check
+log "Step 11: Running health checks..."
 
 # Check API health
 if curl -f http://localhost/health > /dev/null 2>&1; then
@@ -142,13 +156,13 @@ else
     error "Redis health check failed"
 fi
 
-# Step 11: Run smoke tests
-log "Step 11: Running smoke tests..."
+# Step 12: Run smoke tests
+log "Step 12: Running smoke tests..."
 $DOCKER_COMPOSE exec -T api pytest tests/integration/test_critical_paths.py -q || warn "Some smoke tests failed"
 log "Smoke tests completed ✓"
 
-# Step 12: Cleanup old images
-log "Step 12: Cleaning up old Docker images..."
+# Step 13: Cleanup old images
+log "Step 13: Cleaning up old Docker images..."
 docker image prune -f || warn "Image cleanup failed"
 log "Cleanup completed ✓"
 

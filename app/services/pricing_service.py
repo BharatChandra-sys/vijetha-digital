@@ -44,11 +44,11 @@ def _get_business_discount(db: Session, user_id: int = None) -> float:
     if not user_id:
         return 0.0
     
-    from app.models.business_profile import BusinessProfile, VerificationStatus
+    from app.models.business_profile import BusinessProfile, BusinessStatus
     
     profile = db.query(BusinessProfile).filter(
         BusinessProfile.user_id == user_id,
-        BusinessProfile.verification_status == VerificationStatus.verified,
+        BusinessProfile.status == BusinessStatus.VERIFIED,
     ).first()
     
     if profile and profile.discount_percentage:

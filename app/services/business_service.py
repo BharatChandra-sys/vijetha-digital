@@ -7,7 +7,7 @@ from typing import Dict, Optional
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import NotFoundException, ValidationException
-from app.models.business_profile import BusinessProfile, VerificationStatus
+from app.models.business_profile import BusinessProfile, BusinessStatus
 from app.models.user import User
 from app.tasks.email_tasks import (
     send_business_approved_email_task,
@@ -71,7 +71,7 @@ def create_business_profile(
         state=state,
         pincode=pincode,
         phone=phone,
-        verification_status=VerificationStatus.pending,
+        status=BusinessStatus.PENDING_VERIFICATION,
     )
     
     db.add(profile)
@@ -130,11 +130,11 @@ def approve_business_verification(
     if not profile:
         raise NotFoundException("BusinessProfile", str(profile_id))
     
-    if profile.verification_status == VerificationStatus.verified:
+    if profile.status == BusinessStatus.VERIFIED:
         raise ValidationException("Business profile is already verified")
     
     # Update profile
-    profile.verification_status = VerificationStatus.verified
+    profile.status = BusinessStatus.VERIFIED
     profile.verified_at = datetime.utcnow()
     profile.verified_by = admin_id
     profile.credit_limit = credit_limit
@@ -191,7 +191,7 @@ def reject_business_verification(
         raise NotFoundException("BusinessProfile", str(profile_id))
     
     # Update profile
-    profile.verification_status = VerificationStatus.rejected
+    profile.status = BusinessStatus.REJECTED
     profile.rejection_reason = rejection_reason
     profile.verified_by = admin_id
     
@@ -225,7 +225,7 @@ def list_pending_verifications(db: Session) -> list[BusinessProfile]:
         List of pending business profiles
     """
     return db.query(BusinessProfile).filter(
-        BusinessProfile.verification_status == VerificationStatus.pending
+        BusinessProfile.status == BusinessStatus.PENDING_VERIFICATION
     ).order_by(BusinessProfile.created_at.desc()).all()
 
 
@@ -258,7 +258,7 @@ def update_credit_limit(
     if not profile:
         raise NotFoundException("BusinessProfile", str(profile_id))
     
-    if profile.verification_status != VerificationStatus.verified:
+    if profile.status != BusinessStatus.VERIFIED:
         raise ValidationException("Can only update credit limit for verified businesses")
     
     profile.credit_limit = credit_limit

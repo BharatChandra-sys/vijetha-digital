@@ -1,433 +1,413 @@
-# Quick Start Guide - Vijetha Digital Backend
+# Vijetha Digital Backend - Quick Start Guide
 
-## 🚀 Get Started in 5 Minutes
+Get the Vijetha Digital backend running in production in under 30 minutes.
 
-### Prerequisites
-- Python 3.11+
-- PostgreSQL 15+
-- Redis 7+
-- Docker & Docker Compose (for production)
+## 🚀 Prerequisites
 
-## Development Setup
+- Ubuntu 20.04+ server with root access
+- Domain name pointing to your server
+- 4GB RAM minimum (8GB recommended)
+- 20GB disk space minimum
 
-### 1. Clone and Install
+## ⚡ Quick Deployment (5 Steps)
+
+### Step 1: Install Docker (2 minutes)
+
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 
-# Copy environment file
+# Add user to docker group
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Verify
+docker --version
+```
+
+### Step 2: Clone and Configure (5 minutes)
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/vijetha-digital-backend.git
+cd vijetha-digital-backend
+
+# Copy environment template
 cp .env.example .env
+
+# Edit environment variables (IMPORTANT!)
+nano .env
 ```
 
-### 2. Configure Database
-Edit `.env`:
+**Minimum required changes in `.env`:**
+
 ```bash
-DATABASE_URL=postgresql+psycopg2://postgres:admin123@localhost:5432/vijetha_db
-REDIS_URL=redis://localhost:6379/0
-FRONTEND_URL=http://localhost:5173
-JWT_SECRET_KEY=your-secret-key-here
+# Set to production
+ENV=production
+
+# Generate strong JWT secret (run this command):
+# python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+JWT_SECRET_KEY=<paste-generated-secret-here>
+
+# Your domain
+FRONTEND_URL=https://yourdomain.com
+TRUSTED_HOSTS=["yourdomain.com"]
+
+# Database password (change this!)
+POSTGRES_PASSWORD=<strong-password-here>
+DATABASE_URL=postgresql://vijetha:<strong-password-here>@db:5432/vijetha_db
+
+# Admin credentials
+FIRST_ADMIN_EMAIL=admin@yourdomain.com
+FIRST_ADMIN_PASSWORD=<strong-password-here>
+
+# Razorpay PRODUCTION keys
+RAZORPAY_KEY_ID=rzp_live_xxxxx
+RAZORPAY_KEY_SECRET=xxxxx
+RAZORPAY_WEBHOOK_SECRET=xxxxx
+
+# Cloudinary credentials
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=xxxxx
+CLOUDINARY_API_SECRET=xxxxx
 ```
 
-### 3. Run Migrations
+### Step 3: SSL Certificate (5 minutes)
+
 ```bash
-# Create database
-createdb vijetha_db
+# Install certbot
+sudo apt update
+sudo apt install certbot -y
 
-# Run migrations
-alembic upgrade head
+# Get certificate (replace yourdomain.com)
+sudo certbot certonly --standalone -d yourdomain.com -d www.yourdomain.com
 
-# Seed admin user
-python scripts/seed_admin.py
+# Update nginx config with your domain
+sed -i 's/yourdomain.com/your-actual-domain.com/g' nginx/conf.d/vijetha.conf
 ```
 
-### 4. Start Development Server
-```bash
-# Using Makefile
-make dev
+### Step 4: Validate Configuration (2 minutes)
 
-# Or directly
-uvicorn app.main:app --reload
+```bash
+# Run validation script
+python3 scripts/validate_production.py
+
+# Should show all checks passing ✓
 ```
 
-Visit: http://localhost:8000/docs
-
-## Production Deployment
-
-### Option 1: Docker Compose (Recommended)
+### Step 5: Deploy (10 minutes)
 
 ```bash
-# Build and start all services
-docker compose --profile celery --profile nginx up -d
+# Make deploy script executable
+chmod +x scripts/deploy.sh scripts/rollback.sh
 
-# Check status
+# Deploy!
+./scripts/deploy.sh
+
+# The script will:
+# - Validate configuration
+# - Create backups
+# - Build Docker images
+# - Run database migrations
+# - Start all services
+# - Run health checks
+# - Run smoke tests
+```
+
+## ✅ Verify Deployment
+
+```bash
+# Check health
+curl https://yourdomain.com/health
+
+# Expected response:
+# {
+#   "status": "ok",
+#   "version": "2.0.0",
+#   "db": "ok",
+#   "redis": "ok"
+# }
+
+# Check all services are running
 docker compose ps
 
-# View logs
-docker compose logs -f api
-
-# Run migrations
-docker compose exec api alembic upgrade head
-
-# Seed admin
-docker compose exec api python scripts/seed_admin.py
+# Should show: api, db, redis, nginx, worker, beat (all "Up")
 ```
 
-### Option 2: Manual Deployment
+## 🎯 Test Your Deployment
+
+### 1. Test API Health
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Set production environment
-export ENV=production
-
-# Run migrations
-alembic upgrade head
-
-# Start API with Gunicorn
-gunicorn app.main:app \
-  --worker-class uvicorn.workers.UvicornWorker \
-  --workers 4 \
-  --bind 0.0.0.0:8000
-
-# Start Celery worker (separate terminal)
-celery -A app.celery_app worker --loglevel=info
-
-# Start Celery beat (separate terminal)
-celery -A app.celery_app beat --loglevel=info
+curl https://yourdomain.com/health
 ```
 
-## Essential Commands
-
-### Development
-```bash
-make dev          # Start development server
-make test         # Run tests
-make lint         # Run linter
-make fmt          # Format code
-make migrate      # Run migrations
-make seed         # Seed admin user
-```
-
-### Docker
-```bash
-make docker-up    # Start all services
-make docker-down  # Stop all services
-```
-
-### Database
-```bash
-# Create migration
-alembic revision --autogenerate -m "description"
-
-# Apply migrations
-alembic upgrade head
-
-# Rollback one migration
-alembic downgrade -1
-
-# View migration history
-alembic history
-```
-
-### Testing
-```bash
-# Run all tests
-pytest
-
-# Run specific test file
-pytest tests/test_auth_api.py
-
-# Run with coverage
-pytest --cov=app --cov-report=html
-
-# Run integration tests only
-pytest tests/integration/
-```
-
-## Key Endpoints
-
-### Health & Monitoring
-- `GET /health` - Health check
-- `GET /metrics` - Prometheus metrics
-- `GET /docs` - API documentation (dev only)
-
-### Authentication
-- `POST /auth/register` - Register user
-- `POST /auth/login` - Login
-- `POST /auth/logout` - Logout
-- `POST /auth/refresh` - Refresh token
-- `POST /auth/forgot-password` - Request password reset
-- `POST /auth/reset-password` - Reset password
-
-### Orders
-- `POST /orders` - Create order
-- `GET /orders` - List user orders
-- `GET /orders/{id}` - Get order details
-- `POST /orders/{id}/cancel` - Cancel order
-
-### Payments
-- `POST /payments/create` - Create payment order
-- `POST /payments/verify` - Verify payment
-- `POST /payments/webhook` - Razorpay webhook
-
-### Admin
-- `GET /api/v1/admin/dashboard/stats` - Dashboard statistics
-- `GET /api/v1/admin/orders` - All orders
-- `GET /api/v1/admin/users` - All users
-- `GET /api/v1/admin/revenue/trend` - Revenue trend
-- `GET /api/v1/admin/exports/orders` - Export orders CSV
-
-### WebSocket
-- `WS /ws/notifications?token=<jwt>` - Real-time notifications
-
-## Environment Variables
-
-### Required
-```bash
-DATABASE_URL=postgresql+psycopg2://user:pass@host:5432/db
-REDIS_URL=redis://host:6379/0
-FRONTEND_URL=https://yourdomain.com
-JWT_SECRET_KEY=<strong-secret>
-ADMIN_EMAIL=admin@yourdomain.com
-ADMIN_PASSWORD=<strong-password>
-```
-
-### Services
-```bash
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=<cloud-name>
-CLOUDINARY_API_KEY=<api-key>
-CLOUDINARY_API_SECRET=<api-secret>
-
-# Razorpay
-RAZORPAY_KEY_ID=<key-id>
-RAZORPAY_KEY_SECRET=<key-secret>
-RAZORPAY_WEBHOOK_SECRET=<webhook-secret>
-
-# SMTP
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=<email>
-SMTP_PASSWORD=<app-password>
-```
-
-### Optional
-```bash
-# Monitoring
-SENTRY_DSN=<sentry-dsn>
-
-# Security
-TRUSTED_HOSTS=yourdomain.com,www.yourdomain.com
-```
-
-## Troubleshooting
-
-### Database Connection Error
-```bash
-# Check PostgreSQL is running
-pg_isready
-
-# Check connection string
-echo $DATABASE_URL
-
-# Test connection
-psql $DATABASE_URL -c "SELECT 1;"
-```
-
-### Redis Connection Error
-```bash
-# Check Redis is running
-redis-cli ping
-
-# Check connection
-redis-cli -u $REDIS_URL ping
-```
-
-### Migration Issues
-```bash
-# Check current version
-alembic current
-
-# View pending migrations
-alembic heads
-
-# Force stamp to specific version
-alembic stamp head
-```
-
-### Celery Not Processing Tasks
-```bash
-# Check worker is running
-celery -A app.celery_app inspect active
-
-# Check Redis connection
-redis-cli -u $REDIS_URL ping
-
-# View task queue
-redis-cli -u $REDIS_URL llen celery
-```
-
-### Port Already in Use
-```bash
-# Find process using port 8000
-lsof -i :8000
-
-# Kill process
-kill -9 <PID>
-```
-
-## Testing
-
-### Run Tests
-```bash
-# All tests
-pytest
-
-# Specific test
-pytest tests/test_auth_api.py::test_login
-
-# With output
-pytest -v -s
-
-# With coverage
-pytest --cov=app
-```
-
-### Test Database
-Tests use the same database as development by default. To use a separate test database:
+### 2. Test Admin Login
 
 ```bash
-# Create test database
-createdb vijetha_test
-
-# Update tests/conftest.py
-DATABASE_URL=postgresql+psycopg2://postgres:admin123@localhost:5432/vijetha_test
+curl -X POST https://yourdomain.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@yourdomain.com",
+    "password": "your-admin-password"
+  }'
 ```
 
-## Monitoring
+### 3. Access API Documentation
+
+Visit: `https://yourdomain.com/docs` (only in dev mode)
+
+For production, docs are disabled for security.
+
+## 📊 Monitor Your Application
 
 ### View Logs
-```bash
-# Docker logs
-docker compose logs -f api
-docker compose logs -f worker
 
-# Application logs
-tail -f logs/app.log
+```bash
+# All services
+docker compose logs -f
+
+# Specific service
+docker compose logs -f api
+docker compose logs -f nginx
+docker compose logs -f worker
 ```
 
 ### Check Metrics
+
 ```bash
 # Prometheus metrics
-curl http://localhost:8000/metrics
+curl https://yourdomain.com/metrics
+
+# Health status
+curl https://yourdomain.com/health
+```
+
+### Check Resource Usage
+
+```bash
+# Container stats
+docker stats
+
+# Disk usage
+df -h
+
+# Memory usage
+free -h
+```
+
+## 🔧 Common Tasks
+
+### Restart Services
+
+```bash
+# Restart all
+docker compose restart
+
+# Restart specific service
+docker compose restart api
+```
+
+### View Database
+
+```bash
+# Connect to database
+docker compose exec db psql -U vijetha vijetha_db
+
+# List tables
+\dt
+
+# Exit
+\q
+```
+
+### Update Application
+
+```bash
+# Pull latest code
+git pull origin main
+
+# Run deployment (includes backup)
+./scripts/deploy.sh
+```
+
+### Rollback
+
+```bash
+# List backups
+ls -lh backups/
+
+# Rollback to specific timestamp
+./scripts/rollback.sh 20260425_120000
+```
+
+## 🐛 Troubleshooting
+
+### Service Won't Start
+
+```bash
+# Check logs
+docker compose logs api
+
+# Check environment
+docker compose exec api env | grep DATABASE_URL
+
+# Restart
+docker compose restart api
+```
+
+### Database Connection Error
+
+```bash
+# Check database is running
+docker compose ps db
+
+# Test connection
+docker compose exec db psql -U vijetha vijetha_db -c "SELECT 1;"
+
+# Check DATABASE_URL in .env
+cat .env | grep DATABASE_URL
+```
+
+### SSL Certificate Error
+
+```bash
+# Check certificate
+sudo certbot certificates
+
+# Renew if needed
+sudo certbot renew
+
+# Restart nginx
+docker compose restart nginx
+```
+
+### High Memory Usage
+
+```bash
+# Check stats
+docker stats
+
+# Reduce worker concurrency
+# Edit docker-compose.yml, change --concurrency=2 to --concurrency=1
+
+# Restart
+docker compose restart worker
+```
+
+## 📚 Next Steps
+
+1. **Configure Backups**
+   ```bash
+   # Set up daily backups (see DEPLOYMENT_GUIDE.md)
+   sudo crontab -e
+   # Add: 0 2 * * * /path/to/backup-script.sh
+   ```
+
+2. **Set Up Monitoring**
+   - Configure Sentry for error tracking
+   - Set up uptime monitoring (UptimeRobot, Pingdom)
+   - Configure log aggregation
+
+3. **Configure Firewall**
+   ```bash
+   sudo ufw allow 22/tcp   # SSH
+   sudo ufw allow 80/tcp   # HTTP
+   sudo ufw allow 443/tcp  # HTTPS
+   sudo ufw enable
+   ```
+
+4. **Configure Razorpay Webhook**
+   - Go to Razorpay Dashboard
+   - Add webhook URL: `https://yourdomain.com/payments/webhook`
+   - Copy webhook secret to `.env`
+
+5. **Test Payment Flow**
+   - Create test order
+   - Process test payment
+   - Verify webhook received
+
+## 🔐 Security Checklist
+
+- [ ] Changed all default passwords
+- [ ] JWT secret is strong (32+ characters)
+- [ ] ENV set to production
+- [ ] SSL certificate installed and working
+- [ ] Firewall configured
+- [ ] Database password is strong
+- [ ] Admin password is strong
+- [ ] Razorpay production keys configured
+- [ ] CORS origins restricted to your domain
+- [ ] API docs disabled in production
+
+## 📞 Need Help?
+
+### Check Documentation
+
+- **Full deployment guide**: `DEPLOYMENT_GUIDE.md`
+- **Production checklist**: `PRODUCTION_READINESS_CHECKLIST.md`
+- **Upgrade plan**: `UPGRADE_TODO_10_TO_100.md`
+
+### Run Diagnostics
+
+```bash
+# Production validation
+python3 scripts/validate_production.py
 
 # Health check
-curl http://localhost:8000/health
+curl https://yourdomain.com/health
+
+# Check logs
+docker compose logs -f api
 ```
 
-### Monitor Celery
+### Common Commands
+
 ```bash
-# Active tasks
-celery -A app.celery_app inspect active
+# View all containers
+docker compose ps
 
-# Registered tasks
-celery -A app.celery_app inspect registered
+# Restart all services
+docker compose restart
 
-# Stats
-celery -A app.celery_app inspect stats
+# Stop all services
+docker compose down
+
+# Start all services
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Clean up
+docker system prune -a
 ```
 
-## Common Tasks
+## 🎉 Success!
 
-### Add New Admin User
-```bash
-# Via API
-curl -X POST http://localhost:8000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"Admin123!","name":"Admin"}'
+Your Vijetha Digital backend is now running in production!
 
-# Then update role in database
-psql $DATABASE_URL -c "UPDATE users SET role='admin' WHERE email='admin@example.com';"
-```
+**What you have:**
+- ✅ Production-ready API
+- ✅ Secure authentication
+- ✅ Payment processing
+- ✅ Background tasks
+- ✅ Monitoring and metrics
+- ✅ Automated backups
+- ✅ SSL/HTTPS
+- ✅ Rate limiting
+- ✅ Error tracking
 
-### Reset User Password
-```bash
-# Request reset
-curl -X POST http://localhost:8000/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com"}'
-
-# Check email for OTP
-```
-
-### Export Orders
-```bash
-# Via API
-curl -X GET "http://localhost:8000/api/v1/admin/exports/orders?start_date=2024-01-01" \
-  -H "Authorization: Bearer <admin-token>" \
-  -o orders.csv
-```
-
-## Performance Tips
-
-### Database
-- Use connection pooling (already configured)
-- Add indexes for frequently queried columns
-- Use `EXPLAIN ANALYZE` for slow queries
-
-### Caching
-- Redis is configured for sessions and rate limiting
-- Add caching for frequently accessed data
-
-### API
-- Use pagination for list endpoints
-- Implement field selection for large responses
-- Enable gzip compression (configured in Nginx)
-
-## Security Checklist
-
-- [x] Change default admin password
-- [x] Use strong JWT secret
-- [x] Enable HTTPS in production
-- [x] Configure CORS properly
-- [x] Set up rate limiting
-- [x] Enable security headers
-- [x] Use environment variables for secrets
-- [ ] Set up firewall rules
-- [ ] Enable database encryption
-- [ ] Configure backup encryption
-
-## Support
-
-### Documentation
-- API Docs: http://localhost:8000/docs
-- Deployment Guide: `DEPLOYMENT_GUIDE.md`
-- Production Checklist: `PRODUCTION_CHECKLIST.md`
-
-### Logs
-- Application: `docker compose logs api`
-- Worker: `docker compose logs worker`
-- Database: `docker compose logs db`
-
-### Health Checks
-- API: `curl http://localhost:8000/health`
-- Database: `docker compose exec db pg_isready`
-- Redis: `docker compose exec redis redis-cli ping`
-
-## Next Steps
-
-1. ✅ Complete development setup
-2. ✅ Run tests to verify installation
-3. ✅ Configure environment variables
-4. ✅ Start development server
-5. ⏭️ Deploy to staging
-6. ⏭️ Run load tests
-7. ⏭️ Deploy to production
+**Next steps:**
+1. Test all functionality
+2. Configure monitoring alerts
+3. Set up regular backups
+4. Monitor logs for first 24 hours
+5. Load test if expecting high traffic
 
 ---
 
-**Need Help?**
-- Check logs: `docker compose logs -f`
-- Review health: `curl http://localhost:8000/health`
-- Read docs: `DEPLOYMENT_GUIDE.md`
+**Version**: 2.0.0  
+**Last Updated**: 2026-04-25  
+**Status**: Production Ready ✅
