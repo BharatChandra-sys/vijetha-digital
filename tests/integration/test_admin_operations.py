@@ -3,6 +3,7 @@ Integration tests for admin operations.
 Tests: user management, order management, revenue reports
 """
 import pytest
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models.order import Order, OrderStatus, PaymentStatus
@@ -37,13 +38,22 @@ class TestAdminOperations:
             user_id=user1.id,
             status=OrderStatus.placed,
             payment_status=PaymentStatus.pending,
+            subtotal=100.0,
+            tax=0.0,
+            discount=0.0,
+            shipping=0.0,
             total_price=100.0,
         )
         order2 = Order(
             user_id=user2.id,
             status=OrderStatus.confirmed,
             payment_status=PaymentStatus.paid,
+            subtotal=200.0,
+            tax=0.0,
+            discount=0.0,
+            shipping=0.0,
             total_price=200.0,
+            paid_at=datetime.utcnow(),
         )
         db_session.add_all([order1, order2])
         db_session.commit()

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.models.order import Order, OrderStatus, PaymentStatus
 from app.models.product import Product
-from app.schemas.order import CreateOrderRequest, OrderItemRequest
+from app.schemas.order import OrderCreate, OrderItemCreate
 
 
 @pytest.mark.usefixtures("db_session")

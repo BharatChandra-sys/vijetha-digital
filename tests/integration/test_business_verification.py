@@ -4,7 +4,7 @@ Integration tests for business verification workflow.
 import pytest
 from sqlalchemy.orm import Session
 
-from app.models.business_profile import BusinessProfile, VerificationStatus
+from app.models.business_profile import BusinessProfile, BusinessStatus
 from app.models.user import User, UserRole, UserStatus
 
 
