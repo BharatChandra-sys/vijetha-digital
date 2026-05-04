@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { placeOrder } from "../api/orders";
 import { createPayment, verifyPayment } from "../api/payments";
 import useRazorpay from "../hooks/useRazorpay";
+import ComingSoonModal from "../components/ui/ComingSoonModal";
 
 const GST_RATE = 0.18;
 
@@ -24,6 +25,7 @@ export default function Checkout() {
 
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const orderPlacedRef = useRef(false);
 
   const [deliveryMethod, setDeliveryMethod] = useState("home");
@@ -112,6 +114,11 @@ export default function Checkout() {
   };
 
   const handlePayment = async () => {
+    // Show coming soon modal instead of processing payment
+    setShowComingSoon(true);
+    return;
+    
+    /* Original payment code - will be enabled after launch
     setError("");
     const validationError = validateCheckout();
     if (validationError) {
@@ -627,6 +634,12 @@ export default function Checkout() {
           </aside>
         </div>
       </div>
+
+      {/* Coming Soon Modal */}
+      <ComingSoonModal 
+        isOpen={showComingSoon} 
+        onClose={() => setShowComingSoon(false)} 
+      />
     </div>
   );
 }

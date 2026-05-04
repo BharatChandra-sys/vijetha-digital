@@ -15,10 +15,10 @@ class ComingSoonMiddleware(BaseHTTPMiddleware):
     
     # Endpoints to block during coming soon mode
     BLOCKED_PATHS = [
-        "/orders",
-        "/payments",
-        "/checkout",
-        "/cart",
+        "/payments/create",
+        "/payments/verify",
+        "/orders/create",
+        "/orders/confirm",
     ]
     
     # Admin paths that should always work

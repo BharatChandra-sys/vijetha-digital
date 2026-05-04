@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import ComingSoonModal from "../components/ui/ComingSoonModal";
 
 /* ── helpers ──────────────────────────────────────────────────────── */
 function configColumns(item) {
@@ -54,7 +53,6 @@ export default function Cart() {
   const { items, cartLoaded, removeFromCart, updateQuantity, total } = useCart();
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState("");
-  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const gst        = total * 0.18;
   const grandTotal = total + gst;
@@ -353,7 +351,7 @@ export default function Cart() {
                 </div>
 
                 <button
-                  onClick={() => setShowComingSoon(true)}
+                  onClick={() => navigate("/checkout")}
                   className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-light hover:shadow-card-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide focus:ring-4 focus:ring-plum-deep/30"
                 >
                   Proceed to Checkout
@@ -390,12 +388,6 @@ export default function Cart() {
 
         </div>
       </main>
-
-      {/* Coming Soon Modal */}
-      <ComingSoonModal 
-        isOpen={showComingSoon} 
-        onClose={() => setShowComingSoon(false)} 
-      />
     </div>
   );
 }
