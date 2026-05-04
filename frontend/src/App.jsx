@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import MaintenanceOverlay from "./components/MaintenanceOverlay";
+import WhatsAppButton from "./components/ui/WhatsAppButton";
 
 /* Scroll to top on every route change */
 function ScrollToTop() {
@@ -85,6 +86,7 @@ export default function App() {
   return (
     <>
     <MaintenanceOverlay />
+    <WhatsAppButton />
     <ScrollToTop />
     <Routes>
 

@@ -1,7 +1,18 @@
-import { X, Rocket } from 'lucide-react';
+import { X, Rocket, MessageCircle } from 'lucide-react';
 
 export default function ComingSoonModal({ isOpen, onClose }) {
   if (!isOpen) return null;
+
+  const phoneNumber = '919876543210';
+  const message = encodeURIComponent(
+    `Hello Vijetha Digital! 👋\n\nI saw your website and I'm ready to place an order!\n\nCould you please help me with:\n• Product details\n• Pricing\n• Order placement\n\nThank you!`
+  );
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+  const handleWhatsApp = () => {
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
@@ -35,13 +46,20 @@ export default function ComingSoonModal({ isOpen, onClose }) {
           {/* CTA */}
           <div className="space-y-3">
             <button
-              onClick={onClose}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700 transition-colors"
+              onClick={handleWhatsApp}
+              className="w-full rounded-lg bg-green-500 hover:bg-green-600 px-4 py-3 font-semibold text-white transition-colors flex items-center justify-center gap-2"
             >
-              Got it!
+              <MessageCircle className="h-5 w-5" />
+              Order via WhatsApp
             </button>
-            <p className="text-sm text-gray-500">
-              In the meantime, browse our products and services
+            <button
+              onClick={onClose}
+              className="w-full rounded-lg bg-gray-100 hover:bg-gray-200 px-4 py-3 font-semibold text-gray-700 transition-colors"
+            >
+              Continue Browsing
+            </button>
+            <p className="text-sm text-gray-500 text-center">
+              Get instant quotes and place orders directly
             </p>
           </div>
         </div>
