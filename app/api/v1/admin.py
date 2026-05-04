@@ -116,29 +116,31 @@ def get_dashboard_stats(
     ).count()
     shipped_orders = db.query(Order).filter(Order.status == OrderStatus.shipped).count()
     
-    # Revenue calculations
-    completed_orders = db.query(Order).filter(Order.status == OrderStatus.delivered).all()
-    total_revenue = sum([float(order.total_price) for order in completed_orders]) if completed_orders else 0
+    # Revenue calculations - use aggregate instead of loading all orders
+    from sqlalchemy import func
+    total_revenue_result = db.query(func.sum(Order.total_price)).filter(
+        Order.status == OrderStatus.delivered
+    ).scalar()
+    total_revenue = float(total_revenue_result) if total_revenue_result else 0
     
     # 30-day revenue
-    revenue_30days_orders = db.query(Order).filter(
+    revenue_30days_result = db.query(func.sum(Order.total_price)).filter(
         Order.status == OrderStatus.delivered,
         Order.created_at >= thirty_days_ago
-    ).all()
-    revenue_30days = sum([float(order.total_price) for order in revenue_30days_orders]) if revenue_30days_orders else 0
+    ).scalar()
+    revenue_30days = float(revenue_30days_result) if revenue_30days_result else 0
     
     # 90-day revenue
-    revenue_90days_orders = db.query(Order).filter(
+    revenue_90days_result = db.query(func.sum(Order.total_price)).filter(
         Order.status == OrderStatus.delivered,
         Order.created_at >= ninety_days_ago
-    ).all()
-    revenue_90days = sum([float(order.total_price) for order in revenue_90days_orders]) if revenue_90days_orders else 0
+    ).scalar()
+    revenue_90days = float(revenue_90days_result) if revenue_90days_result else 0
     
-    # Cancelled/returned orders (losses)
-    cancelled_orders = db.query(Order).filter(Order.status == OrderStatus.cancelled).all()
-    returned_orders = db.query(Order).filter(Order.status == OrderStatus.refunded).all()
-    
-    total_cancelled = len(cancelled_orders)
+    # Cancelled/returned orders (losses) - use count instead of loading all
+    total_cancelled = db.query(func.count(Order.id)).filter(
+        Order.status == OrderStatus.cancelled
+    ).scalar() or 0
     total_returned = len(returned_orders)
     loss_from_cancelled = sum([float(order.total_price) for order in cancelled_orders]) if cancelled_orders else 0
     loss_from_returned = sum([float(order.total_price) for order in returned_orders]) if returned_orders else 0
@@ -405,7 +407,12 @@ def list_all_orders(
     current_user: User = Depends(admin_required)
 ):
     """List all orders for admin"""
-    query = db.query(Order)
+    from sqlalchemy.orm import joinedload
+    
+    query = db.query(Order).options(
+        joinedload(Order.user),
+        joinedload(Order.items).joinedload(OrderItem.product)
+    )
 
     if start_date:
         from datetime import time as dt_time
@@ -470,7 +477,13 @@ def get_order_details(
     current_user: User = Depends(admin_required)
 ):
     """Get complete order details with all related information"""
-    order = db.query(Order).filter(Order.id == order_id).first()
+    from sqlalchemy.orm import joinedload
+    
+    order = db.query(Order).options(
+        joinedload(Order.user),
+        joinedload(Order.items).joinedload(OrderItem.product),
+        joinedload(Order.files)
+    ).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     
