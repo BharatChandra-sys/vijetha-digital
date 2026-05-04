@@ -23,25 +23,6 @@ services:
         limits:
           memory: 512M
 
-  # ── Redis ───────────────────────────────────────────────────────────
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
-    volumes:
-      - redis_data:/data
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-
   # ── API (FastAPI) ───────────────────────────────────────────────────
   api:
     build:
@@ -52,11 +33,10 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: ""  # Disabled for minimal setup
+      LAUNCH_MODE: "coming_soon"  # Enable coming soon mode
     depends_on:
       db:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     ports:
       - "8000:8000"
@@ -73,52 +53,8 @@ services:
         limits:
           memory: 512M
 
-  # ── Celery Worker ───────────────────────────────────────────────────
-  worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-    restart: unless-stopped
-    command: ["celery", "-A", "app.celery_app", "worker", "--loglevel=info", "--concurrency=2"]
-    env_file: .env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
-      REDIS_URL: redis://redis:6379/0
-    depends_on:
-      - db
-      - redis
-    networks:
-      - backend
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
-  # ── Celery Beat ─────────────────────────────────────────────────────
-  beat:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-    restart: unless-stopped
-    command: ["celery", "-A", "app.celery_app", "beat", "--loglevel=info"]
-    env_file: .env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-vijetha}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vijetha_db}
-      REDIS_URL: redis://redis:6379/0
-    depends_on:
-      - redis
-    networks:
-      - backend
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-
 volumes:
   postgres_data:
-  redis_data:
 
 networks:
   backend:

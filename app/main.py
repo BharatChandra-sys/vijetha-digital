@@ -72,6 +72,9 @@ def _db_ok() -> bool:
 
 
 def _redis_ok() -> bool:
+    """Check Redis connection. Returns False if Redis is disabled."""
+    if not settings.REDIS_URL or settings.REDIS_URL == "":
+        return False  # Redis disabled
     try:
         client = redis.from_url(settings.REDIS_URL, socket_connect_timeout=1, socket_timeout=1)
         client.ping()
@@ -113,6 +116,10 @@ app.add_middleware(
 
 # ---- SECURITY HEADERS ----
 app.add_middleware(SecurityHeadersMiddleware, env=settings.ENV)
+
+# ---- COMING SOON MODE (blocks checkout/payments before launch) ----
+from app.middleware.coming_soon import ComingSoonMiddleware
+app.add_middleware(ComingSoonMiddleware)
 
 # ---- METRICS COLLECTION ----
 app.add_middleware(MetricsMiddleware)
