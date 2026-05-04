@@ -633,13 +633,12 @@ export default function Checkout() {
             </div>
           </aside>
         </div>
-      </div>
 
-      {/* Coming Soon Modal */}
-      <ComingSoonModal 
-        isOpen={showComingSoon} 
-        onClose={() => setShowComingSoon(false)} 
-      />
-    </div>
+        {/* Coming Soon Modal */}
+        <ComingSoonModal 
+          isOpen={showComingSoon} 
+          onClose={() => setShowComingSoon(false)} 
+        />
+      </div>
   );
 }
