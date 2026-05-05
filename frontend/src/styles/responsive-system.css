@@ -1,0 +1,399 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PROFESSIONAL RESPONSIVE SYSTEM
+   Mobile-First Approach with Proper Isolation
+   
+   ARCHITECTURE:
+   1. Base styles (mobile-first, no media queries)
+   2. Tablet overrides (@media min-width: 641px)
+   3. Desktop overrides (@media min-width: 1025px)
+   4. Large desktop (@media min-width: 1280px)
+   
+   PRINCIPLE: Each breakpoint only adds/overrides what's needed
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── CSS CUSTOM PROPERTIES (Design Tokens) ────────────────────────── */
+:root {
+  /* Spacing scale */
+  --space-xs: 0.25rem;    /* 4px */
+  --space-sm: 0.5rem;     /* 8px */
+  --space-md: 1rem;       /* 16px */
+  --space-lg: 1.5rem;     /* 24px */
+  --space-xl: 2rem;       /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+  --space-3xl: 4rem;      /* 64px */
+
+  /* Touch targets */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+  --touch-target-large: 52px;
+
+  /* Border radius */
+  --radius-sm: 0.5rem;    /* 8px */
+  --radius-md: 0.75rem;   /* 12px */
+  --radius-lg: 1rem;      /* 16px */
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* ── BASE STYLES (Mobile-First, applies to all screens) ──────────── */
+
+/* Reset aggressive overrides from other files */
+* {
+  box-sizing: border-box;
+}
+
+/* Base button styles - mobile-first */
+.btn,
+.button,
+button:not([class*="unstyled"]) {
+  min-height: var(--touch-target-comfortable);
+  min-width: var(--touch-target-min);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Icon-only buttons */
+button:has(> .material-symbols-outlined:only-child),
+button:has(> svg:only-child) {
+  min-width: var(--touch-target-comfortable);
+  padding: 0.75rem;
+}
+
+/* Product card buttons - mobile-first */
+.product-card .btn,
+.product-card button,
+[data-component="product-card"] button {
+  min-height: var(--touch-target-comfortable);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  width: 100%;
+}
+
+/* Section spacing - mobile-first */
+section {
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+
+/* Container spacing - mobile-first */
+.container,
+[class*="max-w-"] {
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+
+/* Card spacing - mobile-first */
+.card,
+[class*="rounded-"][class*="border"] {
+  padding: var(--space-lg);
+}
+
+/* Grid gaps - mobile-first */
+.grid {
+  gap: var(--space-md);
+}
+
+/* Form inputs - mobile-first (prevent iOS zoom) */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  min-height: var(--touch-target-comfortable);
+  padding: 0.75rem 1rem;
+  font-size: 16px; /* Prevents iOS zoom */
+  border-radius: var(--radius-sm);
+}
+
+/* ── TABLET STYLES (@media min-width: 641px) ──────────────────────── */
+@media (min-width: 641px) {
+  /* Slightly reduce button sizes on tablet */
+  .btn,
+  .button,
+  button:not([class*="unstyled"]) {
+    min-height: var(--touch-target-min);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  /* Icon buttons */
+  button:has(> .material-symbols-outlined:only-child),
+  button:has(> svg:only-child) {
+    min-width: var(--touch-target-min);
+    padding: 0.625rem;
+  }
+
+  /* Product card buttons - tablet */
+  .product-card .btn,
+  .product-card button,
+  [data-component="product-card"] button {
+    min-height: var(--touch-target-min);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    width: auto; /* No longer full-width */
+  }
+
+  /* Section spacing - tablet */
+  section {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+
+  /* Container spacing - tablet */
+  .container,
+  [class*="max-w-"] {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+
+  /* Card spacing - tablet */
+  .card,
+  [class*="rounded-"][class*="border"] {
+    padding: var(--space-lg);
+  }
+
+  /* Grid gaps - tablet */
+  .grid {
+    gap: var(--space-lg);
+  }
+
+  /* Form inputs - tablet */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea {
+    min-height: var(--touch-target-min);
+    padding: 0.625rem 1rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* ── DESKTOP STYLES (@media min-width: 1025px) ────────────────────── */
+@media (min-width: 1025px) {
+  /* Desktop buttons - more compact */
+  .btn,
+  .button,
+  button:not([class*="unstyled"]) {
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Icon buttons - desktop */
+  button:has(> .material-symbols-outlined:only-child),
+  button:has(> svg:only-child) {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0.5rem;
+  }
+
+  /* Product card buttons - desktop */
+  .product-card .btn,
+  .product-card button,
+  [data-component="product-card"] button {
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Section spacing - desktop (use Tailwind classes) */
+  section {
+    padding-left: 0; /* Let Tailwind px-* classes control */
+    padding-right: 0;
+  }
+
+  /* Container spacing - desktop */
+  .container,
+  [class*="max-w-"] {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+
+  /* Card spacing - desktop */
+  .card,
+  [class*="rounded-"][class*="border"] {
+    padding: var(--space-lg);
+  }
+
+  /* Grid gaps - desktop */
+  .grid {
+    gap: var(--space-lg);
+  }
+
+  /* Form inputs - desktop */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea {
+    min-height: 40px;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ── LARGE DESKTOP (@media min-width: 1280px) ─────────────────────── */
+@media (min-width: 1280px) {
+  /* Container spacing - large desktop */
+  .container,
+  [class*="max-w-"] {
+    padding-left: var(--space-2xl);
+    padding-right: var(--space-2xl);
+  }
+}
+
+/* ── COMPONENT-SPECIFIC OVERRIDES ─────────────────────────────────── */
+
+/* Header/Navigation - always compact */
+nav button,
+header button,
+nav a[role="button"],
+header a[role="button"] {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  nav button,
+  header button {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+}
+
+/* CTA buttons - always prominent */
+.cta-button,
+[data-component="cta"] button,
+section[class*="cta"] button {
+  min-height: var(--touch-target-large);
+  padding: 1rem 2rem;
+  font-size: 1.0625rem;
+}
+
+@media (min-width: 1025px) {
+  .cta-button,
+  [data-component="cta"] button {
+    min-height: var(--touch-target-comfortable);
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* Modal close buttons - always accessible */
+.modal button[aria-label*="close" i],
+[role="dialog"] button[aria-label*="close" i],
+button[data-dismiss] {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .modal button[aria-label*="close" i],
+  [role="dialog"] button[aria-label*="close" i] {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+}
+
+/* WhatsApp floating button */
+.whatsapp-button,
+[data-component="whatsapp"] {
+  min-height: 60px;
+  min-width: 60px;
+}
+
+@media (min-width: 1025px) {
+  .whatsapp-button,
+  [data-component="whatsapp"] {
+    min-height: 56px;
+    min-width: 56px;
+  }
+}
+
+/* ── UTILITY CLASSES ──────────────────────────────────────────────── */
+
+/* Mobile-only utilities */
+@media (max-width: 640px) {
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+}
+
+/* Desktop-only utilities */
+@media (min-width: 1025px) {
+  .desktop-hidden {
+    display: none !important;
+  }
+}
+
+/* ── ACCESSIBILITY ────────────────────────────────────────────────── */
+
+/* Focus visible - all screens */
+*:focus-visible {
+  outline: 3px solid #C0392B;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── PRINT STYLES ─────────────────────────────────────────────────── */
+@media print {
+  nav,
+  header,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+
+  * {
+    box-shadow: none !important;
+  }
+}

@@ -3,7 +3,10 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-import "./index.css"; // ✅ SINGLE Tailwind entry
+import "./index.css"; // ✅ 1. Tailwind base
+import "./styles/text-rendering-fix.css"; // ✅ 2. Text rendering fixes
+import "./styles/responsive-system.css"; // ✅ 3. Professional responsive system
+import "./styles/mobile-enhancements-clean.css"; // ✅ 4. Mobile-only enhancements
 
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";

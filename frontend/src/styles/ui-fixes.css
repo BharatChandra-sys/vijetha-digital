@@ -1,0 +1,306 @@
+/* ═══════════════════════════════════════════════════════════════════
+   COMPREHENSIVE UI FIXES
+   Balanced spacing for mobile and desktop
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET AGGRESSIVE OVERRIDES ───────────────────────────────────── */
+
+/* Remove all !important spacing overrides on desktop */
+@media (min-width: 1025px) {
+  section,
+  [class*="max-w-"],
+  [class*="grid"] > div,
+  button,
+  a {
+    padding: revert !important;
+    margin: revert !important;
+    min-height: revert !important;
+    min-width: revert !important;
+  }
+}
+
+/* ── MOBILE-ONLY FIXES (< 640px) ──────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Ensure minimum touch targets */
+  button,
+  a[role="button"],
+  [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Product card buttons */
+  [class*="product"] button,
+  .product-card button {
+    min-height: 44px;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Section horizontal padding */
+  section > div[class*="max-w"] {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  /* Card internal padding */
+  [class*="rounded"][class*="border"] {
+    padding: 1rem;
+  }
+
+  /* Grid gaps */
+  .grid {
+    gap: 0.875rem;
+  }
+}
+
+/* ── TABLET ADJUSTMENTS (641px - 1024px) ──────────────────────────── */
+@media (min-width: 641px) and (max-width: 1024px) {
+  button,
+  a[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  section > div[class*="max-w"] {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* ── DESKTOP (> 1024px) - LET TAILWIND WORK ───────────────────────── */
+@media (min-width: 1025px) {
+  /* Only enforce absolute minimums, let Tailwind classes control everything else */
+  button:not([class*="w-"]):not([class*="h-"]) {
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  /* Icon buttons can be smaller */
+  button:has(> span.material-symbols-outlined:only-child) {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* ── SPECIFIC COMPONENT FIXES ─────────────────────────────────────── */
+
+/* Product Card Order Button - consistent across all screens */
+.product-card button,
+[class*="product-card"] button,
+div[class*="product"] button[class*="coral"] {
+  min-height: 44px !important;
+  padding: 0.625rem 1.25rem !important;
+  font-size: 0.875rem !important;
+}
+
+@media (max-width: 640px) {
+  .product-card button,
+  [class*="product-card"] button {
+    min-height: 48px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9375rem !important;
+  }
+}
+
+/* Footer text contrast fix */
+footer {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+footer p,
+footer span,
+footer a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+footer a:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+footer [class*="text-white/"] {
+  opacity: 0.9;
+}
+
+/* Category tabs - prevent text cutoff */
+[class*="overflow-x-auto"] button,
+[class*="overflow-x-auto"] a {
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Hero badges spacing */
+.hero [class*="flex"][class*="gap"] {
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .hero [class*="flex"][class*="gap"] {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+/* Trust signal cards - balanced padding */
+[class*="trust"] div[class*="flex"][class*="items-center"],
+section[class*="trust"] > div > div > div {
+  padding: 1.25rem;
+}
+
+@media (min-width: 641px) {
+  [class*="trust"] div[class*="flex"][class*="items-center"] {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  [class*="trust"] div[class*="flex"][class*="items-center"] {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+/* Header cart/search icons - consistent sizing */
+nav button,
+header button {
+  min-height: 40px;
+  min-width: 40px;
+}
+
+@media (max-width: 640px) {
+  nav button,
+  header button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Form inputs - prevent iOS zoom */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* WhatsApp button - optimal sizing */
+.whatsapp-button,
+[class*="whatsapp"] button {
+  min-height: 56px;
+  min-width: 56px;
+}
+
+@media (max-width: 640px) {
+  .whatsapp-button,
+  [class*="whatsapp"] button {
+    min-height: 60px;
+    min-width: 60px;
+  }
+}
+
+/* Modal close buttons */
+.modal button[aria-label*="close" i],
+[role="dialog"] button[aria-label*="close" i] {
+  min-height: 40px;
+  min-width: 40px;
+}
+
+@media (max-width: 640px) {
+  .modal button[aria-label*="close" i] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Dropdown menu items */
+[role="menu"] button,
+[role="menu"] a,
+.dropdown button,
+.dropdown a {
+  min-height: 40px;
+  padding: 0.625rem 1rem;
+}
+
+/* CTA sections - prominent buttons */
+section[class*="cta"] button,
+section[class*="cta"] a[class*="button"] {
+  min-height: 48px;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  section[class*="cta"] button,
+  section[class*="cta"] a[class*="button"] {
+    min-height: 52px;
+    padding: 1rem 2rem;
+    font-size: 1.0625rem;
+  }
+}
+
+/* ── ACCESSIBILITY IMPROVEMENTS ───────────────────────────────────── */
+
+/* Focus visible states */
+*:focus-visible {
+  outline: 3px solid #C0392B;
+  outline-offset: 2px;
+}
+
+/* Skip to content link */
+.skip-to-content:focus {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 9999;
+  padding: 1rem 1.5rem;
+  background: #3B2F63;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+}
+
+/* ── PERFORMANCE OPTIMIZATIONS ────────────────────────────────────── */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* GPU acceleration for smooth animations */
+.animate-fade-in,
+.animate-bounce-in,
+[class*="transition"],
+[class*="hover:"] {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ── PRINT STYLES ─────────────────────────────────────────────────── */
+@media print {
+  nav,
+  header,
+  footer,
+  .no-print,
+  button,
+  [role="button"] {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+}

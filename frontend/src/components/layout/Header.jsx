@@ -553,7 +553,7 @@ export default function Header() {
             >
               <span className="material-symbols-outlined text-[1.25rem]">shopping_cart</span>
               {cartCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral-accent text-[9px] font-bold text-white leading-none">
+                <span className="absolute -top-0.5 -right-0.5 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-coral-accent text-[10px] font-bold text-white leading-none">
                   {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}
@@ -573,7 +573,7 @@ export default function Header() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
                     <div className="fixed z-50 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter"
-                      style={{ top: 60, right: 12, minWidth: 192, maxWidth: "calc(100vw - 24px)" }}>
+                      style={{ top: 60, right: 12, minWidth: 180, maxWidth: "min(240px, calc(100vw - 24px))" }}>
                       <div className="px-4 py-2.5 border-b border-stone-border/60 bg-stone-light/40">
                         <p className="text-[0.875rem] font-bold text-plum-deep leading-tight truncate">{user.full_name || "User"}</p>
                         <p className="text-[0.6875rem] text-text-muted mt-0.5 truncate">{user.email}</p>
@@ -622,45 +622,45 @@ export default function Header() {
               <div className="relative hidden lg:block" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen((v) => !v)}
-                  className="flex items-center gap-2 rounded-full border border-stone-border bg-white px-3 py-1.5 shadow-sm transition-colors hover:border-plum-deep/40"
+                  className="flex items-center gap-1 rounded-full border border-stone-border/40 bg-white pl-1 pr-2 py-1 shadow-sm transition-colors hover:border-plum-deep/40"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-plum-deep text-xs font-bold text-white">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-plum-deep text-[10px] font-bold text-white flex-shrink-0">
                     {avatarLetter}
                   </div>
-                  <span className="hidden max-w-[90px] truncate text-sm font-semibold text-plum-deep sm:block">
+                  <span className="max-w-[65px] truncate text-[0.75rem] font-semibold text-plum-deep leading-none">
                     {user.full_name?.split(" ")[0] || user.email}
                   </span>
-                  <span className="material-symbols-outlined text-sm text-text-muted">expand_more</span>
+                  <span className="material-symbols-outlined text-[0.875rem] text-text-muted leading-none">expand_more</span>
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 z-50 mt-1.5 w-52 overflow-hidden rounded-xl border border-stone-border bg-white shadow-card-enhanced dropdown-enter">
-                    <div className="px-4 py-2.5 border-b border-stone-border/60 bg-stone-light/40">
-                      <p className="text-[0.875rem] font-bold text-plum-deep leading-tight truncate max-w-[180px]">{user.full_name || "User"}</p>
-                      <p className="text-[0.6875rem] text-text-muted mt-0.5 truncate max-w-[180px]">{user.email}</p>
+                  <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-stone-border/30 bg-white shadow-card-enhanced dropdown-enter">
+                    <div className="px-4 py-3 border-b border-stone-border/60 bg-stone-light/40">
+                      <p className="text-sm font-bold text-plum-deep leading-tight truncate">{user.full_name || "User"}</p>
+                      <p className="text-xs text-text-muted mt-0.5 truncate">{user.email}</p>
                     </div>
                     <div className="py-1">
-                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                        <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">person</span>My Profile
+                      <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                        <span className="material-symbols-outlined text-lg text-text-muted flex-shrink-0">person</span>My Profile
                       </Link>
                       {user.role === "customer" && (
-                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">receipt_long</span>My Orders
+                        <Link to="/orders" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-lg text-text-muted flex-shrink-0">receipt_long</span>My Orders
                         </Link>
                       )}
-                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                        <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">shopping_cart</span>
-                        Cart {cartCount > 0 && <span className="ml-auto text-[0.6875rem] font-bold text-coral-accent">{cartCount}</span>}
+                      <Link to="/cart" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                        <span className="material-symbols-outlined text-lg text-text-muted flex-shrink-0">shopping_cart</span>
+                        Cart {cartCount > 0 && <span className="ml-auto text-xs font-bold text-coral-accent">{cartCount}</span>}
                       </Link>
                       {isAdmin && (
-                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-[0.875rem] font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
-                          <span className="material-symbols-outlined text-[1.125rem] text-text-muted flex-shrink-0">admin_panel_settings</span>Admin
+                        <Link to="/admin/dashboard" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-text-dark hover:bg-stone-light hover:text-plum-deep transition-colors">
+                          <span className="material-symbols-outlined text-lg text-text-muted flex-shrink-0">admin_panel_settings</span>Admin
                         </Link>
                       )}
                     </div>
                     <div className="border-t border-stone-border/60">
-                      <button onClick={handleLogout} className="flex w-full items-center gap-2.5 px-4 py-2 text-[0.875rem] font-semibold text-red-500 hover:bg-red-50 transition-colors">
-                        <span className="material-symbols-outlined text-[1.125rem] flex-shrink-0">logout</span>Log Out
+                      <button onClick={handleLogout} className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 transition-colors">
+                        <span className="material-symbols-outlined text-lg flex-shrink-0">logout</span>Log Out
                       </button>
                     </div>
                   </div>

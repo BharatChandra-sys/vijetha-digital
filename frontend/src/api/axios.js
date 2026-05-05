@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
-  withCredentials: false,
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000",
+  withCredentials: true,
   timeout: 15000,
 });
 
@@ -58,7 +58,7 @@ api.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"}/auth/refresh`,
+          `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}/auth/refresh`,
           { refresh_token: refreshToken }
         );
 

@@ -122,7 +122,7 @@ export default function ProductCard({ product, navigate, compact = false }) {
               </div>
             </div>
             <button
-              className="inline-flex items-center justify-center h-8 sm:h-9 px-3 sm:px-4 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-[8px] text-[0.6875rem] sm:text-[0.8125rem] flex-shrink-0 transition-colors active:scale-[0.97]"
+              className="inline-flex items-center justify-center min-h-[44px] h-11 px-4 sm:px-5 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-[10px] text-[0.8125rem] sm:text-[0.875rem] flex-shrink-0 transition-colors active:scale-[0.97]"
               onClick={e => { e.stopPropagation(); navigate(`/products/${product.id}`); }}
             >
               Order

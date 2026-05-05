@@ -1,620 +1,296 @@
-# Testing Guide - Vijetha Digital Backend
+# Testing Guide - UI Fixes
 
-Complete guide for testing the Vijetha Digital printing shop backend.
+## 🚀 Quick Start
 
-## Quick Start
+1. **Clear Browser Cache**
+   ```
+   Chrome/Edge: Ctrl+Shift+R (Windows) / Cmd+Shift+R (Mac)
+   Firefox: Ctrl+Shift+Delete → Clear Cache
+   ```
 
-### 1. Setup Test Environment
-```bash
-# Copy test environment template
-cp .env.test.example .env.test
+2. **Open DevTools**
+   ```
+   F12 or Cmd+Option+I (Mac) / Ctrl+Shift+I (Windows)
+   ```
 
-# Edit with your test credentials
-nano .env.test
+3. **Toggle Device Toolbar**
+   ```
+   Cmd+Shift+M (Mac) / Ctrl+Shift+M (Windows)
+   ```
+
+## 📱 Test on Mobile Device
+
+### Option 1: Local Network (Same WiFi)
+```
+Frontend: http://192.168.137.1:5173
+          http://192.168.56.1:5173
+          http://172.26.209.198:5173
+          http://172.20.48.1:5173
 ```
 
-### 2. Install Dependencies
-```bash
-pip install -r requirements-pinned.txt
+### Option 2: Cloudflare Tunnel
+```
+Check terminal for cloudflared URL
 ```
 
-### 3. Run Tests
-```bash
-# Run all pytest tests
-pytest tests/ -v
+## ✅ Testing Checklist
 
-# Run with coverage
-pytest tests/ --cov=app --cov-report=html
+### Home Page
 
-# Run manual tests (server must be running)
-python tests/manual/test_auth_endpoints.py
+#### Mobile (< 640px)
+- [ ] Hero buttons are 48px tall
+- [ ] Trust signal cards have proper padding (not stitched to edge)
+- [ ] Service cards are readable
+- [ ] Product cards "Order" buttons are 48px tall
+- [ ] Footer text is readable (good contrast)
+- [ ] WhatsApp button is 60px
+- [ ] No horizontal scroll
+- [ ] All text is ≥ 16px
+
+#### Tablet (641-1024px)
+- [ ] Buttons are 44px tall
+- [ ] Cards have balanced padding
+- [ ] Grid layouts work correctly
+- [ ] Images scale properly
+
+#### Desktop (1025px+)
+- [ ] Buttons are 40px tall (compact but clickable)
+- [ ] No excessive white space
+- [ ] Hover states work
+- [ ] Layout uses available space well
+
+### Products Page
+
+#### Mobile
+- [ ] Filter button is 48px tall
+- [ ] Product cards have proper spacing
+- [ ] "Order" buttons are 48px tall
+- [ ] Category tabs don't cut off text
+- [ ] Grid has 16px gaps
+
+#### Desktop
+- [ ] Sidebar filters work
+- [ ] Product grid is balanced
+- [ ] Buttons are appropriately sized
+- [ ] No layout issues
+
+### Product Detail Page
+
+#### Mobile
+- [ ] All configuration buttons are 48px tall
+- [ ] Form inputs are 48px tall
+- [ ] "Add to Cart" button is prominent
+- [ ] Upload button is accessible
+
+#### Desktop
+- [ ] Layout is clean
+- [ ] Buttons are compact
+- [ ] Form is easy to use
+
+### Cart Page
+
+#### Mobile
+- [ ] Cart item cards have padding
+- [ ] Quantity buttons are 48px
+- [ ] "Proceed to Checkout" is prominent
+- [ ] Remove buttons are accessible
+
+#### Desktop
+- [ ] Two-column layout works
+- [ ] Summary card is sticky
+- [ ] All buttons are clickable
+
+### Footer
+
+#### All Screens
+- [ ] Text is readable (85-90% opacity)
+- [ ] Links are clickable
+- [ ] Social icons are 44px minimum
+- [ ] Contact info is clear
+
+## 🔍 Specific Issues to Check
+
+### 1. Trust Signal Cards (Home Page)
+**Before:** Cards looked cramped, stitched to edge  
+**After:** Should have 20px padding on mobile, 24px on tablet
+
+**Test:**
+1. Open Home page on mobile
+2. Scroll to trust signals (500+, 24-48h, GST, 100%)
+3. Verify cards have breathing room
+4. Icons should be 48px × 48px
+5. Text should not touch card edges
+
+### 2. Product Card Buttons
+**Before:** Buttons were too small or too large  
+**After:** 48px on mobile, 44px on tablet, 40px on desktop
+
+**Test:**
+1. Open Products page
+2. Check "Order" button on each card
+3. Mobile: Should be 48px tall, full-width
+4. Desktop: Should be 40px tall, auto-width
+
+### 3. Footer Contrast
+**Before:** Text was hard to read (60-70% opacity)  
+**After:** Text is clear (85-90% opacity)
+
+**Test:**
+1. Scroll to footer
+2. All text should be easily readable
+3. Links should be visible
+4. Hover states should work
+
+### 4. Button Consistency
+**Before:** Buttons had inconsistent sizes  
+**After:** All buttons follow size system
+
+**Test:**
+1. Check buttons across all pages
+2. Mobile: 48px minimum
+3. Tablet: 44px minimum
+4. Desktop: 40px minimum
+
+## 🐛 Common Issues & Solutions
+
+### Issue: Styles not applying
+**Solution:**
+1. Hard refresh: Cmd+Shift+R / Ctrl+Shift+R
+2. Clear browser cache completely
+3. Check DevTools Console for errors
+4. Verify CSS files are loaded (Network tab)
+
+### Issue: Mobile styles on desktop
+**Solution:**
+1. Check browser width (should be > 1024px)
+2. Verify media queries in DevTools
+3. Clear cache and refresh
+
+### Issue: Desktop styles on mobile
+**Solution:**
+1. Check browser width (should be < 640px)
+2. Test on real device, not just emulator
+3. Clear mobile browser cache
+
+### Issue: Buttons still wrong size
+**Solution:**
+1. Inspect element in DevTools
+2. Check which CSS rule is applying
+3. Verify specificity (Computed tab)
+4. Check for inline styles overriding
+
+## 📊 Performance Testing
+
+### Lighthouse Audit
+1. Open DevTools → Lighthouse
+2. Run audit for Mobile
+3. Check scores:
+   - Performance: Should be > 90
+   - Accessibility: Should be > 95
+   - Best Practices: Should be > 90
+
+### Core Web Vitals
+- **LCP (Largest Contentful Paint):** < 2.5s
+- **FID (First Input Delay):** < 100ms
+- **CLS (Cumulative Layout Shift):** < 0.1
+
+## 🎯 Acceptance Criteria
+
+### Must Pass:
+- ✅ All buttons meet 44px minimum on mobile
+- ✅ No content touches screen edges
+- ✅ Text is readable (16px minimum on mobile)
+- ✅ Footer text has good contrast
+- ✅ No horizontal scroll on any page
+- ✅ Cards have proper padding
+- ✅ Layout works on all breakpoints
+
+### Should Pass:
+- ✅ Smooth transitions
+- ✅ Hover states work on desktop
+- ✅ Touch targets don't overlap
+- ✅ Images load properly
+- ✅ Forms are easy to use
+
+## 📱 Device Testing Matrix
+
+| Device | Screen Size | Test Status |
+|--------|-------------|-------------|
+| iPhone SE | 375×667 | ⬜ |
+| iPhone 12 | 390×844 | ⬜ |
+| iPhone 14 Pro Max | 430×932 | ⬜ |
+| Samsung Galaxy S21 | 360×800 | ⬜ |
+| iPad Mini | 768×1024 | ⬜ |
+| iPad Pro | 1024×1366 | ⬜ |
+| Desktop 1080p | 1920×1080 | ⬜ |
+| Desktop 1440p | 2560×1440 | ⬜ |
+
+## 🔧 DevTools Tips
+
+### Check Applied Styles
+1. Right-click element → Inspect
+2. Go to "Computed" tab
+3. See which styles are actually applied
+4. Check for overridden styles (crossed out)
+
+### Test Responsive Breakpoints
+1. Open Device Toolbar (Cmd+Shift+M)
+2. Test at these exact widths:
+   - 320px (small mobile)
+   - 375px (iPhone)
+   - 640px (breakpoint)
+   - 768px (tablet)
+   - 1024px (breakpoint)
+   - 1280px (desktop)
+
+### Check Touch Targets
+1. Enable "Show rulers" in DevTools
+2. Measure button heights
+3. Should be ≥ 44px on mobile
+
+### Monitor Performance
+1. Open Performance tab
+2. Record page load
+3. Check for layout shifts
+4. Verify smooth animations
+
+## 📝 Report Template
+
+If you find issues, report using this format:
+
 ```
+**Issue:** [Brief description]
+**Page:** [Home/Products/Cart/etc.]
+**Device:** [Mobile/Tablet/Desktop]
+**Screen Size:** [Width × Height]
+**Browser:** [Chrome/Safari/Firefox]
+**Steps to Reproduce:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Expected:** [What should happen]
+**Actual:** [What actually happens]
+**Screenshot:** [Attach if possible]
+```
+
+## ✅ Sign-Off
+
+Once all tests pass:
+
+- [ ] Mobile tests complete
+- [ ] Tablet tests complete
+- [ ] Desktop tests complete
+- [ ] Real device tests complete
+- [ ] Performance acceptable
+- [ ] Accessibility verified
+- [ ] Cross-browser tested
+
+**Tested by:** _______________  
+**Date:** _______________  
+**Status:** ⬜ Pass / ⬜ Fail  
+**Notes:** _______________
 
 ---
 
-## Test Structure
-
-```
-tests/
-├── README.md                    # Test suite documentation
-├── conftest.py                  # Pytest configuration & fixtures
-├── unit/                        # Unit tests (isolated)
-├── integration/                 # Integration tests (end-to-end)
-├── manual/                      # Manual test scripts
-│   ├── README.md               # Manual tests documentation
-│   ├── test_login.py           # Login endpoint test
-│   ├── test_logout.py          # Logout & token blacklist test
-│   ├── test_auth_endpoints.py  # Comprehensive auth tests
-│   ├── test_cors.py            # CORS headers test
-│   └── test_stress.py          # Rate limiter stress test
-├── test_auth_api.py            # Auth API tests
-├── test_security.py            # Security tests
-├── test_iam_system.py          # IAM system tests
-└── test_exceptions.py          # Exception handling tests
-```
-
----
-
-## Test Types
-
-### 1. Pytest Tests (Automated)
-
-**Location**: `tests/*.py`, `tests/unit/`, `tests/integration/`
-
-**Purpose**: Automated testing for CI/CD, regression testing, code coverage
-
-**Run**:
-```bash
-# All tests
-pytest tests/ -v
-
-# Specific file
-pytest tests/test_auth_api.py -v
-
-# Specific test
-pytest tests/test_auth_api.py::test_login -v
-
-# With coverage
-pytest tests/ --cov=app --cov-report=term-missing
-```
-
-**Features**:
-- Uses fixtures from `conftest.py`
-- Automatic database rollback after each test
-- Mocked external services
-- Fast execution
-
-**Example**:
-```python
-def test_create_order(auth_client):
-    """Test order creation"""
-    response = auth_client.post("/orders", json={
-        "items": [{"product_id": 1, "quantity": 2}]
-    })
-    assert response.status_code == 201
-    assert "id" in response.json()
-```
-
----
-
-### 2. Manual Tests (Interactive)
-
-**Location**: `tests/manual/`
-
-**Purpose**: Quick debugging, visual inspection, demonstration
-
-**Run**:
-```bash
-# Start server first
-python -m uvicorn app.main:app --reload
-
-# In another terminal, run tests
-python tests/manual/test_login.py
-python tests/manual/test_auth_endpoints.py
-python tests/manual/test_stress.py
-```
-
-**Features**:
-- Standalone Python scripts
-- Colored output for readability
-- Detailed response logging
-- Test against running server
-
-**Example**:
-```python
-import os
-import requests
-from dotenv import load_dotenv
-
-load_dotenv(".env.test")
-
-BASE_URL = os.getenv("TEST_API_BASE_URL", "http://127.0.0.1:8000")
-
-response = requests.post(f"{BASE_URL}/auth/login", json={
-    "email": os.getenv("TEST_ADMIN_EMAIL"),
-    "password": os.getenv("TEST_ADMIN_PASSWORD")
-})
-
-print(f"Status: {response.status_code}")
-print(f"Response: {response.json()}")
-```
-
----
-
-## Environment Configuration
-
-### .env.test File
-
-Create `.env.test` from the example:
-
-```bash
-cp .env.test.example .env.test
-```
-
-**Required variables**:
-```env
-# Admin credentials
-TEST_ADMIN_EMAIL=admin@vijetha.com
-TEST_ADMIN_PASSWORD=admin123
-
-# Regular user credentials
-TEST_USER_EMAIL=test@example.com
-TEST_USER_PASSWORD=SecureTest123!
-
-# API configuration
-TEST_API_BASE_URL=http://127.0.0.1:8000
-
-# Database
-TEST_DATABASE_URL=postgresql+psycopg2://postgres:admin123@localhost:5432/vijetha_db
-```
-
-**Security**:
-- ✅ `.env.test` is in `.gitignore` (never committed)
-- ✅ `.env.test.example` is committed (template only)
-- ✅ All tests load from `.env.test` (no hardcoded credentials)
-
----
-
-## Available Fixtures
-
-From `tests/conftest.py`:
-
-### `db_session`
-Database session with automatic rollback after test.
-
-```python
-def test_user_creation(db_session):
-    user = User(email="test@example.com", ...)
-    db_session.add(user)
-    db_session.commit()
-    # Automatically rolled back after test
-```
-
-### `client`
-Unauthenticated TestClient for public endpoints.
-
-```python
-def test_health_endpoint(client):
-    response = client.get("/health")
-    assert response.status_code == 200
-```
-
-### `auth_client`
-TestClient authenticated as regular customer.
-
-```python
-def test_get_my_orders(auth_client):
-    response = auth_client.get("/orders")
-    assert response.status_code == 200
-```
-
-### `admin_client`
-TestClient authenticated as admin user.
-
-```python
-def test_admin_dashboard(admin_client):
-    response = admin_client.get("/admin/dashboard")
-    assert response.status_code == 200
-```
-
----
-
-## Running Tests
-
-### Local Development
-
-```bash
-# Run all tests
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=app --cov-report=html
-open htmlcov/index.html
-
-# Run specific category
-pytest tests/unit/ -v
-pytest tests/integration/ -v
-
-# Run tests matching pattern
-pytest tests/ -k "auth" -v
-
-# Run failed tests only
-pytest tests/ --lf
-
-# Stop on first failure
-pytest tests/ -x
-```
-
-### Manual Testing
-
-```bash
-# Terminal 1: Start server
-python -m uvicorn app.main:app --reload
-
-# Terminal 2: Run manual tests
-python tests/manual/test_login.py
-python tests/manual/test_logout.py
-python tests/manual/test_auth_endpoints.py
-python tests/manual/test_cors.py
-python tests/manual/test_stress.py
-```
-
-### CI/CD (GitHub Actions)
-
-Tests run automatically on:
-- Push to main branch
-- Pull requests
-- Manual workflow dispatch
-
-```yaml
-# .github/workflows/test.yml
-- name: Run tests
-  run: |
-    pytest tests/ -v --cov=app --cov-report=xml
-```
-
----
-
-## Test Coverage
-
-### Current Coverage
-
-Check coverage:
-```bash
-pytest tests/ --cov=app --cov-report=term-missing
-```
-
-### Coverage Goals
-
-- **Overall**: >80%
-- **Critical paths** (auth, payments, orders): >90%
-- **Business logic**: >85%
-- **API endpoints**: >80%
-
-### Generate HTML Report
-
-```bash
-pytest tests/ --cov=app --cov-report=html
-open htmlcov/index.html
-```
-
----
-
-## Writing New Tests
-
-### Pytest Test Template
-
-```python
-"""
-Test module description
-"""
-import pytest
-from tests.conftest import requires_db
-
-@requires_db
-def test_something(auth_client):
-    """Test description"""
-    # Arrange
-    data = {"key": "value"}
-    
-    # Act
-    response = auth_client.post("/endpoint", json=data)
-    
-    # Assert
-    assert response.status_code == 201
-    assert response.json()["key"] == "value"
-```
-
-### Manual Test Template
-
-```python
-"""
-Manual test description
-"""
-import os
-import requests
-from dotenv import load_dotenv
-
-load_dotenv(".env.test")
-
-BASE_URL = os.getenv("TEST_API_BASE_URL", "http://127.0.0.1:8000")
-
-def test_something():
-    """Test description"""
-    print("Testing something...")
-    
-    response = requests.get(f"{BASE_URL}/endpoint")
-    
-    if response.status_code == 200:
-        print("✓ Test passed")
-        print(f"Response: {response.json()}")
-    else:
-        print("✗ Test failed")
-        print(f"Status: {response.status_code}")
-
-if __name__ == "__main__":
-    try:
-        test_something()
-    except Exception as e:
-        print(f"Error: {e}")
-```
-
----
-
-## Common Test Scenarios
-
-### Test Authentication
-
-```python
-def test_login_success(client):
-    """Test successful login"""
-    response = client.post("/auth/login", json={
-        "email": "admin@vijetha.com",
-        "password": "admin123"
-    })
-    assert response.status_code == 200
-    assert "access_token" in response.json()
-
-def test_login_invalid_credentials(client):
-    """Test login with wrong password"""
-    response = client.post("/auth/login", json={
-        "email": "admin@vijetha.com",
-        "password": "wrongpassword"
-    })
-    assert response.status_code == 401
-```
-
-### Test Authorization
-
-```python
-def test_admin_only_endpoint(client, admin_client):
-    """Test admin-only endpoint"""
-    # Unauthenticated - should fail
-    response = client.get("/admin/users")
-    assert response.status_code == 401
-    
-    # Authenticated as admin - should work
-    response = admin_client.get("/admin/users")
-    assert response.status_code == 200
-```
-
-### Test Database Operations
-
-```python
-def test_create_and_retrieve(db_session):
-    """Test creating and retrieving a record"""
-    # Create
-    user = User(email="test@example.com", full_name="Test User")
-    db_session.add(user)
-    db_session.commit()
-    
-    # Retrieve
-    retrieved = db_session.query(User).filter_by(email="test@example.com").first()
-    assert retrieved is not None
-    assert retrieved.full_name == "Test User"
-```
-
-### Test Error Handling
-
-```python
-def test_validation_error(client):
-    """Test validation error response"""
-    response = client.post("/orders", json={
-        "items": []  # Empty items should fail
-    })
-    assert response.status_code == 422
-    assert "detail" in response.json()
-```
-
----
-
-## Troubleshooting
-
-### Database Connection Issues
-
-```bash
-# Check PostgreSQL is running
-pg_isready -h localhost -p 5432
-
-# Check connection string
-cat .env.test | grep DATABASE_URL
-
-# Test connection
-psql -U postgres -d vijetha_db -c "SELECT 1;"
-```
-
-### Import Errors
-
-```bash
-# Install dependencies
-pip install -r requirements-pinned.txt
-
-# Install in development mode
-pip install -e .
-
-# Check Python path
-python -c "import sys; print('\n'.join(sys.path))"
-```
-
-### Server Not Running (Manual Tests)
-
-```bash
-# Check if server is running
-curl http://localhost:8000/health
-
-# Start server
-python -m uvicorn app.main:app --reload
-
-# Check port
-lsof -i :8000
-```
-
-### Environment Variables Not Loading
-
-```bash
-# Check .env.test exists
-ls -la .env.test
-
-# Verify content
-cat .env.test
-
-# Test loading
-python -c "from dotenv import load_dotenv; import os; load_dotenv('.env.test'); print(os.getenv('TEST_ADMIN_EMAIL'))"
-```
-
-### Tests Failing After Code Changes
-
-```bash
-# Run specific failing test with verbose output
-pytest tests/test_auth_api.py::test_login -vv
-
-# Check for database migrations
-alembic upgrade head
-
-# Clear pytest cache
-rm -rf .pytest_cache
-pytest tests/ -v
-```
-
----
-
-## Best Practices
-
-### 1. Test Isolation
-- Each test should be independent
-- Use fixtures with rollback for database tests
-- Don't rely on test execution order
-
-### 2. Clear Naming
-```python
-# Good
-def test_user_cannot_access_admin_endpoint():
-    ...
-
-# Bad
-def test_endpoint():
-    ...
-```
-
-### 3. One Assertion Per Test
-```python
-# Good
-def test_login_returns_access_token(client):
-    response = client.post("/auth/login", json=credentials)
-    assert "access_token" in response.json()
-
-def test_login_returns_user_info(client):
-    response = client.post("/auth/login", json=credentials)
-    assert "user" in response.json()
-
-# Bad
-def test_login(client):
-    response = client.post("/auth/login", json=credentials)
-    assert "access_token" in response.json()
-    assert "user" in response.json()
-    assert response.status_code == 200
-```
-
-### 4. Use Descriptive Assertions
-```python
-# Good
-assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.text}"
-
-# Bad
-assert response.status_code == 200
-```
-
-### 5. Mock External Services
-```python
-from unittest.mock import patch
-
-def test_payment_processing(auth_client):
-    with patch('app.services.payment_service.razorpay_client') as mock_razorpay:
-        mock_razorpay.payment.capture.return_value = {"status": "captured"}
-        
-        response = auth_client.post("/payments/capture", json={"payment_id": "pay_123"})
-        assert response.status_code == 200
-```
-
-### 6. Keep Tests Fast
-- Unit tests: <100ms each
-- Integration tests: <1s each
-- Use mocks for slow operations
-
-### 7. Document Complex Tests
-```python
-def test_complex_order_workflow(auth_client, db_session):
-    """
-    Test complete order workflow:
-    1. Create order with multiple items
-    2. Apply coupon discount
-    3. Process payment
-    4. Verify order status
-    5. Check inventory deduction
-    """
-    # Test implementation...
-```
-
----
-
-## Resources
-
-- [Pytest Documentation](https://docs.pytest.org/)
-- [FastAPI Testing](https://fastapi.tiangolo.com/tutorial/testing/)
-- [SQLAlchemy Testing](https://docs.sqlalchemy.org/en/14/orm/session_transaction.html)
-- [Requests Library](https://requests.readthedocs.io/)
-- [Python Dotenv](https://pypi.org/project/python-dotenv/)
-
----
-
-## Summary
-
-### For Quick Testing
-```bash
-# Run all automated tests
-pytest tests/ -v
-
-# Run manual test suite
-python tests/manual/test_auth_endpoints.py
-```
-
-### For Development
-```bash
-# Run tests with coverage
-pytest tests/ --cov=app --cov-report=html
-
-# Run specific test during debugging
-pytest tests/test_auth_api.py::test_login -vv
-```
-
-### For CI/CD
-```bash
-# Run all tests with coverage report
-pytest tests/ -v --cov=app --cov-report=xml
-```
-
----
-
-**Need help?** Check the detailed documentation:
-- `tests/README.md` - Full test suite documentation
-- `tests/manual/README.md` - Manual test scripts guide
+**Need Help?** Check `PROFESSIONAL_CSS_ARCHITECTURE.md` for detailed documentation.

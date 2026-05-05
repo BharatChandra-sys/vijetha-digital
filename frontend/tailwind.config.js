@@ -62,7 +62,8 @@ export default {
         "image-card":         "0 8px 24px rgba(0,0,0,0.08)",
         "product-card":       "0 1px 4px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)",
         "product-img-shadow": "0 4px 12px rgba(0,0,0,0.08)",
-        "glow-coral":         "0 0 32px 8px rgba(192,57,43,0.28)",
+        // Removed glow effect for mobile compatibility
+        // "glow-coral":         "0 0 32px 8px rgba(192,57,43,0.28)",
       },
 
       backgroundImage: {

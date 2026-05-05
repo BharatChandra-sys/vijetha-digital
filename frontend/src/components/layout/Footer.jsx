@@ -2,16 +2,16 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-plum-deep text-white pt-20 pb-12 border-t border-white/10 relative font-display">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-14 mb-16">
+    <footer className="bg-plum-deep text-white pt-16 sm:pt-20 pb-10 border-t border-white/10 relative font-display">
+      <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12 sm:gap-y-14 mb-14">
 
         {/* Brand */}
         <div>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-5">
             <img src="/vd-logo.jpeg" alt="Vijetha Digital" className="h-11 w-11 min-w-[44px] rounded-xl object-cover flex-shrink-0 shadow-sm" />
             <span className="text-xl font-bold tracking-tight text-white">VIJETHA DIGITAL</span>
           </div>
-          <p className="text-sm leading-relaxed mb-6 text-white/75">
+          <p className="text-sm leading-relaxed mb-5 text-white/90 font-medium">
             Established in 2002, Vijetha Digital is Hyderabad's trusted print partner for sign boards, flex printing, banner stands &amp; promotional tents. Serving 500+ businesses across Telangana.
           </p>
           <div className="flex gap-3">
@@ -58,7 +58,7 @@ export default function Footer() {
 
         {/* Products */}
         <div>
-          <h4 className="text-white font-bold text-base mb-6 tracking-wide">Products</h4>
+          <h4 className="text-white font-bold text-base mb-5 tracking-wide">Products</h4>
           <ul className="space-y-3 text-sm">
             {[
               ["Sign Boards",        "/products?category=Sign+Boards"],
@@ -68,7 +68,7 @@ export default function Footer() {
               ["Promotional Items",  "/products?category=Promotional+Items"],
             ].map(([label, to]) => (
               <li key={label}>
-                <Link to={to} className="text-white/80 hover:text-coral-accent transition-colors">
+                <Link to={to} className="text-white/90 hover:text-coral-accent transition-colors font-medium">
                   {label}
                 </Link>
               </li>
@@ -78,7 +78,7 @@ export default function Footer() {
 
         {/* Company */}
         <div>
-          <h4 className="text-white font-bold text-base mb-6 tracking-wide">Company</h4>
+          <h4 className="text-white font-bold text-base mb-5 tracking-wide">Company</h4>
           <ul className="space-y-3 text-sm">
             {[
               ["About Us",     "/about"],
@@ -88,7 +88,7 @@ export default function Footer() {
               ["Terms of Service","/terms"],
             ].map(([label, to]) => (
               <li key={label}>
-                <Link to={to} className="text-white/80 hover:text-coral-accent transition-colors">
+                <Link to={to} className="text-white/90 hover:text-coral-accent transition-colors font-medium">
                   {label}
                 </Link>
               </li>
@@ -98,14 +98,14 @@ export default function Footer() {
 
         {/* Contact — all 3 branches */}
         <div>
-          <h4 className="text-white font-bold text-base mb-6 tracking-wide">Contact Us</h4>
+          <h4 className="text-white font-bold text-base mb-5 tracking-wide">Contact Us</h4>
           <ul className="space-y-4 text-sm">
 
             <li className="flex items-start gap-3">
               <span className="material-symbols-outlined text-coral-accent text-xl mt-0.5 flex-shrink-0">location_on</span>
               <div>
                 <p className="text-white/90 font-semibold text-xs mb-0.5">Indira Park (Main)</p>
-                <span className="text-white/70">Shop No. 1-2-607/75, 76, Opp NTR Stadium,<br />LIC Colony Rd, Hyderabad – 500029</span>
+                <span className="text-white/85 font-medium">Shop No. 1-2-607/75, 76, Opp NTR Stadium,<br />LIC Colony Rd, Hyderabad – 500029</span>
               </div>
             </li>
 
@@ -113,7 +113,7 @@ export default function Footer() {
               <span className="material-symbols-outlined text-coral-accent text-xl mt-0.5 flex-shrink-0">location_on</span>
               <div>
                 <p className="text-white/90 font-semibold text-xs mb-0.5">Lakdikapool</p>
-                <span className="text-white/70">H No. 11-5-456, Shop No. 5,<br />Sanapride Complex, Hyderabad – 500004</span>
+                <span className="text-white/85 font-medium">H No. 11-5-456, Shop No. 5,<br />Sanapride Complex, Hyderabad – 500004</span>
               </div>
             </li>
 
@@ -121,40 +121,40 @@ export default function Footer() {
               <span className="material-symbols-outlined text-coral-accent text-xl mt-0.5 flex-shrink-0">location_on</span>
               <div>
                 <p className="text-white/90 font-semibold text-xs mb-0.5">Nacharam</p>
-                <span className="text-white/70">42/B, No. 16, IDA,<br />Nacharam, Hyderabad – 500076</span>
+                <span className="text-white/85 font-medium">42/B, No. 16, IDA,<br />Nacharam, Hyderabad – 500076</span>
               </div>
             </li>
 
             <li className="flex items-center gap-3">
               <span className="material-symbols-outlined text-coral-accent text-xl flex-shrink-0">phone</span>
-              <a href="tel:+917942643004" className="text-white/80 hover:text-coral-accent transition-colors">+91 79426 43004</a>
+              <a href="tel:+917942643004" className="text-white/90 hover:text-coral-accent transition-colors font-semibold">+91 79426 43004</a>
             </li>
 
             <li className="flex items-center gap-3">
               <span className="material-symbols-outlined text-coral-accent text-xl flex-shrink-0">schedule</span>
-              <span className="text-white/70">Mon – Sat, 9:00 AM – 8:00 PM</span>
+              <span className="text-white/85 font-medium">Mon – Sat, 9:00 AM – 8:00 PM</span>
             </li>
 
             <li className="flex items-center gap-3">
               <span className="material-symbols-outlined text-coral-accent text-xl flex-shrink-0">receipt_long</span>
-              <span className="text-xs font-mono text-white/60">GST: 36AGBPC3175H1ZP</span>
+              <span className="text-xs font-mono text-white/75 font-semibold">GST: 36AGBPC3175H1ZP</span>
             </li>
           </ul>
         </div>
       </div>
 
       {/* Bottom bar */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
-        <p>© 2002–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.</p>
+      <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/75">
+        <p className="font-medium">© 2002–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.</p>
         <div className="flex gap-6">
-          <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-          <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-          <Link to="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>
+          <Link to="/privacy-policy" className="hover:text-white transition-colors font-medium">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-white transition-colors font-medium">Terms of Service</Link>
+          <Link to="/sitemap" className="hover:text-white transition-colors font-medium">Sitemap</Link>
         </div>
       </div>
 
       {/* Staff portal — subtle, bottom of footer */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2 flex justify-center">
+      <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 pt-6 pb-3 flex justify-center">
         <Link
           to="/staff/login"
           className="text-[0.6875rem] text-white/20 hover:text-white/50 transition-colors"

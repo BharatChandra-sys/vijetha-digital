@@ -34,6 +34,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -103,10 +104,11 @@ app = FastAPI(
 # ---- CORS (MUST BE FIRST) ----
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
+    allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 app.add_middleware(
@@ -162,6 +164,12 @@ async def http_exception_handler(_, exc: HTTPException):
         status_code=exc.status_code,
         content={"error": exc.detail, "detail": None},
     )
+
+
+# ---- STATIC FILES (for uploads) ----
+upload_dir = BASE_DIR / settings.UPLOAD_DIR
+upload_dir.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
 
 
 # ---- ROUTES ----

@@ -1,0 +1,131 @@
+/* ═══════════════════════════════════════════════════════════════════
+   TEXT RENDERING FIXES
+   Fixes chromatic aberration, blur, and text rendering issues
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Fix chromatic aberration and blur ──────────────────────────── */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+/* ── Remove any blur filters that might cause issues ────────────── */
+select,
+button,
+input,
+a,
+span,
+p,
+h1, h2, h3, h4, h5, h6 {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── Fix select dropdown rendering ──────────────────────────────── */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+}
+
+select option {
+  background-color: white;
+  color: #1A2332;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+/* ── Fix button text rendering ──────────────────────────────────── */
+button {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ── Remove transform effects that cause blur ───────────────────── */
+@media (max-width: 768px) {
+  * {
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  /* Allow only essential transforms */
+  .whatsapp-button,
+  [class*="animate-"],
+  [class*="transition-"] {
+    transform: revert !important;
+  }
+}
+
+/* ── Fix category tabs spacing and prevent overlap ──────────────── */
+.category-tabs button,
+[class*="whitespace-nowrap"] {
+  flex-shrink: 0 !important;
+  min-width: fit-content !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  margin-right: 0.25rem !important;
+}
+
+/* Mobile-specific tab fixes */
+@media (max-width: 640px) {
+  [class*="overflow-x-auto"] button {
+    flex-shrink: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    font-size: 0.8125rem !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+/* ── Ensure crisp text on all devices ───────────────────────────── */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* ── Fix Material Icons rendering ───────────────────────────────── */
+.material-symbols-outlined {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ── Prevent text overlap in flex containers ────────────────────── */
+.flex button,
+.flex a {
+  flex-shrink: 0;
+}
+
+/* ── Fix horizontal scroll containers ───────────────────────────── */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Ensure proper spacing in navigation tabs ───────────────────── */
+nav button,
+[role="tablist"] button {
+  margin-right: 0.5rem;
+}
+
+nav button:last-child,
+[role="tablist"] button:last-child {
+  margin-right: 0;
+}

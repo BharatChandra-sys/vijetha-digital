@@ -113,7 +113,7 @@ export default function Checkout() {
     return "";
   };
 
-  const handlePayment = async () => {
+  const handlePayment = () => {
     // Show coming soon modal instead of processing payment
     setShowComingSoon(true);
     return;
@@ -223,6 +223,7 @@ export default function Checkout() {
     } finally {
       setPaying(false);
     }
+    */
   };
 
   return (
@@ -419,11 +420,11 @@ export default function Checkout() {
                         123 Print Avenue, Tech Park, Madhapur,<br />
                         Hyderabad, Telangana 500081
                       </p>
-                      <div className="flex items-center gap-2 text-xs font-medium text-plum-deep bg-white border border-stone-border rounded-lg px-3 py-2 inline-flex">
+                      <div className="inline-flex items-center gap-2 text-xs font-medium text-plum-deep bg-white border border-stone-border rounded-lg px-3 py-2">
                         <span className="material-symbols-outlined text-[16px]">schedule</span>
                         <span>Pickup Hours: Mon-Sat: 10 AM - 7 PM</span>
                       </div>
-                      <div className="mt-4 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 rounded-lg px-3 py-2 inline-flex">
+                      <div className="mt-4 inline-flex text-xs font-semibold text-green-700 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
                         Pay 50% now. Remaining 50% is due at store pickup.
                       </div>
                     </div>
@@ -640,5 +641,6 @@ export default function Checkout() {
           onClose={() => setShowComingSoon(false)} 
         />
       </div>
+    </div>
   );
 }
