@@ -1,0 +1,72 @@
+services:
+  # Backend API Service
+  - type: web
+    name: vijetha-digital-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements-pinned.txt
+      alembic upgrade head
+    startCommand: gunicorn app.main:app --worker-class uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:$PORT --timeout 120 --access-logfile - --error-logfile - --log-level info
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vijetha-digital-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: 7
+      - key: FRONTEND_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: GST_PERCENTAGE
+        value: 18.0
+      - key: MIN_ORDER_AMOUNT
+        value: 100.0
+      - key: MAX_FILE_SIZE_MB
+        value: 50
+      - key: ALLOWED_FILE_TYPES
+        value: pdf,jpg,jpeg,png,tiff,ai,psd,eps,cdr
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: REDIS_URL
+        value: ""
+      - key: AUTO_CREATE_SCHEMA_ON_STARTUP
+        value: false
+      - key: TRUSTED_HOSTS
+        value: "*"
+    healthCheckPath: /health
+
+  # PostgreSQL Database
+databases:
+  - name: vijetha-digital-db
+    databaseName: vijetha_db
+    user: vijetha_user
+    plan: free
+    region: oregon

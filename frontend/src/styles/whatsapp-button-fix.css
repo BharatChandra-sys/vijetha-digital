@@ -1,0 +1,77 @@
+/* WhatsApp Button - Force Visibility Fix */
+
+/* Ensure WhatsApp button container is always visible */
+[class*="whatsapp"],
+div[style*="9999"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* WhatsApp button itself */
+button[aria-label*="WhatsApp"],
+button[aria-label*="whatsapp"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background-color: #25D366 !important;
+  border-radius: 50% !important;
+}
+
+/* Ensure SVG icon is visible */
+button[aria-label*="WhatsApp"] svg,
+button[aria-label*="whatsapp"] svg {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  fill: white !important;
+}
+
+/* Desktop specific - ensure button is visible */
+@media (min-width: 1024px) {
+  [class*="whatsapp"],
+  div[style*="9999"] {
+    display: flex !important;
+    visibility: visible !important;
+  }
+  
+  button[aria-label*="WhatsApp"],
+  button[aria-label*="whatsapp"] {
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 80px !important;
+    min-height: 80px !important;
+  }
+  
+  button[aria-label*="WhatsApp"] svg,
+  button[aria-label*="whatsapp"] svg {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+/* Mobile specific */
+@media (max-width: 1023px) {
+  button[aria-label*="WhatsApp"],
+  button[aria-label*="whatsapp"] {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+  }
+  
+  button[aria-label*="WhatsApp"] svg,
+  button[aria-label*="whatsapp"] svg {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* Ensure tooltip is visible */
+button[aria-label*="WhatsApp"] + div,
+button[aria-label*="whatsapp"] + div {
+  display: flex !important;
+  visibility: visible !important;
+}

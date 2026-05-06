@@ -4,9 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import "./index.css"; // ✅ 1. Tailwind base
-import "./styles/text-rendering-fix.css"; // ✅ 2. Text rendering fixes
-import "./styles/responsive-system.css"; // ✅ 3. Professional responsive system
-import "./styles/mobile-enhancements-clean.css"; // ✅ 4. Mobile-only enhancements
+import "./styles/mobile-enhancements-clean.css"; // ✅ 2. Mobile-only enhancements
+import "./styles/whatsapp-button-fix.css"; // ✅ 3. WhatsApp button visibility fix
+import "./styles/critical-fixes.css"; // ✅ 4. Critical fixes only
 
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";

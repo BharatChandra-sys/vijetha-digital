@@ -18,8 +18,10 @@ This system was designed to introduce:
 
 ## 🚀 Quick Start
 
-Get started in under 30 minutes! See **[QUICK_START.md](QUICK_START.md)** for rapid deployment.
+### For Production Deployment
+See **[DEPLOYMENT_INSTRUCTIONS.md](DEPLOYMENT_INSTRUCTIONS.md)** for complete deployment guide to Render and Vercel.
 
+### For Local Development
 ```bash
 # Clone and configure
 git clone <repository-url>
@@ -29,9 +31,14 @@ cp .env.example .env
 # Edit .env with your configuration
 nano .env
 
-# Validate and deploy
-python3 scripts/validate_production.py
-./scripts/deploy.sh
+# Install dependencies
+pip install -r requirements-pinned.txt
+
+# Run migrations
+alembic upgrade head
+
+# Start development server
+uvicorn app.main:app --reload
 ```
 
 ## ✨ Core Features

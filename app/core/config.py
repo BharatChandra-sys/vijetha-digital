@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str
     CLOUDINARY_API_SECRET: str
 
+    # Brevo (Email Service)
+    BREVO_API_KEY: Optional[str] = None
+    BREVO_FROM_EMAIL: str = "noreply@vijetha.com"
+    BREVO_FROM_NAME: str = "Vijetha Digital"
+
     # Razorpay
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str
@@ -48,7 +53,12 @@ class Settings(BaseSettings):
     AWS_REGION: str = "ap-south-1"
     AWS_S3_BASE_URL: Optional[str] = None
 
-    # SMTP (optional — required only for password reset emails)
+    # Email Service (Brevo HTTP API - more reliable than SMTP)
+    BREVO_API_KEY: Optional[str] = None
+    BREVO_FROM_EMAIL: str = "noreply@vijetha.com"
+    BREVO_FROM_NAME: str = "Vijetha Digital"
+
+    # SMTP (legacy - optional, Brevo recommended)
     SMTP_HOST: Optional[str] = None
     SMTP_PORT: int = 587
     SMTP_USER: Optional[str] = None
@@ -62,6 +72,8 @@ class Settings(BaseSettings):
 
     # Google OAuth (optional — fill in before deploying)
     GOOGLE_CLIENT_ID: Optional[str] = None
+    GOOGLE_CLIENT_SECRET: Optional[str] = None
+    GOOGLE_REDIRECT_URI: Optional[str] = None
 
     # Runtime/infra
     REDIS_URL: str = "redis://localhost:6379/0"

@@ -36,6 +36,9 @@ python-json-logger
 
 python-dateutil
 
+# Email Service
+requests
+
 pytest
 pytest-asyncio
 httpx

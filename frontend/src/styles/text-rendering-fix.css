@@ -52,16 +52,22 @@ button {
 
 /* ── Remove transform effects that cause blur ───────────────────── */
 @media (max-width: 768px) {
-  * {
+  /* Only remove transforms from non-interactive elements */
+  p, span, div:not([class*="button"]):not([class*="btn"]):not(button) {
     transform: none !important;
     will-change: auto !important;
   }
   
-  /* Allow only essential transforms */
+  /* Allow transforms on interactive elements */
+  button,
+  a,
   .whatsapp-button,
   [class*="animate-"],
-  [class*="transition-"] {
+  [class*="transition-"],
+  [class*="hover:"],
+  [role="button"] {
     transform: revert !important;
+    will-change: revert !important;
   }
 }
 
