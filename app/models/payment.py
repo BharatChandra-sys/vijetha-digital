@@ -21,7 +21,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class PaymentMethod(str, enum.Enum):
+class PaymentMethod(enum.StrEnum):
     razorpay = "razorpay"
     upi = "upi"
     card = "card"
@@ -30,7 +30,7 @@ class PaymentMethod(str, enum.Enum):
     cod = "cod"
 
 
-class PaymentState(str, enum.Enum):
+class PaymentState(enum.StrEnum):
     created = "created"
     attempted = "attempted"
     authorized = "authorized"

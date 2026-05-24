@@ -1,8 +1,8 @@
-from typing import Any, Optional
+from typing import Any
 
 
 class AppException(Exception):
-    def __init__(self, message: str, status_code: int = 500, detail: Optional[Any] = None):
+    def __init__(self, message: str, status_code: int = 500, detail: Any | None = None):
         super().__init__(message)
         self.message = message
         self.status_code = status_code
@@ -10,7 +10,7 @@ class AppException(Exception):
 
 
 class NotFoundException(AppException):
-    def __init__(self, resource: str, identifier: Optional[str] = None):
+    def __init__(self, resource: str, identifier: str | None = None):
         msg = f"{resource} not found" if identifier is None else f"{resource} '{identifier}' not found"
         super().__init__(msg, status_code=404)
 
@@ -31,12 +31,12 @@ class ForbiddenException(AppException):
 
 
 class ValidationException(AppException):
-    def __init__(self, message: str, detail: Optional[Any] = None):
+    def __init__(self, message: str, detail: Any | None = None):
         super().__init__(message, status_code=422, detail=detail)
 
 
 class PaymentException(AppException):
-    def __init__(self, message: str, detail: Optional[Any] = None):
+    def __init__(self, message: str, detail: Any | None = None):
         super().__init__(message, status_code=402, detail=detail)
 
 

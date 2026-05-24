@@ -12,7 +12,6 @@ from app.models.iam import (
     PermissionCategory,
     ResourceType,
     Role,
-    RoleType,
 )
 
 # ============================================================================
@@ -27,7 +26,7 @@ PERMISSIONS = [
     ("user:delete", "Delete User", "user_management", "Can delete user accounts", True, False),
     ("user:list", "List Users", "user_management", "Can view all users", False, True),
     ("user:suspend", "Suspend User", "user_management", "Can suspend user accounts", True, False),
-    
+
     # ROLE MANAGEMENT
     ("role:create", "Create Role", "role_management", "Can create custom roles", True, False),
     ("role:read", "Read Role", "role_management", "Can view role details", False, True),
@@ -35,7 +34,7 @@ PERMISSIONS = [
     ("role:delete", "Delete Role", "role_management", "Can delete roles", True, False),
     ("role:assign", "Assign Role", "role_management", "Can assign roles to users", False, True),
     ("role:revoke", "Revoke Role", "role_management", "Can revoke roles from users", True, False),
-    
+
     # ORDER MANAGEMENT
     ("order:create", "Create Order", "order_management", "Can create orders", False, True),
     ("order:read", "Read Order", "order_management", "Can view order details", False, True),
@@ -44,32 +43,32 @@ PERMISSIONS = [
     ("order:list", "List Orders", "order_management", "Can view all orders", False, True),
     ("order:approve", "Approve Order", "order_management", "Can approve orders", False, True),
     ("order:cancel", "Cancel Order", "order_management", "Can cancel orders", False, True),
-    
+
     # FINANCIAL
     ("payment:read", "Read Payment", "financial", "Can view payment details", False, True),
     ("payment:refund", "Refund Payment", "financial", "Can process refunds", True, False),
     ("report:financial", "Financial Reports", "financial", "Can access financial reports", False, True),
     ("report:revenue", "Revenue Reports", "financial", "Can view revenue analytics", False, True),
-    
+
     # DELIVERY
     ("delivery:create", "Create Delivery", "delivery", "Can create delivery orders", False, True),
     ("delivery:read", "Read Delivery", "delivery", "Can view delivery details", False, True),
     ("delivery:update", "Update Delivery", "delivery", "Can update delivery status", False, True),
     ("delivery:accept", "Accept Delivery", "delivery", "Can accept delivery assignments", False, True),
     ("delivery:complete", "Complete Delivery", "delivery", "Can mark deliveries complete", False, True),
-    
+
     # ANALYTICS
     ("report:read", "Read Reports", "analytics", "Can view analytics reports", False, True),
     ("report:export", "Export Reports", "analytics", "Can export report data", False, True),
     ("analytics:dashboard", "View Dashboard", "analytics", "Can access analytics dashboard", False, True),
-    
+
     # PRODUCT MANAGEMENT
     ("product:create", "Create Product", "product", "Can create new products", False, True),
     ("product:read", "Read Product", "product", "Can view product details", False, True),
     ("product:update", "Update Product", "product", "Can edit products", False, True),
     ("product:delete", "Delete Product", "product", "Can delete products", True, False),
     ("product:list", "List Products", "product", "Can view all products", False, True),
-    
+
     # SYSTEM ADMINISTRATION
     ("system:settings", "System Settings", "system", "Can modify system settings", True, False),
     ("system:logs", "View Logs", "system", "Can access system logs", False, True),
@@ -80,7 +79,7 @@ PERMISSIONS = [
 
 ROLE_DEFINITIONS = [
     # Format: (name, slug, description, permissions, is_system, priority, max_users, parent_slug, requires_approval)
-    
+
     {
         "name": "Super Admin",
         "slug": "super_admin",
@@ -197,32 +196,32 @@ def init_iam_system(db: Session) -> dict:
     """
     Initialize the complete IAM system.
     Creates all permissions and default roles.
-    
+
     Returns:
         dict with created counts
     """
-    
+
     stats = {
         "permissions_created": 0,
         "permissions_skipped": 0,
         "roles_created": 0,
         "roles_skipped": 0,
     }
-    
+
     # Create permissions
     print("\n🔐 Creating Permissions...")
     for perm_key, display_name, category, description, is_dangerous, is_delegable in PERMISSIONS:
         existing = db.query(Permission).filter(
             Permission.permission_key == perm_key
         ).first()
-        
+
         if existing:
             stats["permissions_skipped"] += 1
             continue
-        
+
         # Parse resource and action from key (e.g., "order:create" -> "order", "create")
         resource_str, action_str = perm_key.split(":")
-        
+
         try:
             resource = ResourceType(resource_str)
             action = ActionType(action_str)
@@ -230,7 +229,7 @@ def init_iam_system(db: Session) -> dict:
         except ValueError as e:
             print(f"  ⚠️  Skipping {perm_key}: {str(e)}")
             continue
-        
+
         permission = Permission(
             permission_key=perm_key,
             display_name=display_name,
@@ -241,36 +240,36 @@ def init_iam_system(db: Session) -> dict:
             is_dangerous=is_dangerous,
             is_delegable=is_delegable,
         )
-        
+
         db.add(permission)
         stats["permissions_created"] += 1
         print(f"  ✓ {perm_key}: {display_name}")
-    
+
     db.commit()
-    
+
     # Create roles
     print("\n👥 Creating Roles...")
     for role_def in ROLE_DEFINITIONS:
         existing = db.query(Role).filter(Role.slug == role_def["slug"]).first()
-        
+
         if existing:
             stats["roles_skipped"] += 1
             print(f"  ⊘ {role_def['name']} (already exists)")
             continue
-        
+
         # Get permissions
         perms = db.query(Permission).filter(
             Permission.permission_key.in_(role_def["permissions"]),
-            Permission.is_active == True
+            Permission.is_active
         ).all()
-        
+
         # Get parent role if specified
         parent_role = None
         if role_def["parent_slug"]:
             parent_role = db.query(Role).filter(
                 Role.slug == role_def["parent_slug"]
             ).first()
-        
+
         role = Role(
             name=role_def["name"],
             slug=role_def["slug"],
@@ -281,18 +280,18 @@ def init_iam_system(db: Session) -> dict:
             parent_role_id=parent_role.id if parent_role else None,
             requires_approval=role_def["requires_approval"],
         )
-        
+
         role.permissions = perms
         db.add(role)
         stats["roles_created"] += 1
         print(f"  ✓ {role_def['name']} ({len(perms)} permissions)")
-    
+
     db.commit()
-    
+
     print("\n✅ IAM System Initialized!")
     print(f"   Permissions: {stats['permissions_created']} created, {stats['permissions_skipped']} skipped")
     print(f"   Roles: {stats['roles_created']} created, {stats['roles_skipped']} skipped")
-    
+
     return stats
 
 

@@ -4,15 +4,13 @@ webhook processing, and refund flow with idempotency.
 """
 import hashlib
 import hmac
-import uuid
 from datetime import datetime
-from typing import Optional
 
 import razorpay
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.core.exceptions import PaymentException, NotFoundException, ValidationException
+from app.core.exceptions import NotFoundException, PaymentException, ValidationException
 from app.models.order import Order, OrderStatus, PaymentStatus
 from app.models.payment import Payment, PaymentMethod, PaymentState
 
@@ -36,7 +34,7 @@ def create_payment_order(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user_id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
 
     if not order:
@@ -126,7 +124,7 @@ def verify_and_capture_payment(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user_id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
 
     if not order:
@@ -214,7 +212,7 @@ def process_webhook_captured(db: Session, payment_entity: dict) -> str:
     except ValueError:
         return "invalid_order_id"
 
-    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
+    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
     if not order:
         return "order_not_found"
 
@@ -268,7 +266,7 @@ def process_webhook_failed(db: Session, payment_entity: dict) -> str:
     except ValueError:
         return "invalid_order_id"
 
-    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
+    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
     if order and order.payment_status != PaymentStatus.paid:
         order.payment_status = PaymentStatus.failed
 

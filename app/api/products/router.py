@@ -2,7 +2,6 @@
 Products public router — list, detail, calculate price.
 Admin CRUD lives in app/api/admin/router.py.
 """
-from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
@@ -18,7 +17,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("", response_model=list[ProductResponse])
 def list_products(
-    category: Optional[str] = Query(None),
+    category: str | None = Query(None),
     db: Session = Depends(get_db),
 ):
     """List all active products, optionally filtered by category."""

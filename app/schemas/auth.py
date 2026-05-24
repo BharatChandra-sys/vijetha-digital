@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -27,7 +27,7 @@ class UserInToken(BaseModel):
     email: str
     full_name: str
     role: str
-    iam_roles: List[IAMRoleInfo] = []
+    iam_roles: list[IAMRoleInfo] = []
     status: str
 
 
@@ -35,7 +35,7 @@ class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
-    user: Optional[UserInToken] = None
+    user: UserInToken | None = None
 
 
 # ── Refresh / token flows ─────────────────────────────────────────────
@@ -77,26 +77,26 @@ class UserProfileResponse(BaseModel):
     id: int
     email: str
     full_name: str
-    phone: Optional[str] = None
+    phone: str | None = None
     role: str
-    iam_roles: List[str] = []
+    iam_roles: list[str] = []
     status: str
-    avatar_url: Optional[str] = None
+    avatar_url: str | None = None
     email_verified: bool = False
-    created_at: Optional[str] = None
-    last_login_at: Optional[str] = None
+    created_at: str | None = None
+    last_login_at: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class ProfileUpdateRequest(BaseModel):
-    full_name: Optional[str] = Field(None, min_length=2, max_length=150)
-    phone: Optional[str] = Field(None, max_length=20)
-    avatar_url: Optional[str] = Field(None, max_length=500)
-    address: Optional[str] = Field(None, max_length=500)
-    city: Optional[str] = Field(None, max_length=100)
-    state: Optional[str] = Field(None, max_length=100)
-    postal_code: Optional[str] = Field(None, max_length=20)
+    full_name: str | None = Field(None, min_length=2, max_length=150)
+    phone: str | None = Field(None, max_length=20)
+    avatar_url: str | None = Field(None, max_length=500)
+    address: str | None = Field(None, max_length=500)
+    city: str | None = Field(None, max_length=100)
+    state: str | None = Field(None, max_length=100)
+    postal_code: str | None = Field(None, max_length=20)
 
 
 # ── Admin user management views ───────────────────────────────────────
@@ -105,22 +105,22 @@ class AdminUserView(BaseModel):
     id: int
     email: str
     full_name: str
-    phone: Optional[str] = None
+    phone: str | None = None
     role: str
     status: str
     email_verified: bool = False
     failed_login_attempts: int = 0
-    account_locked_until: Optional[str] = None
-    created_at: Optional[str] = None
-    last_login_at: Optional[str] = None
-    last_login_ip: Optional[str] = None
+    account_locked_until: str | None = None
+    created_at: str | None = None
+    last_login_at: str | None = None
+    last_login_ip: str | None = None
     is_deleted: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class AdminUserListResponse(BaseModel):
-    items: List[AdminUserView]
+    items: list[AdminUserView]
     total: int
     page: int
     page_size: int

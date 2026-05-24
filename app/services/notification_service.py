@@ -1,7 +1,7 @@
 """
 Notification service — create, list, mark-read, and unread count.
 """
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sqlalchemy.orm import Session
 
@@ -14,7 +14,7 @@ def create_notification(
     notification_type: NotificationType,
     title: str,
     message: str,
-    data: Optional[Dict[str, Any]] = None,
+    data: dict[str, Any] | None = None,
 ) -> Notification:
     """Create and persist a notification for a user."""
     notif = Notification(
@@ -36,10 +36,10 @@ def get_user_notifications(
     unread_only: bool = False,
     limit: int = 50,
     offset: int = 0,
-) -> List[Notification]:
+) -> list[Notification]:
     query = db.query(Notification).filter(Notification.user_id == user_id)
     if unread_only:
-        query = query.filter(Notification.is_read == False)
+        query = query.filter(not Notification.is_read)
     return (
         query.order_by(Notification.created_at.desc())
         .offset(offset)
@@ -51,7 +51,7 @@ def get_user_notifications(
 def get_unread_count(db: Session, user_id: int) -> int:
     return (
         db.query(Notification)
-        .filter(Notification.user_id == user_id, Notification.is_read == False)
+        .filter(Notification.user_id == user_id, not Notification.is_read)
         .count()
     )
 
@@ -75,7 +75,7 @@ def mark_all_read(db: Session, user_id: int) -> int:
     now = datetime.utcnow()
     updated = (
         db.query(Notification)
-        .filter(Notification.user_id == user_id, Notification.is_read == False)
+        .filter(Notification.user_id == user_id, not Notification.is_read)
         .all()
     )
     for n in updated:
@@ -105,7 +105,7 @@ def notify_order_confirmed(db: Session, user_id: int, order_id: int) -> None:
     )
 
 
-def notify_order_shipped(db: Session, user_id: int, order_id: int, tracking_number: Optional[str] = None) -> None:
+def notify_order_shipped(db: Session, user_id: int, order_id: int, tracking_number: str | None = None) -> None:
     msg = f"Your order #{order_id} has been shipped."
     if tracking_number:
         msg += f" Tracking: {tracking_number}"

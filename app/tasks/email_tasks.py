@@ -7,25 +7,18 @@ from sqlalchemy.orm import Session
 
 from app.celery_app import celery_app
 from app.db.session import SessionLocal
-from app.services.email_service import (
-    send_business_approved_email,
-    send_business_rejected_email,
-    send_order_confirmation_email,
-    send_order_shipped_email,
-    send_password_reset_email,
-    send_welcome_email,
-)
+from app.services.brevo_email_service import brevo_email_service
 
 
 class DatabaseTask(Task):
     """Base task with database session management."""
-    
+
     _db: Session = None
-    
+
     def after_return(self, *args, **kwargs):
         if self._db is not None:
             self._db.close()
-    
+
     @property
     def db(self) -> Session:
         if self._db is None:
@@ -43,7 +36,7 @@ class DatabaseTask(Task):
 def send_welcome_email_task(self, to_email: str, user_name: str):
     """Send welcome email to new user."""
     try:
-        send_welcome_email(to_email, user_name)
+        brevo_email_service.send_welcome_email(to_email, user_name)
     except Exception as exc:
         # Retry with exponential backoff
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))

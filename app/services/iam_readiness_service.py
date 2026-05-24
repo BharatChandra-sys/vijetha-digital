@@ -26,7 +26,7 @@ class IAMReadinessService:
         inspector = inspect(engine)
         tables = set(inspector.get_table_names())
 
-        permissions_count = db.query(Permission).filter(Permission.is_active == True).count()
+        permissions_count = db.query(Permission).filter(Permission.is_active).count()
         roles = db.query(Role).all()
         roles_count = len(roles)
         active_roles_count = len([role for role in roles if role.is_active])
@@ -35,8 +35,8 @@ class IAMReadinessService:
         role_logs_count = db.query(RoleAssignmentLog).count()
 
         existing_slugs = {role.slug for role in roles}
-        missing_roles = sorted(list(IAMReadinessService.REQUIRED_ROLE_SLUGS - existing_slugs))
-        missing_tables = sorted(list(IAMReadinessService.REQUIRED_TABLES - tables))
+        missing_roles = sorted(IAMReadinessService.REQUIRED_ROLE_SLUGS - existing_slugs)
+        missing_tables = sorted(IAMReadinessService.REQUIRED_TABLES - tables)
 
         checks = {
             "tables_present": len(missing_tables) == 0,

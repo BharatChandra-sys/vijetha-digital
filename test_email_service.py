@@ -9,6 +9,7 @@ Usage:
 
 import sys
 import asyncio
+import os
 from pathlib import Path
 
 # Add parent directory to path
@@ -16,6 +17,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from app.services.brevo_email_service import brevo_email_service
 from app.core.config import settings
+
+TEST_EMAIL = os.getenv("TEST_EMAIL", "bc833498@gmail.com")
 
 
 async def test_welcome_email():
@@ -25,13 +28,13 @@ async def test_welcome_email():
     print("="*60)
     
     result = brevo_email_service.send_welcome_email(
-        to_email="bc833498@gmail.com",
+        to_email=TEST_EMAIL,
         user_name="Test User"
     )
     
     if result:
         print("✅ Welcome email sent successfully!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
     else:
         print("❌ Failed to send welcome email")
         print("Check the logs above for errors")
@@ -46,7 +49,7 @@ async def test_order_confirmation():
     print("="*60)
     
     result = brevo_email_service.send_order_confirmation(
-        to_email="bc833498@gmail.com",
+        to_email=TEST_EMAIL,
         user_name="Test User",
         order_id="TEST-12345",
         order_total=2500.00,
@@ -55,7 +58,7 @@ async def test_order_confirmation():
     
     if result:
         print("✅ Order confirmation email sent successfully!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
     else:
         print("❌ Failed to send order confirmation email")
         print("Check the logs above for errors")
@@ -70,7 +73,7 @@ async def test_order_shipped():
     print("="*60)
     
     result = brevo_email_service.send_order_shipped(
-        to_email="bc833498@gmail.com",
+        to_email=TEST_EMAIL,
         user_name="Test User",
         order_id="TEST-12345",
         tracking_number="TRACK123456789",
@@ -79,7 +82,7 @@ async def test_order_shipped():
     
     if result:
         print("✅ Order shipped email sent successfully!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
     else:
         print("❌ Failed to send order shipped email")
         print("Check the logs above for errors")
@@ -94,14 +97,14 @@ async def test_password_reset():
     print("="*60)
     
     result = brevo_email_service.send_password_reset(
-        to_email="bc833498@gmail.com",
+        to_email=TEST_EMAIL,
         user_name="Test User",
         reset_token="test-reset-token-123456"
     )
     
     if result:
         print("✅ Password reset email sent successfully!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
     else:
         print("❌ Failed to send password reset email")
         print("Check the logs above for errors")
@@ -116,7 +119,7 @@ async def test_payment_success():
     print("="*60)
     
     result = brevo_email_service.send_payment_success(
-        to_email="bc833498@gmail.com",
+        to_email=TEST_EMAIL,
         user_name="Test User",
         order_id="TEST-12345",
         amount=2500.00,
@@ -125,7 +128,7 @@ async def test_payment_success():
     
     if result:
         print("✅ Payment success email sent successfully!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
     else:
         print("❌ Failed to send payment success email")
         print("Check the logs above for errors")
@@ -139,8 +142,8 @@ async def main():
     print("BREVO EMAIL SERVICE TEST")
     print("="*60)
     print(f"\n📧 Sender: {brevo_email_service.from_name} <{brevo_email_service.from_email}>")
-    print(f"📬 Recipient: bc833498@gmail.com")
-    print(f"🔑 API Key: {'✅ Configured' if brevo_email_service.api_key else '❌ Missing'}")
+    print(f"📬 Recipient: {TEST_EMAIL}")
+    print(f" API Key: {'✅ Configured' if brevo_email_service.api_key else '❌ Missing'}")
     print(f"🌐 Frontend URL: {settings.FRONTEND_URL}")
     
     if not brevo_email_service.api_key:
@@ -184,7 +187,7 @@ async def main():
     
     if passed == total:
         print("\n🎉 All tests passed!")
-        print("📧 Check your inbox: bc833498@gmail.com")
+        print(f"📧 Check your inbox: {TEST_EMAIL}")
         print("📱 Check spam folder if you don't see them")
         print("\n✅ Email service is working correctly!")
     else:

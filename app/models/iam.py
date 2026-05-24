@@ -27,7 +27,7 @@ from app.db.base import Base
 # ENUMS
 # ============================================================================
 
-class RoleType(str, enum.Enum):
+class RoleType(enum.StrEnum):
     """Core role types"""
     SUPER_ADMIN = "super_admin"      # Full system access
     ADMIN = "admin"                   # Can manage users, roles, orders
@@ -38,7 +38,7 @@ class RoleType(str, enum.Enum):
     GUEST = "guest"                   # Limited read-only access
 
 
-class PermissionCategory(str, enum.Enum):
+class PermissionCategory(enum.StrEnum):
     """Permission grouping for clarity"""
     USER_MANAGEMENT = "user_management"
     ROLE_MANAGEMENT = "role_management"
@@ -50,7 +50,7 @@ class PermissionCategory(str, enum.Enum):
     SYSTEM = "system"
 
 
-class ResourceType(str, enum.Enum):
+class ResourceType(enum.StrEnum):
     """Resource types for granular access control"""
     USER = "user"
     ORDER = "order"
@@ -65,7 +65,7 @@ class ResourceType(str, enum.Enum):
     SYSTEM = "system"
 
 
-class ActionType(str, enum.Enum):
+class ActionType(enum.StrEnum):
     """Actions that can be performed"""
     CREATE = "create"
     READ = "read"
@@ -128,43 +128,43 @@ class Permission(Base):
     __tablename__ = "permissions"
 
     id = Column(Integer, primary_key=True)
-    
+
     # permission_key: "order:create", "user:read", "delivery:update"
     permission_key = Column(String(100), unique=True, nullable=False, index=True)
-    
+
     # Human-readable description
     display_name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    
+
     # Categorization
     category = Column(
         Enum(PermissionCategory, name="permission_category_enum", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         index=True
     )
-    
+
     resource = Column(
         Enum(ResourceType, name="resource_type_enum", values_callable=lambda x: [e.value for e in x]),
         nullable=False
     )
-    
+
     action = Column(
         Enum(ActionType, name="action_type_enum", values_callable=lambda x: [e.value for e in x]),
         nullable=False
     )
-    
+
     # Is this permission critical/dangerous (logs required for audit)
     is_dangerous = Column(Boolean, default=False)
-    
+
     # Can this be delegated?
     is_delegable = Column(Boolean, default=True)
-    
+
     # Soft delete
     is_active = Column(Boolean, default=True, index=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     roles = relationship(
         'Role',
@@ -172,7 +172,7 @@ class Permission(Base):
         back_populates='permissions',
         lazy='selectin'
     )
-    
+
     __table_args__ = (
         UniqueConstraint('resource', 'action', name='uq_permission_resource_action'),
         Index('ix_permissions_category', 'category'),
@@ -192,38 +192,38 @@ class Role(Base):
     __tablename__ = "roles"
 
     id = Column(Integer, primary_key=True)
-    
+
     # name: "Super Admin", "Order Manager", "Driver", etc.
     name = Column(String(100), unique=True, nullable=False, index=True)
-    
+
     # slug: "super_admin", "order_manager", etc.
     slug = Column(String(100), unique=True, nullable=False, index=True)
-    
+
     description = Column(Text, nullable=True)
-    
+
     # Built-in roles cannot be deleted
     is_system_role = Column(Boolean, default=False)
-    
+
     # Role is active/usable
     is_active = Column(Boolean, default=True, index=True)
-    
+
     # Priority level for conflict resolution (higher = more privileged)
     priority = Column(Integer, default=0)
-    
+
     # Maximum number of users that can have this role (null = unlimited)
     max_users = Column(Integer, nullable=True)
-    
+
     # Role requires approval to assign
     requires_approval = Column(Boolean, default=False)
-    
+
     # Inherit permissions from parent role
     parent_role_id = Column(Integer, ForeignKey('roles.id'), nullable=True)
     parent_role = relationship('Role', remote_side=[id], lazy='selectin')
-    
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     created_by = Column(Integer, ForeignKey('users.id'), nullable=True)
-    
+
     # Relationships
     permissions = relationship(
         'Permission',
@@ -232,7 +232,7 @@ class Role(Base):
         cascade='all',
         lazy='selectin'
     )
-    
+
     users = relationship(
         'User',
         secondary=user_role_association,
@@ -243,7 +243,7 @@ class Role(Base):
         lazy='selectin',
         overlaps="roles_assigned",
     )
-    
+
     __table_args__ = (
         Index('ix_roles_slug', 'slug'),
         Index('ix_roles_is_active', 'is_active'),
@@ -263,35 +263,35 @@ class RoleAssignmentLog(Base):
     __tablename__ = "role_assignment_logs"
 
     id = Column(Integer, primary_key=True)
-    
+
     # Who was affected
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
-    
+
     # Which role
     role_id = Column(Integer, ForeignKey('roles.id', ondelete='CASCADE'), nullable=False, index=True)
-    
+
     # Action: "assigned", "revoked", "expired"
     action = Column(String(50), nullable=False, index=True)
-    
+
     # Who made the change
     assigned_by_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     assigned_by_name = Column(String(255), nullable=True)
-    
+
     # Reason for assignment/revocation
     reason = Column(Text, nullable=True)
-    
+
     # Expiration details
     expires_at = Column(DateTime, nullable=True)
     revoked_at = Column(DateTime, nullable=True)
     revoked_reason = Column(Text, nullable=True)
-    
+
     # Request approval tracking
     requires_approval = Column(Boolean, default=False)
     approved_by_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     approved_at = Column(DateTime, nullable=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
-    
+
     user = relationship('User', foreign_keys=[user_id])
     role = relationship('Role')
     assigned_by = relationship('User', foreign_keys=[assigned_by_id])
@@ -310,35 +310,35 @@ class PermissionAccessLog(Base):
     __tablename__ = "permission_access_logs"
 
     id = Column(Integer, primary_key=True)
-    
+
     # Who accessed/performed action
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
-    
+
     # What permission was used
     permission_id = Column(Integer, ForeignKey('permissions.id'), nullable=False)
-    
+
     # What resource was affected
     resource_type = Column(String(50), nullable=False, index=True)
     resource_id = Column(Integer, nullable=True)
-    
+
     # What action was performed
     action = Column(String(50), nullable=False)
-    
+
     # Request/response details
     endpoint = Column(String(255), nullable=True)
     method = Column(String(10), nullable=True)
     status_code = Column(Integer, nullable=True)
     ip_address = Column(String(50), nullable=True)
-    
+
     # Was it successful?
     success = Column(Boolean, default=True)
     error_message = Column(Text, nullable=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
-    
+
     user = relationship('User')
     permission = relationship('Permission')
-    
+
     __table_args__ = (
         Index('ix_access_logs_user_id', 'user_id'),
         Index('ix_access_logs_permission_id', 'permission_id'),

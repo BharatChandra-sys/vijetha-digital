@@ -10,13 +10,13 @@ from app.db.session import SessionLocal
 
 class DatabaseTask(Task):
     """Base task with database session management."""
-    
+
     _db: Session = None
-    
+
     def after_return(self, *args, **kwargs):
         if self._db is not None:
             self._db.close()
-    
+
     @property
     def db(self) -> Session:
         if self._db is None:
@@ -40,7 +40,7 @@ def send_notification_task(
 ):
     """
     Create and send a notification to a user.
-    
+
     Args:
         user_id: Target user ID
         title: Notification title
@@ -49,7 +49,7 @@ def send_notification_task(
     """
     try:
         from app.models.notification import Notification
-        
+
         notification = Notification(
             user_id=user_id,
             title=title,
@@ -57,16 +57,17 @@ def send_notification_task(
             type=notification_type,
             is_read=False,
         )
-        
+
         self.db.add(notification)
         self.db.commit()
         self.db.refresh(notification)
-        
+
         # Send via WebSocket if user is connected
         try:
-            from app.api.websocket import manager
             import asyncio
-            
+
+            from app.api.websocket import manager
+
             asyncio.run(manager.send_personal_message(
                 {
                     "type": "notification",
@@ -83,7 +84,7 @@ def send_notification_task(
         except Exception:
             # WebSocket delivery failed, notification is still in DB
             pass
-        
+
     except Exception as exc:
         self.db.rollback()
         raise self.retry(exc=exc, countdown=30 * (2 ** self.request.retries))
@@ -104,7 +105,7 @@ def send_bulk_notifications_task(
 ):
     """
     Send notifications to multiple users.
-    
+
     Args:
         user_ids: List of target user IDs
         title: Notification title
@@ -113,7 +114,7 @@ def send_bulk_notifications_task(
     """
     try:
         from app.models.notification import Notification
-        
+
         notifications = [
             Notification(
                 user_id=user_id,
@@ -124,10 +125,10 @@ def send_bulk_notifications_task(
             )
             for user_id in user_ids
         ]
-        
+
         self.db.bulk_save_objects(notifications)
         self.db.commit()
-        
+
     except Exception as exc:
         self.db.rollback()
         raise self.retry(exc=exc, countdown=60)

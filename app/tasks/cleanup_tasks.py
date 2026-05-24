@@ -13,13 +13,13 @@ from app.db.session import SessionLocal
 
 class DatabaseTask(Task):
     """Base task with database session management."""
-    
+
     _db: Session = None
-    
+
     def after_return(self, *args, **kwargs):
         if self._db is not None:
             self._db.close()
-    
+
     @property
     def db(self) -> Session:
         if self._db is None:
@@ -39,24 +39,24 @@ def cleanup_expired_tokens(self):
     """
     try:
         from app.models.token_blacklist import TokenBlacklist
-        
+
         # Delete tokens older than 8 days (refresh token expiry + 1 day buffer)
         cutoff_date = datetime.utcnow() - timedelta(days=8)
-        
+
         deleted_count = (
             self.db.query(TokenBlacklist)
             .filter(TokenBlacklist.blacklisted_at < cutoff_date)
             .delete()
         )
-        
+
         self.db.commit()
-        
+
         return {
             "task": "cleanup_expired_tokens",
             "deleted_count": deleted_count,
             "cutoff_date": cutoff_date.isoformat(),
         }
-        
+
     except Exception as exc:
         self.db.rollback()
         raise exc
@@ -75,24 +75,24 @@ def cleanup_old_access_logs(self):
     """
     try:
         from app.models.access_log import AccessLog
-        
+
         # Delete logs older than 90 days
         cutoff_date = datetime.utcnow() - timedelta(days=90)
-        
+
         deleted_count = (
             self.db.query(AccessLog)
             .filter(AccessLog.timestamp < cutoff_date)
             .delete()
         )
-        
+
         self.db.commit()
-        
+
         return {
             "task": "cleanup_old_access_logs",
             "deleted_count": deleted_count,
             "cutoff_date": cutoff_date.isoformat(),
         }
-        
+
     except Exception as exc:
         self.db.rollback()
         raise exc
@@ -110,24 +110,24 @@ def cleanup_expired_password_resets(self):
     """
     try:
         from app.models.password_reset import PasswordReset
-        
+
         # Delete tokens older than 1 day
         cutoff_date = datetime.utcnow() - timedelta(days=1)
-        
+
         deleted_count = (
             self.db.query(PasswordReset)
             .filter(PasswordReset.created_at < cutoff_date)
             .delete()
         )
-        
+
         self.db.commit()
-        
+
         return {
             "task": "cleanup_expired_password_resets",
             "deleted_count": deleted_count,
             "cutoff_date": cutoff_date.isoformat(),
         }
-        
+
     except Exception as exc:
         self.db.rollback()
         raise exc
@@ -145,26 +145,26 @@ def cleanup_unread_notifications(self):
     """
     try:
         from app.models.notification import Notification
-        
+
         cutoff_date = datetime.utcnow() - timedelta(days=30)
-        
+
         deleted_count = (
             self.db.query(Notification)
             .filter(
-                Notification.is_read == False,
+                not Notification.is_read,
                 Notification.created_at < cutoff_date,
             )
             .delete()
         )
-        
+
         self.db.commit()
-        
+
         return {
             "task": "cleanup_unread_notifications",
             "deleted_count": deleted_count,
             "cutoff_date": cutoff_date.isoformat(),
         }
-        
+
     except Exception as exc:
         self.db.rollback()
         raise exc

@@ -1,5 +1,4 @@
-from typing import List, Optional
-
+from typing import List
 from pydantic_settings import BaseSettings
 
 
@@ -27,9 +26,9 @@ class Settings(BaseSettings):
     # Admin bootstrap
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
-    FIRST_ADMIN_EMAIL: Optional[str] = None
-    FIRST_ADMIN_PASSWORD: Optional[str] = None
-    FIRST_ADMIN_NAME: Optional[str] = None
+    FIRST_ADMIN_EMAIL: str | None = None
+    FIRST_ADMIN_PASSWORD: str | None = None
+    FIRST_ADMIN_NAME: str | None = None
 
     # Cloudinary
     CLOUDINARY_CLOUD_NAME: str
@@ -37,7 +36,7 @@ class Settings(BaseSettings):
     CLOUDINARY_API_SECRET: str
 
     # Brevo (Email Service)
-    BREVO_API_KEY: Optional[str] = None
+    BREVO_API_KEY: str | None = None
     BREVO_FROM_EMAIL: str = "noreply@vijetha.com"
     BREVO_FROM_NAME: str = "Vijetha Digital"
 
@@ -47,38 +46,38 @@ class Settings(BaseSettings):
     RAZORPAY_WEBHOOK_SECRET: str
 
     # Optional AWS S3
-    AWS_ACCESS_KEY_ID: Optional[str] = None
-    AWS_SECRET_ACCESS_KEY: Optional[str] = None
-    AWS_S3_BUCKET: Optional[str] = None
+    AWS_ACCESS_KEY_ID: str | None = None
+    AWS_SECRET_ACCESS_KEY: str | None = None
+    AWS_S3_BUCKET: str | None = None
     AWS_REGION: str = "ap-south-1"
-    AWS_S3_BASE_URL: Optional[str] = None
+    AWS_S3_BASE_URL: str | None = None
 
     # Email Service (Brevo HTTP API - more reliable than SMTP)
-    BREVO_API_KEY: Optional[str] = None
+    BREVO_API_KEY: str | None = None
     BREVO_FROM_EMAIL: str = "noreply@vijetha.com"
     BREVO_FROM_NAME: str = "Vijetha Digital"
 
     # SMTP (legacy - optional, Brevo recommended)
-    SMTP_HOST: Optional[str] = None
+    SMTP_HOST: str | None = None
     SMTP_PORT: int = 587
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
-    MAIL_USERNAME: Optional[str] = None
-    MAIL_PASSWORD: Optional[str] = None
-    MAIL_FROM: Optional[str] = None
-    MAIL_SERVER: Optional[str] = None
+    SMTP_USER: str | None = None
+    SMTP_PASSWORD: str | None = None
+    MAIL_USERNAME: str | None = None
+    MAIL_PASSWORD: str | None = None
+    MAIL_FROM: str | None = None
+    MAIL_SERVER: str | None = None
     MAIL_PORT: int = 587
     MAIL_TLS: bool = True
 
     # Google OAuth (optional — fill in before deploying)
-    GOOGLE_CLIENT_ID: Optional[str] = None
-    GOOGLE_CLIENT_SECRET: Optional[str] = None
-    GOOGLE_REDIRECT_URI: Optional[str] = None
+    GOOGLE_CLIENT_ID: str | None = None
+    GOOGLE_CLIENT_SECRET: str | None = None
+    GOOGLE_REDIRECT_URI: str | None = None
 
     # Runtime/infra
     REDIS_URL: str = "redis://localhost:6379/0"
-    SENTRY_DSN: Optional[str] = None
-    TRUSTED_HOSTS: List[str] = ["*"]
+    SENTRY_DSN: str | None = None
+    TRUSTED_HOSTS: str = "*"
 
     # Business configuration
     GST_PERCENTAGE: float = 18.0
@@ -87,15 +86,20 @@ class Settings(BaseSettings):
     ALLOWED_FILE_TYPES: str = "pdf,jpg,jpeg,png,tiff,ai,psd,eps,cdr"
 
     @property
-    def allowed_file_types_list(self) -> List[str]:
+    def allowed_file_types_list(self) -> list[str]:
         return [v.strip().lower() for v in self.ALLOWED_FILE_TYPES.split(",") if v.strip()]
 
     # File uploads directory
     UPLOAD_DIR: str = "uploads"
 
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
+    model_config = {"env_file": ".env", "extra": "ignore"}
+
+    @property
+    def trusted_hosts_list(self) -> List[str]:
+        """Convert TRUSTED_HOSTS string to list."""
+        if self.TRUSTED_HOSTS == "*":
+            return ["*"]
+        return [h.strip() for h in self.TRUSTED_HOSTS.split(",") if h.strip()]
 
 
 settings = Settings()

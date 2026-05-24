@@ -19,11 +19,11 @@ class Staff(Base):
     email = Column(String(255), nullable=True)  # Optional email
     department = Column(String(100), nullable=True)  # production, design, sales, admin, delivery
     status = Column(String(50), default="active")  # invited, active, suspended, offboarded
-    
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     user = relationship("User", back_populates="staff_profile", lazy="joined")
-    
+
     def __repr__(self):
         return f"<Staff {self.id}: {self.name} - {self.position}>"

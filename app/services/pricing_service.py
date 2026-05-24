@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 
 from app.models.pricing import ExtraRate, MaterialRate
 
-
 # Quantity break tiers (quantity: discount_percentage)
 QUANTITY_BREAKS = {
     10: 5.0,   # 5% off for 10+ items
@@ -15,10 +14,10 @@ QUANTITY_BREAKS = {
 def _get_quantity_discount(quantity: int) -> float:
     """
     Calculate quantity discount percentage based on quantity breaks.
-    
+
     Args:
         quantity: Number of items
-        
+
     Returns:
         Discount percentage (0-100)
     """
@@ -33,27 +32,27 @@ def _get_quantity_discount(quantity: int) -> float:
 def _get_business_discount(db: Session, user_id: int = None) -> float:
     """
     Get business discount for a user if they have a verified business profile.
-    
+
     Args:
         db: Database session
         user_id: User ID
-        
+
     Returns:
         Discount percentage (0-100)
     """
     if not user_id:
         return 0.0
-    
+
     from app.models.business_profile import BusinessProfile, BusinessStatus
-    
+
     profile = db.query(BusinessProfile).filter(
         BusinessProfile.user_id == user_id,
         BusinessProfile.status == BusinessStatus.VERIFIED,
     ).first()
-    
+
     if profile and profile.discount_percentage:
         return float(profile.discount_percentage)
-    
+
     return 0.0
 
 
@@ -71,7 +70,7 @@ def calculate_price(
 ):
     """
     Production-grade pricing engine with quantity breaks and business discounts.
-    
+
     Args:
         db: Database session
         width_ft: Width in feet
@@ -82,7 +81,7 @@ def calculate_price(
         frame: Include frame
         user_id: User ID for business discount
         coupon_code: Coupon code for additional discount
-        
+
     Returns:
         Dict with pricing breakdown
     """

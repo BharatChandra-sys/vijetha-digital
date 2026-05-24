@@ -4,7 +4,6 @@ Centralized, type-safe, and follows best practices.
 """
 
 from datetime import datetime
-from typing import List, Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -29,12 +28,12 @@ security = HTTPBearer(auto_error=False)
 # ============================================================================
 
 def get_current_user(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> User:
     """
     Extract and validate JWT token, return current user.
-    
+
     Raises:
         401: Invalid/expired token or user not found
         403: User account is suspended/inactive/locked
@@ -46,9 +45,9 @@ def get_current_user(
             detail="Missing authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     token = credentials.credentials
-    
+
     # Check if token is blacklisted
     is_blacklisted = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
     if is_blacklisted:
@@ -106,7 +105,7 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account has been suspended",
         )
-    
+
     if user.status == UserStatus.INACTIVE:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -130,10 +129,10 @@ def get_current_active_user(
 # AUTHORIZATION - ROLE-BASED
 # ============================================================================
 
-def require_any_role(role_slugs: List[str]):
+def require_any_role(role_slugs: list[str]):
     """
     Require user to have ANY of the specified roles.
-    
+
     Example:
         @router.get("/admin/dashboard", dependencies=[Depends(require_any_role(["super_admin", "admin"]))])
     """
@@ -150,10 +149,10 @@ def require_any_role(role_slugs: List[str]):
     return check_roles
 
 
-def require_all_roles(role_slugs: List[str]):
+def require_all_roles(role_slugs: list[str]):
     """
     Require user to have ALL of the specified roles.
-    
+
     Example:
         @router.post("/critical", dependencies=[Depends(require_all_roles(["admin", "auditor"]))])
     """
@@ -197,7 +196,7 @@ def require_super_admin(
 ) -> User:
     """
     Require user to have super_admin role.
-    
+
     Usage:
         def critical_route(current_user: User = Depends(require_super_admin)):
             ...
@@ -235,7 +234,7 @@ def require_permission(permission_key: str):
     return check_permission
 
 
-def require_any_permission(permission_keys: List[str]):
+def require_any_permission(permission_keys: list[str]):
     """
     Require user to have ANY of the specified permissions.
     Legacy admins bypass all permission checks.
@@ -256,7 +255,7 @@ def require_any_permission(permission_keys: List[str]):
     return check_permissions
 
 
-def require_all_permissions(permission_keys: List[str]):
+def require_all_permissions(permission_keys: list[str]):
     """
     Require user to have ALL of the specified permissions.
     Legacy admins bypass all permission checks.
@@ -282,13 +281,13 @@ def require_all_permissions(permission_keys: List[str]):
 # ============================================================================
 
 def get_current_user_optional(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False)),
+    credentials: HTTPAuthorizationCredentials | None = Depends(HTTPBearer(auto_error=False)),
     db: Session = Depends(get_db),
-) -> Optional[User]:
+) -> User | None:
     """
     Get current user if token is provided, otherwise return None.
     Useful for endpoints that work for both authenticated and unauthenticated users.
-    
+
     Example:
         @router.get("/products")
         def list_products(current_user: Optional[User] = Depends(get_current_user_optional)):
@@ -297,32 +296,32 @@ def get_current_user_optional(
     """
     if not credentials:
         return None
-    
+
     try:
         token = credentials.credentials
-        
+
         is_blacklisted = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
         if is_blacklisted:
             return None
 
         payload = decode_access_token(token)
-        
+
         if not payload:
             return None
-        
+
         user_id_str = payload.get("sub")
         if not user_id_str:
             return None
-        
+
         user_id = int(user_id_str)
         user = db.query(User).filter(User.id == user_id).first()
-        
+
         # Only return user if account is active
         if user and user.status == UserStatus.ACTIVE:
             if not user.account_locked_until or user.account_locked_until <= datetime.utcnow():
                 return user
-        
+
         return None
-    
+
     except Exception:
         return None

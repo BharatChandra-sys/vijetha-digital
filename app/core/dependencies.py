@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from collections.abc import Callable
 
 from fastapi import Depends, HTTPException, Query, status
 from fastapi.security import OAuth2PasswordBearer
@@ -73,7 +73,7 @@ def require_business(user: User = Depends(get_current_active_user)) -> User:
 def get_pagination(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100),
-) -> Dict[str, int]:
+) -> dict[str, int]:
     return {
         "page": page,
         "page_size": page_size,

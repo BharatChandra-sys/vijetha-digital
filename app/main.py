@@ -1,7 +1,6 @@
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
-import os
 
 import redis
 from dotenv import load_dotenv
@@ -18,7 +17,7 @@ if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
-    
+
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
         environment=settings.ENV,
@@ -58,9 +57,9 @@ from app.core.rate_limiter import limiter
 from app.core.security_middleware import SecurityHeadersMiddleware
 from app.db.init_db import init_db
 from app.db.session import engine
+from app.middleware.deprecation import DeprecationMiddleware
 from app.middleware.logging import RequestLoggingMiddleware
 from app.middleware.metrics import MetricsMiddleware
-from app.middleware.deprecation import DeprecationMiddleware
 
 
 def _db_ok() -> bool:
@@ -113,7 +112,7 @@ app.add_middleware(
 
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=settings.TRUSTED_HOSTS,
+    allowed_hosts=settings.trusted_hosts_list,
 )
 
 # ---- SECURITY HEADERS ----
@@ -121,6 +120,7 @@ app.add_middleware(SecurityHeadersMiddleware, env=settings.ENV)
 
 # ---- COMING SOON MODE (blocks checkout/payments before launch) ----
 from app.middleware.coming_soon import ComingSoonMiddleware
+
 app.add_middleware(ComingSoonMiddleware)
 
 # ---- METRICS COLLECTION ----
@@ -209,10 +209,10 @@ def metrics():
     Returns metrics in Prometheus text format.
     """
     from fastapi.responses import PlainTextResponse
-    
+
     # Update DB pool metrics before returning
     update_db_pool_metrics(engine)
-    
+
     return PlainTextResponse(
         content=get_metrics().decode("utf-8"),
         media_type="text/plain; version=0.0.4",

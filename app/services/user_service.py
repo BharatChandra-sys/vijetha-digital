@@ -2,12 +2,11 @@
 User service — profile management, admin user operations, change-password.
 """
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import (
-    ConflictException,
     ForbiddenException,
     NotFoundException,
     ValidationException,
@@ -16,11 +15,10 @@ from app.core.security import hash_password, is_strong_password, verify_password
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.auth import ProfileUpdateRequest
 
-
 # ── Profile ───────────────────────────────────────────────────────────
 
 def get_user_by_id(db: Session, user_id: int) -> User:
-    user = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
+    user = db.query(User).filter(User.id == user_id, not User.is_deleted).first()
     if not user:
         raise NotFoundException("User", str(user_id))
     return user
@@ -77,11 +75,11 @@ def list_users(
     db: Session,
     page: int = 1,
     page_size: int = 20,
-    role: Optional[str] = None,
-    status: Optional[str] = None,
-    search: Optional[str] = None,
-) -> Dict[str, Any]:
-    query = db.query(User).filter(User.is_deleted == False)
+    role: str | None = None,
+    status: str | None = None,
+    search: str | None = None,
+) -> dict[str, Any]:
+    query = db.query(User).filter(not User.is_deleted)
 
     if role:
         try:

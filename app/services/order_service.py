@@ -49,7 +49,7 @@ def create_order(db: Session, user_id: int, items):
             # Standard product — look up price from DB (never trust client)
             product = db.query(Product).filter(
                 Product.id == item.product_id,
-                Product.is_active == True,
+                Product.is_active,
             ).first()
             if not product:
                 raise HTTPException(status_code=404, detail=f"Product {item.product_id} not found")
@@ -109,7 +109,7 @@ def create_order(db: Session, user_id: int, items):
 def get_user_orders(db: Session, user_id: int):
     return (
         db.query(Order)
-        .filter(Order.user_id == user_id, Order.is_deleted == False)
+        .filter(Order.user_id == user_id, not Order.is_deleted)
         .order_by(Order.id.desc())
         .all()
     )
@@ -117,7 +117,7 @@ def get_user_orders(db: Session, user_id: int):
 
 # ---------------- ADMIN ORDERS ----------------
 def get_all_orders(db: Session):
-    return db.query(Order).filter(Order.is_deleted == False).order_by(Order.id.desc()).all()
+    return db.query(Order).filter(not Order.is_deleted).order_by(Order.id.desc()).all()
 
 
 # ---------------- SAFE STATUS UPDATE (CRITICAL FIX) ----------------
@@ -155,7 +155,7 @@ def update_order_status(
 ) -> Order:
     """
     Update order status with admin notes and tracking information.
-    
+
     Args:
         db: Database session
         order_id: Order ID
@@ -164,11 +164,11 @@ def update_order_status(
         admin_id: ID of admin making the change
         tracking_number: Tracking number for shipment
         tracking_url: Tracking URL for shipment
-        
+
     Returns:
         Updated order
     """
-    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
+    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
 
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -195,7 +195,7 @@ def update_order_status(
     ts_field = _TRANSITION_TIMESTAMPS.get(target_status)
     if ts_field and hasattr(order, ts_field):
         setattr(order, ts_field, datetime.utcnow())
-    
+
     # Update tracking information if provided
     if tracking_number:
         order.tracking_number = tracking_number
@@ -206,9 +206,9 @@ def update_order_status(
     timeline_note = note or f"Status changed to {target_status.value}"
     if admin_id:
         timeline_note += f" (by admin #{admin_id})"
-    
+
     _record_timeline(db, order.id, target_status.value, timeline_note)
-    
+
     # Create audit log entry
     from app.models.audit_log import AuditLog
     if admin_id:
@@ -235,24 +235,24 @@ def update_order_status(
 def add_admin_note(db: Session, order_id: int, admin_id: int, note: str) -> dict:
     """
     Add an admin note to an order without changing status.
-    
+
     Args:
         db: Database session
         order_id: Order ID
         admin_id: Admin user ID
         note: Note content
-        
+
     Returns:
         Success message
     """
-    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
-    
+    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
+
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
-    
+
     # Add timeline entry with note
     _record_timeline(db, order.id, order.status.value, f"Admin note: {note}")
-    
+
     # Create audit log
     from app.models.audit_log import AuditLog
     audit_entry = AuditLog(
@@ -263,9 +263,9 @@ def add_admin_note(db: Session, order_id: int, admin_id: int, note: str) -> dict
         details={"note": note},
     )
     db.add(audit_entry)
-    
+
     db.commit()
-    
+
     return {"message": "Note added successfully", "order_id": order_id}
 
 
@@ -278,32 +278,32 @@ def update_tracking_info(
 ) -> Order:
     """
     Update tracking information for an order.
-    
+
     Args:
         db: Database session
         order_id: Order ID
         tracking_number: Tracking number
         tracking_url: Optional tracking URL
         admin_id: Admin user ID
-        
+
     Returns:
         Updated order
     """
-    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
-    
+    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
+
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
-    
+
     order.tracking_number = tracking_number
     if tracking_url:
         order.tracking_url = tracking_url
-    
+
     # Add timeline entry
     note = f"Tracking updated: {tracking_number}"
     if admin_id:
         note += f" (by admin #{admin_id})"
     _record_timeline(db, order.id, order.status.value, note)
-    
+
     # Send notification to user
     from app.tasks.notification_tasks import send_notification_task
     send_notification_task.delay(
@@ -312,7 +312,7 @@ def update_tracking_info(
         message=f"Your order #{order.id} tracking has been updated: {tracking_number}",
         notification_type="info",
     )
-    
+
     # Send email if order is shipped
     if order.status == OrderStatus.shipped:
         from app.tasks.email_tasks import send_order_shipped_email_task
@@ -323,7 +323,7 @@ def update_tracking_info(
             tracking_number=tracking_number,
             tracking_url=tracking_url or f"https://tracking.example.com/{tracking_number}",
         )
-    
+
     db.commit()
     db.refresh(order)
     return order

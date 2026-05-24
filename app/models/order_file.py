@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class FileType(str, enum.Enum):
+class FileType(enum.StrEnum):
     DESIGN_FILE = "design_file"
     PROOF = "proof"
     INVOICE = "invoice"

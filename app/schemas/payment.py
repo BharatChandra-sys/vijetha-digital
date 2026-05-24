@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -28,8 +27,8 @@ class VerifyPaymentResponse(BaseModel):
 
 
 class RefundRequest(BaseModel):
-    amount: Optional[float] = None   # None = full refund
-    reason: Optional[str] = None
+    amount: float | None = None   # None = full refund
+    reason: str | None = None
 
 
 class RefundResponse(BaseModel):
@@ -42,16 +41,16 @@ class RefundResponse(BaseModel):
 class PaymentStateResponse(BaseModel):
     id: int
     order_id: int
-    razorpay_order_id: Optional[str] = None
-    razorpay_payment_id: Optional[str] = None
+    razorpay_order_id: str | None = None
+    razorpay_payment_id: str | None = None
     amount: float
     amount_refunded: float
     currency: str
     state: str
-    method: Optional[str] = None
-    failure_reason: Optional[str] = None
-    created_at: Optional[str] = None
-    captured_at: Optional[str] = None
-    refunded_at: Optional[str] = None
+    method: str | None = None
+    failure_reason: str | None = None
+    created_at: str | None = None
+    captured_at: str | None = None
+    refunded_at: str | None = None
 
     model_config = ConfigDict(from_attributes=True)

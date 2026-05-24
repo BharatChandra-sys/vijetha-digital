@@ -13,7 +13,6 @@ from app.schemas.order import (
     OrderCreate,
     OrderItemResponse,
     OrderResponse,
-    OrderTimelineEntry,
 )
 from app.services.invoice_service import generate_invoice_pdf
 from app.services.notification_service import notify_order_placed
@@ -111,7 +110,7 @@ def get_order(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -131,7 +130,7 @@ def cancel_order(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -160,7 +159,7 @@ def get_order_timeline(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -191,7 +190,7 @@ def download_invoice(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")

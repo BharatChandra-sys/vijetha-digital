@@ -6,7 +6,6 @@ Handles: Products, Orders, Staff Management for Admin Panel
 import os
 import uuid
 from datetime import date, datetime, timedelta
-from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel
@@ -43,32 +42,32 @@ class OrderStatusUpdateRequest(BaseModel):
 
 
 class OrderTrackingUpdateRequest(BaseModel):
-    tracking_number: Optional[str] = None
-    tracking_url: Optional[str] = None
+    tracking_number: str | None = None
+    tracking_url: str | None = None
 
 
 class StaffCreateRequest(BaseModel):
     name: str
     position: str
     phone: str
-    user_id: Optional[int] = None
-    email: Optional[str] = None
-    department: Optional[str] = None
+    user_id: int | None = None
+    email: str | None = None
+    department: str | None = None
     status: str = "active"
 
 
 class StaffUpdateRequest(BaseModel):
-    name: Optional[str] = None
-    position: Optional[str] = None
-    phone: Optional[str] = None
-    user_id: Optional[int] = None
+    name: str | None = None
+    position: str | None = None
+    phone: str | None = None
+    user_id: int | None = None
     unlink_user: bool = False
-    email: Optional[str] = None
-    department: Optional[str] = None
-    status: Optional[str] = None
+    email: str | None = None
+    department: str | None = None
+    status: str | None = None
 
 
-def _validate_staff_status(status_value: Optional[str]) -> Optional[str]:
+def _validate_staff_status(status_value: str | None) -> str | None:
     if status_value is None:
         return None
     allowed = {"invited", "active", "suspended", "offboarded"}
@@ -80,7 +79,7 @@ def _validate_staff_status(status_value: Optional[str]) -> Optional[str]:
     return status_value
 
 
-def _resolve_staff_user(db: Session, user_id: Optional[int]) -> Optional[User]:
+def _resolve_staff_user(db: Session, user_id: int | None) -> User | None:
     if user_id is None:
         return None
     user = db.query(User).filter(User.id == user_id).first()
@@ -98,11 +97,11 @@ def get_dashboard_stats(
 ):
     """Fetch comprehensive dashboard statistics with time-based analytics"""
     now = datetime.utcnow()
-    
+
     # Time periods
     thirty_days_ago = now - timedelta(days=30)
     ninety_days_ago = now - timedelta(days=90)
-    
+
     # Total counts
     total_orders = db.query(Order).count()
     total_products = db.query(Product).count()
@@ -115,28 +114,28 @@ def get_dashboard_stats(
         ])
     ).count()
     shipped_orders = db.query(Order).filter(Order.status == OrderStatus.shipped).count()
-    
+
     # Revenue calculations - use aggregate instead of loading all orders
     from sqlalchemy import func
     total_revenue_result = db.query(func.sum(Order.total_price)).filter(
         Order.status == OrderStatus.delivered
     ).scalar()
     total_revenue = float(total_revenue_result) if total_revenue_result else 0
-    
+
     # 30-day revenue
     revenue_30days_result = db.query(func.sum(Order.total_price)).filter(
         Order.status == OrderStatus.delivered,
         Order.created_at >= thirty_days_ago
     ).scalar()
     revenue_30days = float(revenue_30days_result) if revenue_30days_result else 0
-    
+
     # 90-day revenue
     revenue_90days_result = db.query(func.sum(Order.total_price)).filter(
         Order.status == OrderStatus.delivered,
         Order.created_at >= ninety_days_ago
     ).scalar()
     revenue_90days = float(revenue_90days_result) if revenue_90days_result else 0
-    
+
     # Cancelled/returned orders (losses) - use count instead of loading all
     total_cancelled = db.query(func.count(Order.id)).filter(
         Order.status == OrderStatus.cancelled
@@ -145,10 +144,10 @@ def get_dashboard_stats(
     loss_from_cancelled = sum([float(order.total_price) for order in cancelled_orders]) if cancelled_orders else 0
     loss_from_returned = sum([float(order.total_price) for order in returned_orders]) if returned_orders else 0
     total_losses = loss_from_cancelled + loss_from_returned
-    
+
     # Product model currently has no stock column
     low_stock_products = 0
-    
+
     return {
         "totalOrders": total_orders,
         "totalProducts": total_products,
@@ -235,9 +234,9 @@ async def create_product_endpoint(
     description: str = Form(""),
     base_price: float = Form(...),
     category: str = Form(...),
-    unit: Optional[str] = Form(None),
+    unit: str | None = Form(None),
     is_active: bool = Form(True),
-    image: Optional[UploadFile] = File(None),
+    image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required)
 ):
@@ -251,10 +250,10 @@ async def create_product_endpoint(
         if image:
             if not image.filename:
                 raise HTTPException(status_code=400, detail="Invalid image filename")
-            
+
             if image.content_type not in ["image/jpeg", "image/png", "image/webp"]:
                 raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed")
-            
+
             image_content = await image.read()
             if len(image_content) > 5 * 1024 * 1024:
                 raise HTTPException(status_code=400, detail="Image size must be less than 5MB")
@@ -262,13 +261,13 @@ async def create_product_endpoint(
             file_ext = image.filename.split('.')[-1]
             unique_filename = f"product_{uuid.uuid4()}.{file_ext}"
             file_path = os.path.join(settings.UPLOAD_DIR, "products", unique_filename)
-            
+
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, "wb") as f:
                 f.write(image_content)
-            
+
             image_url = f"/uploads/products/{unique_filename}"
-        
+
         # Create product
         new_product = Product(
             name=name,
@@ -279,11 +278,11 @@ async def create_product_endpoint(
             unit=unit,
             is_active=is_active,
         )
-        
+
         db.add(new_product)
         db.commit()
         db.refresh(new_product)
-        
+
         return {"id": new_product.id, "message": "Product created successfully"}
     except HTTPException:
         db.rollback()
@@ -316,13 +315,13 @@ def list_all_products(
 @dashboard_router.put("/products/{product_id}")
 async def update_product(
     product_id: int,
-    name: Optional[str] = Form(None),
-    description: Optional[str] = Form(None),
-    base_price: Optional[float] = Form(None),
-    category: Optional[str] = Form(None),
-    unit: Optional[str] = Form(None),
-    is_active: Optional[bool] = Form(None),
-    image: Optional[UploadFile] = File(None),
+    name: str | None = Form(None),
+    description: str | None = Form(None),
+    base_price: float | None = Form(None),
+    category: str | None = Form(None),
+    unit: str | None = Form(None),
+    is_active: bool | None = Form(None),
+    image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required)
 ):
@@ -330,7 +329,7 @@ async def update_product(
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
+
     try:
         if base_price is not None and base_price < 0:
             raise HTTPException(status_code=400, detail="base_price must be non-negative")
@@ -347,14 +346,14 @@ async def update_product(
             product.unit = unit
         if is_active is not None:
             product.is_active = is_active
-        
+
         if image:
             if not image.filename:
                 raise HTTPException(status_code=400, detail="Invalid image filename")
-            
+
             if image.content_type not in ["image/jpeg", "image/png", "image/webp"]:
                 raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed")
-            
+
             image_content = await image.read()
             if len(image_content) > 5 * 1024 * 1024:
                 raise HTTPException(status_code=400, detail="Image size must be less than 5MB")
@@ -362,16 +361,16 @@ async def update_product(
             file_ext = image.filename.split('.')[-1]
             unique_filename = f"product_{uuid.uuid4()}.{file_ext}"
             file_path = os.path.join(settings.UPLOAD_DIR, "products", unique_filename)
-            
+
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, "wb") as f:
                 f.write(image_content)
-            
+
             product.image_url = f"/uploads/products/{unique_filename}"
-        
+
         product.updated_at = datetime.utcnow()
         db.commit()
-        
+
         return {"message": "Product updated successfully"}
     except HTTPException:
         db.rollback()
@@ -390,10 +389,10 @@ def delete_product(
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
+
     db.delete(product)
     db.commit()
-    
+
     return {"message": "Product deleted successfully"}
 
 # ============================================
@@ -401,14 +400,14 @@ def delete_product(
 # ============================================
 @dashboard_router.get("/orders")
 def list_all_orders(
-    start_date: Optional[date] = Query(None),
-    end_date: Optional[date] = Query(None),
+    start_date: date | None = Query(None),
+    end_date: date | None = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required)
 ):
     """List all orders for admin"""
     from sqlalchemy.orm import joinedload
-    
+
     query = db.query(Order).options(
         joinedload(Order.user),
         joinedload(Order.items).joinedload(OrderItem.product)
@@ -478,7 +477,7 @@ def get_order_details(
 ):
     """Get complete order details with all related information"""
     from sqlalchemy.orm import joinedload
-    
+
     order = db.query(Order).options(
         joinedload(Order.user),
         joinedload(Order.items).joinedload(OrderItem.product),
@@ -486,7 +485,7 @@ def get_order_details(
     ).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
-    
+
     return {
         "id": order.id,
         "customerName": order.user.full_name if order.user and order.user.full_name else (order.user.email if order.user else "Guest"),
@@ -529,15 +528,15 @@ def update_order_tracking(
         order = db.query(Order).filter(Order.id == order_id).first()
         if not order:
             raise HTTPException(status_code=404, detail="Order not found")
-        
+
         if payload.tracking_number is not None:
             order.tracking_number = payload.tracking_number
         if payload.tracking_url is not None:
             order.tracking_url = payload.tracking_url
-        
+
         order.updated_at = datetime.utcnow()
         db.commit()
-        
+
         return {
             "message": "Tracking information updated",
             "orderId": order.id,
@@ -563,31 +562,31 @@ async def upload_invoice(
         order = db.query(Order).filter(Order.id == order_id).first()
         if not order:
             raise HTTPException(status_code=404, detail="Order not found")
-        
+
         # Validate file
         if not invoice.filename:
             raise HTTPException(status_code=400, detail="Invalid invoice file")
-        
+
         if invoice.content_type not in ["application/pdf", "image/jpeg", "image/png"]:
             raise HTTPException(status_code=400, detail="Only PDF, PNG, JPG files allowed")
-        
+
         invoice_content = await invoice.read()
         if len(invoice_content) > 5 * 1024 * 1024:
             raise HTTPException(status_code=400, detail="Invoice size must be less than 5MB")
-        
+
         file_ext = invoice.filename.split('.')[-1]
-        
+
         unique_filename = f"invoice_{order.id}_{uuid.uuid4()}.{file_ext}"
         file_path = os.path.join(settings.UPLOAD_DIR, "invoices", unique_filename)
-        
+
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "wb") as f:
             f.write(invoice_content)
-        
+
         order.invoice_url = f"/uploads/invoices/{unique_filename}"
         order.updated_at = datetime.utcnow()
         db.commit()
-        
+
         return {
             "message": "Invoice uploaded successfully",
             "orderId": order.id,
@@ -619,7 +618,7 @@ def create_staff_member(
             existing = db.query(Staff).filter(Staff.user_id == payload.user_id).first()
             if existing:
                 raise HTTPException(status_code=400, detail="This user is already linked to another staff profile")
-        
+
         new_staff = Staff(
             user_id=payload.user_id,
             name=payload.name,
@@ -630,11 +629,11 @@ def create_staff_member(
             status=payload.status,
             created_at=datetime.utcnow()
         )
-        
+
         db.add(new_staff)
         db.commit()
         db.refresh(new_staff)
-        
+
         return {"id": new_staff.id, "message": "Staff member added successfully"}
     except HTTPException:
         db.rollback()
@@ -652,7 +651,7 @@ def list_staff(
     try:
         from app.models.staff import Staff
         _ensure_staff_table(db)
-        
+
         staff_members = db.query(Staff).options(selectinload(Staff.user).selectinload(User.roles_assigned)).all()
         return [
             {
@@ -685,7 +684,7 @@ def update_staff(
     try:
         from app.models.staff import Staff
         _ensure_staff_table(db)
-        
+
         staff = db.query(Staff).filter(Staff.id == staff_id).first()
         if not staff:
             raise HTTPException(status_code=404, detail="Staff member not found")
@@ -706,7 +705,7 @@ def update_staff(
             staff.user_id = payload.user_id
             if payload.email is None:
                 staff.email = linked_user.email
-        
+
         if payload.name is not None:
             staff.name = payload.name
         if payload.position is not None:
@@ -719,10 +718,10 @@ def update_staff(
             staff.department = payload.department
         if payload.status is not None:
             staff.status = payload.status
-        
+
         staff.updated_at = datetime.utcnow()
         db.commit()
-        
+
         return {"message": "Staff member updated successfully"}
     except HTTPException:
         db.rollback()
@@ -741,14 +740,14 @@ def delete_staff(
     try:
         from app.models.staff import Staff
         _ensure_staff_table(db)
-        
+
         staff = db.query(Staff).filter(Staff.id == staff_id).first()
         if not staff:
             raise HTTPException(status_code=404, detail="Staff member not found")
-        
+
         db.delete(staff)
         db.commit()
-        
+
         return {"message": "Staff member deleted successfully"}
     except HTTPException:
         db.rollback()

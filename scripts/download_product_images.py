@@ -20,10 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 UPLOAD_DIR = BASE_DIR / settings.UPLOAD_DIR / "products"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-# Unsplash API - free images, no auth needed for basic usage
 UNSPLASH_API = "https://api.unsplash.com/search/photos"
-# Using demo key - for production, get your own: https://unsplash.com/developers
-UNSPLASH_KEY = "YOUR_ACCESS_KEY_IF_NEEDED"  # Most free queries work without key
+# Get your own key at: https://unsplash.com/developers
+UNSPLASH_KEY = "YOUR_ACCESS_KEY_IF_NEEDED"
 
 # Keywords for each product category
 CATEGORY_KEYWORDS = {
@@ -55,23 +54,27 @@ def download_image(url: str, filename: str) -> bool:
         return False
 
 
-def get_unsplash_image(query: str, product_id: int) -> str | None:
-    """Get image URL from Unsplash for a product"""
+def get_unsplash_image(query: str, product_id: int, category: str) -> str | None:
+    """Get image URL from Unsplash or a reliable placeholder fallback"""
     try:
-        params = {
-            "query": query,
-            "per_page": 1,
-            "orientation": "landscape",
-        }
-        
-        response = requests.get(UNSPLASH_API, params=params, timeout=10)
-        response.raise_for_status()
-        
-        data = response.json()
-        if data["results"]:
-            image_url = data["results"][0]["urls"]["regular"]
-            return image_url
-        return None
+        # Attempt Unsplash only if a valid API key is set
+        if UNSPLASH_KEY != "YOUR_ACCESS_KEY_IF_NEEDED":
+            params = {
+                "query": query,
+                "per_page": 1,
+                "orientation": "landscape",
+                "client_id": UNSPLASH_KEY
+            }
+            
+            response = requests.get(UNSPLASH_API, params=params, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("results"):
+                    return data["results"][0]["urls"]["regular"]
+
+        # Fallback to placehold.co for consistent, properly aligned images
+        safe_text = category.replace(" ", "+")
+        return f"https://placehold.co/800x600/e2e8f0/1e293b/png?text={safe_text}"
     except Exception as e:
         print(f"✗ Failed to fetch from Unsplash for '{query}': {e}")
         return None
@@ -110,22 +113,31 @@ def main():
         for product in products:
             print(f"Processing: {product.name} (Category: {product.category})")
             
-            # Skip if already has image
-            if product.image_url:
-                print(f"  → Already has image: {product.image_url}\n")
-                continue
+            # Force re-download to ensure properly aligned images
+            # if product.image_url:
+            #     print(f"  → Already has image: {product.image_url}\n")
+            #     continue
             
             # Get search keywords for category
             keywords = CATEGORY_KEYWORDS.get(product.category, product.name)
             
-            # Fetch image URL from Unsplash
-            print(f"  → Searching Unsplash for: {keywords}")
-            image_url = get_unsplash_image(keywords, product.id)
+            # Fetch image URL
+            print(f"  → Fetching image for: {keywords}")
+            image_url = get_unsplash_image(keywords, product.id, product.category)
             
             if not image_url:
-                print(f"  → No image found on Unsplash, trying alternative\n")
+                print(f"  → No image found, skipping\n")
                 continue
             
+            # For Render deployments: if it's a placehold.co URL, assign it directly 
+            # without downloading so it survives container restarts!
+            if "placehold.co" in image_url:
+                if update_product_image(db, product.id, image_url):
+                    print(f"  → Success! Assigned remote placeholder URL directly.\n")
+                else:
+                    print(f"  → Database update failed\n")
+                continue
+
             # Download the image
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"product_{product.id}_{timestamp}.jpg"

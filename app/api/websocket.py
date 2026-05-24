@@ -3,7 +3,6 @@ WebSocket endpoint for real-time notifications.
 Supports authentication via token query parameter.
 """
 import json
-from typing import Dict
 
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, status
 from sqlalchemy.orm import Session
@@ -17,25 +16,25 @@ router = APIRouter()
 
 class ConnectionManager:
     """Manage WebSocket connections for real-time notifications."""
-    
+
     def __init__(self):
         # Map user_id -> list of WebSocket connections
-        self.active_connections: Dict[int, list[WebSocket]] = {}
-    
+        self.active_connections: dict[int, list[WebSocket]] = {}
+
     async def connect(self, websocket: WebSocket, user_id: int):
         """Accept and register a new WebSocket connection."""
         await websocket.accept()
         if user_id not in self.active_connections:
             self.active_connections[user_id] = []
         self.active_connections[user_id].append(websocket)
-    
+
     def disconnect(self, websocket: WebSocket, user_id: int):
         """Remove a WebSocket connection."""
         if user_id in self.active_connections:
             self.active_connections[user_id].remove(websocket)
             if not self.active_connections[user_id]:
                 del self.active_connections[user_id]
-    
+
     async def send_personal_message(self, message: dict, user_id: int):
         """Send a message to all connections for a specific user."""
         if user_id in self.active_connections:
@@ -45,14 +44,14 @@ class ConnectionManager:
                     await connection.send_json(message)
                 except Exception:
                     disconnected.append(connection)
-            
+
             # Clean up disconnected connections
             for conn in disconnected:
                 self.disconnect(conn, user_id)
-    
+
     async def broadcast(self, message: dict):
         """Broadcast a message to all connected users."""
-        for user_id, connections in list(self.active_connections.items()):
+        for user_id, _connections in list(self.active_connections.items()):
             await self.send_personal_message(message, user_id)
 
 
@@ -63,29 +62,29 @@ manager = ConnectionManager()
 def get_user_from_token(token: str, db: Session) -> User:
     """
     Authenticate user from JWT token.
-    
+
     Args:
         token: JWT access token
         db: Database session
-        
+
     Returns:
         Authenticated user
-        
+
     Raises:
         Exception if token is invalid
     """
     payload = decode_access_token(token)
     if not payload:
         raise Exception("Invalid token")
-    
+
     user_id = payload.get("sub")
     if not user_id:
         raise Exception("Invalid token payload")
-    
+
     user = db.query(User).filter(User.id == int(user_id)).first()
     if not user:
         raise Exception("User not found")
-    
+
     return user
 
 
@@ -97,10 +96,10 @@ async def websocket_notifications(
 ):
     """
     WebSocket endpoint for real-time notifications.
-    
+
     Usage:
         ws://localhost:8000/ws/notifications?token=YOUR_JWT_TOKEN
-    
+
     Message format:
         {
             "type": "notification",
@@ -116,10 +115,10 @@ async def websocket_notifications(
     try:
         # Authenticate user
         user = get_user_from_token(token, db)
-        
+
         # Connect WebSocket
         await manager.connect(websocket, user.id)
-        
+
         # Send connection confirmation
         await websocket.send_json({
             "type": "connected",
@@ -128,18 +127,18 @@ async def websocket_notifications(
                 "message": "Connected to notification stream",
             }
         })
-        
+
         # Keep connection alive and handle incoming messages
         while True:
             try:
                 # Receive messages from client (ping/pong for keepalive)
                 data = await websocket.receive_text()
                 message = json.loads(data)
-                
+
                 # Handle ping
                 if message.get("type") == "ping":
                     await websocket.send_json({"type": "pong"})
-                
+
                 # Handle mark as read
                 elif message.get("type") == "mark_read":
                     notification_id = message.get("notification_id")
@@ -156,7 +155,7 @@ async def websocket_notifications(
                                 "type": "marked_read",
                                 "data": {"notification_id": notification_id}
                             })
-                
+
             except WebSocketDisconnect:
                 break
             except json.JSONDecodeError:
@@ -169,11 +168,11 @@ async def websocket_notifications(
                     "type": "error",
                     "data": {"message": str(e)}
                 })
-    
+
     except Exception as e:
         # Authentication failed
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason=str(e))
-    
+
     finally:
         # Disconnect
         if 'user' in locals():

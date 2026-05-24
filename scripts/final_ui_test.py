@@ -5,10 +5,11 @@ Tests all components: pricing, auth, orders, cart, and payment.
 
 import requests
 import json
+import os
 from time import sleep
 
-BASE_URL = 'http://127.0.0.1:5000'
-FRONTEND_URL = 'http://localhost:5173'
+BASE_URL = os.getenv('API_BASE_URL', 'http://127.0.0.1:8000')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 # Colors for output
 GREEN = '\033[92m'

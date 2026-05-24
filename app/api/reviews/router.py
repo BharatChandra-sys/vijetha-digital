@@ -1,9 +1,8 @@
-from typing import List
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_user, get_current_user_optional
+from app.core.deps import get_current_user
 from app.db.session import get_db
 from app.models.product import Product
 from app.models.user import User
@@ -123,7 +122,7 @@ def post_review(
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_review_media(
     product_id: int,
-    files: List[UploadFile] = File(...),
+    files: list[UploadFile] = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

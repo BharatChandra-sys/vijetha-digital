@@ -2,7 +2,6 @@
 Business service for business account management and verification.
 """
 from datetime import datetime
-from typing import Dict, Optional
 
 from sqlalchemy.orm import Session
 
@@ -29,7 +28,7 @@ def create_business_profile(
 ) -> BusinessProfile:
     """
     Create a business profile for a user.
-    
+
     Args:
         db: Database session
         user_id: User ID
@@ -41,10 +40,10 @@ def create_business_profile(
         state: State
         pincode: Pincode
         phone: Phone number
-        
+
     Returns:
         Created business profile
-        
+
     Raises:
         ValidationException: If user already has a business profile
     """
@@ -52,14 +51,14 @@ def create_business_profile(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise NotFoundException("User", str(user_id))
-    
+
     # Check if business profile already exists
     existing = db.query(BusinessProfile).filter(
         BusinessProfile.user_id == user_id
     ).first()
     if existing:
         raise ValidationException("Business profile already exists for this user")
-    
+
     # Create business profile
     profile = BusinessProfile(
         user_id=user_id,
@@ -73,22 +72,22 @@ def create_business_profile(
         phone=phone,
         status=BusinessStatus.PENDING_VERIFICATION,
     )
-    
+
     db.add(profile)
     db.commit()
     db.refresh(profile)
-    
+
     return profile
 
 
-def get_business_profile(db: Session, user_id: int) -> Optional[BusinessProfile]:
+def get_business_profile(db: Session, user_id: int) -> BusinessProfile | None:
     """
     Get business profile for a user.
-    
+
     Args:
         db: Database session
         user_id: User ID
-        
+
     Returns:
         Business profile or None
     """
@@ -104,10 +103,10 @@ def approve_business_verification(
     credit_limit: float = 50000.0,
     payment_terms_days: int = 30,
     discount_percentage: float = 5.0,
-) -> Dict:
+) -> dict:
     """
     Approve business verification and set credit terms.
-    
+
     Args:
         db: Database session
         profile_id: Business profile ID
@@ -115,10 +114,10 @@ def approve_business_verification(
         credit_limit: Credit limit in INR
         payment_terms_days: Payment terms in days
         discount_percentage: Discount percentage
-        
+
     Returns:
         Success message dict
-        
+
     Raises:
         NotFoundException: If profile not found
         ValidationException: If already verified
@@ -126,13 +125,13 @@ def approve_business_verification(
     profile = db.query(BusinessProfile).filter(
         BusinessProfile.id == profile_id
     ).first()
-    
+
     if not profile:
         raise NotFoundException("BusinessProfile", str(profile_id))
-    
+
     if profile.status == BusinessStatus.VERIFIED:
         raise ValidationException("Business profile is already verified")
-    
+
     # Update profile
     profile.status = BusinessStatus.VERIFIED
     profile.verified_at = datetime.utcnow()
@@ -140,10 +139,10 @@ def approve_business_verification(
     profile.credit_limit = credit_limit
     profile.payment_terms_days = payment_terms_days
     profile.discount_percentage = discount_percentage
-    
+
     db.commit()
     db.refresh(profile)
-    
+
     # Send approval email (async task)
     user = profile.user
     send_business_approved_email_task.delay(
@@ -154,7 +153,7 @@ def approve_business_verification(
         payment_terms_days=payment_terms_days,
         discount_percentage=discount_percentage,
     )
-    
+
     return {
         "message": "Business verification approved",
         "profile_id": profile.id,
@@ -167,37 +166,37 @@ def reject_business_verification(
     profile_id: int,
     admin_id: int,
     rejection_reason: str,
-) -> Dict:
+) -> dict:
     """
     Reject business verification.
-    
+
     Args:
         db: Database session
         profile_id: Business profile ID
         admin_id: Admin user ID performing rejection
         rejection_reason: Reason for rejection
-        
+
     Returns:
         Success message dict
-        
+
     Raises:
         NotFoundException: If profile not found
     """
     profile = db.query(BusinessProfile).filter(
         BusinessProfile.id == profile_id
     ).first()
-    
+
     if not profile:
         raise NotFoundException("BusinessProfile", str(profile_id))
-    
+
     # Update profile
     profile.status = BusinessStatus.REJECTED
     profile.rejection_reason = rejection_reason
     profile.verified_by = admin_id
-    
+
     db.commit()
     db.refresh(profile)
-    
+
     # Send rejection email (async task)
     user = profile.user
     send_business_rejected_email_task.delay(
@@ -206,7 +205,7 @@ def reject_business_verification(
         company_name=profile.company_name,
         rejection_reason=rejection_reason,
     )
-    
+
     return {
         "message": "Business verification rejected",
         "profile_id": profile.id,
@@ -217,10 +216,10 @@ def reject_business_verification(
 def list_pending_verifications(db: Session) -> list[BusinessProfile]:
     """
     List all pending business verifications.
-    
+
     Args:
         db: Database session
-        
+
     Returns:
         List of pending business profiles
     """
@@ -234,19 +233,19 @@ def update_credit_limit(
     profile_id: int,
     credit_limit: float,
     admin_id: int,
-) -> Dict:
+) -> dict:
     """
     Update credit limit for a business.
-    
+
     Args:
         db: Database session
         profile_id: Business profile ID
         credit_limit: New credit limit
         admin_id: Admin user ID
-        
+
     Returns:
         Success message dict
-        
+
     Raises:
         NotFoundException: If profile not found
         ValidationException: If not verified
@@ -254,16 +253,16 @@ def update_credit_limit(
     profile = db.query(BusinessProfile).filter(
         BusinessProfile.id == profile_id
     ).first()
-    
+
     if not profile:
         raise NotFoundException("BusinessProfile", str(profile_id))
-    
+
     if profile.status != BusinessStatus.VERIFIED:
         raise ValidationException("Can only update credit limit for verified businesses")
-    
+
     profile.credit_limit = credit_limit
     db.commit()
-    
+
     return {
         "message": "Credit limit updated",
         "profile_id": profile.id,

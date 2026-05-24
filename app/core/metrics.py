@@ -142,7 +142,7 @@ celery_task_duration_seconds = Histogram(
 def get_metrics() -> bytes:
     """
     Generate Prometheus metrics in text format.
-    
+
     Returns:
         Metrics in Prometheus text format
     """
@@ -152,7 +152,7 @@ def get_metrics() -> bytes:
 def update_db_pool_metrics(engine):
     """
     Update database connection pool metrics.
-    
+
     Args:
         engine: SQLAlchemy engine
     """

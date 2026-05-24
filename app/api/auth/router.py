@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
@@ -104,24 +104,24 @@ def logout(
     auth = request.headers.get("Authorization")
     if auth and auth.lower().startswith("bearer "):
         token = auth.split(" ", 1)[1]
-        
+
         # Decode token to get JTI
         from app.core.security import decode_access_token
         payload = decode_access_token(token)
-        
+
         if payload and payload.get("jti"):
             jti = payload["jti"]
             # Blacklist using TokenManager (Redis-based)
             from app.core.config import settings
             TokenManager.blacklist_token(jti, settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
-        
+
         # Legacy blacklist for backward compatibility
         from app.models.token_blacklist import TokenBlacklist
         exists = db.query(TokenBlacklist).filter(TokenBlacklist.token == token).first()
         if not exists:
             db.add(TokenBlacklist(token=token))
             db.commit()
-            
+
         ip_address = request.client.host if request.client else None
         ua = request.headers.get("user-agent", "")
         log_event(
@@ -183,7 +183,7 @@ def refresh_token(
     # Extract user_id and jti from token
     user_id_str = payload.get("sub")
     jti = payload.get("jti")
-    
+
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Malformed token payload")
 
@@ -200,18 +200,18 @@ def refresh_token(
     from datetime import datetime
 
     from app.models.user import User, UserStatus
-    
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
-    
+
     # Check account status
     if user.status in {UserStatus.SUSPENDED, UserStatus.INACTIVE}:
         raise HTTPException(
             status_code=403,
             detail="Account is not active"
         )
-    
+
     # Check if account is locked
     if user.account_locked_until and user.account_locked_until > datetime.utcnow():
         raise HTTPException(
@@ -226,19 +226,19 @@ def refresh_token(
     # Issue new tokens with new JTIs
     new_access_jti = TokenManager.generate_jti()
     new_refresh_jti = TokenManager.generate_jti()
-    
+
     new_access_token = create_access_token(
         user_id=user_id,
         role=user.role.value,
         jti=new_access_jti,
     )
-    
+
     new_refresh_token = create_access_token(  # Using create_access_token for refresh with longer expiry
         user_id=user_id,
         role=user.role.value,
         jti=new_refresh_jti,
     )
-    
+
     # Store new JTIs
     from app.core.config import settings
     TokenManager.store_jti(new_access_jti, user_id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
@@ -386,13 +386,13 @@ def reset_user_password(
 # =========================
 
 class ProfileUpdateRequest(BaseModel):
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
-    avatar_url: Optional[str] = None
-    address: Optional[str] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
-    postal_code: Optional[str] = None
+    full_name: str | None = None
+    phone: str | None = None
+    avatar_url: str | None = None
+    address: str | None = None
+    city: str | None = None
+    state: str | None = None
+    postal_code: str | None = None
 
 
 class ChangePasswordRequest(BaseModel):

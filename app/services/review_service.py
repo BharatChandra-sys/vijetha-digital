@@ -1,7 +1,7 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.models.order import Order, OrderStatus, PaymentStatus
+from app.models.order import Order, PaymentStatus
 from app.models.order_item import OrderItem
 from app.models.review import Review
 
@@ -57,7 +57,7 @@ def get_reviews_for_product(
 ) -> list[Review]:
     return (
         db.query(Review)
-        .filter(Review.product_id == product_id, Review.is_visible == True)
+        .filter(Review.product_id == product_id, Review.is_visible)
         .order_by(Review.created_at.desc())
         .offset((page - 1) * per_page)
         .limit(per_page)
@@ -68,11 +68,11 @@ def get_reviews_for_product(
 def get_review_summary(db: Session, product_id: int) -> dict:
     rows = (
         db.query(Review.rating, func.count(Review.id))
-        .filter(Review.product_id == product_id, Review.is_visible == True)
+        .filter(Review.product_id == product_id, Review.is_visible)
         .group_by(Review.rating)
         .all()
     )
-    distribution = {i: 0 for i in range(1, 6)}
+    distribution = dict.fromkeys(range(1, 6), 0)
     total = 0
     weighted = 0
     for rating, count in rows:

@@ -2,7 +2,6 @@
 Admin user management endpoints — list, status update, soft delete.
 Mounted under /admin/users-mgmt to avoid conflict with IAM users router.
 """
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -20,9 +19,9 @@ router = APIRouter(prefix="/users-mgmt", tags=["admin-users"])
 def list_all_users(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
-    role: Optional[str] = Query(None),
-    status: Optional[str] = Query(None),
-    search: Optional[str] = Query(None),
+    role: str | None = Query(None),
+    status: str | None = Query(None),
+    search: str | None = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(admin_required),
 ):

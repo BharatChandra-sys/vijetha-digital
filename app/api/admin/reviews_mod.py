@@ -1,7 +1,6 @@
 """
 Admin review moderation endpoints — list, hide/show, flag.
 """
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -16,7 +15,7 @@ router = APIRouter(prefix="/reviews", tags=["admin-reviews"])
 
 @router.get("")
 def list_reviews(
-    product_id: Optional[int] = Query(None),
+    product_id: int | None = Query(None),
     flagged_only: bool = Query(False),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
@@ -28,7 +27,7 @@ def list_reviews(
     if product_id:
         query = query.filter(Review.product_id == product_id)
     if flagged_only:
-        query = query.filter(Review.is_flagged == True)
+        query = query.filter(Review.is_flagged)
 
     total = query.count()
     reviews = (

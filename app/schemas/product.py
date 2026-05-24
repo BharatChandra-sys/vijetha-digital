@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -7,48 +7,48 @@ class ProductCreate(BaseModel):
     name: str = Field(..., max_length=255)
     category: str = Field(..., max_length=100)
     base_price: float
-    description: Optional[str] = Field(None, max_length=2000)
-    unit: Optional[str] = Field(None, max_length=50)
-    image_url: Optional[str] = Field(None, max_length=1000)
-    slug: Optional[str] = Field(None, max_length=255)
-    seo_title: Optional[str] = Field(None, max_length=255)
-    seo_description: Optional[str] = None
-    seo_tags: Optional[List[str]] = None
-    specification_options: Optional[Dict[str, Any]] = None
-    turnaround_options: Optional[List[Dict[str, Any]]] = None
+    description: str | None = Field(None, max_length=2000)
+    unit: str | None = Field(None, max_length=50)
+    image_url: str | None = Field(None, max_length=1000)
+    slug: str | None = Field(None, max_length=255)
+    seo_title: str | None = Field(None, max_length=255)
+    seo_description: str | None = None
+    seo_tags: list[str] | None = None
+    specification_options: dict[str, Any] | None = None
+    turnaround_options: list[dict[str, Any]] | None = None
 
 
 class ProductUpdate(BaseModel):
-    name: Optional[str] = Field(None, max_length=255)
-    category: Optional[str] = Field(None, max_length=100)
-    base_price: Optional[float] = None
-    description: Optional[str] = Field(None, max_length=2000)
-    unit: Optional[str] = Field(None, max_length=50)
-    image_url: Optional[str] = Field(None, max_length=1000)
-    is_active: Optional[bool] = None
-    slug: Optional[str] = Field(None, max_length=255)
-    seo_title: Optional[str] = Field(None, max_length=255)
-    seo_description: Optional[str] = None
-    seo_tags: Optional[List[str]] = None
-    specification_options: Optional[Dict[str, Any]] = None
-    turnaround_options: Optional[List[Dict[str, Any]]] = None
+    name: str | None = Field(None, max_length=255)
+    category: str | None = Field(None, max_length=100)
+    base_price: float | None = None
+    description: str | None = Field(None, max_length=2000)
+    unit: str | None = Field(None, max_length=50)
+    image_url: str | None = Field(None, max_length=1000)
+    is_active: bool | None = None
+    slug: str | None = Field(None, max_length=255)
+    seo_title: str | None = Field(None, max_length=255)
+    seo_description: str | None = None
+    seo_tags: list[str] | None = None
+    specification_options: dict[str, Any] | None = None
+    turnaround_options: list[dict[str, Any]] | None = None
 
 
 class ProductResponse(BaseModel):
     id: int
     name: str
-    slug: Optional[str] = None
+    slug: str | None = None
     category: str
-    description: Optional[str] = None
-    unit: Optional[str] = None
-    image_url: Optional[str] = None
+    description: str | None = None
+    unit: str | None = None
+    image_url: str | None = None
     base_price: float
     is_active: bool
-    seo_title: Optional[str] = None
-    seo_description: Optional[str] = None
-    seo_tags: Optional[List[str]] = None
-    specification_options: Optional[Dict[str, Any]] = None
-    turnaround_options: Optional[List[Dict[str, Any]]] = None
+    seo_title: str | None = None
+    seo_description: str | None = None
+    seo_tags: list[str] | None = None
+    specification_options: dict[str, Any] | None = None
+    turnaround_options: list[dict[str, Any]] | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -70,4 +70,4 @@ class PriceCalculateResponse(BaseModel):
     area_sqft: float
     material: str
     quantity: int
-    breakdown: Optional[Dict[str, Any]] = None
+    breakdown: dict[str, Any] | None = None

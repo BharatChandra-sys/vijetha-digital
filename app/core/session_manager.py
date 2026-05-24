@@ -1,8 +1,7 @@
 from datetime import datetime
-from typing import Dict
 
 # In production you would store this in Redis or DB
-active_sessions: Dict[str, dict] = {}
+active_sessions: dict[str, dict] = {}
 
 
 def register_session(user_id: int, token: str):

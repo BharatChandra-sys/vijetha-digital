@@ -5,7 +5,7 @@ Includes account lockout, failed login tracking, and security best practices.
 
 import secrets
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
+from typing import Any
 
 import httpx
 from sqlalchemy.orm import Session
@@ -70,19 +70,19 @@ def _enforce_login_portal_access(user: User, login_portal: str) -> None:
 def register_user(
     db: Session,
     data: RegisterRequest,
-    created_by_id: Optional[int] = None,
-) -> Dict[str, str]:
+    created_by_id: int | None = None,
+) -> dict[str, str]:
     """
     Register a new user account.
-    
+
     Args:
         db: Database session
         data: Registration request data
         created_by_id: Optional ID of admin who created this user
-        
+
     Returns:
         Success message dict
-        
+
     Raises:
         400: User already exists
     """
@@ -131,22 +131,22 @@ def register_user(
 def login_user(
     db: Session,
     data: LoginRequest,
-    ip_address: Optional[str] = None,
+    ip_address: str | None = None,
     login_portal: str = "customer",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Authenticate user and return JWT tokens.
-    
+
     Implements account lockout after 5 failed attempts.
-    
+
     Args:
         db: Database session
         data: Login credentials
         ip_address: Optional IP address of the request
-        
+
     Returns:
         Dict with access_token, refresh_token, and user info
-        
+
     Raises:
         401: Invalid credentials
         403: Account locked or inactive
@@ -203,14 +203,14 @@ def login_user(
     user.account_locked_reason = None
     user.last_login_at = datetime.utcnow()
     user.last_login_ip = ip_address
-    
+
     db.commit()
     db.refresh(user)
 
     # Create tokens with JTI tracking
     access_jti = TokenManager.generate_jti()
     refresh_jti = TokenManager.generate_jti()
-    
+
     access_token = create_access_token(
         user_id=user.id,
         role=user.role.value,
@@ -222,7 +222,7 @@ def login_user(
         role=user.role.value,
         jti=refresh_jti,
     )
-    
+
     # Store JTIs in Redis for tracking
     from app.core.config import settings
     TokenManager.store_jti(access_jti, user.id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)
@@ -258,18 +258,18 @@ def login_user(
 # UNLOCK ACCOUNT (Admin function)
 # ============================================================================
 
-def unlock_account(db: Session, user_id: int, admin_id: int) -> Dict[str, str]:
+def unlock_account(db: Session, user_id: int, admin_id: int) -> dict[str, str]:
     """
     Unlock a locked user account (admin only).
-    
+
     Args:
         db: Database session
         user_id: ID of user to unlock
         admin_id: ID of admin performing unlock
-        
+
     Returns:
         Success message
-        
+
     Raises:
         404: User not found
     """
@@ -297,7 +297,7 @@ def google_login_or_register(
     db: Session,
     google_token: str,
     login_portal: str = "customer",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Sign in or register a user via Google OAuth access token.
 
@@ -368,10 +368,10 @@ def google_login_or_register(
     # Issue JWTs with JTI tracking
     access_jti = TokenManager.generate_jti()
     refresh_jti = TokenManager.generate_jti()
-    
+
     access_token = create_access_token(user_id=user.id, role=user.role.value, jti=access_jti)
     refresh_token = create_refresh_token(user_id=user.id, role=user.role.value, jti=refresh_jti)
-    
+
     # Store JTIs in Redis
     from app.core.config import settings
     TokenManager.store_jti(access_jti, user.id, "access", settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60)

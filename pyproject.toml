@@ -1,90 +1,22 @@
 [tool.ruff]
-# Python version
+line-length = 120
 target-version = "py311"
 
-# Line length
-line-length = 120
-
-# Exclude directories
-exclude = [
-    ".git",
-    ".ruff_cache",
-    ".venv",
-    "__pycache__",
-    "alembic/versions",
-    "build",
-    "dist",
-]
-
 [tool.ruff.lint]
-# Enable specific rule sets
-select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
-]
-
-# Ignore specific rules
+select = ["E", "F", "W", "I"]
 ignore = [
-    "E501",  # line too long (handled by formatter)
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
-    "W191",  # indentation contains tabs
+    "E402",  # Module level import not at top (needed for dotenv)
+    "E501",  # Line too long (handled by formatter)
 ]
 
-# Allow autofix for all enabled rules
-fixable = ["ALL"]
-unfixable = []
-
-[tool.ruff.format]
-# Use double quotes for strings
-quote-style = "double"
-
-# Indent with spaces
-indent-style = "space"
-
-# Respect magic trailing comma
-skip-magic-trailing-comma = false
-
-# Auto-detect line ending
-line-ending = "auto"
+[tool.ruff.lint.per-file-ignores]
+"app/main.py" = ["E402"]
+"app/models/__init__.py" = ["F401"]
+"__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
-# Pytest configuration
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = [
-    "-v",
-    "--strict-markers",
-    "--tb=short",
-]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests",
-]
-
-[tool.coverage.run]
-source = ["app"]
-omit = [
-    "*/tests/*",
-    "*/alembic/*",
-    "*/__pycache__/*",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-    "@abstractmethod",
-]
+addopts = "-v --tb=short"

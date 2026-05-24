@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class DiscountType(str, enum.Enum):
+class DiscountType(enum.StrEnum):
     PERCENTAGE = "percentage"
     FIXED = "fixed"
 

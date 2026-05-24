@@ -6,7 +6,6 @@ and sensitive actions with full device/IP context.
 import logging
 import re
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -50,13 +49,13 @@ def log_event(
     db: Session,
     action: str,
     success: bool = True,
-    user_id: Optional[int] = None,
-    email: Optional[str] = None,
-    ip_address: Optional[str] = None,
-    user_agent: Optional[str] = None,
-    endpoint: Optional[str] = None,
-    method: Optional[str] = None,
-    detail: Optional[str] = None,
+    user_id: int | None = None,
+    email: str | None = None,
+    ip_address: str | None = None,
+    user_agent: str | None = None,
+    endpoint: str | None = None,
+    method: str | None = None,
+    detail: str | None = None,
 ) -> None:
     """
     Write an access log entry. Never raises — failures are logged to console only.

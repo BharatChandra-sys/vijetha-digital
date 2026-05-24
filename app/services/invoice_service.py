@@ -6,6 +6,7 @@ with logo, clean typography, and GST breakdowns.
 """
 
 from __future__ import annotations
+from app.models.order_file import OrderFile
 
 import io
 import os
@@ -402,50 +403,51 @@ def generate_invoice_pdf(db: Session, order: Order) -> bytes:
 def generate_and_store_invoice(db: Session, order_id: int) -> dict:
     """
     Generate invoice PDF and store it as an OrderFile.
-    
+
     Args:
         db: Database session
         order_id: Order ID
-        
+
     Returns:
         Dict with file info
     """
-    from app.models.order_file import OrderFile, FileType
-    
+    from app.models.order_file import FileType, OrderFile
+
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:
         raise ValueError(f"Order {order_id} not found")
-    
+
     # Check if invoice already exists
     existing = db.query(OrderFile).filter(
         OrderFile.order_id == order_id,
         OrderFile.file_type == FileType.invoice,
     ).first()
-    
+
     if existing:
         return {
             "message": "Invoice already exists",
             "file_id": existing.id,
             "file_path": existing.file_path,
         }
-    
+
     # Generate PDF
     pdf_bytes = generate_invoice_pdf(db, order)
-    
+
     # Save to file system
     import os
+
     from app.core.config import settings
-    
+
     upload_dir = settings.UPLOAD_DIR
     invoices_dir = os.path.join(upload_dir, "invoices")
     os.makedirs(invoices_dir, exist_ok=True)
-    
+
     filename = f"invoice_{order.id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
     file_path = os.path.join(invoices_dir, filename)
-    
+
     with open(file_path, "wb") as f:
         f.write(pdf_bytes)
-    
+
     # Create OrderFile record
     order_file = OrderFile(
         order_id=order.id,
@@ -455,11 +457,11 @@ def generate_and_store_invoice(db: Session, order_id: int) -> dict:
         file_size=len(pdf_bytes),
         uploaded_by=None,  # System generated
     )
-    
+
     db.add(order_file)
     db.commit()
     db.refresh(order_file)
-    
+
     return {
         "message": "Invoice generated and stored",
         "file_id": order_file.id,
@@ -472,16 +474,16 @@ def generate_and_store_invoice(db: Session, order_id: int) -> dict:
 def get_invoice_for_order(db: Session, order_id: int) -> OrderFile:
     """
     Get invoice file for an order.
-    
+
     Args:
         db: Database session
         order_id: Order ID
-        
+
     Returns:
         OrderFile or None
     """
-    from app.models.order_file import OrderFile, FileType
-    
+    from app.models.order_file import FileType, OrderFile
+
     return db.query(OrderFile).filter(
         OrderFile.order_id == order_id,
         OrderFile.file_type == FileType.invoice,

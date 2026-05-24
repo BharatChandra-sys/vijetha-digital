@@ -1,15 +1,14 @@
-from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class OrderItemCreate(BaseModel):
     # Standard product item
-    product_id: Optional[int] = None
+    product_id: int | None = None
     # Custom signage item
-    width_ft: Optional[float] = None
-    height_ft: Optional[float] = None
-    material: Optional[str] = Field(None, max_length=100)
+    width_ft: float | None = None
+    height_ft: float | None = None
+    material: str | None = Field(None, max_length=100)
     lamination: bool = False
     frame: bool = False
     # Common
@@ -25,23 +24,23 @@ class OrderItemCreate(BaseModel):
 
 
 class OrderCreate(BaseModel):
-    items: List[OrderItemCreate]
-    delivery_address: Optional[str] = None
-    delivery_city: Optional[str] = None
-    delivery_state: Optional[str] = None
-    delivery_postal_code: Optional[str] = None
-    delivery_notes: Optional[str] = None
-    coupon_code: Optional[str] = None
+    items: list[OrderItemCreate]
+    delivery_address: str | None = None
+    delivery_city: str | None = None
+    delivery_state: str | None = None
+    delivery_postal_code: str | None = None
+    delivery_notes: str | None = None
+    coupon_code: str | None = None
 
 
 class OrderItemResponse(BaseModel):
-    product_id: Optional[int] = None
-    product_name: Optional[str] = None
-    product_image: Optional[str] = None
-    product_category: Optional[str] = None
-    width_ft: Optional[float] = None
-    height_ft: Optional[float] = None
-    material: Optional[str] = None
+    product_id: int | None = None
+    product_name: str | None = None
+    product_image: str | None = None
+    product_category: str | None = None
+    width_ft: float | None = None
+    height_ft: float | None = None
+    material: str | None = None
     quantity: int
     unit_price: float
     total_price: float
@@ -78,35 +77,35 @@ class OrderResponse(BaseModel):
     tax: float = 0
     shipping: float = 0
     discount: float = 0
-    coupon_code: Optional[str] = None
+    coupon_code: str | None = None
     coupon_discount: float = 0
     total_price: float
-    delivery_address: Optional[str] = None
-    delivery_city: Optional[str] = None
-    delivery_state: Optional[str] = None
-    delivery_postal_code: Optional[str] = None
-    tracking_number: Optional[str] = None
-    tracking_url: Optional[str] = None
-    created_at: Optional[str] = None
-    confirmed_at: Optional[str] = None
-    paid_at: Optional[str] = None
-    shipped_at: Optional[str] = None
-    delivered_at: Optional[str] = None
-    cancelled_at: Optional[str] = None
-    items: List[OrderItemResponse]
+    delivery_address: str | None = None
+    delivery_city: str | None = None
+    delivery_state: str | None = None
+    delivery_postal_code: str | None = None
+    tracking_number: str | None = None
+    tracking_url: str | None = None
+    created_at: str | None = None
+    confirmed_at: str | None = None
+    paid_at: str | None = None
+    shipped_at: str | None = None
+    delivered_at: str | None = None
+    cancelled_at: str | None = None
+    items: list[OrderItemResponse]
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class OrderStatusUpdateRequest(BaseModel):
     status: str
-    note: Optional[str] = None
+    note: str | None = None
 
 
 class OrderTimelineEntry(BaseModel):
     to_status: str
-    note: Optional[str] = None
-    created_at: Optional[str] = None
+    note: str | None = None
+    created_at: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -115,8 +114,8 @@ class AdminOrderView(BaseModel):
     """Extended order view for admin — includes customer info."""
     id: int
     user_id: int
-    customer_email: Optional[str] = None
-    customer_name: Optional[str] = None
+    customer_email: str | None = None
+    customer_name: str | None = None
     status: str
     payment_status: str
     subtotal: float
@@ -124,13 +123,13 @@ class AdminOrderView(BaseModel):
     shipping: float = 0
     discount: float = 0
     total_price: float
-    coupon_code: Optional[str] = None
-    delivery_address: Optional[str] = None
-    delivery_city: Optional[str] = None
-    admin_notes: Optional[str] = None
-    tracking_number: Optional[str] = None
-    created_at: Optional[str] = None
-    paid_at: Optional[str] = None
-    items: List[OrderItemResponse] = []
+    coupon_code: str | None = None
+    delivery_address: str | None = None
+    delivery_city: str | None = None
+    admin_notes: str | None = None
+    tracking_number: str | None = None
+    created_at: str | None = None
+    paid_at: str | None = None
+    items: list[OrderItemResponse] = []
 
     model_config = ConfigDict(from_attributes=True)

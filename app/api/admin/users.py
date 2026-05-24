@@ -4,17 +4,16 @@ Production-level endpoints with proper validation and audit logging.
 """
 
 from datetime import datetime
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, ConfigDict, EmailStr
 from sqlalchemy.orm import Session
 
-from app.api.auth.dependencies import get_current_user, require_permission
+from app.api.auth.dependencies import require_permission
 from app.core.security import hash_password
 from app.core.token_manager import TokenManager
 from app.db.session import get_db
-from app.models.iam import Permission, Role, RoleAssignmentLog
+from app.models.iam import Role, RoleAssignmentLog
 from app.models.user import User, UserStatus
 from app.services.rbac_service import RBACService
 
@@ -28,33 +27,33 @@ router = APIRouter(prefix="/users", tags=["admin-users"])
 
 class UserAssignRoleRequest(BaseModel):
     role_slug: str
-    reason: Optional[str] = None
-    expires_in_days: Optional[int] = None
+    reason: str | None = None
+    expires_in_days: int | None = None
 
 
 class UserCreateRequest(BaseModel):
     email: EmailStr
     password: str
     full_name: str
-    phone: Optional[str] = None
-    role_slugs: List[str] = ["customer"]  # Initial roles
+    phone: str | None = None
+    role_slugs: list[str] = ["customer"]  # Initial roles
 
 
 class UserUpdateRequest(BaseModel):
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
-    email: Optional[EmailStr] = None
-    status: Optional[UserStatus] = None
+    full_name: str | None = None
+    phone: str | None = None
+    email: EmailStr | None = None
+    status: UserStatus | None = None
 
 
 class UserResponse(BaseModel):
     id: int
     email: str
     full_name: str
-    phone: Optional[str]
+    phone: str | None
     status: str
     created_at: datetime
-    roles: List[dict]
+    roles: list[dict]
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -64,9 +63,9 @@ class RoleAssignmentLogResponse(BaseModel):
     user_id: int
     role_id: int
     action: str
-    assigned_by_id: Optional[int]
-    reason: Optional[str]
-    expires_at: Optional[datetime]
+    assigned_by_id: int | None
+    reason: str | None
+    expires_at: datetime | None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
@@ -77,14 +76,14 @@ class RoleAssignmentLogResponse(BaseModel):
 # LIST USERS
 # ============================================================================
 
-@router.get("", response_model=List[UserResponse])
+@router.get("", response_model=list[UserResponse])
 def list_users(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("user:list")),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    status_filter: Optional[str] = Query(None, alias="status"),
-    role_slug: Optional[str] = None,
+    status_filter: str | None = Query(None, alias="status"),
+    role_slug: str | None = None,
 ):
     """
     List all users with optional filtering.
@@ -178,7 +177,7 @@ def create_user(
     # Fetch roles
     initial_roles = db.query(Role).filter(
         Role.slug.in_(request.role_slugs),
-        Role.is_active == True
+        Role.is_active
     ).all()
 
     if not initial_roles:
@@ -285,7 +284,7 @@ def update_user(
 @router.post("/{user_id}/suspend")
 def suspend_user(
     user_id: int,
-    reason: Optional[str] = None,
+    reason: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("user:suspend")),
 ):
@@ -313,7 +312,7 @@ def suspend_user(
 @router.post("/{user_id}/revoke-tokens")
 def revoke_all_user_tokens(
     user_id: int,
-    reason: Optional[str] = None,
+    reason: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("user:suspend")),
 ):
@@ -388,7 +387,7 @@ def assign_role_to_user(
 def revoke_role_from_user(
     user_id: int,
     role_slug: str,
-    reason: Optional[str] = None,
+    reason: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("role:revoke")),
 ):
@@ -411,7 +410,7 @@ def revoke_role_from_user(
 # GET USER ROLE HISTORY
 # ============================================================================
 
-@router.get("/{user_id}/role-history", response_model=List[RoleAssignmentLogResponse])
+@router.get("/{user_id}/role-history", response_model=list[RoleAssignmentLogResponse])
 def get_user_role_history(
     user_id: int,
     db: Session = Depends(get_db),

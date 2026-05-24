@@ -36,11 +36,11 @@ def list_pending_verifications(
 ):
     """
     List all pending business verifications.
-    
+
     Returns list of business profiles awaiting verification.
     """
     profiles = business_service.list_pending_verifications(db)
-    
+
     return [
         {
             "id": p.id,
@@ -71,7 +71,7 @@ def approve_business(
 ):
     """
     Approve a business verification.
-    
+
     Sets credit terms and sends approval email.
     """
     return business_service.approve_business_verification(
@@ -93,7 +93,7 @@ def reject_business(
 ):
     """
     Reject a business verification.
-    
+
     Sends rejection email with reason.
     """
     return business_service.reject_business_verification(

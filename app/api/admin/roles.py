@@ -4,15 +4,14 @@ Manage roles, permissions, and role-permission associations.
 """
 
 from datetime import datetime
-from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
-from app.api.auth.dependencies import get_current_user, require_permission
+from app.api.auth.dependencies import require_permission
 from app.db.session import get_db
-from app.models.iam import Permission, PermissionCategory, Role, RoleType
+from app.models.iam import Permission, PermissionCategory, Role
 from app.models.user import User
 from app.services.rbac_service import RBACService
 
@@ -27,7 +26,7 @@ class PermissionResponse(BaseModel):
     id: int
     permission_key: str
     display_name: str
-    description: Optional[str]
+    description: str | None
     category: str
     is_dangerous: bool
     created_at: datetime
@@ -39,13 +38,13 @@ class RoleResponse(BaseModel):
     id: int
     name: str
     slug: str
-    description: Optional[str]
+    description: str | None
     is_system_role: bool
     is_active: bool
     priority: int
-    max_users: Optional[int]
+    max_users: int | None
     created_at: datetime
-    permissions: List[PermissionResponse]
+    permissions: list[PermissionResponse]
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -53,41 +52,41 @@ class RoleResponse(BaseModel):
 class CreateRoleRequest(BaseModel):
     name: str
     slug: str
-    description: Optional[str] = None
-    permission_keys: List[str] = []
-    parent_role_slug: Optional[str] = None
+    description: str | None = None
+    permission_keys: list[str] = []
+    parent_role_slug: str | None = None
     priority: int = 0
-    max_users: Optional[int] = None
+    max_users: int | None = None
 
 
 class UpdateRoleRequest(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    permission_keys: Optional[List[str]] = None
-    is_active: Optional[bool] = None
+    name: str | None = None
+    description: str | None = None
+    permission_keys: list[str] | None = None
+    is_active: bool | None = None
 
 
 class AddPermissionsRequest(BaseModel):
-    permission_keys: List[str]
+    permission_keys: list[str]
 
 
 # ============================================================================
 # LIST PERMISSIONS (MUST BE BEFORE /{role_slug} TO AVOID ROUTE CONFLICT)
 # ============================================================================
 
-@router.get("/permissions", response_model=List[PermissionResponse])
+@router.get("/permissions", response_model=list[PermissionResponse])
 def list_permissions(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("role:read")),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    category: Optional[str] = None,
+    category: str | None = None,
 ):
     """
     List all available permissions.
     Requires: role:read permission
     """
-    query = db.query(Permission).filter(Permission.is_active == True)
+    query = db.query(Permission).filter(Permission.is_active)
 
     if category:
         try:
@@ -116,13 +115,13 @@ def list_permissions(
 # LIST ROLES
 # ============================================================================
 
-@router.get("", response_model=List[RoleResponse])
+@router.get("", response_model=list[RoleResponse])
 def list_roles(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("role:read")),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    is_active: Optional[bool] = None,
+    is_active: bool | None = None,
 ):
     """
     List all roles.
@@ -301,7 +300,7 @@ def update_role(
     if request.permission_keys is not None:
         permissions = db.query(Permission).filter(
             Permission.permission_key.in_(request.permission_keys),
-            Permission.is_active == True
+            Permission.is_active
         ).all()
         role.permissions = permissions
 
@@ -354,7 +353,7 @@ def add_permissions_to_role(
 
     permissions = db.query(Permission).filter(
         Permission.permission_key.in_(request.permission_keys),
-        Permission.is_active == True
+        Permission.is_active
     ).all()
 
     for perm in permissions:

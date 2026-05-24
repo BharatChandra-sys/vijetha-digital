@@ -4,23 +4,17 @@ Provides permission checking, role management, and audit logging.
 """
 
 from datetime import datetime, timedelta
-from typing import List, Optional, Set
 
 from fastapi import HTTPException, status
-from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from app.models.iam import (
-    ActionType,
     Permission,
     PermissionAccessLog,
-    PermissionCategory,
-    ResourceType,
     Role,
     RoleAssignmentLog,
-    RoleType,
 )
-from app.models.user import User, UserStatus
+from app.models.user import User
 
 
 class RBACService:
@@ -29,7 +23,7 @@ class RBACService:
     """
 
     @staticmethod
-    def get_user_permissions(db: Session, user_id: int) -> Set[str]:
+    def get_user_permissions(db: Session, user_id: int) -> set[str]:
         """
         Get all permissions for a user across all assigned roles.
         Returns set of permission_keys (e.g., {"order:create", "user:read"})
@@ -39,24 +33,24 @@ class RBACService:
             return set()
 
         permissions = set()
-        
+
         # Collect permissions from all assigned roles
         for role in user.roles_assigned:
             if not role.is_active:
                 continue
-                
+
             # Add role's direct permissions
             for permission in role.permissions:
                 if permission.is_active:
                     permissions.add(permission.permission_key)
-            
+
             # Add inherited permissions from parent role
             if role.parent_role:
                 parent_perms = db.query(Permission).join(
                     Role.permissions
                 ).filter(
                     Role.id == role.parent_role_id,
-                    Permission.is_active == True
+                    Permission.is_active
                 ).all()
                 for perm in parent_perms:
                     permissions.add(perm.permission_key)
@@ -80,7 +74,7 @@ class RBACService:
     def has_any_role(
         db: Session,
         user_id: int,
-        role_slugs: List[str],
+        role_slugs: list[str],
     ) -> bool:
         """
         Check if user has ANY of the specified roles.
@@ -96,7 +90,7 @@ class RBACService:
     def has_all_roles(
         db: Session,
         user_id: int,
-        role_slugs: List[str],
+        role_slugs: list[str],
     ) -> bool:
         """
         Check if user has ALL of the specified roles.
@@ -109,7 +103,7 @@ class RBACService:
         return set(role_slugs).issubset(user_role_slugs)
 
     @staticmethod
-    def get_user_roles(db: Session, user_id: int) -> List[Role]:
+    def get_user_roles(db: Session, user_id: int) -> list[Role]:
         """
         Return all active roles assigned to a user.
         """
@@ -124,12 +118,12 @@ class RBACService:
         user_id: int,
         role_slug: str,
         assigned_by_id: int,
-        reason: Optional[str] = None,
-        expires_in_days: Optional[int] = None,
+        reason: str | None = None,
+        expires_in_days: int | None = None,
     ) -> Role:
         """
         Assign a role to a user.
-        
+
         Args:
             db: Database session
             user_id: User to assign role to
@@ -137,10 +131,10 @@ class RBACService:
             assigned_by_id: Admin user assigning the role
             reason: Reason for assignment
             expires_in_days: Days until role expires (None = permanent)
-            
+
         Returns:
             The assigned Role
-            
+
         Raises:
             HTTPException: If user/role not found or already has role
         """
@@ -148,7 +142,7 @@ class RBACService:
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        role = db.query(Role).filter(Role.slug == role_slug, Role.is_active == True).first()
+        role = db.query(Role).filter(Role.slug == role_slug, Role.is_active).first()
         if not role:
             raise HTTPException(status_code=404, detail="Role not found")
 
@@ -170,7 +164,7 @@ class RBACService:
 
         # Assign the role
         user.roles_assigned.append(role)
-        
+
         # Log the assignment
         assignment_log = RoleAssignmentLog(
             user_id=user_id,
@@ -182,7 +176,7 @@ class RBACService:
             if expires_in_days else None,
             requires_approval=role.requires_approval,
         )
-        
+
         db.add(assignment_log)
         db.commit()
         db.refresh(user)
@@ -195,7 +189,7 @@ class RBACService:
         user_id: int,
         role_slug: str,
         revoked_by_id: int,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> bool:
         """
         Revoke a role from a user.
@@ -232,7 +226,7 @@ class RBACService:
             revoked_at=datetime.utcnow(),
             revoked_reason=reason,
         )
-        
+
         db.add(assignment_log)
         db.commit()
 
@@ -244,14 +238,14 @@ class RBACService:
         user_id: int,
         permission_id: int,
         resource_type: str,
-        resource_id: Optional[int],
+        resource_id: int | None,
         action: str,
-        endpoint: Optional[str] = None,
-        method: Optional[str] = None,
-        status_code: Optional[int] = None,
-        ip_address: Optional[str] = None,
+        endpoint: str | None = None,
+        method: str | None = None,
+        status_code: int | None = None,
+        ip_address: str | None = None,
         success: bool = True,
-        error_message: Optional[str] = None,
+        error_message: str | None = None,
     ) -> None:
         """
         Log access to sensitive/dangerous operations.
@@ -269,7 +263,7 @@ class RBACService:
             success=success,
             error_message=error_message,
         )
-        
+
         db.add(log_entry)
         db.commit()
 
@@ -278,10 +272,10 @@ class RBACService:
         db: Session,
         name: str,
         slug: str,
-        description: Optional[str] = None,
-        permission_keys: Optional[List[str]] = None,
-        created_by_id: Optional[int] = None,
-        parent_role_slug: Optional[str] = None,
+        description: str | None = None,
+        permission_keys: list[str] | None = None,
+        created_by_id: int | None = None,
+        parent_role_slug: str | None = None,
     ) -> Role:
         """
         Create a new custom role with specified permissions.
@@ -305,7 +299,7 @@ class RBACService:
         if permission_keys:
             permissions = db.query(Permission).filter(
                 Permission.permission_key.in_(permission_keys),
-                Permission.is_active == True
+                Permission.is_active
             ).all()
 
         role = Role(
@@ -336,13 +330,13 @@ class RBACService:
         Raises HTTPException if user lacks permission (when raise_exception=True).
         """
         has_perm = RBACService.has_permission(db, user_id, permission_key)
-        
+
         if not has_perm and raise_exception:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Permission denied: {permission_key}"
             )
-        
+
         return has_perm
 
     @staticmethod

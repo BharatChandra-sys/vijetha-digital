@@ -1,14 +1,13 @@
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class ReviewCreate(BaseModel):
     rating: int = Field(..., ge=1, le=5)
-    title: Optional[str] = Field(None, max_length=100)
-    body: Optional[str] = Field(None, max_length=1500)
-    image_urls: Optional[List[str]] = Field(None, max_length=5)
+    title: str | None = Field(None, max_length=100)
+    body: str | None = Field(None, max_length=1500)
+    image_urls: list[str] | None = Field(None, max_length=5)
 
 
 class ReviewResponse(BaseModel):
@@ -17,9 +16,9 @@ class ReviewResponse(BaseModel):
     user_id: int
     user_name: str
     rating: int
-    title: Optional[str] = None
-    body: Optional[str] = None
-    image_urls: Optional[List[str]] = None
+    title: str | None = None
+    body: str | None = None
+    image_urls: list[str] | None = None
     is_verified_purchase: bool
     created_at: datetime
 

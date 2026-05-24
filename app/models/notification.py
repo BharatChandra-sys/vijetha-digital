@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class NotificationType(str, enum.Enum):
+class NotificationType(enum.StrEnum):
     ORDER_PLACED = "order_placed"
     ORDER_CONFIRMED = "order_confirmed"
     DESIGN_REVIEW = "design_review"

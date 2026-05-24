@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -12,10 +11,10 @@ def create_product(
     name: str,
     category: str,
     base_price: float,
-    description: Optional[str] = None,
-    unit: Optional[str] = None,
-    image_url: Optional[str] = None,
-    slug: Optional[str] = None,
+    description: str | None = None,
+    unit: str | None = None,
+    image_url: str | None = None,
+    slug: str | None = None,
 ) -> Product:
     if slug:
         existing = db.query(Product).filter(Product.slug == slug).first()
@@ -63,10 +62,10 @@ def create_product_from_schema(db: Session, data: ProductCreate) -> Product:
     return product
 
 
-def get_all_products(db: Session, active_only: bool = True) -> List[Product]:
+def get_all_products(db: Session, active_only: bool = True) -> list[Product]:
     query = db.query(Product)
     if active_only:
-        query = query.filter(Product.is_active == True)
+        query = query.filter(Product.is_active)
     return query.order_by(Product.id.asc()).all()
 
 
@@ -78,7 +77,7 @@ def get_product_by_id(db: Session, product_id: int) -> Product:
 
 
 def get_product_by_slug(db: Session, slug: str) -> Product:
-    product = db.query(Product).filter(Product.slug == slug, Product.is_active == True).first()
+    product = db.query(Product).filter(Product.slug == slug, Product.is_active).first()
     if not product:
         raise NotFoundException("Product", slug)
     return product

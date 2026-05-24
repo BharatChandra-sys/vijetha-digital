@@ -22,7 +22,7 @@ from app.db.base import Base
 # ENUM DEFINITIONS
 # =========================
 
-class OrderStatus(str, enum.Enum):
+class OrderStatus(enum.StrEnum):
     draft = "draft"
     placed = "placed"
     confirmed = "confirmed"
@@ -34,7 +34,7 @@ class OrderStatus(str, enum.Enum):
     refunded = "refunded"
 
 
-class PaymentStatus(str, enum.Enum):
+class PaymentStatus(enum.StrEnum):
     pending = "pending"
     partial = "partial"
     paid = "paid"

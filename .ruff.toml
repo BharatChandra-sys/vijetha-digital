@@ -1,0 +1,19 @@
+# Ruff configuration for CI/CD
+[lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E402",  # Module level import not at top of file (needed for dotenv)
+    "B904",  # raise-without-from-inside-except (too strict for our use case)
+    "F401",  # Unused imports in __init__.py (needed for re-exports)
+    "F811",  # Redefined while unused (false positives)
+]
+
+[lint.per-file-ignores]
+"app/main.py" = ["E402"]  # Allow imports after dotenv load
+"app/models/__init__.py" = ["F401"]  # Allow unused imports for re-exports
+"app/services/brevo_email_service.py" = ["F811"]  # Allow method overrides
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

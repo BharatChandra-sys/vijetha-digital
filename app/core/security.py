@@ -6,7 +6,7 @@ JWT token management, password hashing, and token helpers.
 import re
 import uuid
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
+from typing import Any
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -34,10 +34,10 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7     # Longer-lived refresh tokens
 def hash_password(password: str) -> str:
     """
     Hash a plaintext password using bcrypt.
-    
+
     Args:
         password: Plain text password
-        
+
     Returns:
         Hashed password string
     """
@@ -47,11 +47,11 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Verify a password against its hash.
-    
+
     Args:
         plain_password: Plain text password to verify
         hashed_password: Hashed password from database
-        
+
     Returns:
         True if password matches, False otherwise
     """
@@ -62,28 +62,28 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # JWT TOKEN CREATION
 # ============================================================================
 
-def create_access_token(user_id: int, role: str, jti: Optional[str] = None) -> str:
+def create_access_token(user_id: int, role: str, jti: str | None = None) -> str:
     """
     Create a short-lived access token (15 minutes).
-    
+
     Args:
         user_id: User's database ID
         role: User's role (for backward compatibility)
         jti: Optional JWT ID for token tracking
-        
+
     Returns:
         JWT access token string
     """
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": str(user_id),  # Subject: user ID as string
         "role": role,         # Legacy role field
         "type": "access",     # Token type
         "exp": expire,        # Expiration timestamp
         "iat": datetime.utcnow(),  # Issued at
     }
-    
+
     # Add JTI if provided (for token tracking and revocation)
     if jti:
         payload["jti"] = jti
@@ -91,10 +91,10 @@ def create_access_token(user_id: int, role: str, jti: Optional[str] = None) -> s
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def create_refresh_token(user_id: int, role: str, jti: Optional[str] = None) -> str:
+def create_refresh_token(user_id: int, role: str, jti: str | None = None) -> str:
     """
     Create a long-lived refresh token (7 days) with a unique jti for revocation.
-    
+
     Args:
         user_id: User's database ID
         role: User's role
@@ -102,7 +102,7 @@ def create_refresh_token(user_id: int, role: str, jti: Optional[str] = None) -> 
     """
     expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
 
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": str(user_id),
         "role": role,
         "type": "refresh",
@@ -118,48 +118,48 @@ def create_refresh_token(user_id: int, role: str, jti: Optional[str] = None) -> 
 # JWT TOKEN DECODING
 # ============================================================================
 
-def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_access_token(token: str) -> dict[str, Any] | None:
     """
     Decode and validate an access token.
-    
+
     Args:
         token: JWT token string
-        
+
     Returns:
         Decoded payload dict if valid, None otherwise
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        
+
         # Ensure this is an access token
         if payload.get("type") != "access":
             return None
-            
+
         return payload
-    
+
     except JWTError:
         return None
 
 
-def decode_refresh_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_refresh_token(token: str) -> dict[str, Any] | None:
     """
     Decode and validate a refresh token.
-    
+
     Args:
         token: JWT token string
-        
+
     Returns:
         Decoded payload dict if valid, None otherwise
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        
+
         # Ensure this is a refresh token
         if payload.get("type") != "refresh":
             return None
-            
+
         return payload
-    
+
     except JWTError:
         return None
 
@@ -168,7 +168,7 @@ def decode_refresh_token(token: str) -> Optional[Dict[str, Any]]:
 # GENERIC TOKEN DECODER
 # ============================================================================
 
-def decode_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_token(token: str) -> dict[str, Any] | None:
     """Decode any JWT token without type enforcement."""
     try:
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -212,7 +212,7 @@ EMAIL_VERIFY_TOKEN_EXPIRE_HOURS = 24
 def create_email_verification_token(user_id: int, email: str) -> str:
     """Create a short-lived token for email address verification."""
     expire = datetime.utcnow() + timedelta(hours=EMAIL_VERIFY_TOKEN_EXPIRE_HOURS)
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": str(user_id),
         "email": email,
         "type": "email_verify",
@@ -223,7 +223,7 @@ def create_email_verification_token(user_id: int, email: str) -> str:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def decode_email_verification_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_email_verification_token(token: str) -> dict[str, Any] | None:
     """Decode and validate an email verification token."""
     payload = decode_token(token)
     if payload and payload.get("type") == "email_verify":
@@ -241,7 +241,7 @@ PASSWORD_RESET_TOKEN_EXPIRE_HOURS = 1
 def create_password_reset_token(user_id: int, email: str) -> str:
     """Create a short-lived token for password reset."""
     expire = datetime.utcnow() + timedelta(hours=PASSWORD_RESET_TOKEN_EXPIRE_HOURS)
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "sub": str(user_id),
         "email": email,
         "type": "password_reset",
@@ -252,7 +252,7 @@ def create_password_reset_token(user_id: int, email: str) -> str:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def decode_password_reset_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_password_reset_token(token: str) -> dict[str, Any] | None:
     """Decode and validate a password reset token."""
     payload = decode_token(token)
     if payload and payload.get("type") == "password_reset":

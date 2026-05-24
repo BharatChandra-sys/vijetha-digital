@@ -2,7 +2,6 @@
 Admin service for dashboard metrics, reports, and exports.
 """
 from datetime import datetime, timedelta
-from typing import Dict, List
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -11,63 +10,63 @@ from app.models.order import Order, OrderStatus, PaymentStatus
 from app.models.payment import Payment, PaymentState
 from app.models.product import Product
 from app.models.review import Review
-from app.models.user import User, UserRole, UserStatus
+from app.models.user import User, UserStatus
 
 
-def get_dashboard_stats(db: Session) -> Dict:
+def get_dashboard_stats(db: Session) -> dict:
     """
     Get comprehensive dashboard statistics.
-    
+
     Returns:
         Dict with key metrics for admin dashboard
     """
     # User stats
-    total_users = db.query(User).filter(User.is_deleted == False).count()
+    total_users = db.query(User).filter(not User.is_deleted).count()
     active_users = db.query(User).filter(
         User.status == UserStatus.ACTIVE,
-        User.is_deleted == False,
+        not User.is_deleted,
     ).count()
     new_users_today = db.query(User).filter(
         User.created_at >= datetime.utcnow().date(),
-        User.is_deleted == False,
+        not User.is_deleted,
     ).count()
-    
+
     # Order stats
-    total_orders = db.query(Order).filter(Order.is_deleted == False).count()
+    total_orders = db.query(Order).filter(not Order.is_deleted).count()
     pending_orders = db.query(Order).filter(
         Order.status.in_([OrderStatus.placed, OrderStatus.confirmed]),
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).count()
     completed_orders = db.query(Order).filter(
         Order.status == OrderStatus.delivered,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).count()
-    
+
     # Revenue stats
     total_revenue = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).scalar() or 0.0
-    
+
     revenue_today = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
         Order.paid_at >= datetime.utcnow().date(),
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).scalar() or 0.0
-    
+
     revenue_this_month = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
         Order.paid_at >= datetime.utcnow().replace(day=1, hour=0, minute=0, second=0),
-        Order.is_deleted == False,
+        not Order.is_deleted,
     ).scalar() or 0.0
-    
+
     # Product stats
-    total_products = db.query(Product).filter(Product.is_active == True).count()
-    
+    total_products = db.query(Product).filter(Product.is_active).count()
+
     # Review stats
     total_reviews = db.query(Review).count()
-    pending_reviews = db.query(Review).filter(Review.is_visible == False).count()
-    
+    pending_reviews = db.query(Review).filter(not Review.is_visible).count()
+
     # Payment stats
     successful_payments = db.query(Payment).filter(
         Payment.state == PaymentState.captured
@@ -75,7 +74,7 @@ def get_dashboard_stats(db: Session) -> Dict:
     failed_payments = db.query(Payment).filter(
         Payment.state == PaymentState.failed
     ).count()
-    
+
     return {
         "users": {
             "total": total_users,
@@ -111,19 +110,19 @@ def get_dashboard_stats(db: Session) -> Dict:
     }
 
 
-def get_revenue_trend(db: Session, days: int = 30) -> List[Dict]:
+def get_revenue_trend(db: Session, days: int = 30) -> list[dict]:
     """
     Get daily revenue trend for the last N days.
-    
+
     Args:
         db: Database session
         days: Number of days to include
-        
+
     Returns:
         List of daily revenue data
     """
     start_date = datetime.utcnow().date() - timedelta(days=days)
-    
+
     # Query daily revenue
     daily_revenue = (
         db.query(
@@ -134,13 +133,13 @@ def get_revenue_trend(db: Session, days: int = 30) -> List[Dict]:
         .filter(
             Order.payment_status == PaymentStatus.paid,
             Order.paid_at >= start_date,
-            Order.is_deleted == False,
+            not Order.is_deleted,
         )
         .group_by(func.date(Order.paid_at))
         .order_by(func.date(Order.paid_at))
         .all()
     )
-    
+
     return [
         {
             "date": str(row.date),
@@ -151,10 +150,10 @@ def get_revenue_trend(db: Session, days: int = 30) -> List[Dict]:
     ]
 
 
-def get_order_status_distribution(db: Session) -> Dict:
+def get_order_status_distribution(db: Session) -> dict:
     """
     Get distribution of orders by status.
-    
+
     Returns:
         Dict with count per status
     """
@@ -163,30 +162,30 @@ def get_order_status_distribution(db: Session) -> Dict:
             Order.status,
             func.count(Order.id).label("count"),
         )
-        .filter(Order.is_deleted == False)
+        .filter(not Order.is_deleted)
         .group_by(Order.status)
         .all()
     )
-    
+
     return {
         row.status.value: row.count
         for row in status_counts
     }
 
 
-def get_top_products(db: Session, limit: int = 10) -> List[Dict]:
+def get_top_products(db: Session, limit: int = 10) -> list[dict]:
     """
     Get top-selling products by order count.
-    
+
     Args:
         db: Database session
         limit: Number of products to return
-        
+
     Returns:
         List of top products with sales data
     """
     from app.models.order_item import OrderItem
-    
+
     top_products = (
         db.query(
             Product.id,
@@ -200,14 +199,14 @@ def get_top_products(db: Session, limit: int = 10) -> List[Dict]:
         .join(Order, Order.id == OrderItem.order_id)
         .filter(
             Order.payment_status == PaymentStatus.paid,
-            Order.is_deleted == False,
+            not Order.is_deleted,
         )
         .group_by(Product.id, Product.name, Product.category)
         .order_by(func.count(OrderItem.id).desc())
         .limit(limit)
         .all()
     )
-    
+
     return [
         {
             "id": row.id,
@@ -221,19 +220,19 @@ def get_top_products(db: Session, limit: int = 10) -> List[Dict]:
     ]
 
 
-def get_user_growth(db: Session, days: int = 30) -> List[Dict]:
+def get_user_growth(db: Session, days: int = 30) -> list[dict]:
     """
     Get daily user registration trend.
-    
+
     Args:
         db: Database session
         days: Number of days to include
-        
+
     Returns:
         List of daily user registration data
     """
     start_date = datetime.utcnow().date() - timedelta(days=days)
-    
+
     daily_users = (
         db.query(
             func.date(User.created_at).label("date"),
@@ -241,13 +240,13 @@ def get_user_growth(db: Session, days: int = 30) -> List[Dict]:
         )
         .filter(
             User.created_at >= start_date,
-            User.is_deleted == False,
+            not User.is_deleted,
         )
         .group_by(func.date(User.created_at))
         .order_by(func.date(User.created_at))
         .all()
     )
-    
+
     return [
         {
             "date": str(row.date),
@@ -257,10 +256,10 @@ def get_user_growth(db: Session, days: int = 30) -> List[Dict]:
     ]
 
 
-def get_payment_method_distribution(db: Session) -> Dict:
+def get_payment_method_distribution(db: Session) -> dict:
     """
     Get distribution of payments by method.
-    
+
     Returns:
         Dict with count per payment method
     """
@@ -274,7 +273,7 @@ def get_payment_method_distribution(db: Session) -> Dict:
         .group_by(Payment.method)
         .all()
     )
-    
+
     return {
         str(row.method.value if row.method else "unknown"): {
             "count": row.count,
@@ -287,30 +286,30 @@ def get_payment_method_distribution(db: Session) -> Dict:
 def export_orders_csv(db: Session, start_date: datetime = None, end_date: datetime = None) -> str:
     """
     Export orders to CSV format.
-    
+
     Args:
         db: Database session
         start_date: Optional start date filter
         end_date: Optional end date filter
-        
+
     Returns:
         CSV string
     """
     import csv
     from io import StringIO
-    
-    query = db.query(Order).filter(Order.is_deleted == False)
-    
+
+    query = db.query(Order).filter(not Order.is_deleted)
+
     if start_date:
         query = query.filter(Order.created_at >= start_date)
     if end_date:
         query = query.filter(Order.created_at <= end_date)
-    
+
     orders = query.order_by(Order.created_at.desc()).all()
-    
+
     output = StringIO()
     writer = csv.writer(output)
-    
+
     # Header
     writer.writerow([
         "Order ID",
@@ -325,7 +324,7 @@ def export_orders_csv(db: Session, start_date: datetime = None, end_date: dateti
         "Created At",
         "Paid At",
     ])
-    
+
     # Data
     for order in orders:
         writer.writerow([
@@ -341,5 +340,5 @@ def export_orders_csv(db: Session, start_date: datetime = None, end_date: dateti
             order.created_at.isoformat(),
             order.paid_at.isoformat() if order.paid_at else "N/A",
         ])
-    
+
     return output.getvalue()

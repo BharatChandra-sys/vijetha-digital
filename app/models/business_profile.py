@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class BusinessStatus(str, enum.Enum):
+class BusinessStatus(enum.StrEnum):
     PENDING_VERIFICATION = "pending_verification"
     VERIFIED = "verified"
     REJECTED = "rejected"

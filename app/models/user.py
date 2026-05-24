@@ -8,7 +8,7 @@ from app.db.base import Base
 from app.models.iam import user_role_association
 
 
-class UserRole(str, enum.Enum):
+class UserRole(enum.StrEnum):
     """Legacy role enum - deprecated in favor of IAM system"""
     ADMIN = "admin"
     CUSTOMER = "customer"
@@ -16,7 +16,7 @@ class UserRole(str, enum.Enum):
     HELPER = "helper"
 
 
-class UserStatus(str, enum.Enum):
+class UserStatus(enum.StrEnum):
     """User account status"""
     ACTIVE = "active"
     INACTIVE = "inactive"
@@ -52,7 +52,7 @@ class User(Base):
 
     # Contact details
     phone = Column(String(20), nullable=True, index=True)
-    
+
     # Profile info
     avatar_url = Column(String(500), nullable=True)
     address = Column(String(500), nullable=True)
@@ -74,7 +74,7 @@ class User(Base):
     # Account security
     mfa_enabled = Column(Boolean, default=False)
     mfa_secret = Column(String(255), nullable=True)
-    
+
     # Failed login tracking
     failed_login_attempts = Column(Integer, default=0, nullable=False)
     last_failed_login_at = Column(DateTime, nullable=True)

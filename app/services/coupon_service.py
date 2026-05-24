@@ -2,13 +2,13 @@
 Coupon service — validation, usage tracking, and admin CRUD.
 """
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import ConflictException, NotFoundException, ValidationException
+from app.core.exceptions import ConflictException, NotFoundException
 from app.models.coupon import Coupon, CouponUsage, DiscountType
-from app.schemas.coupon import CouponCreate, CouponValidateRequest
+from app.schemas.coupon import CouponCreate
 
 
 def validate_coupon(
@@ -16,14 +16,14 @@ def validate_coupon(
     code: str,
     order_amount: float,
     user_id: int,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Validate a coupon code and return the discount amount.
     Returns a dict with valid, discount_amount, and message.
     """
     coupon = db.query(Coupon).filter(
         Coupon.code == code.strip().upper(),
-        Coupon.is_active == True,
+        Coupon.is_active,
     ).first()
 
     if not coupon:
@@ -125,10 +125,10 @@ def create_coupon(db: Session, data: CouponCreate) -> Coupon:
     return coupon
 
 
-def list_coupons(db: Session, active_only: bool = False) -> List[Coupon]:
+def list_coupons(db: Session, active_only: bool = False) -> list[Coupon]:
     query = db.query(Coupon)
     if active_only:
-        query = query.filter(Coupon.is_active == True)
+        query = query.filter(Coupon.is_active)
     return query.order_by(Coupon.created_at.desc()).all()
 
 
