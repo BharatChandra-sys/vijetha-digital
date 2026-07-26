@@ -711,3 +711,5 @@ For common issues, check:
 [Report Bug](https://github.com/yourusername/vijetha-digital-backend/issues) • [Request Feature](https://github.com/yourusername/vijetha-digital-backend/issues)
 
 </div>
+#   V e r c e l   d e p l o y m e n t  
+ 
