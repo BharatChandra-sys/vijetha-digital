@@ -43,6 +43,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         http_requests_in_progress.labels(method=method, endpoint=normalized_path).inc()
 
         start_time = time.time()
+        status_code = 500  # default in case of exception
 
         try:
             response = await call_next(request)
