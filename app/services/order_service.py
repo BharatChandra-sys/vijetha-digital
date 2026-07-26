@@ -109,7 +109,7 @@ def create_order(db: Session, user_id: int, items):
 def get_user_orders(db: Session, user_id: int):
     return (
         db.query(Order)
-        .filter(Order.user_id == user_id, not Order.is_deleted)
+        .filter(Order.user_id == user_id, Order.is_deleted == False)
         .order_by(Order.id.desc())
         .all()
     )
@@ -117,7 +117,7 @@ def get_user_orders(db: Session, user_id: int):
 
 # ---------------- ADMIN ORDERS ----------------
 def get_all_orders(db: Session):
-    return db.query(Order).filter(not Order.is_deleted).order_by(Order.id.desc()).all()
+    return db.query(Order).filter(Order.is_deleted == False).order_by(Order.id.desc()).all()
 
 
 # ---------------- SAFE STATUS UPDATE (CRITICAL FIX) ----------------
@@ -168,7 +168,7 @@ def update_order_status(
     Returns:
         Updated order
     """
-    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
+    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
 
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -245,7 +245,7 @@ def add_admin_note(db: Session, order_id: int, admin_id: int, note: str) -> dict
     Returns:
         Success message
     """
-    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
+    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
 
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -289,7 +289,7 @@ def update_tracking_info(
     Returns:
         Updated order
     """
-    order = db.query(Order).filter(Order.id == order_id, not Order.is_deleted).first()
+    order = db.query(Order).filter(Order.id == order_id, Order.is_deleted == False).first()
 
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -327,3 +327,4 @@ def update_tracking_info(
     db.commit()
     db.refresh(order)
     return order
+

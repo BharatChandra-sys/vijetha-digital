@@ -32,32 +32,32 @@ def get_dashboard_stats(db: Session) -> dict:
     ).count()
 
     # Order stats
-    total_orders = db.query(Order).filter(not Order.is_deleted).count()
+    total_orders = db.query(Order).filter(Order.is_deleted == False).count()
     pending_orders = db.query(Order).filter(
         Order.status.in_([OrderStatus.placed, OrderStatus.confirmed]),
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).count()
     completed_orders = db.query(Order).filter(
         Order.status == OrderStatus.delivered,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).count()
 
     # Revenue stats
     total_revenue = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).scalar() or 0.0
 
     revenue_today = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
         Order.paid_at >= datetime.utcnow().date(),
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).scalar() or 0.0
 
     revenue_this_month = db.query(func.sum(Order.total_price)).filter(
         Order.payment_status == PaymentStatus.paid,
         Order.paid_at >= datetime.utcnow().replace(day=1, hour=0, minute=0, second=0),
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).scalar() or 0.0
 
     # Product stats
@@ -133,7 +133,7 @@ def get_revenue_trend(db: Session, days: int = 30) -> list[dict]:
         .filter(
             Order.payment_status == PaymentStatus.paid,
             Order.paid_at >= start_date,
-            not Order.is_deleted,
+            Order.is_deleted == False,
         )
         .group_by(func.date(Order.paid_at))
         .order_by(func.date(Order.paid_at))
@@ -162,7 +162,7 @@ def get_order_status_distribution(db: Session) -> dict:
             Order.status,
             func.count(Order.id).label("count"),
         )
-        .filter(not Order.is_deleted)
+        .filter(Order.is_deleted == False)
         .group_by(Order.status)
         .all()
     )
@@ -199,7 +199,7 @@ def get_top_products(db: Session, limit: int = 10) -> list[dict]:
         .join(Order, Order.id == OrderItem.order_id)
         .filter(
             Order.payment_status == PaymentStatus.paid,
-            not Order.is_deleted,
+            Order.is_deleted == False,
         )
         .group_by(Product.id, Product.name, Product.category)
         .order_by(func.count(OrderItem.id).desc())
@@ -298,7 +298,7 @@ def export_orders_csv(db: Session, start_date: datetime = None, end_date: dateti
     import csv
     from io import StringIO
 
-    query = db.query(Order).filter(not Order.is_deleted)
+    query = db.query(Order).filter(Order.is_deleted == False)
 
     if start_date:
         query = query.filter(Order.created_at >= start_date)
@@ -342,3 +342,4 @@ def export_orders_csv(db: Session, start_date: datetime = None, end_date: dateti
         ])
 
     return output.getvalue()
+

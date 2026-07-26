@@ -110,7 +110,7 @@ def get_order(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -130,7 +130,7 @@ def cancel_order(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -159,7 +159,7 @@ def get_order_timeline(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -190,7 +190,7 @@ def download_invoice(
     order = db.query(Order).filter(
         Order.id == order_id,
         Order.user_id == user.id,
-        not Order.is_deleted,
+        Order.is_deleted == False,
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -202,3 +202,4 @@ def download_invoice(
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
