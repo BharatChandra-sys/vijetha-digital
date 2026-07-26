@@ -94,6 +94,12 @@ class Payment(Base):
     order = relationship("Order", backref="payments")
 
     __table_args__ = (
-        Index("ix_payments_order_id", "order_id"),
+        # Indexes already defined in Column definitions:
+        # - order_id (line 56): index=True
+        # - razorpay_order_id (line 60): index=True
+        # - razorpay_payment_id (line 61): index=True
+        # - razorpay_refund_id (line 65): index=True
+        # - idempotency_key (line 91): index=True
+        # Additional index:
         Index("ix_payments_state", "state"),
     )

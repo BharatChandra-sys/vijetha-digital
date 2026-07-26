@@ -134,7 +134,8 @@ class User(Base):
     )
 
     __table_args__ = (
-        Index('ix_users_status', 'status'),
-        Index('ix_users_created_at', 'created_at'),
-        Index('ix_users_phone', 'phone'),
+        # Indexes already defined in Column definitions:
+        # - status (line 51): index=True
+        # - phone (line 54): index=True  
+        # - created_at (line 103): index=True
     )

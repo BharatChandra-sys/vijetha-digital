@@ -41,8 +41,9 @@ class AccessLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
     __table_args__ = (
-        Index("ix_access_logs_user_id", "user_id"),
-        Index("ix_access_logs_action", "action"),
-        Index("ix_access_logs_ip", "ip_address"),
-        Index("ix_access_logs_created_at", "created_at"),
+        # Indexes already defined in Column definitions:
+        # - user_id (line 19): index=True
+        # - action (line 23): index=True
+        # - ip_address (line 31): index=True
+        # - created_at (line 42): index=True
     )

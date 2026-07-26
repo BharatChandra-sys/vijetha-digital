@@ -175,7 +175,6 @@ class Permission(Base):
 
     __table_args__ = (
         UniqueConstraint('resource', 'action', name='uq_permission_resource_action'),
-        Index('ix_permissions_category', 'category'),
         Index('ix_permissions_resource_action', 'resource', 'action'),
     )
 
@@ -245,8 +244,10 @@ class Role(Base):
     )
 
     __table_args__ = (
-        Index('ix_roles_slug', 'slug'),
-        Index('ix_roles_is_active', 'is_active'),
+        # Indexes already defined in Column definitions:
+        # - slug (line 202): index=True
+        # - is_active (line 210): index=True
+        # Additional index:
         Index('ix_roles_priority', 'priority'),
     )
 
@@ -340,8 +341,10 @@ class PermissionAccessLog(Base):
     permission = relationship('Permission')
 
     __table_args__ = (
-        Index('ix_access_logs_user_id', 'user_id'),
-        Index('ix_access_logs_permission_id', 'permission_id'),
-        Index('ix_access_logs_created_at', 'created_at'),
+        # Indexes already defined in Column definitions:
+        # - user_id (line 315): index=True
+        # - resource_type (line 321): index=True
+        # - created_at (line 338): index=True
+        # Additional composite index:
         Index('ix_access_logs_resource', 'resource_type', 'resource_id'),
     )

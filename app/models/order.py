@@ -121,7 +121,7 @@ class Order(Base):
 
     __table_args__ = (
         Index("ix_orders_user_created", "user_id", "created_at"),
-        Index("ix_orders_razorpay", "razorpay_order_id"),
+        # razorpay_order_id index already defined in Column definition (line 109): index=True
         CheckConstraint("subtotal >= 0", name="chk_orders_subtotal_non_negative"),
         CheckConstraint("tax >= 0", name="chk_orders_tax_non_negative"),
         CheckConstraint("shipping >= 0", name="chk_orders_shipping_non_negative"),
