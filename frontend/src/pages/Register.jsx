@@ -92,14 +92,14 @@ export default function Register() {
               label="Sign up with Google"
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
-              className="border-stone-border hover:bg-stone-light text-plum-deep"
+              className="border-stone-border hover:bg-stone-light hover:shadow-md hover:-translate-y-0.5 text-plum-deep transition-all duration-200"
             />
           </div>
         ) : (
           <button
             type="button"
             onClick={() => { setNotice("Google Sign-In is coming soon. Please fill in the form below to register."); setError(""); }}
-            className="w-full h-10 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-lg hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep mb-4"
+            className="w-full h-11 flex items-center justify-center gap-2.5 bg-white border-2 border-stone-border rounded-xl hover:bg-stone-light hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-sm font-medium text-plum-deep mb-4"
           >
             {GOOGLE_LOGO}
             Sign up with Google
@@ -112,23 +112,26 @@ export default function Register() {
           <div className="flex-1 h-px bg-stone-border" />
         </div>
 
-        <form onSubmit={submit} className="space-y-3.5">
+        <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Full Name</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Full Name</label>
             <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
+              placeholder="John Doe"
+              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
           </div>
 
           <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Email Address</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Email Address</label>
             <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
+              placeholder="name@example.com"
+              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
           </div>
 
           <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-1.5">Password</label>
+            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Password</label>
             <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all" />
+              placeholder="Minimum 6 characters"
+              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
           </div>
 
           <label className="flex items-center gap-2 cursor-pointer text-[0.8125rem] text-text-muted">
@@ -142,8 +145,9 @@ export default function Register() {
           </label>
 
           <button type="submit"
-            className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98]">
+            className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
             Create Account
+            <span className="material-symbols-outlined text-lg">arrow_forward</span>
           </button>
         </form>
 

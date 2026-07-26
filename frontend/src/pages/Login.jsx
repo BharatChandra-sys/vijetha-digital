@@ -145,7 +145,7 @@ export default function Login() {
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">
+              <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">
                 Email Address
               </label>
               <input
@@ -155,12 +155,12 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="w-full h-11 px-3.5 text-sm rounded-xl border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+                className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center justify-between mb-2">
                 <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider">
                   Password
                 </label>
@@ -179,12 +179,12 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="w-full h-11 px-3.5 pr-10 text-sm rounded-xl border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
+                  className="w-full h-11 px-4 pr-11 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(v => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors"
                   tabIndex={-1}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -212,17 +212,19 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-2"
+              className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-                  </svg>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Signing in…
                 </>
-              ) : "Sign In"}
+              ) : (
+                <>
+                  Sign In
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                </>
+              )}
             </button>
           </form>
 
@@ -237,13 +239,13 @@ export default function Login() {
               label="Sign in with Google"
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
-              className="border-stone-border hover:bg-stone-light text-plum-deep"
+              className="border-stone-border hover:bg-stone-light hover:shadow-md text-plum-deep transition-all duration-200 hover:-translate-y-0.5"
             />
           ) : (
             <button
               type="button"
               onClick={() => { setNotice("Google Sign-In is coming soon. Please use email & password for now."); setError(""); }}
-              className="w-full h-11 flex items-center justify-center gap-2.5 bg-white border border-stone-border rounded-xl hover:bg-stone-light transition-colors text-sm font-medium text-plum-deep"
+              className="w-full h-11 flex items-center justify-center gap-2.5 bg-white border-2 border-stone-border rounded-xl hover:bg-stone-light hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98] text-sm font-medium text-plum-deep"
             >
               {GOOGLE_LOGO}
               Sign in with Google
