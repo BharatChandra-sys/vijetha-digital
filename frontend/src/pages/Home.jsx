@@ -47,11 +47,6 @@ export default function Home() {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-4 sm:gap-6 lg:gap-12 items-center">
           {/* Left: copy */}
           <div className="relative z-10 space-y-3 sm:space-y-4 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-plum-deep/5 border border-plum-deep/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-coral-accent flex-shrink-0" />
-              <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-plum-deep">Premium Print Solutions · Since 2002</span>
-            </div>
-
             <h1 className="text-[1.625rem] sm:text-[2.375rem] lg:text-[2.75rem] font-extrabold text-plum-deep leading-[1.1] tracking-[-0.025em]">
               Premium Printing for{" "}
               <span className="text-coral-accent">Businesses</span>{" "}
@@ -62,23 +57,23 @@ export default function Home() {
               From business cards to large-format signage — premium-quality prints that elevate your brand across Hyderabad.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-xl shadow-sm transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base tracking-wide cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-xl shadow-sm transition-all hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base tracking-wide whitespace-nowrap"
               >
                 Explore Products
               </Link>
               <a
                 href="tel:+917942643004"
-                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 border-2 border-plum-deep/30 bg-white text-plum-deep hover:bg-plum-deep hover:text-white font-semibold rounded-xl transition-all text-sm sm:text-base cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white font-semibold rounded-xl transition-all text-sm sm:text-base whitespace-nowrap"
               >
                 <span className="material-symbols-outlined text-lg sm:text-[1.25rem] mr-2 leading-none">call</span>
                 Get Custom Quote
               </a>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4 pt-1">
               <div className="flex items-center gap-1.5 text-[0.8125rem] text-plum-deep/70 font-medium">
                 <span className="material-symbols-outlined text-coral-accent text-base">verified_user</span>
                 <span>500+ businesses trust us</span>
