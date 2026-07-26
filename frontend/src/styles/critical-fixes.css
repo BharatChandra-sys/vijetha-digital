@@ -1,51 +1,14 @@
-/* ═══════════════════════════════════════════════════════════════════
-   CRITICAL FIXES ONLY
-   Minimal fixes to ensure Tailwind works correctly
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   CRITICAL FIXES — Zero conflicts with Tailwind
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── Let Tailwind utility classes work without interference ────────── */
-
-/* Remove any pseudo-elements that might create overlays */
-button::before,
-button::after,
-a[role="button"]::before,
-a[role="button"]::after,
-.inline-flex::before,
-.inline-flex::after {
-  content: none !important;
-  display: none !important;
+/* GPU acceleration — doesn't affect visual appearance */
+button, a {
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Ensure transforms work on buttons */
-button,
-a[role="button"],
-[role="button"] {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Ensure proper font rendering */
-button,
-a[role="button"] {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* Ensure cursor pointer */
-button:not(:disabled),
-a[role="button"] {
-  cursor: pointer;
-}
-
-/* Fix for inline-flex display */
-.inline-flex {
-  display: inline-flex !important;
-}
-
-/* Ensure proper z-index */
-button,
-a[role="button"] {
-  position: relative;
-  z-index: 1;
+/* Focus — keyboard only, never on mouse click */
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
 }

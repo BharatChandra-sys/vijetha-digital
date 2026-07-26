@@ -61,7 +61,7 @@ export default function AdminWorkspace() {
                 </div>
               </div>
               <div className="flex-1 text-right">
-                <Link to="/admin/orders" className="inline-block px-4 py-2 bg-coral-accent text-white rounded shadow-card-hover font-medium hover:bg-coral-dark transition">View Orders</Link>
+                <Link to="/admin/orders" className="inline-block px-4 py-2 bg-coral-accent text-white rounded-xl shadow-card-hover font-medium hover:bg-coral-dark transition-all">View Orders</Link>
               </div>
             </div>
           </div>

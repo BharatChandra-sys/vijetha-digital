@@ -104,7 +104,7 @@ export default {
   },
 
   plugins: [
-    forms,
+    forms({ strategy: "class" }),   // ← only apply form styles when class="form-input" etc. — stops @tailwindcss/forms from touching ALL buttons and inputs
     containerQueries,
   ],
 };

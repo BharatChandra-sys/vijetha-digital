@@ -1,0 +1,384 @@
+/* ═══════════════════════════════════════════════════════════════════
+   BUTTON SYSTEM — Comprehensive button styling for all components
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET ALL BUTTONS ────────────────────────────────────────────── */
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+.btn,
+a[role="button"] {
+  /* Remove default browser styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  
+  /* Remove border issues */
+  border: none;
+  background: none;
+  
+  /* Base layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Typography */
+  font-family: inherit;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  
+  /* Cursor */
+  cursor: pointer;
+  
+  /* Transitions */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Touch target optimization */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  
+  /* Anti-aliasing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── PREVENT FOCUS RING ON MOUSE CLICK ───────────────────────────── */
+button:focus:not(:focus-visible),
+[type="button"]:focus:not(:focus-visible),
+[type="submit"]:focus:not(:focus-visible),
+[type="reset"]:focus:not(:focus-visible),
+.btn:focus:not(:focus-visible),
+a[role="button"]:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ── KEYBOARD NAVIGATION FOCUS ───────────────────────────────────── */
+button:focus-visible,
+[type="button"]:focus-visible,
+[type="submit"]:focus-visible,
+[type="reset"]:focus-visible,
+.btn:focus-visible,
+a[role="button"]:focus-visible {
+  outline: 3px solid #C0392B;
+  outline-offset: 2px;
+}
+
+/* ── DISABLED STATE ───────────────────────────────────────────────── */
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[type="reset"]:disabled,
+.btn:disabled,
+a[role="button"][aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── ACTIVE STATE ─────────────────────────────────────────────────── */
+button:active:not(:disabled),
+[type="button"]:active:not(:disabled),
+[type="submit"]:active:not(:disabled),
+[type="reset"]:active:not(:disabled),
+.btn:active:not(:disabled),
+a[role="button"]:active {
+  transform: scale(0.98);
+}
+
+/* ── PRIMARY BUTTON (Coral/Red CTA) ──────────────────────────────── */
+.btn-primary,
+button[class*="bg-coral"],
+button[class*="bg-brand-orange"],
+a[class*="bg-coral"],
+a[class*="bg-brand-orange"] {
+  background: #C0392B;
+  color: white;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.15);
+}
+
+.btn-primary:hover:not(:disabled),
+button[class*="bg-coral"]:hover:not(:disabled),
+button[class*="bg-brand-orange"]:hover:not(:disabled),
+a[class*="bg-coral"]:hover,
+a[class*="bg-brand-orange"]:hover {
+  background: #A93226;
+  box-shadow: 0 4px 16px rgba(192, 57, 43, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ── SECONDARY BUTTON (Plum/Navy) ────────────────────────────────── */
+.btn-secondary,
+button[class*="bg-plum"],
+button[class*="bg-brand-navy"],
+a[class*="bg-plum"],
+a[class*="bg-brand-navy"] {
+  background: #1A2332;
+  color: white;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(26, 35, 50, 0.15);
+}
+
+.btn-secondary:hover:not(:disabled),
+button[class*="bg-plum"]:hover:not(:disabled),
+button[class*="bg-brand-navy"]:hover:not(:disabled),
+a[class*="bg-plum"]:hover,
+a[class*="bg-brand-navy"]:hover {
+  background: #2C3E55;
+  box-shadow: 0 4px 16px rgba(26, 35, 50, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ── OUTLINE BUTTON ───────────────────────────────────────────────── */
+.btn-outline,
+button[class*="border-2"],
+a[class*="border-2"] {
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+}
+
+.btn-outline:hover:not(:disabled),
+button[class*="border-2"]:hover:not(:disabled),
+a[class*="border-2"]:hover {
+  background: currentColor;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* ── GHOST BUTTON ─────────────────────────────────────────────────── */
+.btn-ghost {
+  background: transparent;
+  color: currentColor;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(26, 35, 50, 0.05);
+}
+
+/* ── ICON BUTTON ──────────────────────────────────────────────────── */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-center: center;
+}
+
+.btn-icon:hover:not(:disabled) {
+  background: rgba(26, 35, 50, 0.05);
+}
+
+/* ── SMALL SIZE ───────────────────────────────────────────────────── */
+.btn-sm,
+button[class*="text-sm"],
+a[class*="text-sm"] {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+}
+
+/* ── LARGE SIZE ───────────────────────────────────────────────────── */
+.btn-lg,
+button[class*="text-lg"],
+a[class*="text-lg"] {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 14px;
+}
+
+/* ── FULL WIDTH ───────────────────────────────────────────────────── */
+.btn-block,
+button[class*="w-full"],
+a[class*="w-full"] {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── ROUNDED VARIANTS ─────────────────────────────────────────────── */
+button[class*="rounded-full"],
+a[class*="rounded-full"] {
+  border-radius: 9999px !important;
+}
+
+button[class*="rounded-xl"],
+a[class*="rounded-xl"] {
+  border-radius: 12px !important;
+}
+
+button[class*="rounded-lg"],
+a[class*="rounded-lg"] {
+  border-radius: 10px !important;
+}
+
+/* ── SPECIFIC COMPONENT FIXES ─────────────────────────────────────── */
+
+/* Header buttons */
+header button,
+header a[role="button"],
+.header-nav button,
+.header-nav a {
+  border: none !important;
+  background-clip: padding-box;
+}
+
+/* Cart button */
+.cart-button,
+button[aria-label*="Cart"],
+a[href="/cart"] {
+  border: none !important;
+}
+
+/* Auth buttons */
+.auth-button,
+button[type="submit"],
+form button {
+  border: none !important;
+}
+
+/* Mobile menu buttons */
+.mobile-menu button,
+.mobile-nav button {
+  border: none !important;
+}
+
+/* Product card buttons */
+.product-card button,
+.product-item button {
+  border: none !important;
+}
+
+/* Dropdown buttons */
+.dropdown button,
+[role="menu"] button {
+  border: none !important;
+}
+
+/* ── MATERIAL ICONS ALIGNMENT ─────────────────────────────────────── */
+button .material-symbols-outlined,
+a .material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* ── LOADING STATE ────────────────────────────────────────────────── */
+.btn-loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-right-color: transparent;
+  animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── MOBILE OPTIMIZATIONS ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  button,
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  .btn,
+  a[role="button"] {
+    /* Larger touch targets on mobile */
+    min-height: 44px;
+  }
+
+  /* Adjust padding for mobile */
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+/* ── PRINT STYLES ─────────────────────────────────────────────────── */
+@media print {
+  button,
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  .btn,
+  a[role="button"] {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTAL OVERRIDES — Neutralise global button rules inside portals
+   These styles are scoped to .portal-layout so the public site is
+   completely unaffected.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Reset min-height so small icon/nav buttons look correct */
+.portal-layout button,
+.portal-layout [type="button"],
+.portal-layout [type="submit"] {
+  min-height: unset !important;
+}
+
+/* Prevent the translateY lift on hover for portal buttons */
+.portal-layout button:hover:not(:disabled),
+.portal-layout [type="button"]:hover:not(:disabled) {
+  transform: none !important;
+}
+
+/* Prevent active scale on portal buttons (feels wrong in nav) */
+.portal-layout button:active:not(:disabled),
+.portal-layout [type="button"]:active:not(:disabled) {
+  transform: none !important;
+}
+
+/* Remove box-shadow added by .btn-primary on portal buttons */
+.portal-layout button[class*="bg-[#C0392B]"],
+.portal-layout button[class*="bg-green"] {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+.portal-layout button[class*="bg-[#C0392B]"]:hover,
+.portal-layout button[class*="bg-green"]:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  transform: none !important;
+}
+
+/* Sidebar links need full-width, left-aligned layout */
+.portal-layout .portal-sidebar-link {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}

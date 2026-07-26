@@ -167,6 +167,29 @@ a, button {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Button defaults - ensure all buttons have rounded corners */
+button {
+  border-radius: 0.75rem; /* 12px - rounded-xl */
+}
+
+button.rounded-lg {
+  border-radius: 0.5rem; /* 8px */
+}
+
+button.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Ensure input checkboxes and radios also have proper rounding */
+input[type="checkbox"],
+input[type="radio"] {
+  border-radius: 0.375rem; /* 6px */
+}
+
+input[type="radio"] {
+  border-radius: 9999px;
+}
+
 /* ── Toast slide-down animation ── */
 @keyframes slideDown {
   from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
@@ -175,31 +198,6 @@ a, button {
 
 .animate-slide-down {
   animation: slideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Minimum touch target size (44px) — only for interactive elements without explicit sizing */
-button:not([class*="h-"]):not([class*="w-"]) {
-  min-height: 44px;
-}
-
-/* Ensure buttons with w-full display correctly */
-button[class*="w-full"] {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Icon-only and small buttons keep inline-flex */
-button:not([class*="w-full"]) {
-  display: inline-flex;
-  align-items: center;
-}
-
-/* Override for inline/text links */
-p a, footer a, nav a {
-  min-height: unset;
-  display: inline;
 }
 
 /* Focus ring — keyboard nav only, not on mouse click */
@@ -311,3 +309,4 @@ button:focus:not(:focus-visible) {
   outline: none;
   box-shadow: none;
 }
+

@@ -16,6 +16,7 @@ import HomeLayout      from "./layouts/HomeLayout";
 import CustomerLayout  from "./layouts/CustomerLayout";
 import AdminLayout     from "./layouts/AdminLayout";
 import StaffLayout     from "./layouts/StaffLayout";
+import ReceptionLayout from "./layouts/ReceptionLayout";
 
 /* guards */
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -34,8 +35,10 @@ import ResetLinkSent  from "./pages/ResetLinkSent";
 /* new auth portal pages */
 import AdminLogin from "./pages/auth/AdminLogin";
 import StaffLogin from "./pages/auth/StaffLogin";
+import ReceptionLogin from "./pages/auth/ReceptionLogin";
 import AdminForgotPassword from "./pages/auth/AdminForgotPassword";
 import StaffForgotPassword from "./pages/auth/StaffForgotPassword";
+import ReceptionForgotPassword from "./pages/auth/ReceptionForgotPassword";
 import ResetPasswordNew from "./pages/auth/ResetPassword";
 
 /* public shop pages */
@@ -82,6 +85,11 @@ import StaffProducts from "./pages/staff/StaffProducts";
 import StaffNotifications from "./pages/staff/StaffNotifications";
 import StaffSchedule from "./pages/staff/StaffSchedule";
 
+import Workspace from "./pages/Workspace";
+
+/* reception pages */
+import ReceptionDashboard from "./pages/reception/ReceptionDashboard";
+
 export default function App() {
   return (
     <>
@@ -90,14 +98,19 @@ export default function App() {
     <ScrollToTop />
     <Routes>
 
+      {/* ===== WORKSPACE — Portal selector ===== */}
+      <Route path="/workspace" element={<Workspace />} />
+
       {/* ===== MAINTENANCE PAGE ===== */}
       <Route path="/maintenance" element={<Maintenance />} />
 
       {/* ===== NEW AUTH PORTALS (Full-screen, no layout) ===== */}
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/staff/login" element={<StaffLogin />} />
+      <Route path="/reception/login" element={<ReceptionLogin />} />
       <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
       <Route path="/staff/forgot-password" element={<StaffForgotPassword />} />
+      <Route path="/reception/forgot-password" element={<ReceptionForgotPassword />} />
       <Route path="/reset-password" element={<ResetPasswordNew />} />
 
       {/* ===== PUBLIC AUTH (Legacy, kept for compatibility) ===== */}
@@ -173,6 +186,25 @@ export default function App() {
           <Route path="/staff/profile" element={<Profile />} />
           <Route path="/staff/operations" element={<OperationsDashboard />} />
           <Route path="/staff/delivery" element={<DeliveryDashboard />} />
+        </Route>
+      </Route>
+
+      {/* ===== RECEPTION DESK ===== */}
+      <Route element={<IamRoleRoute allowedRoles={["reception", "admin"]} />}>
+        <Route element={<ReceptionLayout />}>
+          <Route path="/reception/dashboard" element={<ReceptionDashboard />} />
+          <Route path="/reception/walk-in" element={<div className="p-8"><h1>Walk-in Orders - Coming Soon</h1></div>} />
+          <Route path="/reception/tracking" element={<div className="p-8"><h1>Order Tracking - Coming Soon</h1></div>} />
+          <Route path="/reception/orders" element={<div className="p-8"><h1>All Orders - Coming Soon</h1></div>} />
+          <Route path="/reception/customers" element={<div className="p-8"><h1>Customer Info - Coming Soon</h1></div>} />
+          <Route path="/reception/payments" element={<div className="p-8"><h1>Payment Center - Coming Soon</h1></div>} />
+          <Route path="/reception/support" element={<div className="p-8"><h1>Support Queue - Coming Soon</h1></div>} />
+          <Route path="/reception/inventory" element={<div className="p-8"><h1>Inventory Check - Coming Soon</h1></div>} />
+          <Route path="/reception/delivery" element={<div className="p-8"><h1>Delivery Queue - Coming Soon</h1></div>} />
+          <Route path="/reception/reports" element={<div className="p-8"><h1>Daily Reports - Coming Soon</h1></div>} />
+          <Route path="/reception/tasks" element={<div className="p-8"><h1>My Tasks - Coming Soon</h1></div>} />
+          <Route path="/reception/schedule" element={<div className="p-8"><h1>Schedule - Coming Soon</h1></div>} />
+          <Route path="/reception/profile" element={<Profile />} />
         </Route>
       </Route>
 

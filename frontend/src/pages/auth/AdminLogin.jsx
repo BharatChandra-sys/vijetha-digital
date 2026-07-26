@@ -10,6 +10,12 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Fill demo credentials
+  const fillDemoCredentials = () => {
+    setEmail("admin@vijethadigital.com");
+    setPassword("admin123");
+  };
+
   useEffect(() => {
     if (error) {
       const t = setTimeout(() => setError(""), 5000);
@@ -38,9 +44,9 @@ export default function AdminLogin() {
     >
       <div className="w-full max-w-[360px]">
         <div className="mb-5">
-          <Link to="/" className="inline-flex items-center gap-1 text-[0.8125rem] text-text-muted hover:text-plum-deep transition-colors">
+          <Link to="/workspace" className="inline-flex items-center gap-1 text-[0.8125rem] text-text-muted hover:text-plum-deep transition-colors">
             <span className="material-symbols-outlined text-base">arrow_back</span>
-            Back to Home
+            Back to Workspace
           </Link>
         </div>
 
@@ -77,7 +83,7 @@ export default function AdminLogin() {
               autoComplete="username"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="admin@vijetha.com"
+              placeholder="admin@vijethadigital.com"
               className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
           </div>
@@ -92,6 +98,19 @@ export default function AdminLogin() {
               placeholder="Enter admin password"
               className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
             />
+          </div>
+
+          {/* Demo credentials button */}
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={fillDemoCredentials}
+              className="text-xs text-plum-deep font-semibold hover:text-coral-accent transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+              Use demo credentials
+            </button>
+            <span className="text-xs text-text-muted">admin@vijethadigital.com</span>
           </div>
 
           <button

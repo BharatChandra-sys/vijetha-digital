@@ -156,10 +156,11 @@ export default function Footer() {
       {/* Staff portal — subtle, bottom of footer */}
       <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 pt-6 pb-3 flex justify-center">
         <Link
-          to="/staff/login"
-          className="text-[0.6875rem] text-white/20 hover:text-white/50 transition-colors"
+          to="/workspace"
+          className="text-[0.6875rem] text-white/40 hover:text-white/80 transition-colors font-semibold flex items-center gap-1"
         >
-          Staff Portal
+          <span className="material-symbols-outlined text-sm">badge</span>
+          Staff & Admin Workspace
         </Link>
       </div>
     </footer>

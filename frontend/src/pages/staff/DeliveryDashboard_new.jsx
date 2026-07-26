@@ -173,10 +173,10 @@ export default function DeliveryDashboard() {
                         <td className="px-3 py-2">
                           <div className="flex justify-end gap-2">
                             {trip.status === "confirmed" && (
-                              <button onClick={() => updateStatus(trip.orderId, "shipped")} className="px-2 py-1 rounded border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light">Ship</button>
+                              <button onClick={() => updateStatus(trip.orderId, "shipped")} className="px-3 py-1.5 rounded-lg border border-stone-border text-xs font-semibold text-plum-deep hover:bg-stone-light transition-colors">Ship</button>
                             )}
                             {trip.status === "shipped" && (
-                              <button onClick={() => updateStatus(trip.orderId, "delivered")} className="px-2 py-1 rounded border border-green-200 text-xs font-semibold text-green-700 hover:bg-green-50">Deliver</button>
+                              <button onClick={() => updateStatus(trip.orderId, "delivered")} className="px-3 py-1.5 rounded-lg border border-green-200 text-xs font-semibold text-green-700 hover:bg-green-50 transition-colors">Deliver</button>
                             )}
                           </div>
                         </td>

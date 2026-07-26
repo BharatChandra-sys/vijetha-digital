@@ -11,6 +11,12 @@ export default function StaffLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Fill demo credentials
+  const fillDemoCredentials = () => {
+    setEmail("staff@vijethadigital.com");
+    setPassword("staff123");
+  };
+
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(""), 5000);
@@ -40,11 +46,11 @@ export default function StaffLogin() {
       <div className="w-full max-w-md">
         <div className="mb-6">
           <Link
-            to="/"
+            to="/workspace"
             className="inline-flex items-center gap-1 text-sm text-plum-deep/60 hover:text-plum-deep transition-colors"
           >
             <span className="material-symbols-outlined text-base">arrow_back</span>
-            <span>Back to Home</span>
+            <span>Back to Workspace</span>
           </Link>
         </div>
 
@@ -88,10 +94,19 @@ export default function StaffLogin() {
             />
           </div>
 
-          <div className="text-right">
+          {/* Demo credentials button */}
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={fillDemoCredentials}
+              className="text-xs text-plum-deep font-semibold hover:text-coral-accent transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+              Use demo credentials
+            </button>
             <Link
               to="/staff/forgot-password"
-              className="text-plum-deep text-sm font-semibold hover:text-coral-accent transition-colors"
+              className="text-plum-deep text-xs font-semibold hover:text-coral-accent transition-colors"
             >
               Forgot password?
             </Link>
