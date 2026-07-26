@@ -40,10 +40,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_API_BASE_URL": "@vite_api_base_url",
-    "VITE_WHATSAPP_NUMBER": "@vite_whatsapp_number",
-    "VITE_GOOGLE_CLIENT_ID": "@vite_google_client_id"
-  }
+  ]
 }
