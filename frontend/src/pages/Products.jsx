@@ -186,25 +186,29 @@ export default function Products() {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 relative z-10">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-center">
             <div className="w-full lg:w-1/2 space-y-3">
-              <nav className="flex items-center text-[0.75rem] text-text-muted overflow-x-auto no-scrollbar pb-1">
-                <Link to="/" className="hover:text-plum-deep transition-colors">Home</Link>
+              {/* Caption: 12px mobile → 12.8px desktop */}
+              <nav className="flex items-center text-xs lg:text-[0.8rem] text-text-muted overflow-x-auto no-scrollbar pb-1">
+                <Link to="/" className="hover:text-plum-deep transition-colors duration-200">Home</Link>
                 <span className="material-symbols-outlined text-xs mx-1">chevron_right</span>
                 <span className="text-plum-deep font-semibold">{meta.title}</span>
               </nav>
               {/* H1: 28px mobile → 44px desktop */}
-              <h1 className="text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem] font-extrabold text-plum-deep leading-[1.1] tracking-[-0.02em]">
+              {/* Display XL: 36px mobile → 48px desktop */}
+              <h1 className="text-[2.25rem] sm:text-[2.75rem] lg:text-[3rem] font-extrabold text-plum-deep leading-[1.15] tracking-[-0.02em]">
                 {meta.highlight.split(" ").slice(0, -1).join(" ")}{" "}
                 <span className="text-coral-accent">{meta.highlight.split(" ").slice(-1)[0]}</span>
               </h1>
-              <p className="text-[0.875rem] sm:text-base text-text-muted max-w-xl leading-relaxed">{meta.desc}</p>
+              {/* Body: 14px mobile → 16px desktop */}
+              <p className="text-sm lg:text-base text-text-muted max-w-xl leading-[1.65]">{meta.desc}</p>
               <div className="flex flex-wrap gap-2">
+                {/* Caption: 12px */}
                 {[
                   { icon: "verified",       label: "Quality Guaranteed" },
                   { icon: "receipt_long",   label: "GST Invoice"        },
                   { icon: "local_shipping", label: "Fast Delivery"      },
                 ].map(b => (
-                  <div key={b.label} className="flex items-center gap-1.5 text-[0.6875rem] sm:text-[0.75rem] font-medium text-plum-deep/80 bg-white border border-stone-border px-2.5 py-1.5 rounded-full shadow-sm">
-                    <span className="material-symbols-outlined text-coral-accent text-sm">{ b.icon}</span>
+                  <div key={b.label} className="flex items-center gap-1.5 text-xs font-medium text-plum-deep/80 bg-white border border-stone-border px-2.5 py-1.5 rounded-full shadow-sm">
+                    <span className="material-symbols-outlined text-coral-accent text-sm">{b.icon}</span>
                     {b.label}
                   </div>
                 ))}
@@ -254,10 +258,11 @@ export default function Products() {
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
 
           {/* Count + sort */}
-          <div className="flex items-center justify-between pb-3 border-b border-stone-border/60 mb-4">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-border/60 mb-4">
             <div className="flex items-center gap-2">
+              {/* Button md: h-11, rounded-xl */}
               <button
-                className="lg:hidden inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-plum-deep border border-stone-border bg-white px-3 min-h-[44px] h-9 rounded-[8px] shadow-sm cursor-pointer"
+                className="lg:hidden inline-flex items-center gap-1.5 text-sm font-semibold text-plum-deep border border-stone-border bg-white px-3 h-11 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
                 onClick={() => setDrawerOpen(true)}
                 aria-label="Open filters"
               >
@@ -269,15 +274,17 @@ export default function Products() {
                   </span>
                 )}
               </button>
-              <p className="text-text-muted text-[0.8125rem]">
+              {/* Body Small: 13px mobile → 14px desktop */}
+              <p className="text-text-muted text-[0.8125rem] lg:text-[0.875rem]">
                 <span className="text-plum-deep font-bold">{allFiltered.length}</span>
                 <span className="hidden sm:inline"> Products</span>
               </p>
             </div>
             <div className="relative">
+              {/* Select h-11 per design system */}
               <select value={sort} onChange={e => { setSort(e.target.value); setPage(1); }}
                 aria-label="Sort products"
-                className="appearance-none bg-white border border-stone-border text-plum-deep text-[0.875rem] font-semibold min-h-[44px] h-10 pl-4 pr-10 rounded-[8px] focus:outline-none focus:ring-2 focus:ring-plum-deep/20 cursor-pointer shadow-sm">
+                className="appearance-none bg-white border border-stone-border text-plum-deep text-sm font-semibold h-11 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-plum-deep/20 cursor-pointer shadow-sm hover:shadow-md transition-all duration-200">
                 {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-plum-deep">
@@ -337,24 +344,27 @@ export default function Products() {
                   <div className="w-24 h-24 rounded-full bg-stone-light flex items-center justify-center mb-6">
                     <span className="material-symbols-outlined text-5xl text-plum-deep/30">search_off</span>
                   </div>
-                  <h3 className="text-xl font-bold text-plum-deep mb-2">No products found</h3>
-                  <p className="text-text-muted text-sm max-w-xs mb-6">
+                  {/* H2: 22px mobile → 25.6px desktop */}
+                  <h3 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-2 leading-[1.25]">No products found</h3>
+                  {/* Body Small: 13px mobile → 14px desktop */}
+                  <p className="text-text-muted text-[0.8125rem] lg:text-[0.875rem] max-w-xs mb-6 leading-[1.65]">
                     {priceFilters.length > 0 || bulkOnly
                       ? "No products match your current filters. Try adjusting or clearing them."
                       : "We couldn't find any products in this category right now."}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Button md: h-11, rounded-xl */}
                     {(priceFilters.length > 0 || bulkOnly) && (
                       <button
                         onClick={clearAll}
-                        className="min-h-[44px] h-11 px-6 rounded-xl bg-plum-deep text-white font-semibold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 cursor-pointer"
+                        className="h-11 px-6 rounded-xl bg-plum-deep text-white font-semibold text-sm hover:bg-plum-light hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
                       >
                         Clear Filters
                       </button>
                     )}
                     <button
                       onClick={() => handleCategory("")}
-                      className="min-h-[44px] h-11 px-6 rounded-xl border-2 border-plum-deep text-plum-deep font-semibold text-sm hover:bg-plum-deep hover:text-white transition-all cursor-pointer"
+                      className="h-11 px-6 rounded-xl border-2 border-plum-deep text-plum-deep font-semibold text-sm hover:bg-plum-deep hover:text-white hover:shadow-lg transition-all duration-200 cursor-pointer"
                     >
                       Browse All Products
                     </button>
@@ -423,15 +433,19 @@ export default function Products() {
             <div className="w-full md:w-1/2 z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-plum-deep/5 border border-plum-deep/10 mb-5">
                 <span className="w-2 h-2 rounded-full bg-coral-accent" />
-                <span className="text-[0.75rem] font-bold uppercase tracking-wider text-plum-deep">For Enterprise</span>
+                {/* Caption: 12px */}
+                <span className="text-xs font-bold uppercase tracking-wider text-plum-deep">For Enterprise</span>
               </div>
-              <h2 className="text-[2rem] font-bold text-plum-deep mb-4 leading-tight tracking-[-0.01em]">Streamline Corporate Ordering</h2>
-              <p className="text-base text-text-muted mb-7 leading-relaxed">Ensure brand consistency across all branches. Dedicated bulk pricing, account support &amp; monthly invoicing for high-volume needs.</p>
+              {/* H1: 28px mobile → 32px desktop */}
+              <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-4 leading-[1.25] tracking-[-0.01em]">Streamline Corporate Ordering</h2>
+              {/* Body: 14px mobile → 16px desktop */}
+              <p className="text-sm lg:text-base text-text-muted mb-7 leading-[1.65]">Ensure brand consistency across all branches. Dedicated bulk pricing, account support &amp; monthly invoicing for high-volume needs.</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to="/register" className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-lg transition-all hover:-translate-y-0.5 text-sm cursor-pointer">
+                {/* Button md: h-11, lg: h-12, rounded-xl */}
+                <Link to="/register" className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-8 bg-plum-deep hover:bg-plum-light hover:shadow-lg text-white font-bold rounded-xl transition-all duration-200 hover:-translate-y-0.5 text-sm cursor-pointer">
                   Open Business Account
                 </Link>
-                <a href="tel:+917942643004" className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 border border-plum-deep text-plum-deep hover:bg-plum-deep/5 font-bold rounded-lg transition-all text-sm cursor-pointer">
+                <a href="tel:+917942643004" className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-8 border border-plum-deep text-plum-deep hover:bg-plum-deep/5 hover:shadow-lg font-bold rounded-xl transition-all duration-200 text-sm cursor-pointer">
                   Call +91 79426 43004
                 </a>
               </div>

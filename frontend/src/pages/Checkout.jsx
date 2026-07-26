@@ -218,17 +218,18 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-warm-white font-display py-6 lg:py-8">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
-        <nav className="flex items-center text-sm text-text-muted mb-4 overflow-x-auto whitespace-nowrap custom-scrollbar">
-          <Link to="/" className="hover:text-plum-deep transition-colors">Home</Link>
+        <nav className="flex items-center text-xs lg:text-[0.8rem] text-text-muted mb-4 overflow-x-auto whitespace-nowrap custom-scrollbar">
+          <Link to="/" className="hover:text-plum-deep transition-colors duration-200">Home</Link>
           <span className="material-symbols-outlined text-sm mx-2 text-stone-400">chevron_right</span>
-          <Link to="/cart" className="hover:text-plum-deep transition-colors">Shopping Cart</Link>
+          <Link to="/cart" className="hover:text-plum-deep transition-colors duration-200">Shopping Cart</Link>
           <span className="material-symbols-outlined text-sm mx-2 text-stone-400">chevron_right</span>
           <span className="text-plum-deep font-semibold">Checkout</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
           <div className="lg:col-span-8 flex flex-col gap-6">
-            <h1 className="text-3xl lg:text-4xl font-extrabold text-plum-deep tracking-tight">Checkout Details</h1>
+            {/* H1: 28px mobile → 32px desktop */}
+            <h1 className="text-[1.75rem] lg:text-[2rem] font-extrabold text-plum-deep tracking-tight leading-[1.25]">Checkout Details</h1>
 
             {error && (
               <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2">
@@ -237,38 +238,42 @@ export default function Checkout() {
               </div>
             )}
 
-            <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card p-5 sm:p-7">
-              <h2 className="text-xl font-bold text-plum-deep mb-5 flex items-center gap-2">
+            {/* Card Standard: p-6, rounded-xl, shadow-sm */}
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
+              {/* H2: 22px mobile → 25.6px desktop */}
+              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
                 <span className="material-symbols-outlined">person</span>
                 Contact Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-bold text-text-muted mb-2">Full Name</label>
+                  {/* Body Small: 13px mobile → 14px desktop */}
+                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Full Name</label>
+                  {/* Input md: h-11, rounded-xl, border-2 */}
                   <input
                     value={contact.fullName}
                     onChange={(e) => onContactChange("fullName", e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
                     placeholder="John Doe"
                     type="text"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-text-muted mb-2">Email Address</label>
+                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Email Address</label>
                   <input
                     value={contact.email}
                     onChange={(e) => onContactChange("email", e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
                     placeholder="john@example.com"
                     type="email"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-text-muted mb-2">Phone Number</label>
+                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Phone Number</label>
                   <input
                     value={contact.phone}
                     onChange={(e) => onContactChange("phone", e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
                     placeholder="+91 98765 43210"
                     type="tel"
                   />
@@ -287,8 +292,8 @@ export default function Checkout() {
               </div>
             </section>
 
-            <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card p-5 sm:p-7">
-              <h2 className="text-xl font-bold text-plum-deep mb-5 flex items-center gap-2">
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
+              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
                 <span className="material-symbols-outlined">local_shipping</span>
                 Delivery Method
               </h2>
@@ -302,15 +307,18 @@ export default function Checkout() {
                     checked={deliveryMethod === "home"}
                     onChange={() => setDeliveryMethod("home")}
                   />
-                  <div className="p-5 rounded-[12px] border border-stone-border bg-stone-50 hover:border-plum-deep peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-1 peer-checked:ring-plum-deep transition-all h-full">
+                  {/* Card Standard: p-6, rounded-xl, hover:shadow-md */}
+                  <div className="p-5 lg:p-6 rounded-xl border-2 border-stone-border bg-stone-50 hover:border-plum-deep hover:shadow-md peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-2 peer-checked:ring-plum-deep/20 transition-all duration-200 h-full">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-plum-deep">local_shipping</span>
-                        <span className="font-bold text-plum-deep">Home Delivery</span>
+                        {/* H4: 16px mobile → 18px desktop */}
+                        <span className="font-bold text-plum-deep text-base lg:text-[1.125rem]">Home Delivery</span>
                       </div>
                       <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
                     </div>
-                    <p className="text-xs text-text-muted">Delivery to your address within 3-5 business days.</p>
+                    {/* Caption: 12px */}
+                    <p className="text-xs text-text-muted leading-[1.5]">Delivery to your address within 3-5 business days.</p>
                   </div>
                 </label>
                 <label className="relative cursor-pointer">
@@ -322,34 +330,35 @@ export default function Checkout() {
                     checked={deliveryMethod === "pickup"}
                     onChange={() => setDeliveryMethod("pickup")}
                   />
-                  <div className="p-5 rounded-[12px] border border-stone-border bg-stone-50 hover:border-plum-deep peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-1 peer-checked:ring-plum-deep transition-all h-full relative">
-                    <div className="absolute -top-3 right-4 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">50% advance</div>
+                  <div className="p-5 lg:p-6 rounded-xl border-2 border-stone-border bg-stone-50 hover:border-plum-deep hover:shadow-md peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-2 peer-checked:ring-plum-deep/20 transition-all duration-200 h-full relative">
+                    {/* Tiny: 11px */}
+                    <div className="absolute -top-3 right-4 bg-green-600 text-white text-[0.6875rem] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">50% advance</div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-plum-deep">storefront</span>
-                        <span className="font-bold text-plum-deep">Store Pickup</span>
+                        <span className="font-bold text-plum-deep text-base lg:text-[1.125rem]">Store Pickup</span>
                       </div>
                       <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
                     </div>
-                    <p className="text-xs text-text-muted">Pay 50% now and collect from our Hyderabad store in 24 hours.</p>
+                    <p className="text-xs text-text-muted leading-[1.5]">Pay 50% now and collect from our Hyderabad store in 24 hours.</p>
                   </div>
                 </label>
               </div>
             </section>
 
             {deliveryMethod === "home" ? (
-              <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card p-5 sm:p-7">
-                <h2 className="text-xl font-bold text-plum-deep mb-5 flex items-center gap-2">
+              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
+                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
                   <span className="material-symbols-outlined">map</span>
                   Shipping Address
                 </h2>
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-sm font-bold text-text-muted mb-2">Street Address</label>
+                    <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Street Address</label>
                     <input
                       value={address.street}
                       onChange={(e) => onAddressChange("street", e.target.value)}
-                      className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                      className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
                       placeholder="123 Print Avenue, Tech Park"
                       type="text"
                     />
