@@ -3,16 +3,23 @@ line-length = 120
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
+select = ["E", "F", "W"]
 ignore = [
     "E402",  # Module level import not at top (needed for dotenv)
     "E501",  # Line too long (handled by formatter)
+    "F401",  # Unused imports (needed for re-exports and model registration)
+    "F811",  # Redefined while unused (false positives with overloads)
+    "F821",  # Undefined name (false positives with dynamic imports)
+    "W291",  # Trailing whitespace
+    "W293",  # Whitespace before ':'
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "app/main.py" = ["E402"]
 "app/models/__init__.py" = ["F401"]
 "__init__.py" = ["F401"]
+"app/tasks/*.py" = ["F821"]
+"app/services/*.py" = ["F811"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

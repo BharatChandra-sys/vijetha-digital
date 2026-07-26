@@ -13,33 +13,29 @@ a[role="button"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  
-  /* Remove border issues */
-  border: none;
-  background: none;
-  
+
   /* Base layout */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Typography */
   font-family: inherit;
   font-weight: 600;
   text-align: center;
   text-decoration: none;
-  
+
   /* Cursor */
   cursor: pointer;
-  
+
   /* Transitions */
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Touch target optimization */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   user-select: none;
-  
+
   /* Anti-aliasing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -177,7 +173,7 @@ a[class*="border-2"]:hover {
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
-  justify-center: center;
+  justify-content: center;
 }
 
 .btn-icon:hover:not(:disabled) {
@@ -382,3 +378,4 @@ a .material-symbols-outlined {
   justify-content: flex-start !important;
   text-align: left !important;
 }
+

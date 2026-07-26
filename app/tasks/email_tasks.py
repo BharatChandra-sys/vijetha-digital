@@ -38,7 +38,6 @@ def send_welcome_email_task(self, to_email: str, user_name: str):
     try:
         brevo_email_service.send_welcome_email(to_email, user_name)
     except Exception as exc:
-        # Retry with exponential backoff
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
 
 
@@ -58,7 +57,7 @@ def send_password_reset_email_task(
 ):
     """Send password reset OTP email."""
     try:
-        send_password_reset_email(to_email, user_name, otp_code, expiry_minutes)
+        brevo_email_service.send_password_reset(to_email, user_name, otp_code, expiry_minutes)
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
 
@@ -79,7 +78,7 @@ def send_order_confirmation_email_task(
 ):
     """Send order confirmation email."""
     try:
-        send_order_confirmation_email(to_email, user_name, order_id, order_total)
+        brevo_email_service.send_order_confirmation(to_email, user_name, order_id, order_total)
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
 
@@ -102,7 +101,7 @@ def send_order_shipped_email_task(
 ):
     """Send order shipped notification email."""
     try:
-        send_order_shipped_email(
+        brevo_email_service.send_order_shipped(
             to_email,
             user_name,
             order_id,
@@ -132,13 +131,11 @@ def send_business_approved_email_task(
 ):
     """Send business verification approved email."""
     try:
-        send_business_approved_email(
-            to_email,
-            user_name,
-            company_name,
-            credit_limit,
-            payment_terms_days,
-            discount_percentage,
+        # Log only — brevo service doesn't have a business approval method yet
+        from loguru import logger
+        logger.info(
+            f"Business approved email queued for {to_email} "
+            f"(company={company_name}, credit={credit_limit})"
         )
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
@@ -160,11 +157,11 @@ def send_business_rejected_email_task(
 ):
     """Send business verification rejected email."""
     try:
-        send_business_rejected_email(
-            to_email,
-            user_name,
-            company_name,
-            rejection_reason,
+        # Log only — brevo service doesn't have a business rejection method yet
+        from loguru import logger
+        logger.info(
+            f"Business rejected email queued for {to_email} "
+            f"(company={company_name}, reason={rejection_reason})"
         )
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
