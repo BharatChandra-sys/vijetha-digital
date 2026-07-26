@@ -1,0 +1,568 @@
+/* ========================================
+   MOBILE-FIRST E-COMMERCE OPTIMIZATIONS
+   Modern, touch-friendly, performance-focused
+   ======================================== */
+
+/* ── BASE MOBILE IMPROVEMENTS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Better touch targets (min 44x44px recommended) */
+  button, 
+  a[role="button"],
+  .btn,
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better touch scrolling */
+  body {
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* ── MOBILE HEADER IMPROVEMENTS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Sticky header that doesn't jump */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Better mobile menu button */
+  .mobile-menu-button {
+    padding: 12px;
+    touch-action: manipulation;
+  }
+
+  /* Mobile menu overlay */
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  /* Mobile menu drawer */
+  .mobile-menu-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 85%;
+    max-width: 320px;
+    background: white;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-menu-drawer.open {
+    transform: translateX(0);
+  }
+}
+
+/* ── MOBILE PRODUCT CARDS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Product grid - 2 columns on mobile */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Compact product cards */
+  .product-card {
+    padding: 10px !important;
+  }
+
+  .product-card img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  /* Smaller, readable product titles */
+  .product-card h3 {
+    font-size: 0.875rem !important;
+    line-height: 1.3 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Prominent price */
+  .product-card .price {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+  }
+
+  /* Touch-friendly add to cart */
+  .product-card .add-to-cart {
+    height: 40px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+  }
+}
+
+/* ── MOBILE CAROUSEL IMPROVEMENTS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Snap scrolling for carousels */
+  .carousel-container {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .carousel-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  .carousel-item {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Carousel dots - bigger touch targets */
+  .carousel-dots button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    padding: 0;
+  }
+
+  .carousel-dots button.active {
+    width: 24px;
+    border-radius: 5px;
+  }
+}
+
+/* ── MOBILE BUTTONS & ACTIONS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Primary buttons - full width on mobile */
+  .btn-primary-mobile {
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+  }
+
+  /* Floating action button (like Amazon) */
+  .mobile-fab {
+    position: fixed;
+    bottom: 80px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 900;
+    touch-action: manipulation;
+  }
+
+  /* Bottom navigation bar */
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    z-index: 900;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    touch-action: manipulation;
+    text-decoration: none;
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: #d97456; /* coral-accent */
+  }
+
+  .mobile-bottom-nav-item .material-symbols-outlined {
+    font-size: 24px;
+  }
+
+  /* Add padding to body for bottom nav */
+  body.has-bottom-nav {
+    padding-bottom: 64px;
+  }
+}
+
+/* ── MOBILE FORMS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Full-width inputs */
+  .form-input-mobile {
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 16px !important; /* Prevent zoom */
+    padding: 12px 16px !important;
+  }
+
+  /* Larger checkboxes and radios */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Better form labels */
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+  }
+}
+
+/* ── MOBILE MODALS & OVERLAYS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Full-screen modals on mobile */
+  .modal-mobile {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    background: white;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-mobile-header {
+    position: sticky;
+    top: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 10;
+  }
+
+  /* Bottom sheet style modal */
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 90vh;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    z-index: 1100;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bottom-sheet.open {
+    transform: translateY(0);
+  }
+
+  .bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: #d1d5db;
+    border-radius: 2px;
+    margin: 12px auto;
+  }
+}
+
+/* ── MOBILE CART & CHECKOUT ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Sticky cart summary */
+  .mobile-cart-summary {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 16px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 800;
+  }
+
+  /* Cart item cards */
+  .cart-item-mobile {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  /* Quantity controls */
+  .quantity-control-mobile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0 8px;
+  }
+
+  .quantity-control-mobile button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+}
+
+/* ── MOBILE SEARCH ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Full-width search on mobile */
+  .search-mobile {
+    position: sticky;
+    top: 64px;
+    z-index: 900;
+    background: white;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .search-input-mobile {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px 0 44px;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    font-size: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+  }
+}
+
+/* ── MOBILE FILTERS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Floating filter button */
+  .mobile-filter-button {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    height: 48px;
+    padding: 0 20px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 900;
+    font-weight: 600;
+  }
+
+  /* Filter drawer (slides from bottom) */
+  .filter-drawer {
+    position: fixed;
+    inset: 0;
+    top: auto;
+    height: 90vh;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    z-index: 1100;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-drawer.open {
+    transform: translateY(0);
+  }
+}
+
+/* ── MOBILE SPACING IMPROVEMENTS ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Reduce excessive padding on mobile */
+  .container-mobile {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Tighter section spacing */
+  .section-mobile {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Smaller headings on mobile */
+  h1 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+  h2 { font-size: 1.5rem !important; line-height: 1.25 !important; }
+  h3 { font-size: 1.25rem !important; line-height: 1.3 !important; }
+  h4 { font-size: 1.125rem !important; line-height: 1.4 !important; }
+}
+
+/* ── MOBILE PERFORMANCE ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Lazy load images */
+  img[loading="lazy"] {
+    min-height: 100px;
+    background: #f3f4f6;
+  }
+
+  /* Reduce animations on low-end devices */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Hardware acceleration for smooth scrolling */
+  .smooth-scroll {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+/* ── MOBILE WHATSAPP BUTTON ────────────────── */
+@media (max-width: 768px) {
+  
+  .whatsapp-button-mobile {
+    position: fixed;
+    bottom: 144px; /* Above bottom nav */
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    z-index: 900;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+}
+
+/* ── MOBILE LOADING STATES ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Skeleton loader */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #f3f4f6 0%,
+      #e5e7eb 50%,
+      #f3f4f6 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+/* ── MOBILE ACCESSIBILITY ────────────────── */
+@media (max-width: 768px) {
+  
+  /* Focus visible for keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid #d97456;
+    outline-offset: 2px;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    button,
+    a {
+      border: 2px solid currentColor;
+    }
+  }
+}
+
+/* ── ANIMATIONS ────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

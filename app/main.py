@@ -101,13 +101,30 @@ app = FastAPI(
 )
 
 # ---- CORS (MUST BE FIRST) ----
+# Build allowed origins list from FRONTEND_URL (may be comma-separated)
+_raw_origins = settings.FRONTEND_URL or ""
+_allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
+# Always include these dev/fallback origins
+_always_allowed = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "https://vijetha-digital-store.vercel.app",
+]
+for _o in _always_allowed:
+    if _o not in _allowed_origins:
+        _allowed_origins.append(_o)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
+    allow_origins=_allowed_origins,
+    allow_origin_regex=r"https://vijetha-digital-store.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],
+    max_age=600,
 )
 
 app.add_middleware(

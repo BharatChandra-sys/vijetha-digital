@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import MaintenanceOverlay from "./components/MaintenanceOverlay";
 import WhatsAppButton from "./components/ui/WhatsAppButton";
+import keepAliveService from "./utils/keepAlive";
 
 /* Scroll to top on every route change */
 function ScrollToTop() {
@@ -91,6 +92,12 @@ import Workspace from "./pages/Workspace";
 import ReceptionDashboard from "./pages/reception/ReceptionDashboard";
 
 export default function App() {
+  // Start keep-alive pinger in production to prevent Render backend from sleeping
+  useEffect(() => {
+    keepAliveService.start();
+    return () => keepAliveService.stop();
+  }, []);
+
   return (
     <>
     <MaintenanceOverlay />
