@@ -31,8 +31,11 @@ def _generate_otp() -> str:
 def _try_send_email(to_email: str, otp: str) -> None:
     """Attempt to send OTP email using Brevo API. Logs to console if sending fails."""
     try:
-        from app.services.brevo_email_service import send_otp_email
-        send_otp_email(to_email, otp)
+        from app.services.brevo_email_service import BrevoEmailService
+        email_service = BrevoEmailService()
+        # Extract user name from email (before @)
+        user_name = to_email.split('@')[0].title()
+        email_service.send_otp_email(to_email, user_name, otp, expiry_minutes=OTP_EXPIRY_MINUTES)
         logger.info(f"OTP email sent to {to_email} via Brevo")
     except Exception as e:
         # Log OTP to console so dev can still test without working email

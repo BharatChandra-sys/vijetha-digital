@@ -575,62 +575,6 @@ class BrevoEmailService:
             to_name=user_name,
         )
     
-    def send_otp_email(
-        self,
-        to_email: str,
-        user_name: str,
-        otp: str,
-        expiry_minutes: int = 10,
-    ) -> bool:
-        """Send OTP email for password reset."""
-        content = f"""
-        <h2 style="margin: 0 0 16px 0; color: {self.brand_colors['primary']}; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">
-            Password Reset Request
-        </h2>
-        
-        <p style="margin: 0 0 24px 0; color: {self.brand_colors['text']}; font-size: 15px; line-height: 1.6;">
-            Hello {user_name},
-        </p>
-        
-        <p style="margin: 0 0 32px 0; color: {self.brand_colors['text']}; font-size: 15px; line-height: 1.6;">
-            We received a request to reset your password. Use the verification code below to proceed:
-        </p>
-        
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 32px 0;">
-            <tr>
-                <td style="background-color: {self.brand_colors['background']}; border: 2px solid #E5E7EB; border-radius: 8px; padding: 24px; text-align: center;">
-                    <p style="margin: 0 0 8px 0; color: {self.brand_colors['text_muted']}; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
-                        Verification Code
-                    </p>
-                    <p style="margin: 0; color: {self.brand_colors['primary']}; font-size: 36px; font-weight: 700; letter-spacing: 8px; font-family: 'Courier New', Courier, monospace;">
-                        {otp}
-                    </p>
-                </td>
-            </tr>
-        </table>
-        
-        <p style="margin: 0 0 24px 0; color: {self.brand_colors['text_muted']}; font-size: 14px; line-height: 1.6;">
-            This code will expire in {expiry_minutes} minutes. If you didn't request a password reset, you can safely ignore this email.
-        </p>
-        
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0 0 0; border-top: 1px solid #E5E7EB; padding-top: 24px;">
-            <tr>
-                <td>
-                    <p style="margin: 0; color: {self.brand_colors['text_muted']}; font-size: 13px; line-height: 1.5;">
-                        For security, this code can only be used once. If you need assistance, contact us at contact@vijethadigital.com
-                    </p>
-                </td>
-            </tr>
-        </table>
-        """
-        
-        return self.send_email(
-            to_email=to_email,
-            subject="Password Reset Code - Vijetha Digital",
-            html_content=content,
-            to_name=user_name,
-        )
-    
     def send_otp_email(self, to_email: str, user_name: str, otp: str, expiry_minutes: int = 10) -> bool:
         """OTP email - Apple-inspired minimal design."""
         content = f"""<h1 style="margin:0 0 8px 0;color:{self.colors['text']};font-size:28px;font-weight:600;letter-spacing:-0.02em;line-height:1.2;">
