@@ -73,6 +73,81 @@ button.border-2  { border-width: 2px !important; }
 a.border         { border-width: 1px !important; }
 a.border-2       { border-width: 2px !important; }
 
+/* Ensure all outline/bordered elements have visible borders */
+.border-plum-deep {
+  border-color: #1A1F3C !important;
+}
+
+.border-coral-accent {
+  border-color: #FF6B6B !important;
+}
+
+.border-stone-border {
+  border-color: #E2E0D8 !important;
+}
+
+.border-white {
+  border-color: #FFFFFF !important;
+}
+
+/* Force background on white bordered buttons for visibility */
+a[class*="bg-white"][class*="border"],
+button[class*="bg-white"][class*="border"] {
+  background-color: #FFFFFF !important;
+}
+
+/* Ensure text visibility on bordered buttons */
+a[class*="border-plum-deep"],
+button[class*="border-plum-deep"],
+a[class*="text-plum-deep"],
+button[class*="text-plum-deep"] {
+  color: #1A1F3C !important;
+}
+
+/* Ensure icons are visible */
+a .material-symbols-outlined,
+button .material-symbols-outlined {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Fix hover states for outline buttons */
+a[class*="hover:bg-plum-deep"]:hover,
+button[class*="hover:bg-plum-deep"]:hover {
+  background-color: #1A1F3C !important;
+  color: #FFFFFF !important;
+  border-color: #1A1F3C !important;
+}
+
+a[class*="hover:bg-plum-deep"]:hover .material-symbols-outlined,
+button[class*="hover:bg-plum-deep"]:hover .material-symbols-outlined {
+  color: #FFFFFF !important;
+}
+
+/* White buttons on dark backgrounds need dark text */
+.bg-plum-deep a[class*="bg-white"],
+.bg-plum-deep button[class*="bg-white"],
+section[class*="bg-plum"] a[class*="bg-white"],
+section[class*="bg-plum"] button[class*="bg-white"] {
+  background-color: #FFFFFF !important;
+  color: #1A1F3C !important;
+}
+
+.bg-plum-deep a[class*="bg-white"] .material-symbols-outlined,
+.bg-plum-deep button[class*="bg-white"] .material-symbols-outlined,
+section[class*="bg-plum"] a[class*="bg-white"] .material-symbols-outlined,
+section[class*="bg-plum"] button[class*="bg-white"] .material-symbols-outlined {
+  color: #1A1F3C !important;
+}
+
+.bg-plum-deep a[class*="bg-white"] span,
+.bg-plum-deep button[class*="bg-white"] span,
+section[class*="bg-plum"] a[class*="bg-white"] span,
+section[class*="bg-plum"] button[class*="bg-white"] span {
+  color: #1A1F3C !important;
+}
+
 /* ── Fix order tracking icon sizes ── */
 .material-symbols-outlined[class*="text-["] {
   font-size: inherit;

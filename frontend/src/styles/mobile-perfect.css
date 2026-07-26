@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE UI PERFECTION - Ultimate mobile experience
+   Applied only to screens < 768px for optimal mobile UX
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  
+  /* ── HERO SECTION MOBILE ────────────────────────────────────────── */
+  
+  /* Hero title - optimal mobile size */
+  h1 {
+    font-size: 1.75rem !important; /* 28px */
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+  }
+  
+  /* Hero description - readable on small screens */
+  h1 + p {
+    font-size: 0.9375rem !important; /* 15px */
+    line-height: 1.6 !important;
+  }
+  
+  /* Hero buttons - full width on mobile for easy tap */
+  .flex-col.sm\:flex-row {
+    width: 100%;
+  }
+  
+  .flex-col.sm\:flex-row > a,
+  .flex-col.sm\:flex-row > button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  /* ── TRUST BADGES MOBILE ────────────────────────────────────────── */
+  
+  /* Trust badges - better spacing */
+  .flex.flex-wrap.items-center.gap-4 {
+    gap: 0.75rem !important;
+  }
+  
+  .flex.flex-wrap.items-center.gap-4 > div {
+    font-size: 0.75rem !important; /* 12px */
+  }
+  
+  /* ── FEATURE BAR MOBILE ─────────────────────────────────────────── */
+  
+  /* Feature bar - compact on mobile */
+  .border-y .flex.items-center {
+    font-size: 0.75rem !important;
+    padding: 0.625rem 0 !important;
+  }
+  
+  /* ── STAT CARDS MOBILE ──────────────────────────────────────────── */
+  
+  /* Stat cards - 2 column grid on mobile */
+  .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Stat card content - compact */
+  .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 > div {
+    padding: 1rem !important;
+  }
+  
+  /* Stat numbers - readable size */
+  .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-4 span[class*="text-[1"] {
+    font-size: 1.125rem !important;
+  }
+  
+  /* ── SERVICE CARDS MOBILE ───────────────────────────────────────── */
+  
+  /* Service cards - 2 column on mobile */
+  .grid.grid-cols-2.lg\:grid-cols-4 {
+    gap: 0.75rem !important;
+  }
+  
+  .grid.grid-cols-2.lg\:grid-cols-4 > div {
+    padding: 1rem !important;
+    min-height: 140px !important;
+  }
+  
+  /* Service card icon */
+  .grid.grid-cols-2.lg\:grid-cols-4 .w-11 {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  /* Service card title */
+  .grid.grid-cols-2.lg\:grid-cols-4 h3 {
+    font-size: 0.875rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Service card description */
+  .grid.grid-cols-2.lg\:grid-cols-4 p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* ── HOW IT WORKS MOBILE ────────────────────────────────────────── */
+  
+  /* How it works - 2 column on mobile */
+  .grid.grid-cols-2.lg\:grid-cols-4.gap-4 {
+    gap: 0.75rem !important;
+  }
+  
+  .grid.grid-cols-2.lg\:grid-cols-4.gap-4 > div {
+    padding: 1rem !important;
+  }
+  
+  /* ── SECTION HEADINGS MOBILE ────────────────────────────────────── */
+  
+  /* Section headings - optimal mobile size */
+  section h2 {
+    font-size: 1.5rem !important; /* 24px */
+    line-height: 1.25 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  section h2 + p {
+    font-size: 0.875rem !important; /* 14px */
+    line-height: 1.5 !important;
+  }
+  
+  /* ── SPACING MOBILE ─────────────────────────────────────────────── */
+  
+  /* Section spacing - tighter on mobile */
+  section {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  /* Container padding - consistent */
+  .max-w-\[1280px\],
+  .max-w-\[1400px\],
+  .max-w-\[1200px\] {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* ── BUTTONS MOBILE ─────────────────────────────────────────────── */
+  
+  /* All buttons - perfect tap target */
+  button,
+  a[class*="inline-flex"] {
+    min-height: 44px !important;
+    font-size: 0.875rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+  
+  /* CTA buttons - full width */
+  a[class*="bg-coral"],
+  a[class*="bg-plum"],
+  a[class*="border-plum"] {
+    width: 100% !important;
+  }
+  
+  /* ── PRODUCT CAROUSEL MOBILE ────────────────────────────────────── */
+  
+  /* Product carousel - single column scroll */
+  .product-carousel {
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* ── FOOTER MOBILE ──────────────────────────────────────────────── */
+  
+  /* Footer - compact on mobile */
+  footer {
+    font-size: 0.8125rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  footer h3 {
+    font-size: 0.9375rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* ── IMAGES MOBILE ──────────────────────────────────────────────── */
+  
+  /* All images - prevent overflow */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* ── TEXT MOBILE ────────────────────────────────────────────────── */
+  
+  /* Prevent text overflow */
+  * {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  /* ── FINAL CTA SECTION MOBILE ───────────────────────────────────── */
+  
+  /* Final CTA - compact spacing */
+  section[class*="bg-plum"] {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+  
+  section[class*="bg-plum"] h2 {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  section[class*="bg-plum"] p {
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* ── CORPORATE SECTION MOBILE ───────────────────────────────────── */
+  
+  /* Corporate section - hide decorative card on mobile */
+  section[class*="bg-beige"] .hidden.lg\:block {
+    display: none !important;
+  }
+  
+  /* ── ANIMATIONS MOBILE ──────────────────────────────────────────── */
+  
+  /* Reduce animations for better performance */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      animation-duration: 0.15s !important;
+      transition-duration: 0.15s !important;
+    }
+  }
+  
+  /* ── ACCESSIBILITY MOBILE ───────────────────────────────────────── */
+  
+  /* Focus states - visible on mobile */
+  *:focus-visible {
+    outline: 2px solid #C0392B !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* ── HEADER ICONS MOBILE ────────────────────────────────────────── */
+  
+  /* Header icons - larger for better visibility and touch */
+  header .material-symbols-outlined,
+  nav .material-symbols-outlined {
+    font-size: 1.5rem !important; /* 24px - much more visible */
+  }
+  
+  /* Header buttons - bigger tap targets */
+  header button,
+  nav button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  
+  /* Logo - slightly larger on mobile */
+  header img[alt*="Vijetha"],
+  nav img[alt*="Vijetha"] {
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+  }
+  
+  /* Header text - readable size */
+  header span[class*="font-bold"],
+  nav span[class*="font-bold"] {
+    font-size: 0.9375rem !important;
+  }
+  
+  /* ── PERFORMANCE MOBILE ─────────────────────────────────────────── */
+  
+  /* GPU acceleration for smooth scrolling */
+  body,
+  section {
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+  
+}
+
+/* ── MOBILE LANDSCAPE (> 640px but < 768px) ────────────────────────── */
+
+@media (min-width: 641px) and (max-width: 767px) {
+  
+  /* Slightly larger text in landscape */
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  section h2 {
+    font-size: 1.625rem !important;
+  }
+  
+  /* 3 column grid for service cards in landscape */
+  .grid.grid-cols-2.lg\:grid-cols-4 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  
+}

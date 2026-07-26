@@ -60,19 +60,19 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
-              {/* Primary CTA Button - lg: h-12 */}
+              {/* Primary CTA Button - Perfect size: h-11 mobile, h-12 desktop */}
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-10 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm lg:text-base whitespace-nowrap"
+                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
               >
                 Explore Products
               </Link>
               {/* Secondary CTA Button - outline style */}
               <a
                 href="tel:+917942643004"
-                className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-10 bg-white border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white hover:border-plum-deep font-semibold rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm lg:text-base whitespace-nowrap"
+                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-white border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white hover:border-plum-deep font-semibold rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
               >
-                <span className="material-symbols-outlined text-lg mr-2 leading-none">call</span>
+                <span className="material-symbols-outlined text-lg sm:text-xl mr-2 leading-none">call</span>
                 Get Custom Quote
               </a>
             </div>
@@ -244,10 +244,10 @@ export default function Home() {
           <ProductCarousel products={popular} loading={loading} count={4} />
 
           <div className="text-center mt-8">
-            {/* Button lg: h-12, rounded-xl */}
+            {/* Button: h-11 mobile, h-12 desktop */}
             <Link
               to="/products"
-              className="inline-flex items-center justify-center h-11 lg:h-12 px-8 lg:px-12 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-base whitespace-nowrap"
+              className="inline-flex items-center justify-center h-11 sm:h-12 px-8 sm:px-10 lg:px-12 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
             >
               Explore All Products
             </Link>
@@ -334,10 +334,10 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              {/* Button lg: h-12, rounded-xl */}
+              {/* Button: h-11 mobile, h-12 desktop */}
               <Link
                 to="/register"
-                className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-10 bg-plum-deep text-white font-bold rounded-xl shadow-md hover:bg-plum-light hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm lg:text-base whitespace-nowrap"
+                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-plum-deep text-white font-bold rounded-xl shadow-md hover:bg-plum-light hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
               >
                 Open Business Account
               </Link>
@@ -399,19 +399,19 @@ export default function Home() {
             Join 500+ businesses who trust Vijetha Digital for their printing needs. Quality guaranteed, every order.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            {/* Button xl: h-14, rounded-2xl (hero CTA) */}
+            {/* Button xl: h-12 mobile, h-13 desktop (hero CTA) */}
             <Link
               to="/products"
-              className="inline-flex items-center justify-center h-12 sm:h-14 px-8 sm:px-12 lg:px-14 bg-coral-accent hover:bg-coral-dark text-white text-base sm:text-lg font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] whitespace-nowrap"
+              className="inline-flex items-center justify-center h-12 sm:h-13 px-8 sm:px-10 lg:px-12 bg-coral-accent hover:bg-coral-dark text-white text-base sm:text-lg font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] whitespace-nowrap"
             >
               Start Your Order
             </Link>
             <a
               href="tel:+917942643004"
-              className="inline-flex items-center justify-center h-12 sm:h-14 px-8 sm:px-10 lg:px-12 border-2 border-white/30 text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/50 shadow-md hover:shadow-lg transition-all duration-200 text-base sm:text-lg whitespace-nowrap"
+              className="inline-flex items-center justify-center h-12 sm:h-13 px-8 sm:px-10 lg:px-12 bg-white border-2 border-white/30 text-plum-deep font-bold rounded-2xl hover:bg-white/90 hover:border-white/50 shadow-md hover:shadow-lg transition-all duration-200 text-base sm:text-lg whitespace-nowrap"
             >
-              <span className="material-symbols-outlined text-lg mr-2">call</span>
-              +91 79426 43004
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 text-plum-deep">call</span>
+              <span className="text-plum-deep">+91 79426 43004</span>
             </a>
           </div>
         </div>

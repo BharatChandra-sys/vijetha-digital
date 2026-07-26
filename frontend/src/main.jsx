@@ -7,9 +7,10 @@ import "./index.css"; // ✅ 1. Tailwind base
 import "./styles/button-system.css"; // ✅ 2. Comprehensive button styling system
 import "./styles/mobile-enhancements-clean.css"; // ✅ 3. Mobile-only enhancements
 import "./styles/mobile-optimized.css"; // ✅ 4. Advanced mobile e-commerce optimizations
-import "./styles/whatsapp-button-fix.css"; // ✅ 5. WhatsApp button visibility fix
-import "./styles/critical-fixes.css"; // ✅ 6. Critical fixes only
-import "./styles/portal.css";          // ✅ 7. Enterprise portal styles
+import "./styles/mobile-perfect.css"; // ✅ 5. Ultimate mobile UI perfection
+import "./styles/whatsapp-button-fix.css"; // ✅ 6. WhatsApp button visibility fix
+import "./styles/critical-fixes.css"; // ✅ 7. Critical fixes only
+import "./styles/portal.css";          // ✅ 8. Enterprise portal styles
 
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
