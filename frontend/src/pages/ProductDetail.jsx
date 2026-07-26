@@ -288,24 +288,24 @@ export default function ProductDetail() {
           {/* Right: order panel */}
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-24">
-              <h1 className="text-4xl lg:text-5xl font-extrabold text-plum-deep tracking-tight mb-3 leading-[1.1]">{product.name}</h1>
-              <p className="text-text-muted leading-relaxed mb-6 text-base lg:text-lg">{product.description || product.category}</p>
+              <h1 className="text-xl lg:text-2xl font-bold text-plum-deep tracking-tight mb-2 leading-[1.2]">{product.name}</h1>
+              <p className="text-text-muted leading-relaxed mb-4 text-sm">{product.description || product.category}</p>
 
               {/* Base price */}
-              <div className="flex items-center gap-3 mb-8 border-b border-stone-border pb-6">
+              <div className="flex items-center gap-3 mb-6 border-b border-stone-border pb-4">
                 <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-extrabold text-plum-deep tracking-tight">&#8377;{fmtPrice(product.base_price)}</span>
-                    <span className="text-lg text-text-muted font-medium">/ {unitLabel}</span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-2xl font-extrabold text-plum-deep tracking-tight">&#8377;{fmtPrice(product.base_price)}</span>
+                    <span className="text-sm text-text-muted font-medium">/ {unitLabel}</span>
                   </div>
-                  <span className="text-xs text-text-muted mt-1 font-medium inline-block">(Excl. GST)</span>
+                  <span className="text-xs text-text-muted mt-0.5 font-medium inline-block">(Excl. GST)</span>
                 </div>
                 <span className="ml-auto text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1 flex-shrink-0">
                   <span className="material-symbols-outlined text-[14px]">check_circle</span> In Stock
                 </span>
               </div>
 
-              <form className="space-y-8" onSubmit={e => e.preventDefault()}>
+              <form className="space-y-5" onSubmit={e => e.preventDefault()}>
 
                 {/* ── 1. Finish / Material ───────────────────────────── */}
                 <div>
@@ -523,10 +523,10 @@ export default function ProductDetail() {
 
                 {/* ── 5. Price summary ──────────────────────────────── */}
                 {totalPrice > 0 && (
-                  <div className="bg-stone-light/50 border border-stone-border rounded-[12px] px-4 py-3 flex items-center justify-between">
+                  <div className="bg-stone-light/50 border border-stone-border rounded-[10px] px-4 py-2.5 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-text-muted font-medium">Estimated Total</p>
-                      <p className="text-2xl font-extrabold text-plum-deep">&#8377;{fmtPrice(totalPrice)}</p>
+                      <p className="text-lg font-extrabold text-plum-deep">&#8377;{fmtPrice(totalPrice)}</p>
                     </div>
                     <div className="text-right text-xs text-text-muted">
                       {pcsUnitProduct && usesPaperSize(product) ? (
@@ -584,7 +584,7 @@ export default function ProductDetail() {
             {activeTab === "description" && (
               <div>
                 <h3 className="text-xl font-bold text-plum-deep mb-4">About This Product</h3>
-                <p className="text-text-muted leading-relaxed mb-8 text-lg">{product.description || `${product.name} from Vijetha Digital, Hyderabad. Est. 2002, serving 500+ businesses across Telangana.`}</p>
+                <p className="text-text-muted leading-relaxed mb-6 text-sm">{product.description || `${product.name} from Vijetha Digital, Hyderabad. Est. 2002, serving 500+ businesses across Telangana.`}</p>
                 <ul className="grid md:grid-cols-2 gap-y-4 gap-x-8">
                   {[
                     "High-resolution printing with sharp text and vibrant colors",
@@ -706,7 +706,7 @@ export default function ProductDetail() {
                 <span className="text-xs font-bold uppercase tracking-wider text-plum-deep">B2B Solutions</span>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-plum-deep mb-3">Bulk Orders &amp; Corporate Accounts</h2>
-              <p className="text-text-muted text-lg max-w-xl">Exclusive pricing tiers, dedicated account support &amp; simplified monthly invoicing for high-volume business needs.</p>
+              <p className="text-text-muted text-sm max-w-xl">Exclusive pricing tiers, dedicated account support &amp; simplified monthly invoicing for high-volume business needs.</p>
             </div>
             <Link to="/register" className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-4 px-8 rounded-[12px] transition-all transform hover:-translate-y-1 text-sm uppercase tracking-wide whitespace-nowrap">
               Open Corporate Account <span className="material-symbols-outlined text-lg">arrow_forward</span>

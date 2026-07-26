@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 import { placeOrder } from "../api/orders";
 import { createPayment, verifyPayment } from "../api/payments";
 import useRazorpay from "../hooks/useRazorpay";
-import ComingSoonModal from "../components/ui/ComingSoonModal";
 
 const GST_RATE = 0.18;
 
@@ -25,7 +24,6 @@ export default function Checkout() {
 
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
-  const [showComingSoon, setShowComingSoon] = useState(false);
   const orderPlacedRef = useRef(false);
 
   const [deliveryMethod, setDeliveryMethod] = useState("home");
@@ -113,12 +111,7 @@ export default function Checkout() {
     return "";
   };
 
-  const handlePayment = () => {
-    // Show coming soon modal instead of processing payment
-    setShowComingSoon(true);
-    return;
-    
-    /* Original payment code - will be enabled after launch
+  const handlePayment = async () => {
     setError("");
     const validationError = validateCheckout();
     if (validationError) {
@@ -202,15 +195,13 @@ export default function Checkout() {
         },
         modal: {
           ondismiss: () => {
-            // User closed Razorpay modal without completing payment
-            navigate("/orders", {
-              state: { paymentError: "Payment was not completed. You can retry from your orders." },
-            });
+            setPaying(false);
           },
         },
       });
 
       rzp.on("payment.failed", () => {
+        setPaying(false);
         navigate("/orders", {
           state: { paymentError: "Payment failed. You can retry from your orders." },
         });
@@ -220,10 +211,8 @@ export default function Checkout() {
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.detail || "Payment failed. Please try again.");
-    } finally {
       setPaying(false);
     }
-    */
   };
 
   return (
@@ -634,12 +623,6 @@ export default function Checkout() {
             </div>
           </aside>
         </div>
-
-        {/* Coming Soon Modal */}
-        <ComingSoonModal 
-          isOpen={showComingSoon} 
-          onClose={() => setShowComingSoon(false)} 
-        />
       </div>
     </div>
   );

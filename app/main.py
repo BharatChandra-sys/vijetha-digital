@@ -135,10 +135,9 @@ app.add_middleware(
 # ---- SECURITY HEADERS ----
 app.add_middleware(SecurityHeadersMiddleware, env=settings.ENV)
 
-# ---- COMING SOON MODE (blocks checkout/payments before launch) ----
-from app.middleware.coming_soon import ComingSoonMiddleware
-
-app.add_middleware(ComingSoonMiddleware)
+# ---- COMING SOON MODE (disabled - payments are live) ----
+# from app.middleware.coming_soon import ComingSoonMiddleware
+# app.add_middleware(ComingSoonMiddleware)
 
 # ---- METRICS COLLECTION ----
 app.add_middleware(MetricsMiddleware)
