@@ -29,32 +29,15 @@ def _generate_otp() -> str:
 
 
 def _try_send_email(to_email: str, otp: str) -> None:
-    """Attempt to send OTP email. Logs to console if SMTP fails."""
+    """Attempt to send OTP email using Brevo API. Logs to console if sending fails."""
     try:
-        from app.services.email_service import send_email
-        send_email(
-            to_email=to_email,
-            subject="Your Vijetha Digital password reset OTP",
-            html_content=f"""
-            <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;">
-              <h2 style="color:#1A1F3C;margin-bottom:8px;">Password Reset OTP</h2>
-              <p style="color:#5A5A65;margin-bottom:24px;">
-                Use the OTP below to reset your password. It expires in {OTP_EXPIRY_MINUTES} minutes.
-              </p>
-              <div style="background:#F4F3F0;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
-                <span style="font-size:40px;font-weight:900;letter-spacing:12px;color:#1A1F3C;">{otp}</span>
-              </div>
-              <p style="color:#9A9AA5;font-size:13px;">
-                If you didn't request this, ignore this email.
-              </p>
-            </div>
-            """,
-        )
-        logger.info(f"OTP email sent to {to_email}")
+        from app.services.brevo_email_service import send_otp_email
+        send_otp_email(to_email, otp)
+        logger.info(f"OTP email sent to {to_email} via Brevo")
     except Exception as e:
-        # Log OTP to console so dev can still test without working SMTP
+        # Log OTP to console so dev can still test without working email
         logger.warning(
-            f"SMTP failed ({type(e).__name__}: {e}). "
+            f"Email sending failed ({type(e).__name__}: {e}). "
             f"DEV FALLBACK — OTP for {to_email}: {otp}"
         )
 
