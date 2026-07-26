@@ -43,7 +43,17 @@ export default function ForgotPassword() {
     const next = [...otp];
     next[index] = value.slice(-1);
     setOtp(next);
-    if (value && index < 5) otpRefs.current[index + 1]?.focus();
+    if (value && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    } else if (value && index === 5) {
+      // Auto-verify when last digit is entered
+      const completeOtp = [...next];
+      setTimeout(() => {
+        if (completeOtp.join("").length === 6) {
+          handleVerifyOtp(new Event('submit'));
+        }
+      }, 100);
+    }
   };
 
   const handleOtpKeyDown = (index, e) => {
@@ -61,7 +71,7 @@ export default function ForgotPassword() {
   };
 
   const handleVerifyOtp = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     const otpStr = otp.join("");
     if (otpStr.length < 6) { setError("Enter all 6 digits"); return; }
     setError("");
@@ -71,6 +81,9 @@ export default function ForgotPassword() {
       setStep(3);
     } catch (err) {
       setError(err?.response?.data?.detail || "Invalid or expired OTP");
+      // Clear OTP on error for retry
+      setOtp(["", "", "", "", "", ""]);
+      setTimeout(() => otpRefs.current[0]?.focus(), 100);
     } finally {
       setLoading(false);
     }
@@ -217,49 +230,96 @@ export default function ForgotPassword() {
 
           {/* ── STEP 1 ── */}
           {step === 1 && (
-            <form onSubmit={handleSendOtp} className="space-y-4 animate-fade-in-up">
+            <form onSubmit={handleSendOtp} className="space-y-5 animate-fade-in-up">
               <div>
-                <h2 className="text-[1.5rem] font-bold text-plum-deep mb-1">Reset Password</h2>
-                <p className="text-[0.8125rem] text-text-muted mb-5">
-                  Enter your registered email and we'll send a 6-digit OTP.
+                <h2 className="text-[1.5rem] sm:text-[1.75rem] font-bold text-plum-deep mb-2">Reset Password</h2>
+                <p className="text-[0.8125rem] sm:text-[0.875rem] text-text-muted leading-relaxed">
+                  Enter your registered email and we'll send a verification code to reset your password.
                 </p>
-                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">
+              </div>
+              
+              <div>
+                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">
                   Email Address
                 </label>
-                <input
-                  type="email"
-                  required
-                  autoFocus
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full h-10 px-3.5 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
-                />
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-muted text-lg">
+                    mail
+                  </span>
+                  <input
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full h-11 pl-11 pr-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                  />
+                </div>
+                <p className="mt-2 text-[0.75rem] text-text-muted flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  We'll send a 6-digit code valid for 10 minutes
+                </p>
               </div>
-              <button type="submit" disabled={loading}
-                className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
-                {loading ? "Sending OTP…" : "Send OTP"}
+              
+              <button 
+                type="submit" 
+                disabled={loading || !email.trim()}
+                className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Sending Code...
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    Send Verification Code
+                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  </span>
+                )}
               </button>
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-stone-border"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2 bg-warm-white text-text-muted">or</span>
+                </div>
+              </div>
+              
               <p className="text-center text-[0.8125rem] text-text-muted">
                 Remember your password?{" "}
-                <Link to="/login" className="text-plum-deep font-semibold hover:text-coral-accent transition-colors">Sign In</Link>
+                <Link to="/login" className="text-plum-deep font-semibold hover:text-coral-accent transition-colors inline-flex items-center gap-0.5">
+                  Sign In
+                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                </Link>
               </p>
             </form>
           )}
 
           {/* ── STEP 2 ── */}
           {step === 2 && (
-            <form onSubmit={handleVerifyOtp} className="space-y-5 animate-fade-in-up">
+            <form onSubmit={handleVerifyOtp} className="space-y-6 animate-fade-in-up">
               <div>
-                <h2 className="text-[1.5rem] font-bold text-plum-deep mb-1">Enter OTP</h2>
-                <p className="text-[0.8125rem] text-text-muted mb-5">
-                  We sent a 6-digit code to{" "}
-                  <span className="font-semibold text-plum-deep">{email}</span>.
-                  <br />Valid for 10 minutes.
+                <h2 className="text-[1.5rem] sm:text-[1.75rem] font-bold text-plum-deep mb-2">Enter Verification Code</h2>
+                <p className="text-[0.8125rem] sm:text-[0.875rem] text-text-muted leading-relaxed">
+                  We sent a 6-digit code to<br />
+                  <span className="font-semibold text-plum-deep">{email}</span>
                 </p>
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-md">
+                  <span className="material-symbols-outlined text-amber-600 text-sm">schedule</span>
+                  <span className="text-[0.75rem] text-amber-700 font-medium">Expires in 10 minutes</span>
+                </div>
+              </div>
 
-                {/* OTP boxes */}
-                <div className="flex gap-2" onPaste={handleOtpPaste}>
+              {/* OTP boxes - Enhanced */}
+              <div className="space-y-3">
+                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider">
+                  Verification Code
+                </label>
+                <div className="flex gap-2 sm:gap-3" onPaste={handleOtpPaste}>
                   {otp.map((digit, i) => (
                     <input
                       key={i}
@@ -270,86 +330,178 @@ export default function ForgotPassword() {
                       value={digit}
                       onChange={e => handleOtpChange(i, e.target.value)}
                       onKeyDown={e => handleOtpKeyDown(i, e)}
-                      className={`flex-1 h-12 text-center text-xl font-bold rounded-lg border-2 outline-none transition-all ${
-                        digit
-                          ? "border-plum-deep bg-plum-deep/5 text-plum-deep"
-                          : "border-stone-border bg-white text-plum-deep focus:border-plum-deep focus:bg-plum-deep/5"
+                      autoComplete="off"
+                      disabled={loading}
+                      className={`flex-1 aspect-square max-w-[52px] sm:max-w-[56px] text-center text-xl sm:text-2xl font-bold rounded-xl border-2 outline-none transition-all duration-200 ${
+                        loading 
+                          ? "opacity-50 cursor-not-allowed"
+                          : digit
+                          ? "border-plum-deep bg-plum-deep/10 text-plum-deep shadow-sm scale-105"
+                          : "border-stone-border bg-white text-plum-deep hover:border-plum-deep/40 focus:border-plum-deep focus:bg-plum-deep/5 focus:shadow-md focus:scale-105"
                       }`}
                     />
                   ))}
                 </div>
+                <p className="text-[0.75rem] text-text-muted flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Paste your code directly or enter each digit
+                </p>
               </div>
 
-              <button type="submit" disabled={loading || otp.join("").length < 6}
-                className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
-                {loading ? "Verifying…" : "Verify OTP"}
-              </button>
-
-              <div className="flex items-center justify-between text-[0.8125rem]">
-                <span className="text-text-muted">Didn't receive it?</span>
-                <button type="button" onClick={handleResend}
-                  disabled={resendCooldown > 0 || loading}
-                  className="font-semibold text-plum-deep hover:text-coral-accent transition-colors disabled:text-text-muted disabled:cursor-not-allowed">
-                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend OTP"}
+              {/* Submit button - only shown when manual submission is needed */}
+              {otp.join("").length === 6 && !loading && (
+                <button 
+                  type="submit"
+                  className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] animate-fade-in-up"
+                >
+                  Verify Code
                 </button>
+              )}
+
+              {/* Loading state */}
+              {loading && (
+                <div className="flex items-center justify-center gap-2 py-3 animate-fade-in-up">
+                  <div className="w-5 h-5 border-2 border-plum-deep border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm text-plum-deep font-medium">Verifying...</span>
+                </div>
+              )}
+
+              {/* Resend section - Enhanced */}
+              <div className="pt-4 border-t border-stone-border">
+                <div className="flex items-center justify-between text-[0.8125rem]">
+                  <span className="text-text-muted">Didn't receive the code?</span>
+                  <button 
+                    type="button" 
+                    onClick={handleResend}
+                    disabled={resendCooldown > 0 || loading}
+                    className="font-semibold text-plum-deep hover:text-coral-accent transition-all disabled:text-text-muted disabled:cursor-not-allowed inline-flex items-center gap-1 group"
+                  >
+                    {resendCooldown > 0 ? (
+                      <>
+                        <span className="material-symbols-outlined text-base">schedule</span>
+                        Resend in {resendCooldown}s
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-base group-hover:rotate-12 transition-transform">refresh</span>
+                        Resend Code
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
           )}
 
           {/* ── STEP 3 ── */}
           {step === 3 && (
-            <form onSubmit={handleResetPassword} className="space-y-4 animate-fade-in-up">
+            <form onSubmit={handleResetPassword} className="space-y-5 animate-fade-in-up">
               <div>
-                <h2 className="text-[1.5rem] font-bold text-plum-deep mb-1">New Password</h2>
-                <p className="text-[0.8125rem] text-text-muted mb-5">Choose a strong password for your account.</p>
+                <h2 className="text-[1.5rem] sm:text-[1.75rem] font-bold text-plum-deep mb-2">Create New Password</h2>
+                <p className="text-[0.8125rem] sm:text-[0.875rem] text-text-muted leading-relaxed">
+                  Choose a strong password to secure your account.
+                </p>
               </div>
 
               <div>
-                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">New Password</label>
+                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">New Password</label>
                 <div className="relative">
                   <input
                     type={showNew ? "text" : "password"}
                     required
+                    autoFocus
                     value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
-                    placeholder="Min. 6 characters"
-                    className="w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                    placeholder="Minimum 6 characters"
+                    className="w-full h-11 pl-4 pr-11 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
                   />
-                  <button type="button" onClick={() => setShowNew(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors">
-                    <span className="material-symbols-outlined text-base">{showNew ? "visibility_off" : "visibility"}</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowNew(v => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors p-1"
+                    aria-label={showNew ? "Hide password" : "Show password"}
+                  >
+                    <span className="material-symbols-outlined text-lg">{showNew ? "visibility_off" : "visibility"}</span>
                   </button>
                 </div>
+                {/* Password strength indicator */}
+                {newPassword && (
+                  <div className="mt-2 space-y-1">
+                    <div className="h-1 w-full bg-stone-border rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full transition-all duration-300 ${
+                          newPassword.length < 6 ? "w-1/3 bg-red-500" :
+                          newPassword.length < 10 ? "w-2/3 bg-amber-500" :
+                          "w-full bg-green-500"
+                        }`}
+                      />
+                    </div>
+                    <p className={`text-[0.75rem] font-medium ${
+                      newPassword.length < 6 ? "text-red-600" :
+                      newPassword.length < 10 ? "text-amber-600" :
+                      "text-green-600"
+                    }`}>
+                      {newPassword.length < 6 ? "Weak - Use at least 6 characters" :
+                       newPassword.length < 10 ? "Good - Consider adding more characters" :
+                       "Strong password"}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>
-                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Confirm Password</label>
+                <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-2">Confirm Password</label>
                 <div className="relative">
                   <input
                     type={showConfirm ? "text" : "password"}
                     required
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="Repeat password"
-                    className="w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
+                    placeholder="Re-enter your password"
+                    className="w-full h-11 pl-4 pr-11 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
                   />
-                  <button type="button" onClick={() => setShowConfirm(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors">
-                    <span className="material-symbols-outlined text-base">{showConfirm ? "visibility_off" : "visibility"}</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowConfirm(v => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-plum-deep transition-colors p-1"
+                    aria-label={showConfirm ? "Hide password" : "Show password"}
+                  >
+                    <span className="material-symbols-outlined text-lg">{showConfirm ? "visibility_off" : "visibility"}</span>
                   </button>
                 </div>
                 {/* Password match indicator */}
                 {confirmPassword && (
-                  <p className={`mt-1 text-[0.75rem] font-medium ${newPassword === confirmPassword ? "text-green-600" : "text-red-500"}`}>
-                    {newPassword === confirmPassword ? "✓ Passwords match" : "✗ Passwords don't match"}
-                  </p>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <span className={`material-symbols-outlined text-sm ${newPassword === confirmPassword ? "text-green-600" : "text-red-500"}`}>
+                      {newPassword === confirmPassword ? "check_circle" : "cancel"}
+                    </span>
+                    <p className={`text-[0.75rem] font-medium ${newPassword === confirmPassword ? "text-green-600" : "text-red-500"}`}>
+                      {newPassword === confirmPassword ? "Passwords match" : "Passwords don't match"}
+                    </p>
+                  </div>
                 )}
               </div>
 
-              <button type="submit" disabled={loading}
-                className="w-full h-10 bg-plum-deep text-white rounded-lg font-bold text-sm hover:bg-plum-light transition-all hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
-                {loading ? "Saving…" : "Set New Password"}
+              <button 
+                type="submit" 
+                disabled={loading || newPassword.length < 6 || newPassword !== confirmPassword}
+                className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light transition-all hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Saving...
+                  </span>
+                ) : (
+                  "Set New Password"
+                )}
               </button>
+
+              {/* Success hint */}
+              <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-[0.75rem] text-blue-700">
+                <span className="material-symbols-outlined text-base flex-shrink-0">info</span>
+                <span>After resetting, you'll be redirected to login with your new password.</span>
+              </div>
             </form>
           )}
         </div>
