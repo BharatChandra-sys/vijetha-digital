@@ -5,10 +5,16 @@ JWT token management, password hashing, and token helpers.
 
 import re
 import uuid
+import warnings
 from datetime import datetime, timedelta
 from typing import Any
 
 from jose import JWTError, jwt
+
+# Suppress passlib's bcrypt version warning (bcrypt>=4 removed __about__)
+warnings.filterwarnings("ignore", ".*error reading bcrypt version.*")
+warnings.filterwarnings("ignore", ".*trapped.*bcrypt.*")
+
 from passlib.context import CryptContext
 
 from app.core.config import settings
