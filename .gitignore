@@ -77,6 +77,33 @@ frontend/.env.local
 frontend/.env.production
 frontend/build.log
 
+# Frontend1 (Next.js)
+frontend1/node_modules/
+frontend1/.next/
+frontend1/out/
+frontend1/.env
+frontend1/.env.local
+frontend1/.env.production
+
+# Wix reference files (not needed in repo)
+233152/
+Home\ _\ My\ Site.html
+wix-animations.json
+wix-site-complete.css
+
+# Large scratch/session docs
+SESSION_SUMMARY.md
+PROGRESS_SUMMARY.md
+SETUP_COMPLETE.md
+GALLERY_SETUP_COMPLETE.md
+QUICK_START_GALLERY.txt
+TODO_NEXT.md
+UI_IMPROVEMENT_STATUS.md
+SETUP_PRODUCT_GALLERY.md
+PRODUCT_IMAGES_GUIDE.md
+MOBILE_IMPROVEMENTS.md
+FRONTEND_FIX_INSTRUCTIONS.md
+
 # Temporary files
 *.tmp
 *.temp
@@ -94,3 +121,4 @@ Thumbs.db
 
 # Vercel
 .vercel/
+.233512

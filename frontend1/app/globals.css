@@ -1,0 +1,325 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── WIX EXACT COLOR PALETTE (extracted from --color_N variables) ─── */
+:root {
+  --wix-white:        rgb(255, 255, 255);   /* color_11 */
+  --wix-cream:        rgb(241, 240, 235);   /* color_12 */
+  --wix-beige:        rgb(201, 196, 183);   /* color_13 */
+  --wix-text:         rgb(0, 0, 0);         /* color_15 */
+  --wix-text-sub:     rgb(85, 78, 78);      /* color_14 */
+  --wix-yellow-light: rgb(255, 237, 201);   /* color_16 */
+  --wix-yellow:       rgb(253, 212, 132);   /* color_17 */
+  --wix-accent:       rgb(156, 105, 2);     /* color_18 */
+  --wix-navy:         rgb(28, 29, 32);      /* footer bg */
+
+  /* Wix animation timings — extracted from wix-thunderbolt CSS */
+  --motion-duration:  1200ms;
+  --ease-fade:        cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-slide:       cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out-in:      cubic-bezier(0.64, 0, 0.78, 0);
+
+  /* Wix fonts: helvetica-w01-roman / helvetica-w01-bold */
+  --font-wix: 'helvetica-w01-roman', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-wix-bold: 'helvetica-w01-bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-wix);
+  color: var(--wix-text);
+  background: var(--wix-white);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── WIX FONT SCALE (matches font_0 through font_9 from source) ─── */
+/* font_0: 80px hero heading */
+.wix-font-0 {
+  font-family: var(--font-wix);
+  font-size: clamp(50px, 6.25vw, 80px);
+  font-weight: 400;
+  line-height: 1em;
+  letter-spacing: 0em;
+  color: var(--wix-text);
+}
+/* font_2: 32px h2 */
+.wix-font-2 {
+  font-family: var(--font-wix);
+  font-size: clamp(28px, 2.5vw, 32px);
+  font-weight: 400;
+  line-height: 1.2em;
+  letter-spacing: 0em;
+  color: var(--wix-text);
+}
+/* font_3: 28px bold h3 */
+.wix-font-3 {
+  font-family: var(--font-wix-bold);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 400;
+  line-height: 1.4em;
+  letter-spacing: 0.05em;
+  color: var(--wix-text);
+  text-transform: uppercase;
+}
+/* font_7: 18px body */
+.wix-font-7 {
+  font-family: var(--font-wix);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4em;
+  letter-spacing: 0em;
+  color: var(--wix-text);
+}
+/* font_8: 14px small */
+.wix-font-8 {
+  font-family: var(--font-wix);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4em;
+  letter-spacing: 0em;
+  color: var(--wix-text);
+}
+/* font_9: 14px bold small */
+.wix-font-9 {
+  font-family: var(--font-wix);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4em;
+  letter-spacing: 0.05em;
+  color: var(--wix-text);
+}
+/* font_10: 12px label */
+.wix-font-10 {
+  font-family: var(--font-wix);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4em;
+  letter-spacing: 0em;
+  color: var(--wix-text-sub);
+}
+
+/* ─── LAYOUT ─── */
+.wix-container {
+  width: 100%;
+  max-width: 980px;    /* Wix --site-width: 980px */
+  margin: 0 auto;
+  padding: 0 40px;
+}
+@media (max-width: 768px) {
+  .wix-container { padding: 0 20px; }
+}
+
+/* ─── STACK-SCROLL SECTIONS ─────────────────────────────────────────────────
+   This replicates the Wix "section stacking" effect:
+   Each section is sticky at top:0 while the NEXT section scrolls up over it.
+   z-index increments per section so later sections stack on top of earlier.
+   The first section (hero) is full viewport height.
+   All subsequent sections are normal flow height but use sticky positioning.
+───────────────────────────────────────────────────────────────────────────── */
+.wix-page {
+  /* Contains all stack-scroll sections */
+}
+
+.wix-section {
+  position: relative;
+  width: 100%;
+}
+
+/* Stack scroll: each section slides over the previous */
+.wix-section--stack {
+  position: sticky;
+  top: 0;
+  /* z-index set inline per section via style prop */
+  overflow: hidden;
+}
+
+/* Hero takes full viewport */
+.wix-section--hero {
+  height: 100vh;
+  min-height: 640px;
+}
+
+/* Regular sections */
+.wix-section--regular {
+  padding: 100px 0;
+}
+
+@media (max-width: 1024px) {
+  .wix-section--regular { padding: 70px 0; }
+}
+@media (max-width: 768px) {
+  .wix-section--regular { padding: 50px 0; }
+}
+
+/* ─── WIX MOTION ANIMATION SYSTEM ────────────────────────────────────────────
+   Elements get .wix-motion + a variant class.
+   ScrollAnimations.tsx adds .wix-motion-running when 10% enters viewport.
+   JS sets data-motion-enter="done" after 1200ms to lock final state.
+─────────────────────────────────────────────────────────────────────────── */
+.wix-motion {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.wix-motion[data-motion-enter="done"] {
+  opacity:   1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* fadeIn */
+.wix-fade-in {
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--ease-fade);
+}
+.wix-fade-in.wix-motion-running { opacity: 1; }
+
+/* fadeIn + slideUp (primary Wix entrance) */
+.wix-fade-up {
+  opacity: 0;
+  transform: translate3d(0, 80px, 0);
+  transition:
+    opacity   var(--motion-duration) var(--ease-fade),
+    transform var(--motion-duration) var(--ease-slide);
+}
+.wix-fade-up.wix-motion-running { opacity: 1; transform: translate3d(0,0,0); }
+
+/* fadeIn + slideFromLeft */
+.wix-fade-left {
+  opacity: 0;
+  transform: translate3d(-80px, 0, 0);
+  transition:
+    opacity   var(--motion-duration) var(--ease-fade),
+    transform var(--motion-duration) var(--ease-slide);
+}
+.wix-fade-left.wix-motion-running { opacity: 1; transform: translate3d(0,0,0); }
+
+/* fadeIn + slideFromRight */
+.wix-fade-right {
+  opacity: 0;
+  transform: translate3d(80px, 0, 0);
+  transition:
+    opacity   var(--motion-duration) var(--ease-fade),
+    transform var(--motion-duration) var(--ease-slide);
+}
+.wix-fade-right.wix-motion-running { opacity: 1; transform: translate3d(0,0,0); }
+
+/* Stagger delays */
+.wix-delay-1 { transition-delay: 0ms !important; }
+.wix-delay-2 { transition-delay: 150ms !important; }
+.wix-delay-3 { transition-delay: 300ms !important; }
+.wix-delay-4 { transition-delay: 450ms !important; }
+.wix-delay-5 { transition-delay: 600ms !important; }
+
+/* Mobile: disable all scroll animations (Wix ≤750px behaviour) */
+@media (max-width: 750px) {
+  .wix-motion,
+  .wix-fade-in, .wix-fade-up,
+  .wix-fade-left, .wix-fade-right {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wix-motion,
+  .wix-fade-in, .wix-fade-up,
+  .wix-fade-left, .wix-fade-right {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── WIX BUTTON STYLES ─── */
+.wix-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--wix-text);
+  color: var(--wix-white);
+  font-family: var(--font-wix);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.4em;
+  padding: 16px 40px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+.wix-btn-primary:hover { opacity: 0.8; }
+
+.wix-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--wix-white);
+  font-family: var(--font-wix);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.4em;
+  padding: 14px 38px;
+  border: 1px solid var(--wix-white);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+.wix-btn-outline:hover {
+  background-color: var(--wix-white);
+  color: var(--wix-text);
+}
+
+/* ─── IMAGE HOVER ZOOM ─── */
+.wix-img-wrap {
+  overflow: hidden;
+  display: block;
+  width: 100%;
+}
+.wix-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.37, 0, 0.63, 1);
+  will-change: transform;
+}
+.wix-img-wrap:hover img { transform: scale(1.06); }
+@media (hover: none) {
+  .wix-img-wrap:hover img { transform: none; }
+}
+
+/* ─── DIVIDER LINE ─── */
+.wix-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--wix-beige);
+}
+
+/* ─── ACCESSIBILITY ─── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

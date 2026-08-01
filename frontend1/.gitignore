@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+
+# Production build
+build/
+dist/
+
+# Environment files — never commit secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Wix CDN cache folders (garbage thumbnail directories)
+public/images/11062b_*/
+public/images/c837a6_*/
+public/images/*~mv2.webp
+public/images/*~mv2.jpg
+public/images/*~mv.jpg
+public/images/DIGITAL_PRINT_COMPANY_*
+public/images/print-shop.jpg
+public/images/hero-banner.jpg
+public/images/*-wix.webp
