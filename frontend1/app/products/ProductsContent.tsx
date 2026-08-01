@@ -1,34 +1,53 @@
 'use client';
 
-import Link from 'next/link';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
+import { WA_URL, PHONE_RAW } from '@/lib/constants';
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
-const WA       = 'https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20enquire%20about%20';
+const WA       = `https://wa.me/${PHONE_RAW}?text=Hi%21%20I%20would%20like%20to%20enquire%20about%20`;
 
 const PRODUCTS = [
-  { id:1,  name:'3D Sign Board',            category:'Sign Boards',        image:'/images/project-booklets.jpg',  price:'₹4,500 onwards', desc:'Eye-catching 3D lettering for shops and offices. Acrylic, metal & foam options.' },
-  { id:2,  name:'Glow Sign Board',          category:'Sign Boards',        image:'/images/project-cards.jpg',    price:'₹2,800 onwards', desc:'Backlit glow boards for 24/7 visibility. Ideal for retail and commercial spaces.' },
-  { id:3,  name:'Vinyl Sign Board',         category:'Sign Boards',        image:'/images/about-printing.jpg',   price:'₹900 onwards',   desc:'Durable vinyl boards for long-lasting outdoor signage at an affordable price.' },
-  { id:4,  name:'Aluminium Sign Board',     category:'Sign Boards',        image:'/images/hero-banner-hq.jpg',   price:'₹2,200 onwards', desc:'Lightweight, rust-proof aluminium boards for indoor and outdoor use.' },
-  { id:5,  name:'Open LED Sign Board',      category:'Sign Boards',        image:'/images/project-booklets.jpg', price:'₹3,500 onwards', desc:'LED-illuminated open signage for 24-hour shop fronts and kiosks.' },
-  { id:6,  name:'Flex Printing',            category:'Printing Services',  image:'/images/project-cards.jpg',    price:'₹18 per sq ft',  desc:'High-resolution flex printing for hoardings, banners and backdrops.' },
-  { id:7,  name:'Offset Printing',          category:'Printing Services',  image:'/images/about-printing.jpg',   price:'₹1,200 onwards', desc:'Commercial-grade offset printing for bulk flyers, letterheads and brochures.' },
-  { id:8,  name:'Catalogue Printing',       category:'Printing Services',  image:'/images/hero-banner-hq.jpg',   price:'₹2,500 onwards', desc:'Full-colour perfect-bound or saddle-stitched product catalogues.' },
-  { id:9,  name:'Canvas Printing',          category:'Printing Services',  image:'/images/project-booklets.jpg', price:'₹650 onwards',   desc:'Premium canvas prints for décor, photo galleries and brand displays.' },
-  { id:10, name:'Business Card Printing',   category:'Printing Services',  image:'/images/project-cards.jpg',    price:'₹450 for 100',   desc:'Matte, gloss, spot UV and foil visiting cards. Fast turnaround.' },
-  { id:11, name:'Roll-Up Banner Stand',     category:'Banner Stands',      image:'/images/about-printing.jpg',   price:'₹1,800 onwards', desc:'Portable roll-up standees for exhibitions, events and retail display.' },
-  { id:12, name:'Heavy Roll-Up Stand',      category:'Banner Stands',      image:'/images/hero-banner-hq.jpg',   price:'₹3,200 onwards', desc:'Heavy-duty roll-up stands for frequent use at trade shows and road shows.' },
-  { id:13, name:'Demo Tent 4×4×7 ft',      category:'Demo Tents',         image:'/images/project-booklets.jpg', price:'₹8,500 onwards', desc:'Compact branded canopy tent ideal for promotions and outdoor activations.' },
-  { id:14, name:'Demo Tent 6×6×7 ft',      category:'Demo Tents',         image:'/images/project-cards.jpg',    price:'₹12,000 onwards',desc:'Large branded canopy for exhibitions, road shows and corporate events.' },
-  { id:15, name:'Vehicle Branding',         category:'Promotional Items',  image:'/images/about-printing.jpg',   price:'₹3,500 onwards', desc:'Full or partial vehicle wrap printing for cars, vans and trucks.' },
-  { id:16, name:'T-Shirt Printing',         category:'Promotional Items',  image:'/images/hero-banner-hq.jpg',   price:'₹250 per piece', desc:'Screen and digital printing on cotton, polyester and dri-fit tees.' },
-  { id:17, name:'In-Shop Branding',         category:'Promotional Items',  image:'/images/project-booklets.jpg', price:'On request',     desc:'Complete branding solutions for shop interiors — walls, floors and windows.' },
-  { id:18, name:'Promo Table',              category:'Promotional Items',  image:'/images/project-cards.jpg',    price:'₹2,200 onwards', desc:'Branded folding promotional tables for events, expos and pop-up stalls.' },
+  // Signage Solutions
+  { id:1,  name:'LED Sign Board',           category:'Signage Solutions',      image:'/images/project-booklets.jpg',  price:'₹3,500 onwards', desc:'Bright LED illuminated boards for 24/7 visibility. Ideal for retail, showrooms and commercial spaces.' },
+  { id:2,  name:'ACP Cladding Sign',        category:'Signage Solutions',      image:'/images/project-cards.jpg',    price:'₹2,200 onwards', desc:'Aluminium composite panel cladding for professional, weather-resistant outdoor signage.' },
+  { id:3,  name:'Acrylic Letter Sign',      category:'Signage Solutions',      image:'/images/about-printing.jpg',   price:'₹1,800 onwards', desc:'Precision-cut acrylic 3D lettering for shopfronts, offices and brand walls.' },
+  { id:4,  name:'Fascia Sign Board',        category:'Signage Solutions',      image:'/images/hero-banner-hq.jpg',   price:'₹4,500 onwards', desc:'Full-width fascia boards for storefronts and commercial complexes. Bold, weather-resistant.' },
+  { id:5,  name:'Flex Board Hoarding',      category:'Signage Solutions',      image:'/images/project-booklets.jpg', price:'₹18 per sq ft',  desc:'High-resolution flex printing for large hoardings, outdoor banners and backdrops.' },
+  { id:6,  name:'Pylon Sign',               category:'Signage Solutions',      image:'/images/project-cards.jpg',    price:'₹8,000 onwards', desc:'Tall freestanding pylon signs for maximum visibility at malls, hospitals and industrial sites.' },
+  // Internal Branding
+  { id:7,  name:'Office Wall Branding',     category:'Internal Branding',      image:'/images/about-printing.jpg',   price:'On request',     desc:'Transform office walls into powerful brand statements with murals, typography and graphics.' },
+  { id:8,  name:'Reception & Lobby',        category:'Internal Branding',      image:'/images/hero-banner-hq.jpg',   price:'On request',     desc:'Premium reception and lobby branding that creates unforgettable first impressions.' },
+  { id:9,  name:'Retail In-Shop Branding',  category:'Internal Branding',      image:'/images/project-booklets.jpg', price:'On request',     desc:'Complete in-shop branding for retail stores — walls, ceilings, floors and windows.' },
+  { id:10, name:'Hospital Branding',        category:'Internal Branding',      image:'/images/project-cards.jpg',    price:'On request',     desc:'Wayfinding, signage and branding solutions tailored for healthcare environments.' },
+  // Vehicle Branding
+  { id:11, name:'Car / 4-Wheeler Wrap',     category:'Vehicle Branding',       image:'/images/about-printing.jpg',   price:'₹3,500 onwards', desc:'Full or partial vehicle wraps for cars, jeeps and SUVs. UV-resistant, professionally installed.' },
+  { id:12, name:'Bus / Van Branding',       category:'Vehicle Branding',       image:'/images/hero-banner-hq.jpg',   price:'₹6,000 onwards', desc:'Large-format bus and van branding that turns your fleet into moving billboards.' },
+  { id:13, name:'2-Wheeler Branding',       category:'Vehicle Branding',       image:'/images/project-booklets.jpg', price:'₹800 onwards',   desc:'Eye-catching delivery bike and scooter branding for food, logistics and promo campaigns.' },
+  { id:14, name:'Heavy Vehicle Branding',   category:'Vehicle Branding',       image:'/images/project-cards.jpg',    price:'On request',     desc:'Full truck and heavy transport branding for maximum road presence and brand reach.' },
+  // Digital Printing
+  { id:15, name:'Flex / Vinyl Printing',    category:'Digital Printing',       image:'/images/about-printing.jpg',   price:'₹18 per sq ft',  desc:'High-resolution flex and vinyl printing for banners, hoardings and backdrops. In-house 1 lakh sq.ft/day.' },
+  { id:16, name:'UV Print',                 category:'Digital Printing',       image:'/images/hero-banner-hq.jpg',   price:'₹45 per sq ft',  desc:'UV-cured printing for vibrant, scratch-resistant output on rigid and flexible substrates.' },
+  { id:17, name:'3D Canvas Print',          category:'Digital Printing',       image:'/images/project-booklets.jpg', price:'₹120 per sq ft', desc:'Textured 3D canvas printing for premium wall art, retail displays and exhibitions.' },
+  { id:18, name:'Eco-Solvent Print',        category:'Digital Printing',       image:'/images/project-cards.jpg',    price:'₹20 per sq ft',  desc:'Durable eco-solvent outdoor printing on Roland Soljet EJ 640 for long-lasting results.' },
+  // Offset Printing
+  { id:19, name:'Brochure / Catalogue',     category:'Offset Printing',        image:'/images/about-printing.jpg',   price:'₹2,500 onwards', desc:'Full-colour perfect-bound or saddle-stitched brochures and product catalogues.' },
+  { id:20, name:'Flyers & Pamphlets',       category:'Offset Printing',        image:'/images/hero-banner-hq.jpg',   price:'₹800 per 1000',  desc:'High-quality offset flyers and pamphlets for promotions, events and campaigns.' },
+  { id:21, name:'Corporate Stationery',     category:'Offset Printing',        image:'/images/project-booklets.jpg', price:'₹1,200 onwards', desc:'Letterheads, envelopes, visiting cards and notepads with consistent brand identity.' },
+  { id:22, name:'Packaging & Gift Boxes',   category:'Offset Printing',        image:'/images/project-cards.jpg',    price:'₹3,000 onwards', desc:'Custom packaging boxes and gift sets with spot UV, foil stamping and die-cutting.' },
+  // Display & Exhibition
+  { id:23, name:'Roll-Up Standee',          category:'Display & Exhibition',   image:'/images/about-printing.jpg',   price:'₹1,800 onwards', desc:'Portable roll-up standees for exhibitions, events and retail point-of-sale displays.' },
+  { id:24, name:'Demo Tent / Canopy',       category:'Display & Exhibition',   image:'/images/hero-banner-hq.jpg',   price:'₹8,500 onwards', desc:'Branded demo tents for outdoor promotions, trade fairs and road shows.' },
+  { id:25, name:'Fabric Light Box',         category:'Display & Exhibition',   image:'/images/project-booklets.jpg', price:'₹5,500 onwards', desc:'Illuminated fabric tension displays for high-impact retail and exhibition environments.' },
+  { id:26, name:'Trade Show Booth',         category:'Display & Exhibition',   image:'/images/project-cards.jpg',    price:'On request',     desc:'Complete trade show booth design and fabrication for conferences, expos and product launches.' },
+  // Outdoor Advertising
+  { id:27, name:'Flags & Bunting',          category:'Outdoor Advertising',    image:'/images/about-printing.jpg',   price:'₹350 onwards',   desc:'Printed flags, buntings and feather flags for outdoor events and brand promotions.' },
+  { id:28, name:'Backdrop / Stage Banner',  category:'Outdoor Advertising',    image:'/images/hero-banner-hq.jpg',   price:'₹1,200 onwards', desc:'Large format backdrops and stage banners for events, press conferences and launches.' },
+  { id:29, name:'Stickers & Decals',        category:'Outdoor Advertising',    image:'/images/project-booklets.jpg', price:'₹5 per sq ft',   desc:'Custom stickers and vinyl decals for vehicles, walls, floors and glass surfaces.' },
+  { id:30, name:'Canopy & Tent Branding',   category:'Outdoor Advertising',    image:'/images/project-cards.jpg',    price:'₹2,200 onwards', desc:'Branded promotional canopies and pop-up tents for outdoor activations and events.' },
 ];
 
-const CATEGORIES = ['Sign Boards', 'Printing Services', 'Banner Stands', 'Demo Tents', 'Promotional Items'];
+const CATEGORIES = ['Signage Solutions', 'Internal Branding', 'Vehicle Branding', 'Digital Printing', 'Offset Printing', 'Display & Exhibition', 'Outdoor Advertising'];
 
 export default function ProductsContent() {
   return (
@@ -42,7 +61,7 @@ export default function ProductsContent() {
             {['All', ...CATEGORIES].map(cat => (
               <a
                 key={cat}
-                href={cat === 'All' ? '#sign-boards' : `#${cat.replace(/\s+/g, '-').toLowerCase()}`}
+                href={cat === 'All' ? '#signage-solutions' : `#${cat.replace(/\s+/g, '-').toLowerCase()}`}
                 style={{
                   fontFamily: font, fontSize: '14px', color: '#000',
                   padding: '16px 20px', whiteSpace: 'nowrap', textDecoration: 'none',
@@ -123,7 +142,7 @@ export default function ProductsContent() {
               Tell us your requirement — we&apos;ll quote within 24 hours.
             </p>
             <a
-              href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20a%20custom%20quote%20for%20printing%20services."
+              href={WA_URL}
               target="_blank"
               rel="noopener noreferrer"
               style={{

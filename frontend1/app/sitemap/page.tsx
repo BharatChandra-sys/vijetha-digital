@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Sitemap | Vijetha Digital',
@@ -18,6 +19,7 @@ const groups = [
       { label: 'Home',       href: '/' },
       { label: 'Services',   href: '/services' },
       { label: 'Products',   href: '/products' },
+      { label: 'About',      href: '/about' },
       { label: 'Contact',    href: '/contact' },
     ],
   },
@@ -44,9 +46,9 @@ const groups = [
     heading: 'Get in Touch',
     links: [
       { label: 'Contact Page',      href: '/contact' },
-      { label: 'WhatsApp Us',       href: 'https://wa.me/919248195552', external: true },
-      { label: '+91 79426 43004',   href: 'tel:+917942643004',          external: true },
-      { label: 'info@vijethadigital.com', href: 'mailto:info@vijethadigital.com', external: true },
+      { label: 'WhatsApp Us',              href: WA_URL,                         external: true },
+      { label: PHONE,                       href: `tel:+${PHONE_RAW}`,            external: true },
+      { label: EMAIL,                       href: `mailto:${EMAIL}`,              external: true },
     ],
   },
 ];

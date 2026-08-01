@@ -6,7 +6,7 @@ import { WA_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Services | Vijetha Digital',
-  description: 'Full-service printing solutions — booklets, visiting cards, flex printing, banners, packaging and more.',
+  description: 'Signage solutions, vehicle branding, digital printing, offset printing, screen printing, display & exhibition — all under one roof.',
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -15,45 +15,59 @@ const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-ser
 const services = [
   {
     id: '01',
-    title: 'Booklets & Catalogues',
+    title: 'Signage Solutions',
     description:
-      'Saddle-stitched or perfect-bound booklets for product catalogues, annual reports, event programs and corporate brochures. Full colour, any page count, delivered on time.',
-    specs: ['A4 / A5 / Custom sizes', 'Saddle stitch or perfect bind', '90gsm–170gsm paper', 'Full colour + mono'],
+      'From commanding fascia signs to precision-cut acrylic lettering, our signage solutions are engineered to make your brand impossible to ignore. Industry-leading materials and latest fabrication technology on every project.',
+    specs: ['LED & ACP Cladding', 'Acrylic Letters & Back Lit', 'Billboard, Fascia & Pylon', 'Flex Board, Glass Film & Modular'],
   },
   {
     id: '02',
-    title: 'Visiting Cards',
+    title: 'Internal Branding',
     description:
-      'Make every introduction count. Choose from matte laminate, gloss, spot UV, foil stamping and textured finishes. Standard 3.5×2" or custom die-cut shapes.',
-    specs: ['Standard & custom sizes', 'Matte, gloss, spot UV, foil', 'Single & double-sided', 'From 100 to 50,000 units'],
+      'We transform interiors into immersive brand experiences. Every wall, column, window and surface becomes a canvas — for offices, showrooms, hospitals, malls and retail spaces.',
+    specs: ['Wall murals & feature walls', 'Reception & lobby branding', 'Wayfinding & directional systems', 'Window graphics & frosting'],
   },
   {
     id: '03',
-    title: 'Flex & Banner Printing',
+    title: 'Vehicle Branding',
     description:
-      'Large-format printing for hoardings, roll-up banners, pop-up displays, backdrops and outdoor signage. Weather-resistant inks, reinforced hems and eyelets.',
-    specs: ['Flex, vinyl, canvas media', 'Up to 10 ft wide', 'UV-resistant inks', 'Hems, eyelets & poles'],
+      'Turn your fleet into a moving media channel. Our vehicle wraps deliver maximum visibility across city streets and highways — from 2-wheelers to heavy transport, rain or shine.',
+    specs: ['2-wheeler to heavy transport', 'UV-resistant lamination', 'Design & visualisation mockup', 'Nationwide fleet support'],
   },
   {
     id: '04',
-    title: 'Packaging',
+    title: 'Digital Printing',
     description:
-      'Custom boxes, bags, sleeves and labels for retail, gifting and e-commerce. Structural design support available. Minimum order quantities from 50 units.',
-    specs: ['Rigid, folding & corrugated', 'Custom structural design', 'Full colour print', 'Food-safe options available'],
+      'Powered by HP Latex 570 and Epson Surecolor machines, our digital printing delivers stunning colour accuracy at any scale. From single banners to 1 lakh sq.ft runs — done entirely in-house.',
+    specs: ['Flex, Vinyl, Canvas, UV Print', '3D Printing & Eco-solvent', 'HP Latex 570 · Epson Surecolor', '1 Lakh+ sq.ft/day capacity'],
   },
   {
     id: '05',
     title: 'Offset Printing',
     description:
-      'High-volume commercial printing for flyers, letterheads, envelopes, posters and newspapers. Pantone colour matching, varnish and special finishes available.',
-    specs: ['Pantone colour matching', 'Gloss / matte varnish', 'Any substrate', 'Bulk pricing available'],
+      'Premium offset printing for all corporate and marketing collateral. Crisp, consistent, crafted to reflect your brand quality — from a 1,000-copy brochure to a luxury invitation set.',
+    specs: ['Books, Flyers, Brochures, Catalogues', 'Stationery, Packaging & Gift Boxes', 'Spot UV, Foil stamping, Die-cutting', 'High-volume bulk runs'],
   },
   {
     id: '06',
-    title: 'Stationery',
+    title: 'Screen Printing',
     description:
-      'Complete corporate stationery sets — letterheads, envelopes, notepads, folders and presentation kits branded consistently for your business.',
-    specs: ['Letterheads & envelopes', 'Branded notepads', 'Presentation folders', 'Full identity kits'],
+      'Our 4-pillar screen printing machine delivers bold, durable prints on a wide range of substrates — perfect for regulatory signage, promotional boards and everything in between.',
+    specs: ['No Parking & Regulatory Boards', 'Pole Hanging & Flute Board', 'UV Print & 3D Print', 'Municipal & government boards'],
+  },
+  {
+    id: '07',
+    title: 'Display & Exhibition',
+    description:
+      'Make every event a brand showcase. From portable standees to large-scale trade show booths — display solutions that command attention and drive engagement at every venue.',
+    specs: ['Standees, Demo Tents & Umbrellas', 'Fabric Light Boxes & Canvas Frames', 'Trade Show & Name Plates', 'Easel Stands & Exhibition Booths'],
+  },
+  {
+    id: '08',
+    title: 'Outdoor Advertising',
+    description:
+      'Dominate the outdoor landscape with materials engineered for maximum impact and weather resistance. Your brand owns the space — rain or shine, day or night.',
+    specs: ['Flags, Backdrops & Canopies', 'Stickers, Decals & Tents', 'Posters & Table Covers', 'Pan South India coverage'],
   },
 ];
 
@@ -72,10 +86,10 @@ export default function ServicesPage() {
       }}>
         <div className="wix-container">
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
-            What We Do
+            Our Capabilities
           </p>
           <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '700px' }}>
-            Printing services built<br />for every scale
+            Every service,<br />flawlessly delivered.
           </h1>
         </div>
       </section>
@@ -127,17 +141,46 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Machinery section */}
+      <section style={{ backgroundColor: '#f1f0eb', padding: '80px 0' }}>
+        <div className="wix-container">
+          <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
+            Our Infrastructure
+          </p>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '48px', maxWidth: '600px' }}>
+            World-class machinery behind every job.
+          </h2>
+          <div className="machinery-grid">
+            {[
+              { num: '01', name: 'HP Latex 570', desc: 'Wide-format latex printing with stunning colour accuracy for indoor & outdoor applications up to 64 inches wide.' },
+              { num: '02', name: 'Epson Surecolor S80670', desc: 'Eco-solvent wide-format printer delivering 10,000+ sq.ft/day with precision 8-colour output for vehicle wraps & banners.' },
+              { num: '03', name: 'Roland Soljet EJ 640', desc: '64" solvent printer renowned for vivid, weather-resistant output — perfect for outdoor signage.' },
+              { num: '04', name: 'K Tech 1325 HD CNC Router', desc: 'High-definition CNC routing for precision-cut acrylic, ACP and wood signage with sub-millimetre accuracy.' },
+              { num: '05', name: 'Laser Engraving & Cutting', desc: 'Precision laser engraving for nameplates, awards, glass etching and intricate branding details.' },
+              { num: '06', name: '4-Pillar Screen Printer', desc: 'Industrial-grade screen printing for high-volume runs on boards, flute sheets, UV and 3D applications.' },
+              { num: '07', name: 'Graphtec Cutting Plotter', desc: 'Japan-engineered precision cutting plotter for vinyl graphics, stickers, decals and vehicle wrap contours.' },
+            ].map((m, i) => (
+              <div key={m.num} className={`wix-motion wix-fade-up`} style={{ transitionDelay: `${i * 60}ms` }}>
+                <p style={{ fontFamily: font, fontSize: '11px', color: 'rgb(85,78,78)', marginBottom: '10px' }}>{m.num}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(14px, 1.4vw, 17px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '8px' }}>{m.name}</p>
+                <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.6em', color: 'rgb(85,78,78)' }}>{m.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA strip */}
       <section style={{ backgroundColor: '#ffedc9', padding: '80px 0' }}>
         <div className="wix-container" style={{ textAlign: 'center' }}>
           <div className="wix-motion wix-fade-up">
             <h2 style={{ fontFamily: font, fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: '#000', marginBottom: '20px' }}>
-              Ready to print?
+              Ready to make your brand unforgettable?
             </h2>
             <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
-              Get a quote in under 24 hours. No hidden costs.
+              Talk to our team today and get a custom quote for your project.
             </p>
-            <a href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20get%20a%20quote%20for%20printing%20services." target="_blank" rel="noopener noreferrer" style={{
+            <a href={WA_URL} target="_blank" rel="noopener noreferrer" style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               backgroundColor: '#000', color: '#fff',
               fontFamily: font, fontSize: '14px', letterSpacing: '0.03em',
@@ -171,6 +214,15 @@ export default function ServicesPage() {
             padding: 32px 0 !important;
           }
         }
+
+        .machinery-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 40px 32px;
+        }
+        @media (max-width: 1024px) { .machinery-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px)  { .machinery-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; } }
+        @media (max-width: 480px)  { .machinery-grid { grid-template-columns: 1fr; } }
       `}</style>
     </>
   );

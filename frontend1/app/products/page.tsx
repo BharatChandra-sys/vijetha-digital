@@ -22,10 +22,10 @@ export default function ProductsPage() {
             Our Catalogue
           </p>
           <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '700px' }}>
-            Everything you need,<br />printed to perfection
+            Signage, branding &<br />print — all under one roof.
           </h1>
           <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '520px', lineHeight: '1.65em' }}>
-            Sign boards, flex printing, banner stands, demo tents and promotional items — all under one roof.
+            From LED sign boards to vehicle wraps, digital printing to exhibition displays — 30+ products across 7 categories.
           </p>
         </div>
       </section>

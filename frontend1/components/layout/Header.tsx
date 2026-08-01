@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
+
 const MENU_BG = '#ffedc9';
 
 interface HeaderProps {
@@ -38,7 +40,8 @@ export default function Header({ variant = 'default' }: HeaderProps) {
   const navLinks = [
     { label: 'Services', href: '/services' },
     { label: 'Products', href: '/products' },
-    { label: 'Contact',  href: '/contact' },
+    { label: 'About',    href: '/about'    },
+    { label: 'Contact',  href: '/contact'  },
   ];
 
   return (
@@ -93,7 +96,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
 
           {/* Desktop CTA */}
           <a
-            href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20get%20a%20quote%20for%20printing%20services."
+            href={WA_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex items-center justify-center px-7 py-[11px] text-[14px] font-normal leading-none transition-all duration-300 hover:opacity-80"
@@ -197,7 +200,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
             </Link>
           ))}
           <a
-            href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20get%20a%20quote%20for%20printing%20services."
+            href={WA_URL}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMenuOpen(false)}
