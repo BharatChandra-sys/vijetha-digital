@@ -54,7 +54,7 @@ const groups = [
 export default function SitemapPage() {
   return (
     <>
-      <Header />
+      <Header variant="home" />
 
       {/* Hero */}
       <section style={{ backgroundColor: '#1c1d20', paddingTop: '140px', paddingBottom: '64px' }}>

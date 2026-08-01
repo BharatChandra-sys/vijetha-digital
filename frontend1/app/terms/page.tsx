@@ -86,7 +86,7 @@ const sections = [
 export default function TermsPage() {
   return (
     <>
-      <Header />
+      <Header variant="home" />
 
       {/* Hero */}
       <section style={{ backgroundColor: '#1c1d20', paddingTop: '140px', paddingBottom: '64px' }}>
