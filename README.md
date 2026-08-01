@@ -1,13 +1,35 @@
-# Vijetha Digital
+<div align="center">
+  <img src="frontend/public/vd-logo.jpeg" alt="Vijetha Digital" width="140" />
+  <h1>Vijetha Digital</h1>
+  <p><strong>Production-Grade E-Commerce Platform for Digital Printing Services</strong></p>
 
-A production-grade e-commerce platform for digital printing services, built on FastAPI and React. The system handles the full order lifecycle from product browsing through payment processing, with role-based access for customers, business accounts, and administrators.
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/FastAPI-0.109-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Redis-7-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis" />
+    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+    <img src="https://img.shields.io/badge/License-Proprietary-red?style=flat-square" alt="License" />
+  </p>
+
+  <p>
+    <a href="#overview">Overview</a> &nbsp;|&nbsp;
+    <a href="#architecture">Architecture</a> &nbsp;|&nbsp;
+    <a href="#tech-stack">Tech Stack</a> &nbsp;|&nbsp;
+    <a href="#local-development">Quick Start</a> &nbsp;|&nbsp;
+    <a href="#deployment">Deployment</a> &nbsp;|&nbsp;
+    <a href="#api-reference">API Reference</a>
+  </p>
+</div>
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Architecture](#architecture)
+- [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
@@ -18,7 +40,7 @@ A production-grade e-commerce platform for digital printing services, built on F
 - [Deployment](#deployment)
 - [Testing](#testing)
 - [Monitoring and Observability](#monitoring-and-observability)
-- [Security](#security)
+- [Security Model](#security-model)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -26,71 +48,105 @@ A production-grade e-commerce platform for digital printing services, built on F
 
 ## Overview
 
-Vijetha Digital replaces manual order workflows (WhatsApp messages, phone calls, spreadsheets) with a structured digital platform. Core capabilities:
+Vijetha Digital is a full-stack commerce platform built for digital printing businesses. It replaces fragmented manual workflows — WhatsApp orders, phone-based pricing, spreadsheet tracking — with a structured, auditable system that scales.
 
-- Full order lifecycle management: Placed, Confirmed, Printing, Quality Check, Shipped, Delivered
-- Dynamic pricing engine with GST, quantity breaks, and business-tier discounts
-- Coupon and promotion system
-- Integrated Razorpay payment gateway with webhook processing
-- JWT authentication with refresh token rotation and Redis-backed token blacklist
-- Role-based access control: Customer, Business, Admin
-- Transactional email via Brevo HTTP API
-- Asynchronous task processing via Celery
-- Admin dashboard with metrics, user management, and order oversight
-- Containerised for consistent deployment across environments
+### Core Capabilities
+
+**Order Management**
+Complete order lifecycle tracking: Placed, Confirmed, Printing, Quality Check, Shipped, Delivered. Every status transition is timestamped and logged with the acting user. PDF invoices generated on demand.
+
+**Dynamic Pricing Engine**
+Calculates final order price accounting for base price, quantity breaks, business-tier discounts, coupons, GST, and configurable shipping rules. All calculations are deterministic and server-side.
+
+**Payment Processing**
+Integrated Razorpay gateway with webhook-based payment verification. All webhook payloads are HMAC-SHA256 verified before processing. Payment state machine prevents double-capture and double-refund.
+
+**Identity and Access**
+JWT authentication with access/refresh token rotation. Token blacklist backed by Redis. Role-based access control across three roles: Customer, Business, Admin. Google OAuth supported as an alternative login path.
+
+**Async Notifications**
+Transactional email via Brevo HTTP API. Background task processing via Celery so email delivery never blocks a request. Templates cover welcome, order confirmation, shipping update, payment receipt, and password reset.
+
+**Administration**
+Full admin dashboard with user management, product moderation, order oversight, coupon management, and business metrics with revenue reporting.
 
 ---
 
-## Architecture
+## System Architecture
 
 ```
-                          +-------------------------+
-                          |      Client Layer        |
-                          |  Browser / Mobile / App  |
-                          +------------+------------+
-                                       |
-                          +------------v------------+
-                          |     Nginx (SSL/TLS)      |
-                          |  Rate Limiting, Caching  |
-                          +------------+------------+
-                                       |
-               +-----------------------+-----------------------+
-               |                       |                       |
-    +----------v----------+ +----------v----------+ +----------v----------+
-    |   FastAPI Worker 1  | |   FastAPI Worker 2  | |   FastAPI Worker N  |
-    |  Gunicorn/Uvicorn   | |  Gunicorn/Uvicorn   | |  Gunicorn/Uvicorn   |
-    +----------+----------+ +----------+----------+ +----------+----------+
-               |                       |                       |
-               +-----------+-----------+-----------+-----------+
-                           |                       |
-              +------------v-----------+ +---------v-----------+
-              |    PostgreSQL 15        | |      Redis 7         |
-              |    Primary Database     | |   Cache / Sessions   |
-              |    Alembic Migrations   | |   Celery Broker      |
-              +------------------------+ +---------------------+
-                                                  |
-                           +-----------------------+
-                           |
-              +------------v-----------+       +------------------------+
-              |    Celery Workers       |       |    External Services    |
-              |  Email / Notifications  +-----> |  Brevo (Email)         |
-              |  Background Tasks       |       |  Razorpay (Payments)   |
-              +------------------------+       |  Cloudinary (Storage)  |
-                                               +------------------------+
++------------------------------------------------------------------+
+|                         CLIENT LAYER                             |
+|  Browser (React / Next.js)    Mobile Browser    Third-party API  |
++----------------------------+------------------------------------+-+
+                             |
+             +---------------v---------------+
+             |         Nginx (SSL/TLS)        |
+             |   Rate Limiting  |  Caching    |
+             |   Static Assets  |  Proxying   |
+             +---------------+---------------+
+                             |
+         +-------------------+-------------------+
+         |                   |                   |
++--------v-------+  +--------v-------+  +--------v-------+
+| FastAPI Worker |  | FastAPI Worker |  | FastAPI Worker |
+| Gunicorn/Uvicorn  | Gunicorn/Uvicorn  | Gunicorn/Uvicorn  |
++--------+-------+  +--------+-------+  +--------+-------+
+         |                   |                   |
+         +-------------------+-------------------+
+                    |                   |
+       +------------v---------+ +-------v---------+
+       |    PostgreSQL 15      | |    Redis 7       |
+       |    Primary Database   | |  Token Blacklist |
+       |    Alembic Migrations | |  Session Cache   |
+       +----------------------+ |  Celery Broker   |
+                                +---------+--------+
+                                          |
+                         +----------------v---------------+
+                         |         Celery Workers         |
+                         |  Email Tasks | Notifications  |
+                         |  Background Jobs | Exports    |
+                         +----------------+---------------+
+                                          |
+                   +-----------------------+-----------------------+
+                   |                       |                       |
+         +---------v--------+  +----------v--------+  +----------v---------+
+         |  Brevo HTTP API  |  |  Razorpay Gateway |  | Cloudinary / S3    |
+         |  Transactional   |  |  Payments         |  | Media Storage      |
+         |  Email Delivery  |  |  Webhooks         |  | Image CDN          |
+         +------------------+  +-------------------+  +--------------------+
 ```
 
-### Request Flow
+### Request Lifecycle
 
 ```
-Request
-  -> Nginx: SSL termination, rate limiting, static file serving
-  -> FastAPI middleware: CORS, security headers, request ID injection, logging
-  -> Authentication: JWT validation, token blacklist check
-  -> Authorization: Role and permission check
-  -> Service layer: Business logic, external API calls
-  -> Repository layer: SQLAlchemy ORM queries
-  -> PostgreSQL
-  <- JSON response with standardised envelope
+1.  Incoming HTTPS request
+     -> Nginx: SSL termination, rate limit check, static file short-circuit
+
+2.  FastAPI middleware chain
+     -> CORS validation
+     -> Request ID injection (UUID, propagated through all log lines)
+     -> Security header attachment (HSTS, CSP, X-Frame-Options, etc.)
+     -> Structured access log emission
+
+3.  Route handler
+     -> JWT validation (signature, expiry, algorithm)
+     -> Token blacklist check against Redis
+     -> Role/permission assertion
+     -> Request body validation via Pydantic v2
+
+4.  Service layer
+     -> Business logic execution
+     -> External API calls (Razorpay, Brevo, Cloudinary)
+     -> Celery task dispatch for async work
+
+5.  Repository layer
+     -> SQLAlchemy ORM queries (parameterised, no raw SQL)
+     -> PostgreSQL read/write
+
+6.  Response
+     -> Standardised JSON envelope
+     -> HTTP status code aligned to RFC 9110
 ```
 
 ---
@@ -99,49 +155,52 @@ Request
 
 ### Backend
 
-| Component       | Technology                          |
-|-----------------|-------------------------------------|
-| Framework       | FastAPI 0.109.0 (Python 3.11+)      |
-| Database        | PostgreSQL 15, SQLAlchemy 2.0       |
-| Cache / Broker  | Redis 7                             |
-| Migrations      | Alembic                             |
-| Auth            | python-jose (JWT), bcrypt           |
-| Validation      | Pydantic v2                         |
-| Task Queue      | Celery                              |
-| Email           | Brevo HTTP API                      |
-| Payments        | Razorpay                            |
-| Storage         | Cloudinary / AWS S3                 |
-| Server          | Gunicorn + Uvicorn workers          |
-| Linting         | Ruff                                |
-| Testing         | Pytest, pytest-asyncio              |
+| Component        | Technology                              | Version    |
+|------------------|-----------------------------------------|------------|
+| Language         | Python                                  | 3.11+      |
+| Framework        | FastAPI                                 | 0.109.0    |
+| ASGI Server      | Gunicorn + Uvicorn workers              | latest     |
+| Database         | PostgreSQL + SQLAlchemy ORM             | 15, 2.0    |
+| Cache / Broker   | Redis                                   | 7          |
+| Migrations       | Alembic                                 | latest     |
+| Auth             | python-jose (JWT) + bcrypt              | latest     |
+| Validation       | Pydantic                                | v2         |
+| Task Queue       | Celery                                  | latest     |
+| Email            | Brevo HTTP API                          | v3         |
+| Payments         | Razorpay Python SDK                     | latest     |
+| Media Storage    | Cloudinary / AWS S3                     | —          |
+| Monitoring       | Prometheus client, Sentry SDK           | latest     |
+| Logging          | Loguru (JSON structured output)         | latest     |
+| Linting          | Ruff                                    | 0.15.x     |
+| Testing          | Pytest + pytest-asyncio                 | latest     |
 
-### Frontend (Legacy — React)
+### Frontend — React (Current Production)
 
-| Component  | Technology                          |
-|------------|-------------------------------------|
-| Framework  | React 19.2.0 (Vite 7.2.4)          |
-| Routing    | React Router DOM 7.13.0             |
-| Styling    | Tailwind CSS 3.4.17                 |
-| HTTP       | Axios 1.13.4                        |
-| OAuth      | @react-oauth/google 0.13.4          |
+| Component  | Technology                | Version    |
+|------------|---------------------------|------------|
+| Framework  | React + Vite              | 19.2, 7.2  |
+| Routing    | React Router DOM          | 7.13.0     |
+| Styling    | Tailwind CSS              | 3.4.17     |
+| HTTP       | Axios                     | 1.13.4     |
+| OAuth      | @react-oauth/google       | 0.13.4     |
 
-### Frontend (New — Next.js)
+### Frontend — Next.js (In Development)
 
-| Component  | Technology                          |
-|------------|-------------------------------------|
-| Framework  | Next.js 15 (App Router)             |
-| Styling    | Tailwind CSS                        |
-| Language   | TypeScript                          |
+| Component  | Technology                | Version    |
+|------------|---------------------------|------------|
+| Framework  | Next.js (App Router)      | 15         |
+| Language   | TypeScript                | 5          |
+| Styling    | Tailwind CSS              | 4          |
 
 ### Infrastructure
 
-| Component        | Technology               |
-|------------------|--------------------------|
-| Containerisation | Docker, Docker Compose   |
-| Reverse Proxy    | Nginx                    |
-| CI/CD            | GitHub Actions           |
-| Monitoring       | Prometheus, Sentry       |
-| Logging          | Loguru, JSON structured  |
+| Component         | Technology                        |
+|-------------------|-----------------------------------|
+| Containerisation  | Docker + Docker Compose           |
+| Reverse Proxy     | Nginx                             |
+| CI/CD             | GitHub Actions                    |
+| PaaS (Staging)    | Render (backend), Vercel (frontend)|
+| IaC               | render.yaml                       |
 
 ---
 
@@ -149,110 +208,141 @@ Request
 
 ```
 vijetha-digital-backend/
-├── app/                          # Backend application root
-│   ├── api/                      # Route handlers
-│   │   ├── admin/                # Admin-only endpoints
-│   │   ├── auth/                 # Registration, login, token refresh
-│   │   ├── orders/               # Order CRUD and lifecycle
-│   │   ├── payments/             # Razorpay integration and webhooks
-│   │   └── products/             # Product catalog
+│
+├── app/                              # Backend application
+│   ├── api/                          # HTTP route handlers
+│   │   ├── admin/                    # Admin-scoped endpoints
+│   │   ├── auth/                     # Registration, login, OAuth, tokens
+│   │   ├── orders/                   # Order CRUD and lifecycle transitions
+│   │   ├── payments/                 # Razorpay integration and webhooks
+│   │   └── products/                 # Product catalogue
+│   │
 │   ├── core/
-│   │   ├── config.py             # Settings via Pydantic BaseSettings
-│   │   ├── dependencies.py       # Dependency injection
-│   │   ├── exceptions.py         # Custom exception types
-│   │   └── security.py           # JWT utilities, password hashing
+│   │   ├── config.py                 # Pydantic BaseSettings — all config here
+│   │   ├── dependencies.py           # FastAPI dependency injection
+│   │   ├── exceptions.py             # Typed exception hierarchy
+│   │   └── security.py               # JWT encode/decode, password hashing
+│   │
 │   ├── db/
-│   │   ├── session.py            # SQLAlchemy engine and session factory
-│   │   └── init_db.py            # Database initialisation
-│   ├── middleware/               # CORS, logging, security headers
-│   ├── models/                   # SQLAlchemy ORM models
-│   ├── schemas/                  # Pydantic request/response schemas
-│   ├── services/                 # Business logic layer
-│   │   ├── brevo_email_service.py
-│   │   ├── business_service.py
-│   │   └── payment_service.py
-│   ├── tasks/                    # Celery async tasks
-│   └── main.py                   # Application entry point
-├── alembic/                      # Database migration scripts
-│   └── versions/
-├── frontend/                     # React (Vite) frontend
+│   │   ├── session.py                # Engine, sessionmaker, get_db dependency
+│   │   └── init_db.py                # First-run database bootstrap
+│   │
+│   ├── middleware/                   # CORS, logging, security headers
+│   ├── models/                       # SQLAlchemy declarative models
+│   ├── schemas/                      # Pydantic v2 request/response schemas
+│   │
+│   ├── services/                     # Business logic — no ORM queries here
+│   │   ├── brevo_email_service.py    # Email delivery via Brevo HTTP API
+│   │   ├── business_service.py       # Business account logic
+│   │   ├── payment_service.py        # Razorpay payment orchestration
+│   │   └── ...
+│   │
+│   ├── tasks/                        # Celery async task definitions
+│   └── main.py                       # FastAPI app factory and startup
+│
+├── alembic/                          # Alembic migration environment
+│   └── versions/                     # Timestamped migration scripts
+│
+├── frontend/                         # React (Vite) — production frontend
+│   ├── public/
+│   │   ├── vd-logo.jpeg              # Brand logo
+│   │   └── products/                 # Product images
 │   └── src/
-├── frontend1/                    # Next.js frontend (in development)
-│   ├── app/
-│   ├── components/
-│   └── public/
-├── nginx/                        # Nginx configuration
-├── scripts/                      # Operational scripts
-│   ├── seed_products.py
-│   ├── deploy.sh
-│   └── rollback.sh
-├── tests/                        # Test suite
-│   ├── unit/
-│   └── integration/
-├── .github/workflows/            # CI/CD pipeline definitions
-│   ├── ci.yml
-│   └── deploy.yml
+│       ├── api/                      # Axios API client modules
+│       ├── components/               # Shared UI components
+│       ├── layouts/                  # Page layout wrappers
+│       ├── pages/                    # Route-level page components
+│       └── styles/                   # Global and component CSS
+│
+├── frontend1/                        # Next.js — in-development frontend
+│   ├── app/                          # App Router pages and layouts
+│   ├── components/                   # Server and client components
+│   └── public/                       # Static assets
+│
+├── nginx/                            # Nginx server configuration
+├── scripts/                          # Operational and maintenance scripts
+│   ├── seed_products.py              # Initial product catalogue seed
+│   ├── deploy.sh                     # Zero-downtime production deploy
+│   └── rollback.sh                   # Deployment rollback
+│
+├── tests/
+│   ├── unit/                         # Isolated unit tests
+│   └── integration/                  # API-level integration tests
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                    # Lint, test, type-check on every PR
+│       └── deploy.yml                # Deploy to Render on merge to main
+│
 ├── Dockerfile
-├── docker-compose.yml
-├── docker-compose.prod.yml
-├── render.yaml                   # Render.com deployment manifest
+├── docker-compose.yml                # Local development stack
+├── docker-compose.prod.yml           # Production stack
+├── render.yaml                       # Render deployment manifest
 ├── alembic.ini
 ├── pyproject.toml
-├── requirements.txt
-├── requirements-pinned.txt       # Pinned dependencies for reproducibility
-└── .env.example                  # Environment variable template
+├── requirements.txt                  # Unpinned (for flexibility)
+├── requirements-pinned.txt           # Pinned (for reproducibility)
+└── .env.example                      # Full environment variable reference
 ```
 
 ---
 
 ## Prerequisites
 
-- Python 3.11 or higher
-- Node.js 18 or higher
-- PostgreSQL 15 or higher
-- Redis 7 or higher
-- Docker and Docker Compose (for containerised deployment)
+| Requirement        | Minimum Version |
+|--------------------|-----------------|
+| Python             | 3.11            |
+| Node.js            | 18              |
+| PostgreSQL         | 15              |
+| Redis              | 7               |
+| Docker             | 24 (optional)   |
+| Docker Compose     | 2.x (optional)  |
 
 ---
 
 ## Local Development
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
-git clone https://github.com/yourusername/vijetha-digital-backend.git
+git clone https://github.com/BharatChandra-sys/vijetha-digital-backend.git
 cd vijetha-digital-backend
 ```
 
-### 2. Backend setup
+### 2. Backend
 
 ```bash
 # Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate        # Linux / macOS
-venv\Scripts\activate           # Windows
+source venv/bin/activate          # macOS / Linux
+venv\Scripts\activate             # Windows
 
 # Install pinned dependencies
 pip install -r requirements-pinned.txt
 
-# Copy and configure environment variables
+# Configure environment
 cp .env.example .env
-# Edit .env with your database, Redis, and third-party credentials
+# Open .env and fill in DATABASE_URL, REDIS_URL, JWT_SECRET_KEY,
+# BREVO_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
 
-# Apply database migrations
+# Apply database schema
 alembic upgrade head
 
-# Seed initial product data (optional)
+# Seed product catalogue (optional)
 python scripts/seed_products.py
 
-# Start the development server
+# Start API server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend available at: `http://localhost:8000`
-Interactive API docs: `http://localhost:8000/docs`
+| Endpoint            | URL                            |
+|---------------------|-------------------------------|
+| API Base            | http://localhost:8000          |
+| Interactive Docs    | http://localhost:8000/docs     |
+| ReDoc               | http://localhost:8000/redoc    |
+| Health              | http://localhost:8000/health   |
 
-### 3. Frontend setup (React)
+### 3. React Frontend
 
 ```bash
 cd frontend
@@ -262,9 +352,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Frontend available at: `http://localhost:5173`
+Available at: http://localhost:5173
 
-### 4. Frontend setup (Next.js)
+### 4. Next.js Frontend
 
 ```bash
 cd frontend1
@@ -272,16 +362,16 @@ npm install
 npm run dev
 ```
 
-Frontend available at: `http://localhost:3000`
+Available at: http://localhost:3000
 
-### 5. Default admin credentials
+### Default Admin Credentials
 
 ```
-Email:    admin@vijetha.com
-Password: admin123
+Email:     admin@vijetha.com
+Password:  admin123
 ```
 
-Change the admin password immediately after first login.
+Change the admin password immediately after the first login.
 
 ---
 
@@ -290,51 +380,54 @@ Change the admin password immediately after first login.
 ### Backend (`.env`)
 
 ```bash
-# Application
+# ── Application ──────────────────────────────────────────────────
 ENV=development
 APP_NAME=Vijetha Digital Backend
 SECRET_KEY=<64-character-random-string>
 
-# Database
+# ── Database ─────────────────────────────────────────────────────
 DATABASE_URL=postgresql://user:password@localhost:5432/vijetha_db
 
-# Redis
+# ── Redis ────────────────────────────────────────────────────────
 REDIS_URL=redis://localhost:6379/0
 
-# JWT
+# ── JWT ──────────────────────────────────────────────────────────
 JWT_SECRET_KEY=<64-character-random-string>
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=7
 
-# Admin bootstrap
+# ── Admin Bootstrap ───────────────────────────────────────────────
 ADMIN_EMAIL=admin@yourdomain.com
 ADMIN_PASSWORD=<strong-password>
 
-# Brevo (transactional email)
+# ── Email — Brevo HTTP API ────────────────────────────────────────
 BREVO_API_KEY=xkeysib-...
 BREVO_FROM_EMAIL=noreply@yourdomain.com
 BREVO_FROM_NAME=Vijetha Digital
 
-# Cloudinary (media storage)
+# ── Media Storage — Cloudinary ────────────────────────────────────
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
-# Razorpay (payments)
+# ── Payments — Razorpay ───────────────────────────────────────────
 RAZORPAY_KEY_ID=rzp_live_...
 RAZORPAY_KEY_SECRET=
 RAZORPAY_WEBHOOK_SECRET=
 
-# Google OAuth (optional)
+# ── Google OAuth (optional) ───────────────────────────────────────
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
-# CORS
+# ── CORS ─────────────────────────────────────────────────────────
 FRONTEND_URL=http://localhost:5173
+
+# ── Monitoring ───────────────────────────────────────────────────
+SENTRY_DSN=
 ```
 
-See `.env.example` for the complete list including optional variables.
+See `.env.example` for the complete annotated reference including all optional variables.
 
 ### Frontend (`.env`)
 
@@ -350,21 +443,23 @@ VITE_GOOGLE_CLIENT_ID=
 ## Database Migrations
 
 ```bash
-# Apply all pending migrations
+# Apply all pending migrations to the latest revision
 alembic upgrade head
 
-# Create a new migration after model changes
-alembic revision --autogenerate -m "description_of_change"
+# Generate a new migration after model changes
+alembic revision --autogenerate -m "describe_the_change"
 
-# Downgrade one revision
-alembic downgrade -1
-
-# View current revision
+# View current applied revision
 alembic current
 
-# View migration history
-alembic history
+# View full migration history
+alembic history --verbose
+
+# Downgrade one revision (use with caution in production)
+alembic downgrade -1
 ```
+
+Migration files live in `alembic/versions/`. Every migration must be reviewed before applying to a production database.
 
 ---
 
@@ -374,12 +469,10 @@ alembic history
 
 ```
 Development:  http://localhost:8000
-Production:   https://your-domain.com
+Production:   https://vijetha-digital.onrender.com
 ```
 
-### Authentication
-
-All protected endpoints require a Bearer token in the Authorization header:
+### Authentication Header
 
 ```
 Authorization: Bearer <access_token>
@@ -387,68 +480,66 @@ Authorization: Bearer <access_token>
 
 ### Endpoints
 
-#### Auth
+#### Authentication
 
-```
-POST  /auth/register           Register a new user account
-POST  /auth/login              Authenticate and receive tokens
-POST  /auth/refresh            Rotate access token using refresh token
-POST  /auth/logout             Invalidate current session
-POST  /auth/forgot-password    Initiate password reset flow
-POST  /auth/reset-password     Complete password reset
-```
+| Method | Path                    | Description                         | Auth     |
+|--------|-------------------------|-------------------------------------|----------|
+| POST   | /auth/register          | Register a new user account         | Public   |
+| POST   | /auth/login             | Authenticate and receive tokens     | Public   |
+| POST   | /auth/refresh           | Rotate access token                 | Public   |
+| POST   | /auth/logout            | Invalidate current session          | Required |
+| POST   | /auth/forgot-password   | Initiate password reset             | Public   |
+| POST   | /auth/reset-password    | Complete password reset             | Public   |
 
 #### Products
 
-```
-GET    /products               List products with pagination and filters
-GET    /products/{id}          Retrieve a single product
-POST   /products               Create a product (Admin)
-PUT    /products/{id}          Update a product (Admin)
-DELETE /products/{id}          Delete a product (Admin)
-```
+| Method | Path             | Description                   | Auth     |
+|--------|------------------|-------------------------------|----------|
+| GET    | /products        | List products (paginated)     | Public   |
+| GET    | /products/{id}   | Retrieve single product       | Public   |
+| POST   | /products        | Create product                | Admin    |
+| PUT    | /products/{id}   | Update product                | Admin    |
+| DELETE | /products/{id}   | Delete product                | Admin    |
 
 #### Orders
 
-```
-GET   /orders                  List authenticated user's orders
-GET   /orders/{id}             Retrieve order details
-POST  /orders                  Create a new order
-PUT   /orders/{id}/status      Update order status (Admin)
-GET   /orders/{id}/invoice     Download PDF invoice
-```
+| Method | Path                     | Description                   | Auth     |
+|--------|--------------------------|-------------------------------|----------|
+| GET    | /orders                  | List current user's orders    | Required |
+| GET    | /orders/{id}             | Retrieve order details        | Required |
+| POST   | /orders                  | Create a new order            | Required |
+| PUT    | /orders/{id}/status      | Update order status           | Admin    |
+| GET    | /orders/{id}/invoice     | Download PDF invoice          | Required |
 
 #### Payments
 
-```
-POST  /payments/create         Initiate a Razorpay payment
-POST  /payments/verify         Verify payment signature
-POST  /payments/webhook        Razorpay webhook receiver
-```
+| Method | Path                  | Description                      | Auth     |
+|--------|-----------------------|----------------------------------|----------|
+| POST   | /payments/create      | Initiate a Razorpay payment      | Required |
+| POST   | /payments/verify      | Verify payment signature         | Required |
+| POST   | /payments/webhook     | Razorpay event webhook receiver  | HMAC     |
 
 #### Admin
 
-```
-GET   /api/v1/admin/users      List all users
-GET   /api/v1/admin/orders     List all orders with filters
-GET   /api/v1/admin/metrics    Business metrics summary
-```
+| Method | Path                        | Description              | Auth  |
+|--------|-----------------------------|--------------------------|-------|
+| GET    | /api/v1/admin/users         | List all users           | Admin |
+| GET    | /api/v1/admin/orders        | List all orders          | Admin |
+| GET    | /api/v1/admin/metrics       | Business metrics summary | Admin |
 
 ### Response Envelope
 
-Success:
+All responses follow a consistent structure:
 
 ```json
+// Success
 {
   "status": "success",
-  "data": {},
+  "data": { },
   "message": "Operation completed"
 }
-```
 
-Error:
-
-```json
+// Error
 {
   "error": "Validation error",
   "detail": "Field 'email' is required",
@@ -460,41 +551,48 @@ Error:
 
 ## Deployment
 
-### Render + Vercel (Recommended for Staging)
+### Render + Vercel (Recommended for Staging / Free Tier)
 
-**Backend on Render:**
+**Backend on Render**
 
-1. Push to GitHub
-2. Create a PostgreSQL database on Render
-3. Create a Web Service pointing to this repository
-4. Set all required environment variables from `.env.example`
-5. Render will run `uvicorn app.main:app` automatically via `render.yaml`
+1. Push to the `main` branch on GitHub.
+2. Create a PostgreSQL database on Render (free tier available).
+3. Create a Web Service from the repository root. Render reads `render.yaml` automatically.
+4. Add all required environment variables from `.env.example` to the Render service.
+5. Render runs `alembic upgrade head` as a pre-deploy job, then starts Gunicorn.
 
-**Frontend on Vercel:**
+**Frontend on Vercel**
 
-1. Import repository in Vercel
-2. Set root directory to `frontend`
-3. Add `VITE_API_BASE_URL` pointing to your Render service URL
-4. Deploy
+1. Import the repository in Vercel.
+2. Set the root directory to `frontend`.
+3. Add `VITE_API_BASE_URL` pointing to your Render service URL.
+4. Deploy. Vercel runs `npm run build` automatically.
+
+Estimated setup time: 20 minutes. Cost: $0/month on free tiers.
 
 ### Docker (Production)
 
 ```bash
-# Build and start all services
+# Start all services (API, Postgres, Redis, Nginx, Celery)
 docker-compose -f docker-compose.prod.yml up -d
 
-# View logs
+# Tail logs
 docker-compose -f docker-compose.prod.yml logs -f api
 
-# Stop all services
+# Run migrations against the running container
+docker-compose -f docker-compose.prod.yml exec api alembic upgrade head
+
+# Graceful shutdown
 docker-compose -f docker-compose.prod.yml down
 
-# Deploy with rollback capability
+# Deploy with automated rollback support
 ./scripts/deploy.sh
-./scripts/rollback.sh   # if issues arise
+
+# Roll back to previous release if needed
+./scripts/rollback.sh
 ```
 
-Refer to `COMPLETE_DEPLOYMENT_MANUAL.md` for detailed server provisioning steps.
+Refer to `COMPLETE_DEPLOYMENT_MANUAL.md` for full server provisioning, SSL certificate setup, and post-deploy verification steps.
 
 ---
 
@@ -504,24 +602,25 @@ Refer to `COMPLETE_DEPLOYMENT_MANUAL.md` for detailed server provisioning steps.
 # Run full test suite
 pytest tests/ -v
 
-# Run with coverage report
+# Run with HTML coverage report
 pytest tests/ --cov=app --cov-report=html
+open htmlcov/index.html
 
-# Run only unit tests
+# Run unit tests only
 pytest tests/unit/ -v
 
-# Run only integration tests
+# Run integration tests only
 pytest tests/integration/ -v
 
-# Test email service connectivity
+# Test Brevo email connectivity
 python test_email_service.py
 ```
 
-### Manual smoke test
+### Manual Smoke Tests
 
 ```bash
 # Health check
-curl http://localhost:8000/health
+curl https://your-api.onrender.com/health
 
 # Register
 curl -X POST http://localhost:8000/auth/register \
@@ -538,13 +637,11 @@ curl -X POST http://localhost:8000/auth/login \
 
 ## Monitoring and Observability
 
-### Health check
+### Health Check
 
-```bash
-curl https://your-api.onrender.com/health
 ```
-
-Expected response:
+GET /health
+```
 
 ```json
 {
@@ -556,68 +653,102 @@ Expected response:
 }
 ```
 
-### Prometheus metrics
+### Prometheus Metrics
 
 ```
 GET /metrics
 ```
 
-Exposes request counts, latency histograms, error rates, and custom business metrics. Scrape interval: 15 seconds.
+Exposes: request counts, latency histograms (p50/p95/p99), error rates by endpoint, database connection pool utilisation, Celery queue depths, and custom business metrics (orders per minute, payment success rate).
 
-### Structured logging
+Recommended scrape interval: 15 seconds.
 
-All requests emit JSON log lines including:
+### Structured Logging
 
-- `request_id` (injected by middleware, propagated to all log statements in the request context)
-- `method`, `path`, `status_code`, `duration_ms`
-- `user_id` (when authenticated)
-- `level`, `timestamp`
+Every log line is JSON with the following guaranteed fields:
 
-Log output goes to stdout for collection by the container orchestrator or a log aggregation service.
+| Field          | Description                                    |
+|----------------|------------------------------------------------|
+| `timestamp`    | ISO 8601 UTC                                   |
+| `level`        | DEBUG, INFO, WARNING, ERROR, CRITICAL          |
+| `request_id`   | UUID injected at middleware, spans full request|
+| `method`       | HTTP verb                                      |
+| `path`         | Request path                                   |
+| `status_code`  | HTTP response code                             |
+| `duration_ms`  | Request processing time                        |
+| `user_id`      | Present on authenticated requests              |
 
-### Error tracking
+Logs are written to stdout for capture by Docker, systemd, or a log aggregation agent (Datadog, Loki, CloudWatch).
 
-Sentry DSN is configured via `SENTRY_DSN` environment variable. All unhandled exceptions and 5xx responses are captured automatically.
+### Error Tracking
+
+Sentry is configured via `SENTRY_DSN`. All unhandled exceptions, 5xx responses, and Celery task failures are captured automatically with full stack traces and request context.
 
 ---
 
-## Security
+## Security Model
 
-- All secrets are loaded from environment variables. No credentials are committed to the repository.
-- JWT access tokens expire in 30 minutes. Refresh tokens expire in 7 days. Invalidated tokens are stored in Redis.
-- Passwords are hashed using bcrypt with a work factor of 12.
-- Failed login attempts are tracked. Accounts are locked after repeated failures.
-- Rate limiting is applied at the Nginx layer and per-endpoint in FastAPI.
-- CORS origins are explicitly configured. Wildcard origins are not permitted in production.
-- Security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options) are set by middleware.
-- Razorpay webhook payloads are verified using HMAC-SHA256 signature validation before processing.
-- SQL injection is prevented by using SQLAlchemy parameterised queries exclusively.
-- File uploads are validated by MIME type and size before storage.
+| Control                      | Implementation                                               |
+|------------------------------|--------------------------------------------------------------|
+| Transport security           | TLS 1.2+ enforced at Nginx, HSTS header set                  |
+| Authentication               | JWT HS256, 30-minute access tokens, 7-day refresh tokens     |
+| Token revocation             | Redis-backed blacklist, checked on every authenticated request |
+| Password storage             | bcrypt with work factor 12                                   |
+| Account lockout              | Consecutive failed login tracking, configurable threshold    |
+| Role enforcement             | RBAC checked in FastAPI dependencies before handler executes |
+| SQL injection                | SQLAlchemy parameterised queries exclusively, no raw SQL      |
+| Webhook integrity            | Razorpay payloads verified with HMAC-SHA256 before processing|
+| File upload safety           | MIME type validation and size limits enforced server-side     |
+| CORS                         | Explicit allow-list, no wildcard origins in production        |
+| Security headers             | CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy|
+| Rate limiting                | Per-endpoint limits in FastAPI, global limits at Nginx        |
+| Secrets management           | All secrets via environment variables, never committed        |
+| Dependency pinning           | `requirements-pinned.txt` used for all production deployments|
 
 ---
 
 ## Contributing
 
-1. Fork the repository and create a feature branch from `main`:
+1. Fork the repository.
 
-```bash
-git checkout -b feature/your-feature-name
-```
+2. Create a feature branch from `main`:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-2. Make changes following the code style conventions:
-   - Python: PEP 8, enforced by Ruff
-   - TypeScript/JavaScript: ESLint
+3. Follow code style conventions:
+   - Python: PEP 8, enforced by Ruff (`ruff check .`)
+   - TypeScript / JavaScript: ESLint
 
-3. Write or update tests for any changed behaviour.
+4. Write tests covering any new or changed behaviour. The CI pipeline enforces test passage.
 
-4. Verify the test suite passes locally before opening a pull request.
+5. Verify locally before opening a pull request:
+   ```bash
+   ruff check .
+   pytest tests/ -v
+   ```
 
-5. Open a pull request against `main` with a clear description of the change and the reasoning behind it.
+6. Open a pull request against `main` with a clear title and description. Link any relevant issue.
+
+Pull request titles must follow Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`.
+
+---
+
+## Documentation Index
+
+| Document                        | Purpose                                          |
+|---------------------------------|--------------------------------------------------|
+| `README.md`                     | This file — project overview and quick reference |
+| `COMPLETE_DEPLOYMENT_MANUAL.md` | Step-by-step production server setup             |
+| `DEPLOYMENT_GUIDE.md`           | Concise deployment reference                     |
+| `BREVO_OAUTH_SETUP_GUIDE.md`    | Email service and Google OAuth configuration     |
+| `SECURITY_REMINDER.md`          | Pre-deployment security checklist                |
+| `DEPLOYMENT_STATUS.md`          | Current live environment status                  |
 
 ---
 
 ## License
 
-Proprietary. All rights reserved.
+Proprietary software. All rights reserved.
 
-Copyright 2026 Vijetha Digital. Unauthorised copying, distribution, or modification of this software is prohibited.
+Copyright 2026 Vijetha Digital. Unauthorised copying, distribution, modification, or use of this software, in whole or in part, without prior written permission is strictly prohibited.
