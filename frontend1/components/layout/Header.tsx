@@ -64,6 +64,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
               fontFamily: "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif",
               color: (useDarkText || menuOpen) ? '#000' : heroTextColor,
               textDecoration: 'none',
+              visibility: menuOpen ? 'hidden' : 'visible',
             }}
           >
             Vijetha Digital
@@ -106,33 +107,52 @@ export default function Header({ variant = 'default' }: HeaderProps) {
             Get a Quote
           </a>
 
-          {/* Hamburger */}
+          {/* Hamburger — animated morph to X */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden flex items-center justify-center w-10 h-10"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
-            {menuOpen ? (
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <line x1="2" y1="2" x2="20" y2="20" stroke="black" strokeWidth="2" strokeLinecap="round"/>
-                <line x1="20" y1="2" x2="2" y2="20" stroke="black" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            ) : (
-              <span className="flex flex-col gap-[5px]">
-                {[0, 1, 2].map(i => (
-                  <span
-                    key={i}
-                    className="block w-6 h-[2px] transition-colors duration-300"
-                    style={{ backgroundColor: (useDarkText || menuOpen) ? '#000' : heroTextColor }}
-                  />
-                ))}
-              </span>
-            )}
+            <span className="hamburger-icon" data-open={menuOpen ? 'true' : 'false'}>
+              <span className="hbar hbar-1" style={{ backgroundColor: (useDarkText || menuOpen) ? '#000' : heroTextColor }} />
+              <span className="hbar hbar-2" style={{ backgroundColor: (useDarkText || menuOpen) ? '#000' : heroTextColor }} />
+              <span className="hbar hbar-3" style={{ backgroundColor: (useDarkText || menuOpen) ? '#000' : heroTextColor }} />
+            </span>
           </button>
 
         </div>
       </header>
+
+      {/* ── HAMBURGER CSS ── */}
+      <style>{`
+        .hamburger-icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 24px;
+          height: 18px;
+          position: relative;
+        }
+        .hbar {
+          display: block;
+          width: 24px;
+          height: 2px;
+          border-radius: 2px;
+          position: absolute;
+          transition:
+            transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+            opacity   0.3s ease,
+            top       0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .hbar-1 { top: 0px; }
+        .hbar-2 { top: 8px; }
+        .hbar-3 { top: 16px; }
+        [data-open="true"] .hbar-1 { top: 8px; transform: rotate(45deg); }
+        [data-open="true"] .hbar-2 { opacity: 0; transform: scaleX(0); }
+        [data-open="true"] .hbar-3 { top: 8px; transform: rotate(-45deg); }
+      `}</style>
 
       {/* ── FULL-PAGE MOBILE MENU ── */}
       <div
