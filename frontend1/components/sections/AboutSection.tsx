@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 
+const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+
 export default function AboutSection() {
   return (
-    <section
-      id="about"
-      style={{ backgroundColor: '#f1f0eb', width: '100%', padding: '80px 0' }}
-    >
+    <section id="about" style={{ backgroundColor: '#f1f0eb', width: '100%', padding: '80px 0' }}>
       <div className="wix-container">
         <div className="about-grid">
 
@@ -16,7 +16,7 @@ export default function AboutSection() {
             <div className="wix-img-wrap" style={{ aspectRatio: '4/3' }}>
               <img
                 src="/images/about-printing.jpg"
-                alt="Vijetha Digital printing facility"
+                alt="Vijetha Digital printing facility — Hyderabad"
                 loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
@@ -25,61 +25,44 @@ export default function AboutSection() {
 
           {/* Content */}
           <div className="wix-motion wix-fade-left wix-delay-2">
-            <p style={{
-              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-              fontSize: '11px', fontWeight: 400, letterSpacing: '0.18em',
-              textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px',
-            }}>
+            <p style={{ fontFamily: font, fontSize: '11px', fontWeight: 400, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               About Us
             </p>
 
-            <h2 style={{
-              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-              fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 400,
-              lineHeight: 1.25, color: '#000', marginBottom: '22px',
-            }}>
-              The go-to experts for<br />all your printing needs
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 400, lineHeight: 1.25, color: '#000', marginBottom: '22px' }}>
+              Hyderabad&apos;s trusted<br />printing partner
             </h2>
 
-            <p style={{
-              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-              fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '14px',
-            }}>
-              Vijetha Digital is a full-service printing company delivering precision, quality and 
-              creativity to every project. From high-volume commercial prints to bespoke marketing 
-              collateral, we combine state-of-the-art machinery with skilled craftsmanship.
+            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
+              Vijetha Digital is a full-service printing and signage company based in Hyderabad,
+              Telangana. From sign boards and flex printing to banner stands and branded tents,
+              we deliver precision and quality on every project — regardless of scale.
             </p>
-            <p style={{
-              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-              fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px',
-            }}>
-              Whether it&apos;s a business card or a large-format banner, every print that leaves 
-              our facility meets the highest standards — because your brand deserves nothing less.
+            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
+              With 500+ happy businesses and a decade of expertise, we combine modern printing
+              technology with skilled craftsmanship. Your brand deserves nothing less.
             </p>
 
-            <Link href="#contact" style={{
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              backgroundColor: '#000', color: '#fff',
-              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-              fontSize: '14px', fontWeight: 400, letterSpacing: '0.03em',
-              padding: '14px 36px', textDecoration: 'none',
-            }}>
+            <a
+              href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20get%20a%20quote%20for%20printing%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                backgroundColor: '#000', color: '#fff',
+                fontFamily: font, fontSize: '14px', fontWeight: 400, letterSpacing: '0.03em',
+                padding: '14px 36px', textDecoration: 'none',
+              }}
+            >
               Get a Quote
-            </Link>
+            </a>
           </div>
         </div>
       </div>
 
       <style>{`
-        .about-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 72px;
-          align-items: center;
-        }
-        @media (max-width: 768px) {
-          .about-grid { grid-template-columns: 1fr; gap: 36px; }
-        }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 36px; } }
       `}</style>
     </section>
   );

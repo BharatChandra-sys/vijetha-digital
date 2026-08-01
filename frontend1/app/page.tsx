@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <ScrollAnimations />
-      <Header />
+      <Header variant="home" />
       <main>
         {/*
           Stack scroll zone: Hero → About → Projects each slide over the previous.

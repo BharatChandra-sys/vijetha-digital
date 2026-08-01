@@ -108,7 +108,6 @@ export default function HeroSection() {
           >
             Print Your<br />Vision to Life
           </h1>
-
           {/* CTA — smaller on mobile */}
           <div
             style={{

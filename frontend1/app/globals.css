@@ -112,9 +112,15 @@ body {
 /* ─── LAYOUT ─── */
 .wix-container {
   width: 100%;
-  max-width: 980px;    /* Wix --site-width: 980px */
+  max-width: 1280px;    /* Increased from 980px for better desktop utilization */
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 60px;      /* Increased side padding for breathing room */
+}
+@media (max-width: 1024px) {
+  .wix-container { 
+    max-width: 100%;
+    padding: 0 40px; 
+  }
 }
 @media (max-width: 768px) {
   .wix-container { padding: 0 20px; }
