@@ -11,39 +11,35 @@ export default function ClientsSection() {
     <section style={{ backgroundColor: '#ffedc9', width: '100%', padding: '80px 0' }}>
       <div className="wix-container">
 
-        {/* Header */}
-        <div
-          className="wix-motion wix-fade-up"
-          style={{ textAlign: 'center', marginBottom: '56px' }}
-        >
-          <p
-            className="wix-font-9"
-            style={{
-              textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              color: 'rgb(85,78,78)',
-              marginBottom: '12px',
-            }}
-          >
+        <div className="wix-motion wix-fade-up" style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <p style={{
+            fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+            fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: 'rgb(85,78,78)', marginBottom: '12px',
+          }}>
             Our Clients
           </p>
-          <h2 className="wix-font-2" style={{ marginBottom: '12px' }}>
+          <h2 style={{
+            fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+            fontSize: 'clamp(24px, 2.6vw, 34px)', fontWeight: 400,
+            lineHeight: 1.25, color: '#000',
+          }}>
             We&apos;re proud to work with<br />these companies
           </h2>
         </div>
 
-        {/* Client names — 3 columns */}
         <div className="clients-grid">
-          {clients.map((client, index) => (
+          {clients.map((client, i) => (
             <div
               key={client.id}
-              className={`wix-motion wix-fade-up wix-delay-${index + 2}`}
+              className={`wix-motion wix-fade-up wix-delay-${i + 2}`}
               style={{ textAlign: 'center' }}
             >
-              <p
-                className="wix-font-3"
-                style={{ fontSize: '22px', letterSpacing: '0.05em' }}
-              >
+              <p style={{
+                fontFamily: "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif",
+                fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 400,
+                letterSpacing: '0.04em', color: '#000',
+              }}>
                 {client.name}
               </p>
             </div>
@@ -56,16 +52,13 @@ export default function ClientsSection() {
         .clients-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 40px;
-          max-width: 700px;
+          gap: 32px;
+          max-width: 640px;
           margin: 0 auto;
           align-items: center;
         }
-        @media (max-width: 640px) {
-          .clients-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
+        @media (max-width: 480px) {
+          .clients-grid { grid-template-columns: 1fr; gap: 20px; }
         }
       `}</style>
     </section>

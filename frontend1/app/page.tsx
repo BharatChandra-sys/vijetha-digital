@@ -9,9 +9,10 @@ import ClientsSection from '@/components/sections/ClientsSection';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 
 export const metadata: Metadata = {
-  title: 'More Than B&W | Premium Printing Solutions',
+  title: 'Vijetha Digital | Professional Printing Services',
   description:
-    'The go-to experts for all your printing needs. Quality prints, beautiful details.',
+    'Vijetha Digital — your go-to experts for all printing needs. Quality prints, beautiful details. Booklets, cards, flex printing, banners and more.',
+  keywords: 'printing services, booklets, flex printing, banner printing, visiting cards, Vijetha Digital',
 };
 
 export default function Home() {
@@ -19,41 +20,29 @@ export default function Home() {
     <>
       <ScrollAnimations />
       <Header />
-
-      {/*
-        Stack-scroll layout:
-        Each section is position:sticky top:0 with increasing z-index.
-        As you scroll, each new section slides up and overlays the previous one.
-        The spacer divs give the page enough scroll height for each section.
-      */}
       <main>
         {/*
-          STACK ZONE — Hero + About + Projects all stack over each other.
-          Wrapper height = 100vh (Hero) + ~100vh (About) + ~100vh (Projects) = 300vh.
-          Once the wrapper ends, Services and Clients scroll normally.
+          Stack scroll zone: Hero → About → Projects each slide over the previous.
+          The wrapper height drives scroll travel for each sticky section.
+          Each non-hero section is ~600–700px so we give 100vh per section.
+          No extra whitespace because sections are min-height not 100vh.
         */}
         <div style={{ position: 'relative', height: '300vh' }}>
-          {/* Hero — z-index 1 */}
           <div style={{ position: 'sticky', top: 0, zIndex: 1 }}>
             <HeroSection />
           </div>
-
-          {/* About — slides over Hero, z-index 2 */}
           <div style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <AboutSection />
           </div>
-
-          {/* Projects — slides over About, z-index 3 */}
           <div style={{ position: 'sticky', top: 0, zIndex: 3 }}>
             <ProjectsSection />
           </div>
         </div>
 
-        {/* ── NORMAL SCROLL from here ── */}
+        {/* Normal scroll */}
         <ServicesSection />
         <ClientsSection />
       </main>
-
       <Footer />
     </>
   );

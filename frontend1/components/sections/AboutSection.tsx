@@ -2,77 +2,68 @@
 
 import Link from 'next/link';
 
-// Wix section: bg = color_12 = rgb(241,240,235) = #f1f0eb
 export default function AboutSection() {
   return (
     <section
       id="about"
-      style={{
-        backgroundColor: '#f1f0eb',
-        width: '100%',
-        padding: '100px 0',
-      }}
+      style={{ backgroundColor: '#f1f0eb', width: '100%', padding: '80px 0' }}
     >
       <div className="wix-container">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '80px',
-            alignItems: 'center',
-          }}
-          className="about-grid"
-        >
-          {/* Image — wix-fade-right: slides in from right */}
+        <div className="about-grid">
+
+          {/* Image */}
           <div className="wix-motion wix-fade-right">
             <div className="wix-img-wrap" style={{ aspectRatio: '4/3' }}>
               <img
                 src="/images/about-printing.jpg"
-                alt="About Us — Printing Services"
+                alt="Vijetha Digital printing facility"
                 loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
           </div>
 
-          {/* Text — wix-fade-left: slides in from left, 150ms delay */}
+          {/* Content */}
           <div className="wix-motion wix-fade-left wix-delay-2">
-            {/* font_9 label — uppercase small bold */}
-            <p
-              className="wix-font-9"
-              style={{
-                textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                marginBottom: '16px',
-                color: 'rgb(85,78,78)',
-              }}
-            >
+            <p style={{
+              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize: '11px', fontWeight: 400, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px',
+            }}>
               About Us
             </p>
 
-            {/* font_2 heading */}
-            <h2
-              className="wix-font-2"
-              style={{ marginBottom: '24px', lineHeight: '1.2em' }}
-            >
+            <h2 style={{
+              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 400,
+              lineHeight: 1.25, color: '#000', marginBottom: '22px',
+            }}>
               The go-to experts for<br />all your printing needs
             </h2>
 
-            {/* font_7 body */}
-            <p className="wix-font-7" style={{ color: 'rgb(85,78,78)', marginBottom: '16px', lineHeight: '1.6em' }}>
-              This is a space to share more about the business: who&apos;s behind it,
-              what it does and what this site has to offer. It&apos;s an opportunity to
-              tell the story behind the business or describe a special service or product
-              it offers. You can use this section to share the company&apos;s history or
-              highlight a particular feature that sets it apart from competitors.
+            <p style={{
+              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '14px',
+            }}>
+              Vijetha Digital is a full-service printing company delivering precision, quality and 
+              creativity to every project. From high-volume commercial prints to bespoke marketing 
+              collateral, we combine state-of-the-art machinery with skilled craftsmanship.
             </p>
-            <p className="wix-font-7" style={{ color: 'rgb(85,78,78)', marginBottom: '40px', lineHeight: '1.6em' }}>
-              Keep a consistent tone and voice throughout the website to stay true to the
-              brand image and give visitors a taste of the company&apos;s values and
-              personality.
+            <p style={{
+              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px',
+            }}>
+              Whether it&apos;s a business card or a large-format banner, every print that leaves 
+              our facility meets the highest standards — because your brand deserves nothing less.
             </p>
 
-            <Link href="#quote" className="wix-btn-primary">
+            <Link href="#contact" style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              backgroundColor: '#000', color: '#fff',
+              fontFamily: "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize: '14px', fontWeight: 400, letterSpacing: '0.03em',
+              padding: '14px 36px', textDecoration: 'none',
+            }}>
               Get a Quote
             </Link>
           </div>
@@ -80,11 +71,14 @@ export default function AboutSection() {
       </div>
 
       <style>{`
+        .about-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 72px;
+          align-items: center;
+        }
         @media (max-width: 768px) {
-          .about-grid {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
-          }
+          .about-grid { grid-template-columns: 1fr; gap: 36px; }
         }
       `}</style>
     </section>
