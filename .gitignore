@@ -12,6 +12,9 @@ eggs/
 .eggs/
 lib/
 lib64/
+# Allow frontend lib folders (not virtualenv)
+!frontend1/lib/
+!frontend/lib/
 parts/
 sdist/
 var/
