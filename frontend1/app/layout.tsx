@@ -135,6 +135,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="google9f42b8a0d05f7d64f" />
+      </head>
       <body>
         {children}
         <JsonLd data={websiteSchema} />
