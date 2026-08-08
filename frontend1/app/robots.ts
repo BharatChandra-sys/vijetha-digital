@@ -6,12 +6,17 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/private/', '/_next/', '/admin/'],
+        disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
       },
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/api/', '/private/', '/_next/', '/admin/'],
+        disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
+      },
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
       },
     ],
     sitemap: 'https://vijethadigital.com/sitemap.xml',

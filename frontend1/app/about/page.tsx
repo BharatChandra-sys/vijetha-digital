@@ -18,18 +18,6 @@ import {
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
 
-// Clearbit logo service - much better quality than Google favicons
-// Multi-source approach with fallbacks
-const getLogo = (domain: string, name: string) => {
-  // Return object with multiple sources for fallback
-  return {
-    clearbit: `https://logo.clearbit.com/${domain}`,
-    google: `https://www.google.com/s2/favicons?sz=128&domain=${domain}`,
-    unavatar: `https://unavatar.io/${domain}?fallback=false`,
-    initials: name.substring(0, 2).toUpperCase(),
-  };
-};
-
 function StarRating({ count }: { count: number }) {
   return (
     <div style={{ display: 'flex', gap: '4px' }}>
@@ -153,7 +141,7 @@ export default function AboutPage() {
           {/* Premium Client Grid */}
           <div className="client-premium-grid">
             {CLIENT_PORTFOLIO.map((client, i) => {
-              const logos = getLogo(client.domain, client.name);
+              const initials = client.name.substring(0, 2).toUpperCase();
               return (
                 <a
                   key={client.domain}
@@ -164,34 +152,7 @@ export default function AboutPage() {
                   style={{ transitionDelay: `${(i % 5) * 60}ms` }}
                 >
                   <div className="client-logo-wrapper">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={logos.clearbit}
-                      alt={`${client.name} logo`}
-                      width={64}
-                      height={64}
-                      className="client-brand-logo"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        // Try Google favicon as fallback
-                        if (target.src === logos.clearbit) {
-                          target.src = logos.google;
-                        } else if (target.src === logos.google) {
-                          // If Google also fails, try Unavatar
-                          target.src = logos.unavatar;
-                        } else {
-                          // All sources failed, show initials
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            const fallback = document.createElement('div');
-                            fallback.style.cssText = `font-family: ${fontBold}; font-size: 24px; color: #1c1d20; letter-spacing: 0.05em; font-weight: 700;`;
-                            fallback.textContent = logos.initials;
-                            parent.appendChild(fallback);
-                          }
-                        }
-                      }}
-                    />
+                    <div className="client-initials">{initials}</div>
                   </div>
                   <div className="client-info">
                     <p className="client-brand-name">{client.name}</p>
@@ -441,14 +402,36 @@ export default function AboutPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #f9f9f7;
+          background: linear-gradient(135deg, #1c1d20 0%, #2a2b2f 100%);
           border-radius: 10px;
-          padding: 14px;
-          transition: background 0.2s ease;
+          transition: all 0.3s ease;
           flex-shrink: 0;
+          position: relative;
+          overflow: hidden;
+        }
+        .client-logo-wrapper::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
         }
         .client-premium-card:hover .client-logo-wrapper {
-          background: #f1f0eb;
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(28, 29, 32, 0.15);
+        }
+        .client-premium-card:hover .client-logo-wrapper::before {
+          opacity: 1;
+        }
+        .client-initials {
+          font-family: ${fontBold};
+          font-size: 22px;
+          color: #fff;
+          letter-spacing: 0.05em;
+          font-weight: 700;
+          position: relative;
+          z-index: 1;
         }
         .client-brand-logo {
           width: 100%;

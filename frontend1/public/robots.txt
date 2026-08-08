@@ -1,0 +1,27 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /_next/static/
+Disallow: /admin/
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /_next/static/
+Disallow: /admin/
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /_next/static/
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://vijethadigital.com/sitemap.xml
+Host: https://vijethadigital.com
