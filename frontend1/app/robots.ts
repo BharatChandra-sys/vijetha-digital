@@ -4,11 +4,6 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
-      },
-      {
         userAgent: 'Googlebot',
         allow: '/',
         disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
@@ -18,8 +13,12 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
       },
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/private/', '/_next/static/', '/admin/'],
+      },
     ],
     sitemap: 'https://vijethadigital.com/sitemap.xml',
-    host: 'https://vijethadigital.com',
   };
 }
