@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  // Set the workspace root to silence lockfile warnings
-  outputFileTracingRoot: 'C:\\Users\\bc833\\vijetha-digital-backend\\frontend1',
+  // Set the workspace root for proper tracing (removed for Vercel compatibility)
+  // outputFileTracingRoot: path.join(__dirname),
   // Generate static sitemap at build time
   trailingSlash: false,
   // SEO: Generate proper meta tags

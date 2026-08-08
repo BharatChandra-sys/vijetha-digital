@@ -9,7 +9,7 @@ import { productsFaqContent } from './faq';
 export const metadata: Metadata = {
   title: 'Printing Products in Hyderabad | Signage, Flex, Banners & Branding',
   description:
-    'Explore Vijetha Digital's complete catalogue of signage boards, flex boards, banners, vehicle branding, exhibition displays, and promotional products for Hyderabad businesses.',
+    "Explore Vijetha Digital's complete catalogue of signage boards, flex boards, banners, vehicle branding, exhibition displays, and promotional products for Hyderabad businesses.",
   alternates: {
     canonical: 'https://vijethadigital.com/products',
   },
