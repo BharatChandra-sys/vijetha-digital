@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://vijethadigital.com/terms',
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";

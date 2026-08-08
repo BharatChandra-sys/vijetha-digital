@@ -107,11 +107,17 @@ export const metadata: Metadata = {
   other: {
     'theme-color': '#0f0f10',
     'format-detection': 'telephone=no',
+    'msapplication-TileColor': '#0f0f10',
+    'author': 'Vijetha Digital',
+    'publisher': 'Vijetha Digital',
   },
   icons: {
     icon: '/vd-logo.jpeg',
     shortcut: '/vd-logo.jpeg',
     apple: '/vd-logo.jpeg',
+  },
+  verification: {
+    google: 'your-google-verification-code',
   },
 };
 

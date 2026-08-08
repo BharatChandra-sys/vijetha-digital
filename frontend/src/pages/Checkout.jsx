@@ -229,20 +229,20 @@ export default function Checkout() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
           <div className="lg:col-span-8 flex flex-col gap-6">
             {/* H1: 28px mobile → 32px desktop */}
-            <h1 className="text-[1.75rem] lg:text-[2rem] font-extrabold text-plum-deep tracking-tight leading-[1.25]">Checkout Details</h1>
+            <h1 className="text-[1.75rem] lg:text-[2rem] font-extrabold text-plum-deep tracking-[-0.01em] leading-[1.25]">Checkout Details</h1>
 
             {error && (
-              <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2">
+              <div className="text-sm text-red-700 bg-red-50 border-2 border-red-200 rounded-xl px-4 py-3 flex items-center gap-2">
                 <span className="material-symbols-outlined text-base flex-shrink-0">error</span>
                 {error}
               </div>
             )}
 
             {/* Card Standard: p-6, rounded-xl, shadow-sm */}
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
               {/* H2: 22px mobile → 25.6px desktop */}
-              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
-                <span className="material-symbols-outlined">person</span>
+              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
+                <span className="material-symbols-outlined text-xl">person</span>
                 Contact Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -292,9 +292,9 @@ export default function Checkout() {
               </div>
             </section>
 
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
-              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
-                <span className="material-symbols-outlined">local_shipping</span>
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
+              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
+                <span className="material-symbols-outlined text-xl">local_shipping</span>
                 Delivery Method
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -347,9 +347,9 @@ export default function Checkout() {
             </section>
 
             {deliveryMethod === "home" ? (
-              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-6 lg:p-7">
-                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 flex items-center gap-2 leading-[1.25]">
-                  <span className="material-symbols-outlined">map</span>
+              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
+                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
+                  <span className="material-symbols-outlined text-xl">map</span>
                   Shipping Address
                 </h2>
                 <div className="space-y-5">
@@ -402,9 +402,9 @@ export default function Checkout() {
                 </div>
               </section>
             ) : (
-              <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card p-5 sm:p-7">
-                <h2 className="text-xl font-bold text-plum-deep mb-5 flex items-center gap-2">
-                  <span className="material-symbols-outlined">map</span>
+              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
+                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
+                  <span className="material-symbols-outlined text-xl">map</span>
                   Pickup Location
                 </h2>
                 <div className="bg-stone-50 border border-stone-border rounded-[12px] p-5">
@@ -431,22 +431,22 @@ export default function Checkout() {
               </section>
             )}
 
-            <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card overflow-hidden">
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm overflow-hidden">
               <button
                 type="button"
                 onClick={() => setShowBusinessFields((prev) => !prev)}
-                className="w-full flex justify-between items-center p-5 sm:p-7 bg-stone-50/50 hover:bg-stone-50 transition-colors"
+                className="w-full flex justify-between items-center p-5 lg:p-6 bg-stone-50/50 hover:bg-stone-50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-stone-200/60 flex items-center justify-center text-plum-deep/80">
-                    <span className="material-symbols-outlined text-[18px]">domain</span>
+                  <div className="w-9 h-9 rounded-full bg-stone-200/60 flex items-center justify-center text-plum-deep/80">
+                    <span className="material-symbols-outlined text-lg">domain</span>
                   </div>
-                  <span className="text-lg font-bold text-plum-deep">Ordering for a Business?</span>
+                  <span className="text-base lg:text-lg font-bold text-plum-deep">Ordering for a Business?</span>
                 </div>
                 <span className={`material-symbols-outlined text-plum-deep transition-transform ${showBusinessFields ? "rotate-180" : ""}`}>expand_more</span>
               </button>
               {showBusinessFields && (
-                <div className="p-5 sm:p-7 border-t border-stone-border/50 grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="p-5 lg:p-6 border-t border-stone-border/50 grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-bold text-text-muted mb-2">Company Name</label>
                     <input
@@ -471,9 +471,9 @@ export default function Checkout() {
               )}
             </section>
 
-            <section className="bg-white rounded-[16px] border border-stone-border shadow-product-card p-5 sm:p-7">
-              <h2 className="text-xl font-bold text-plum-deep mb-5 flex items-center gap-2">
-                <span className="material-symbols-outlined">payments</span>
+            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
+              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
+                <span className="material-symbols-outlined text-xl">payments</span>
                 Payment Method
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -533,8 +533,8 @@ export default function Checkout() {
 
           <aside className="lg:col-span-4 relative h-full">
             <div className="sticky top-24 space-y-6">
-              <section className="bg-white rounded-[16px] shadow-architectural border border-stone-border p-5 sm:p-7">
-                <h2 className="text-xl font-bold text-plum-deep mb-6">Order Summary</h2>
+              <section className="bg-white rounded-xl shadow-md border border-stone-border p-5 lg:p-6">
+                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 lg:mb-6 leading-[1.25] tracking-[-0.01em]">Order Summary</h2>
 
                 {summaryItem && (
                   <div className="flex gap-4 mb-6 pb-6 border-b border-stone-border">

@@ -14,7 +14,15 @@ class Product(Base):
     category = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     unit = Column(String, nullable=True)
+    
+    # Legacy single image (kept for backward compatibility)
     image_url = Column(String, nullable=True)
+    
+    # New: Multiple images gallery (array of URLs)
+    images = Column(JSON, nullable=True)  # ["url1.jpg", "url2.jpg", "url3.jpg"]
+    
+    # New: Videos (array of video objects)
+    videos = Column(JSON, nullable=True)  # [{"url": "video.mp4", "thumbnail": "thumb.jpg", "title": "Product Demo"}]
 
     base_price = Column(Numeric(12, 2), nullable=False)
 

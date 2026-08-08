@@ -11,9 +11,9 @@ import ScrollAnimations from '@/components/ui/ScrollAnimations';
 export const metadata: Metadata = {
   title: 'Printing, Signage & Vehicle Branding in Hyderabad | Vijetha Digital',
   description:
-    'Vijetha Digital is a trusted printing and signage company in Hyderabad offering sign boards, acrylic signage, vehicle branding, digital printing, banners, exhibition displays, and promotional solutions.',
+    'Vijetha Digital is a trusted printing and signage company in Hyderabad offering sign boards, acrylic signage, vehicle branding, digital printing, banners, exhibition displays, and promotional solutions for businesses across India.',
   keywords:
-    'printing services Hyderabad, signage company Hyderabad, vehicle branding Hyderabad, flex printing, banner printing, acrylic signage, exhibition displays, Vijetha Digital',
+    'Vijetha Digital, printing services Hyderabad, signage company Hyderabad, vehicle branding Hyderabad, flex printing, banner printing, acrylic signage, exhibition displays, branding solutions',
   alternates: {
     canonical: 'https://vijethadigital.com/',
   },
