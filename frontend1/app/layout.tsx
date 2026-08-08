@@ -117,7 +117,7 @@ export const metadata: Metadata = {
     apple: '/vd-logo.jpeg',
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'google9f42b8a0d05f7d64f',
   },
 };
 
