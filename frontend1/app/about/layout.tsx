@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us | Vijetha Digital',
-  description: 'Founded in 2009, Vijetha Digital is Hyderabad s trusted printing and signage partner. 15+ years of craftsmanship, 1,000+ happy clients, world-class machinery.',
+  title: 'About Vijetha Digital | Trusted Printing & Signage Partner in Hyderabad',
+  description:
+    'Learn about Vijetha Digital, our 15+ years of printing and signage expertise, world-class machinery, and trusted service for businesses across Hyderabad and India.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/about',
+  },
 };
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {

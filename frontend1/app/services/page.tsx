@@ -2,11 +2,17 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
+import JsonLd from '@/components/seo/JsonLd';
 import { WA_URL } from '@/lib/constants';
+import { serviceFaqContent } from './faq';
 
 export const metadata: Metadata = {
-  title: 'Services | Vijetha Digital',
-  description: 'Signage solutions, vehicle branding, digital printing, offset printing, screen printing, display & exhibition — all under one roof.',
+  title: 'Printing & Signage Services in Hyderabad | Vijetha Digital',
+  description:
+    'Discover Vijetha Digital’s services for signage boards, vehicle branding, digital printing, offset printing, screen printing, exhibition displays, and outdoor advertising in Hyderabad.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/services',
+  },
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -72,6 +78,19 @@ const services = [
 ];
 
 export default function ServicesPage() {
+  const servicesFaqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: serviceFaqContent.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <>
       <ScrollAnimations />
@@ -88,15 +107,31 @@ export default function ServicesPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Capabilities
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '700px' }}>
-            Every service,<br />flawlessly delivered.
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+            Printing, signage, vehicle branding, and exhibition solutions for modern businesses.
           </h1>
+          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+            Vijetha Digital delivers signage solutions, digital printing, vehicle branding, offset printing, screen printing, and display services for retail, corporate, hospitality, healthcare, and government projects.
+          </p>
+          <div style={{ marginTop: '24px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+            <a href="/services/signage" style={{ fontFamily: font, fontSize: '14px', color: '#000', textDecoration: 'underline' }}>Signage solutions</a>
+            <a href="/services/vehicle-branding" style={{ fontFamily: font, fontSize: '14px', color: '#000', textDecoration: 'underline' }}>Vehicle branding</a>
+            <a href="/services/digital-printing" style={{ fontFamily: font, fontSize: '14px', color: '#000', textDecoration: 'underline' }}>Digital printing</a>
+          </div>
         </div>
       </section>
 
       {/* Services list */}
       <section style={{ backgroundColor: '#ffffff', padding: '80px 0' }}>
         <div className="wix-container">
+          <div style={{ marginBottom: '40px', maxWidth: '860px' }}>
+            <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '10px' }}>
+              Why businesses choose us
+            </p>
+            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+              Our team combines in-house manufacturing, modern machinery, and a production-first approach to deliver reliable signage, branding, and print solutions for projects of every scale.
+            </p>
+          </div>
           <div className="services-list">
             {services.map((s, i) => (
               <div
@@ -170,6 +205,26 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* FAQ section */}
+      <section style={{ backgroundColor: '#f7f5ef', padding: '80px 0' }}>
+        <div className="wix-container">
+          <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
+            Frequently asked questions
+          </p>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
+            Clear answers for the questions buyers ask before they choose a printing partner.
+          </h2>
+          <div style={{ display: 'grid', gap: '16px' }}>
+            {serviceFaqContent.map((item) => (
+              <div key={item.question} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
+                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
+                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA strip */}
       <section style={{ backgroundColor: '#ffedc9', padding: '80px 0' }}>
         <div className="wix-container" style={{ textAlign: 'center' }}>
@@ -193,6 +248,7 @@ export default function ServicesPage() {
       </section>
 
       <Footer />
+      <JsonLd data={servicesFaqSchema} />
 
       <style>{`
         /* Tablet: hide specs column */

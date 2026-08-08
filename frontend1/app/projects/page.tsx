@@ -4,8 +4,12 @@ import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 
 export const metadata: Metadata = {
-  title: 'Projects | Vijetha Digital',
-  description: 'Browse our portfolio of printing projects — booklets, visiting cards, packaging, flex banners and more.',
+  title: 'Printing & Branding Projects | Hyderabad Portfolio',
+  description:
+    'Browse Vijetha Digital’s portfolio of premium booklets, visiting cards, packaging, flex banners, signage, and branding projects delivered across industries in Hyderabad and beyond.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/projects',
+  },
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -55,9 +59,12 @@ export default function ProjectsPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Work
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '600px' }}>
-            Projects we&apos;re<br />proud of
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+            Branding and printing projects delivered with precision, scale, and consistency for Hyderabad businesses.
           </h1>
+          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '680px', lineHeight: '1.7em' }}>
+            From retail signage and exhibition displays to corporate stationery, promotional branding, and large-format print campaigns, our projects reflect the quality and reliability expected by modern businesses.
+          </p>
         </div>
       </section>
 

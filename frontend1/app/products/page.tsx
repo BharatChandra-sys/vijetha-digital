@@ -4,8 +4,12 @@ import Footer from '@/components/layout/Footer';
 import ProductsContent from './ProductsContent';
 
 export const metadata: Metadata = {
-  title: 'Products | Vijetha Digital',
-  description: 'Sign boards, printing services, banner stands, demo tents and promotional items — browse the full Vijetha Digital catalogue.',
+  title: 'Printing Products in Hyderabad | Signage, Flex, Banners & Branding',
+  description:
+    'Explore Vijetha Digital’s complete catalogue of signage boards, flex boards, banners, vehicle branding, exhibition displays, and promotional products for Hyderabad businesses.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/products',
+  },
 };
 
 const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -21,11 +25,14 @@ export default function ProductsPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Catalogue
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '700px' }}>
-            Signage, branding &<br />print — all under one roof.
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+            Premium printing products and branding materials for Hyderabad businesses.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '520px', lineHeight: '1.65em' }}>
-            From LED sign boards to vehicle wraps, digital printing to exhibition displays — 30+ products across 7 categories.
+          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '620px', lineHeight: '1.65em' }}>
+            Explore high-quality signage boards, vehicle branding wraps, flex printing, exhibition displays, banners, stickers, and promotional materials designed for retail, corporate, hospitality, healthcare, and government projects.
+          </p>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '16px', maxWidth: '620px', lineHeight: '1.65em' }}>
+            From acrylic letters and ACP cladding to custom packaging and event graphics, Vijetha Digital offers a complete range of branding solutions under one roof with fast turnaround and dependable quality.
           </p>
         </div>
       </section>

@@ -54,11 +54,11 @@ export default function AboutPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '14px' }}>
             Company Profile
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 64px)', fontWeight: 400, lineHeight: 1.05, color: '#fff', maxWidth: '900px', marginBottom: '24px' }}>
-            Engineering excellence in<br />commercial signage since 2009
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 64px)', fontWeight: 400, lineHeight: 1.05, color: '#fff', maxWidth: '960px', marginBottom: '24px' }}>
+            Trusted printing and signage company in Hyderabad for brands that need quality, speed, and scale.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgba(255,255,255,0.55)', maxWidth: '680px', lineHeight: '1.7em' }}>
-            A vertically integrated printing and signage manufacturer serving enterprise clients across South India. From Fortune 500 headquarters to nationwide retail chains — we deliver precision, scale, and reliability.
+          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgba(255,255,255,0.55)', maxWidth: '760px', lineHeight: '1.7em' }}>
+            Vijetha Digital is a vertically integrated printing and signage manufacturer serving businesses across Hyderabad, Telangana, and South India. We deliver premium signage, vehicle branding, digital printing, offset printing, and exhibition solutions with dependable execution.
           </p>
 
           {/* Stats strip */}

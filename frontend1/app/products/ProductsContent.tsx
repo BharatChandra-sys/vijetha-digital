@@ -79,6 +79,14 @@ export default function ProductsContent() {
       {/* Products by category */}
       <section style={{ backgroundColor: '#ffffff', padding: '72px 0 0' }}>
         <div className="wix-container">
+          <div style={{ marginBottom: '48px', maxWidth: '860px' }}>
+            <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '12px' }}>
+              Search-friendly product categories
+            </p>
+            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+              Browse products for signage solutions, vehicle branding, digital printing, offset printing, exhibition displays, office branding, and outdoor advertising — all manufactured and delivered with professional quality.
+            </p>
+          </div>
           {CATEGORIES.map(category => {
             const items = PRODUCTS.filter(p => p.category === category);
             return (

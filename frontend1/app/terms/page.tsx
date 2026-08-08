@@ -4,7 +4,11 @@ import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Vijetha Digital',
-  description: 'Terms and conditions for using Vijetha Digital products and services.',
+  description:
+    'Read the terms and conditions for using Vijetha Digital’s website, products, and services.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/terms',
+  },
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";

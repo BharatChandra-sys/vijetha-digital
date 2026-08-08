@@ -5,6 +5,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
+import JsonLd from '@/components/seo/JsonLd';
+import { contactFaqContent } from './faq';
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -45,6 +47,18 @@ const BRANCHES = [
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const contactFaqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: contactFaqContent.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
   const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,9 +80,12 @@ export default function ContactPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Get in Touch
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '600px' }}>
-            Let&apos;s talk about<br />your next project
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+            Contact Vijetha Digital for printing, signage, and vehicle branding in Hyderabad.
           </h1>
+          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+            Reach our team for signage boards, flex printing, exhibition displays, vehicle wraps, corporate branding, and large-format production across Hyderabad and nearby regions.
+          </p>
         </div>
       </section>
 
@@ -81,6 +98,12 @@ export default function ContactPage() {
             <div className="wix-motion wix-fade-right">
               <p style={{ fontFamily: fontBold, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
                 Contact Details
+              </p>
+              <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
+                Whether you need a quote for signage boards, flex printing, vehicle wraps, exhibition displays, or corporate branding, our team can help you choose the right material, finish, and production method for your project.
+              </p>
+              <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
+                We work with clients from retail, healthcare, hospitality, education, government, and commercial sectors across Hyderabad and nearby regions.
               </p>
 
               {/* Phone */}
@@ -99,6 +122,9 @@ export default function ContactPage() {
               <div style={{ marginBottom: '32px' }}>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '4px' }}>Hours</p>
                 <p style={{ fontFamily: font, fontSize: '15px', color: '#000' }}>Mon – Sat, 9:00 AM – 8:00 PM</p>
+                <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '8px', lineHeight: '1.6em' }}>
+                  Fast response for quotes, production planning, and project consultations.
+                </p>
               </div>
 
               {/* Branches */}
@@ -193,6 +219,26 @@ export default function ContactPage() {
         </div>
       </section>
 
+      {/* FAQ section */}
+      <section style={{ backgroundColor: '#f7f5ef', padding: '80px 0' }}>
+        <div className="wix-container">
+          <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
+            Frequently asked questions
+          </p>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
+            Answers to common questions about printing, signage, and branding projects.
+          </h2>
+          <div style={{ display: 'grid', gap: '16px' }}>
+            {contactFaqContent.map((item) => (
+              <div key={item.question} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
+                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
+                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── MAP: Nacharam ── */}
       <section style={{ backgroundColor: '#f1f0eb', padding: '0' }}>
         <div style={{ position: 'relative' }}>
@@ -219,6 +265,7 @@ export default function ContactPage() {
       </section>
 
       <Footer />
+      <JsonLd data={contactFaqSchema} />
 
       <style>{`
         .contact-grid {

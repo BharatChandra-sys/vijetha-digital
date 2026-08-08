@@ -4,7 +4,11 @@ import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Vijetha Digital',
-  description: 'How Vijetha Digital collects, uses, and protects your personal information.',
+  description:
+    'Review how Vijetha Digital collects, uses, and protects your personal information on our website and in our services.',
+  alternates: {
+    canonical: 'https://vijethadigital.com/privacy',
+  },
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";

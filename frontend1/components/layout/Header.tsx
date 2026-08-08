@@ -40,8 +40,9 @@ export default function Header({ variant = 'default' }: HeaderProps) {
   const navLinks = [
     { label: 'Services', href: '/services' },
     { label: 'Products', href: '/products' },
-    { label: 'About',    href: '/about'    },
-    { label: 'Contact',  href: '/contact'  },
+    { label: 'Projects', href: '/projects' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ];
 
   return (
