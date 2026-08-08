@@ -27,11 +27,11 @@ const groups = [
     heading: 'Products & Services',
     links: [
       { label: 'All Products',       href: '/products',                          indent: false },
-      { label: '→ Sign Boards',       href: '/products#sign-boards',              indent: true  },
-      { label: '→ Printing Services', href: '/products#printing-services',        indent: true  },
-      { label: '→ Banner Stands',     href: '/products#banner-stands',            indent: true  },
-      { label: '→ Demo Tents',        href: '/products#demo-tents',               indent: true  },
-      { label: '→ Promotional Items', href: '/products#promotional-items',        indent: true  },
+      { label: '→ Sign Boards',       href: '/products/sign-boards',              indent: true  },
+      { label: '→ Printing Services', href: '/products/printing-services',        indent: true  },
+      { label: '→ Banner Stands',     href: '/products/banner-stands',            indent: true  },
+      { label: '→ Demo Tents',        href: '/products/demo-tents',               indent: true  },
+      { label: '→ Promotional Items', href: '/products/promotional-items',        indent: true  },
     ],
   },
   {

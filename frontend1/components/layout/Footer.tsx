@@ -56,11 +56,11 @@ export default function Footer() {
             <p className="footer-col-heading">Products</p>
             <ul className="footer-link-list">
               {[
-                ['Sign Boards',       '/products#sign-boards'],
-                ['Printing Services', '/products#printing-services'],
-                ['Banner Stands',     '/products#banner-stands'],
-                ['Demo Tents',        '/products#demo-tents'],
-                ['Promotional Items', '/products#promotional-items'],
+                ['Sign Boards',       '/products/sign-boards'],
+                ['Printing Services', '/products/printing-services'],
+                ['Banner Stands',     '/products/banner-stands'],
+                ['Demo Tents',        '/products/demo-tents'],
+                ['Promotional Items', '/products/promotional-items'],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link href={href} className="footer-nav-link">{label}</Link>

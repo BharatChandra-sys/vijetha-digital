@@ -11,14 +11,14 @@ const projects = [
     title: 'BOOKLETS & CATALOGUES',
     description: 'Saddle-stitched and perfect-bound booklets for product catalogues, annual reports and corporate brochures. Delivered on 130gsm gloss art paper.',
     image: '/images/project-booklets.jpg',
-    href: '/products#printing-services',
+    href: '/products/printing-services',
   },
   {
     id: 2,
     title: 'VISITING CARDS',
     description: 'High-impact cards with spot UV, matte laminate, foil and custom die-cuts. Standard 85×55mm or custom size, single or double-sided.',
     image: '/images/project-cards.jpg',
-    href: '/products#printing-services',
+    href: '/products/printing-services',
   },
 ];
 
