@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+  <msapplication>
+    <tile>
+      <square150x150logo src="/vd-logo.jpeg"/>
+      <TileColor>#0f0f10</TileColor>
+    </tile>
+  </msapplication>
+</browserconfig>
