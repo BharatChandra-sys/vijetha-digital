@@ -1,0 +1,14 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /_next/static/
+Disallow: /admin/
+
+Sitemap: https://vijethadigital.com/sitemap.xml
