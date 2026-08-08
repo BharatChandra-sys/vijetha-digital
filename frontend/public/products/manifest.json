@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-07-26 21:24:33",
+  "total_products": 30,
+  "total_images": 15,
+  "products": [
+    {
+      "slug": "3d-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "aluminium-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "glow-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "vinyl-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "open-led-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "acrylic-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "led-acrylic-sign-board",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "acp-board",
+      "images": [
+        "/products/acp-board/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "ss-letter-sign-board",
+      "images": [
+        "/products/ss-letter-sign-board/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "canvas-printing",
+      "images": [
+        "/products/canvas-printing/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "catalogue-printing",
+      "images": [
+        "/products/catalogue-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "flex-printing",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "gift-voucher-printing",
+      "images": [
+        "/products/gift-voucher-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "offset-printing",
+      "images": [
+        "/products/offset-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "star-flex-printing",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "vinyl-printing",
+      "images": [
+        "/products/vinyl-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "business-card-printing",
+      "images": [
+        "/products/business-card-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "translite-printing",
+      "images": [
+        "/products/translite-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "heavy-roll-up-banner-stand",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "roller-banner-stand",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "outdoor-demo-tent",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "demo-tent-6x6x7",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "demo-tent-4x4x7",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "promo-table",
+      "images": [
+        "/products/promo-table/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "cutout-sprint",
+      "images": [
+        "/products/cutout-sprint/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "flute-board",
+      "images": [
+        "/products/flute-board/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "vehicle-branding",
+      "images": [],
+      "count": 0
+    },
+    {
+      "slug": "t-shirt-printing",
+      "images": [
+        "/products/t-shirt-printing/02-detail.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "acp-cladding",
+      "images": [
+        "/products/acp-cladding/01-main.jpg"
+      ],
+      "count": 1
+    },
+    {
+      "slug": "in-shop-branding",
+      "images": [
+        "/products/in-shop-branding/01-main.jpg"
+      ],
+      "count": 1
+    }
+  ]
+}
