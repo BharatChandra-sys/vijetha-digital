@@ -119,30 +119,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Local SEO landing pages
   const localSeoRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/hyderabad-printing-signage`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.88,
-    },
-    {
-      url: `${baseUrl}/hyderabad-printing-services`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.88,
-    },
-    {
-      url: `${baseUrl}/hyderabad-signage-company`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.88,
-    },
-    {
-      url: `${baseUrl}/hyderabad-vehicle-branding`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.88,
-    },
+    { url: `${baseUrl}/hyderabad-printing-signage`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.90 },
+    { url: `${baseUrl}/hyderabad-printing-services`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.90 },
+    { url: `${baseUrl}/hyderabad-signage-company`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.90 },
+    { url: `${baseUrl}/hyderabad-vehicle-branding`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.90 },
+    { url: `${baseUrl}/vijetha-digital`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.92 },
   ];
 
   // Product pages
