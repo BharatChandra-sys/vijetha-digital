@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
@@ -6,7 +6,7 @@ import ScrollAnimations from '@/components/ui/ScrollAnimations';
 export const metadata: Metadata = {
   title: 'Printing & Branding Projects | Hyderabad Portfolio',
   description:
-    'Browse Vijetha Digital’s portfolio of premium booklets, visiting cards, packaging, flex banners, signage, and branding projects delivered across industries in Hyderabad and beyond.',
+    "Browse Vijetha Digital's portfolio of premium booklets, visiting cards, packaging, flex banners, signage, and branding projects delivered across industries in Hyderabad and beyond.",
   alternates: {
     canonical: 'https://vijethadigital.com/projects',
   },

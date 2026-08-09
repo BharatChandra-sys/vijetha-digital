@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Vijetha Digital',
   description:
-    'Read the terms and conditions for using Vijetha Digital’s website, products, and services.',
+    "Read the terms and conditions for using Vijetha Digital"s website, products, and services.',
   alternates: {
     canonical: 'https://vijethadigital.com/terms',
   },
