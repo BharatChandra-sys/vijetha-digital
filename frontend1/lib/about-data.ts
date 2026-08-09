@@ -16,140 +16,160 @@ export const CLIENT_PORTFOLIO = [
     domain: 'samsung.com', 
     website: 'https://www.samsung.com',
     industry: 'Consumer Electronics',
-    work: 'Retail store branding, in-shop displays and product launch backdrops across 12 Hyderabad outlets.'
+    work: 'Retail store branding, in-shop displays and product launch backdrops across 12 Hyderabad outlets.',
+    logo: 'https://logo.clearbit.com/samsung.com'
   },
   { 
     name: 'Microsoft', 
     domain: 'microsoft.com', 
     website: 'https://www.microsoft.com',
     industry: 'Technology',
-    work: 'Office interior branding, wall murals, wayfinding systems and event displays for Hyderabad campus.'
+    work: 'Office interior branding, wall murals, wayfinding systems and event displays for Hyderabad campus.',
+    logo: 'https://logo.clearbit.com/microsoft.com'
   },
   { 
     name: 'Airtel', 
     domain: 'airtel.in', 
     website: 'https://www.airtel.in',
     industry: 'Telecom',
-    work: 'Franchise store fascia signage, internal branding and promotional standees for 40+ Telangana outlets.'
+    work: 'Franchise store fascia signage, internal branding and promotional standees for 40+ Telangana outlets.',
+    logo: 'https://logo.clearbit.com/airtel.in'
   },
   { 
     name: 'Jio', 
     domain: 'jio.com', 
     website: 'https://www.jio.com',
     industry: 'Telecom',
-    work: 'Large-format flex printing, hoarding campaigns and retail point-of-sale branding across Hyderabad.'
+    work: 'Large-format flex printing, hoarding campaigns and retail point-of-sale branding across Hyderabad.',
+    logo: 'https://logo.clearbit.com/jio.com'
   },
   { 
     name: 'Reliance Digital', 
     domain: 'reliancedigital.in', 
     website: 'https://www.reliancedigital.in',
     industry: 'Retail',
-    work: 'Store launch branding, product zone signage and seasonal campaign materials.'
+    work: 'Store launch branding, product zone signage and seasonal campaign materials.',
+    logo: 'https://logo.clearbit.com/reliancedigital.in'
   },
   { 
     name: 'Vivo', 
     domain: 'vivo.com', 
     website: 'https://www.vivo.com',
     industry: 'Consumer Electronics',
-    work: 'Dealer network signage, product launch events and outdoor advertising across South India.'
+    work: 'Dealer network signage, product launch events and outdoor advertising across South India.',
+    logo: 'https://logo.clearbit.com/vivo.com'
   },
   { 
     name: 'Swiggy', 
     domain: 'swiggy.com', 
     website: 'https://www.swiggy.com',
     industry: 'Food Tech',
-    work: 'Vehicle branding for delivery fleet, office interior branding and event displays.'
+    work: 'Vehicle branding for delivery fleet, office interior branding and event displays.',
+    logo: 'https://logo.clearbit.com/swiggy.com'
   },
   { 
     name: 'OLA', 
     domain: 'olacabs.com', 
     website: 'https://www.olacabs.com',
     industry: 'Mobility',
-    work: 'Driver centre branding, vehicle wraps and large-format campaign hoardings.'
+    work: 'Driver centre branding, vehicle wraps and large-format campaign hoardings.',
+    logo: 'https://logo.clearbit.com/olacabs.com'
   },
   { 
     name: 'Pepsi', 
     domain: 'pepsico.com', 
     website: 'https://www.pepsi.com',
     industry: 'FMCG',
-    work: 'Outdoor advertising campaigns, retail branding, canopy tents and promotional collateral.'
+    work: 'Outdoor advertising campaigns, retail branding, canopy tents and promotional collateral.',
+    logo: 'https://logo.clearbit.com/pepsico.com'
   },
   { 
     name: 'SBI', 
     domain: 'sbi.co.in', 
     website: 'https://www.onlinesbi.sbi',
     industry: 'Banking',
-    work: 'Branch signage renovation, ATM surrounds and corporate stationery printing.'
+    work: 'Branch signage renovation, ATM surrounds and corporate stationery printing.',
+    logo: 'https://logo.clearbit.com/sbi.co.in'
   },
   { 
     name: "Dr. Reddy's", 
     domain: 'drreddys.com', 
     website: 'https://www.drreddys.com',
     industry: 'Pharmaceuticals',
-    work: 'Corporate campus branding, R&D facility wayfinding and conference displays.'
+    work: 'Corporate campus branding, R&D facility wayfinding and conference displays.',
+    logo: 'https://logo.clearbit.com/drreddys.com'
   },
   { 
     name: 'Panasonic', 
     domain: 'panasonic.com', 
     website: 'https://www.panasonic.com',
     industry: 'Electronics',
-    work: 'Dealer showroom signage, product launch backdrops and trade show stands.'
+    work: 'Dealer showroom signage, product launch backdrops and trade show stands.',
+    logo: 'https://logo.clearbit.com/panasonic.com'
   },
   { 
     name: 'Cult.fit', 
     domain: 'cultfit.com', 
     website: 'https://www.cult.fit',
     industry: 'Health & Fitness',
-    work: 'Gym interior branding, motivational wall graphics and entrance fascia.'
+    work: 'Gym interior branding, motivational wall graphics and entrance fascia.',
+    logo: 'https://logo.clearbit.com/cult.fit'
   },
   { 
     name: 'Mi', 
     domain: 'mi.com', 
     website: 'https://www.mi.com',
     industry: 'Consumer Electronics',
-    work: 'Mi Store branding, product display stands and city-wide outdoor campaigns.'
+    work: 'Mi Store branding, product display stands and city-wide outdoor campaigns.',
+    logo: 'https://logo.clearbit.com/mi.com'
   },
   { 
     name: 'Heritage Foods', 
     domain: 'heritagefoods.in', 
     website: 'https://www.heritagefoods.in',
     industry: 'FMCG / Dairy',
-    work: 'Retail outlet branding, cold storage signage and delivery vehicle wraps.'
+    work: 'Retail outlet branding, cold storage signage and delivery vehicle wraps.',
+    logo: 'https://logo.clearbit.com/heritagefoods.in'
   },
   { 
     name: 'GHMC', 
     domain: 'ghmc.gov.in', 
     website: 'https://www.ghmc.gov.in',
     industry: 'Government',
-    work: 'Public information boards, city beautification hoardings and directional signage.'
+    work: 'Public information boards, city beautification hoardings and directional signage.',
+    logo: 'https://logo.clearbit.com/ghmc.gov.in'
   },
   { 
     name: 'Coromandel', 
     domain: 'coromandel.biz', 
     website: 'https://www.coromandel.biz',
     industry: 'Agri Business',
-    work: 'Corporate office branding, dealer network signage and rural advertising.'
+    work: 'Corporate office branding, dealer network signage and rural advertising.',
+    logo: 'https://logo.clearbit.com/coromandel.biz'
   },
   { 
     name: 'GlobalData', 
     domain: 'globaldata.com', 
     website: 'https://www.globaldata.com',
     industry: 'Analytics',
-    work: 'Hyderabad office interior branding and meeting room graphics.'
+    work: 'Hyderabad office interior branding and meeting room graphics.',
+    logo: 'https://logo.clearbit.com/globaldata.com'
   },
   { 
     name: 'Telangana Tourism', 
     domain: 'telanganatourism.gov.in', 
     website: 'https://www.telanganatourism.gov.in',
     industry: 'Government / Tourism',
-    work: 'Tourist site wayfinding boards, promotional hoardings and heritage signage.'
+    work: 'Tourist site wayfinding boards, promotional hoardings and heritage signage.',
+    logo: 'https://logo.clearbit.com/telanganatourism.gov.in'
   },
   { 
     name: 'Air Costa', 
     domain: 'aircosta.in', 
     website: 'https://en.wikipedia.org/wiki/Air_Costa',
     industry: 'Aviation',
-    work: 'Airport counter branding, boarding gate displays and promotional campaigns.'
+    logo: 'https://logo.clearbit.com/aircosta.in'
+    
   },
 ];
 

@@ -152,7 +152,20 @@ export default function AboutPage() {
                   style={{ transitionDelay: `${(i % 5) * 60}ms` }}
                 >
                   <div className="client-logo-wrapper">
-                    <div className="client-initials">{initials}</div>
+                    {client.logo ? (
+                      <img 
+                        src={client.logo} 
+                        alt={`${client.name} logo`} 
+                        className="client-brand-logo"
+                        onError={(e) => {
+                          // Fallback to initials if logo fails to load
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.nextElementSibling;
+                          if (fallback) (fallback as HTMLElement).style.display = 'block';
+                        }}
+                      />
+                    ) : null}
+                    <div className="client-initials" style={{ display: client.logo ? 'none' : 'block' }}>{initials}</div>
                   </div>
                   <div className="client-info">
                     <p className="client-brand-name">{client.name}</p>
@@ -424,12 +437,14 @@ export default function AboutPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #1c1d20 0%, #2a2b2f 100%);
+          background: #fff;
           border-radius: 10px;
           transition: all 0.3s ease;
           flex-shrink: 0;
           position: relative;
           overflow: hidden;
+          padding: 14px;
+          border: 1px solid rgba(0,0,0,0.06);
         }
         .client-logo-wrapper::before {
           content: '';
@@ -441,7 +456,8 @@ export default function AboutPage() {
         }
         .client-premium-card:hover .client-logo-wrapper {
           transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(28, 29, 32, 0.15);
+          box-shadow: 0 4px 12px rgba(28, 29, 32, 0.12);
+          border-color: rgba(0,0,0,0.1);
         }
         .client-premium-card:hover .client-logo-wrapper::before {
           opacity: 1;
@@ -449,11 +465,13 @@ export default function AboutPage() {
         .client-initials {
           font-family: ${fontBold};
           font-size: 22px;
-          color: #fff;
+          color: #1c1d20;
           letter-spacing: 0.05em;
           font-weight: 700;
           position: relative;
           z-index: 1;
+          text-align: center;
+          width: 100%;
         }
         .client-brand-logo {
           width: 100%;
@@ -461,6 +479,8 @@ export default function AboutPage() {
           object-fit: contain;
           max-width: 100%;
           max-height: 100%;
+          position: relative;
+          z-index: 1;
         }
         .client-info {
           display: flex;
