@@ -2,6 +2,17 @@ import { NextResponse } from 'next/server';
 
 const baseUrl = 'https://vijethadigital.com';
 
+// Escape all XML special characters so the feed parses cleanly in every reader.
+// &  must become &amp; FIRST — otherwise we'd double-escape other replacements.
+function xmlEscape(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 // Helper to convert product name to slug
 const toSlug = (value: string) =>
   value
@@ -98,17 +109,18 @@ function generateProductDescription(productName: string): string {
 export async function GET() {
   const updated = new Date().toISOString();
 
-  // Generate product entries
   const productEntries = PRODUCTS.map((productName) => {
     const slug = toSlug(productName);
+    const desc = xmlEscape(generateProductDescription(productName));
+    const safeName = xmlEscape(`${productName} - Vijetha Digital`);
     return `
     <entry>
-      <title>${productName} - Vijetha Digital</title>
+      <title>${safeName}</title>
       <link href="${baseUrl}/products/${slug}" rel="alternate" type="text/html"/>
       <id>${baseUrl}/products/${slug}</id>
       <updated>${updated}</updated>
       <published>${updated}</published>
-      <summary type="html">${generateProductDescription(productName)}</summary>
+      <summary type="html">${desc}</summary>
       <category term="Products"/>
       <category term="Printing"/>
       <category term="Signage"/>
@@ -121,21 +133,25 @@ export async function GET() {
   }).join('');
 
   // Generate main page entries
-  const mainPageEntries = MAIN_PAGES.map((page) => `
+  const mainPageEntries = MAIN_PAGES.map((page) => {
+    const safeTitle = xmlEscape(page.title);
+    const safeDesc  = xmlEscape(page.description);
+    return `
     <entry>
-      <title>${page.title}</title>
+      <title>${safeTitle}</title>
       <link href="${baseUrl}${page.url}" rel="alternate" type="text/html"/>
-      <id>${baseUrl}${page.url}</id>
+      <id>${baseUrl}${page.url || '/'}</id>
       <updated>${page.updated}</updated>
       <published>${page.updated}</published>
-      <summary type="html">${page.description}</summary>
+      <summary type="html">${safeDesc}</summary>
       <category term="Main"/>
       <author>
         <name>Vijetha Digital</name>
         <email>info@vijethadigital.com</email>
         <uri>${baseUrl}</uri>
       </author>
-    </entry>`).join('');
+    </entry>`;
+  }).join('');
 
   const atomFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-IN">

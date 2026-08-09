@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 
 const baseUrl = 'https://vijethadigital.com';
 
+// Escape all XML special characters so the feed parses cleanly in every reader.
+function xmlEscape(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 // Helper to convert product name to slug
 const toSlug = (value: string) =>
   value
@@ -102,12 +112,14 @@ export async function GET() {
   // Generate product items
   const productItems = PRODUCTS.map((productName) => {
     const slug = toSlug(productName);
+    const safeName = xmlEscape(`${productName} - Vijetha Digital`);
+    const safeDesc  = xmlEscape(generateProductDescription(productName));
     return `
     <item>
-      <title>${productName} - Vijetha Digital</title>
+      <title>${safeName}</title>
       <link>${baseUrl}/products/${slug}</link>
       <guid isPermaLink="true">${baseUrl}/products/${slug}</guid>
-      <description>${generateProductDescription(productName)}</description>
+      <description>${safeDesc}</description>
       <pubDate>${buildDate}</pubDate>
       <category>Products</category>
       <category>Printing</category>
@@ -116,15 +128,19 @@ export async function GET() {
   }).join('');
 
   // Generate main page items
-  const mainPageItems = MAIN_PAGES.map((page) => `
+  const mainPageItems = MAIN_PAGES.map((page) => {
+    const safeTitle = xmlEscape(page.title);
+    const safeDesc  = xmlEscape(page.description);
+    return `
     <item>
-      <title>${page.title}</title>
+      <title>${safeTitle}</title>
       <link>${baseUrl}${page.url}</link>
-      <guid isPermaLink="true">${baseUrl}${page.url}</guid>
-      <description>${page.description}</description>
+      <guid isPermaLink="true">${baseUrl}${page.url || '/'}</guid>
+      <description>${safeDesc}</description>
       <pubDate>${new Date(page.pubDate).toUTCString()}</pubDate>
       <category>Main</category>
-    </item>`).join('');
+    </item>`;
+  }).join('');
 
   const rssFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" 
