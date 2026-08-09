@@ -355,6 +355,28 @@ export default function AboutPage() {
 
       <Footer />
 
+      {/* Hidden structured data — no visual impact */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          '@id': 'https://vijethadigital.com/about#webpage',
+          url: 'https://vijethadigital.com/about',
+          name: 'About Vijetha Digital | Trusted Printing & Signage Partner in Hyderabad',
+          description: '15+ years of printing and signage expertise in Hyderabad. World-class machinery, 500+ clients, 3 branches.',
+          isPartOf: { '@id': 'https://vijethadigital.com/#website' },
+          about: { '@id': 'https://vijethadigital.com/#organization' },
+          breadcrumb: {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://vijethadigital.com/' },
+              { '@type': 'ListItem', position: 2, name: 'About', item: 'https://vijethadigital.com/about' },
+            ],
+          },
+        })}}
+      />
+
       <style>{`
         .hero-stats {
           display: flex;

@@ -1,0 +1,290 @@
+// Product Schemas with Technical Specifications
+// Research shows B2B manufacturing needs detailed technical specs as structured data
+
+export const featuredProductSchemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': 'https://vijethadigital.com/products/led-sign-board',
+    name: 'LED Sign Board',
+    description: 'Premium LED illuminated sign boards for 24/7 visibility with weatherproof construction and energy-efficient LED modules.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Vijetha Digital',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Vijetha Digital',
+    },
+    category: 'Signage Solutions',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: '15000',
+      priceCurrency: 'INR',
+      priceValidUntil: '2027-12-31',
+      seller: {
+        '@type': 'Organization',
+        name: 'Vijetha Digital',
+      },
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Material',
+        value: 'Aluminium frame with acrylic face and LED modules',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Power Consumption',
+        value: '12W per sq.ft',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Lead Time',
+        value: '5-7 working days',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Warranty',
+        value: '2 years on LED modules, 1 year on transformer',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'IP Rating',
+        value: 'IP65 weatherproof',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Brightness',
+        value: '3000-5000 lumens per sq.ft',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': 'https://vijethadigital.com/products/acp-cladding-sign',
+    name: 'ACP Cladding Sign Board',
+    description: 'Aluminium Composite Panel cladding signs with 3D lettering for professional corporate signage with durability and premium finish.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Vijetha Digital',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Vijetha Digital',
+    },
+    category: 'Signage Solutions',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: '18000',
+      priceCurrency: 'INR',
+      priceValidUntil: '2027-12-31',
+      seller: {
+        '@type': 'Organization',
+        name: 'Vijetha Digital',
+      },
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Material',
+        value: 'Goldplus ACP sheets 4mm thickness with aluminium frame',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Letter Height Options',
+        value: '6 inches to 48 inches',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Lead Time',
+        value: '7-10 working days',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Finish Options',
+        value: 'Glossy, Matte, Brushed, Mirror',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Outdoor Durability',
+        value: '7-10 years',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': 'https://vijethadigital.com/products/vehicle-branding',
+    name: 'Vehicle Branding & Wraps',
+    description: 'Professional vehicle wrapping services for cars, vans, buses and fleet branding with UV-resistant 3M and Avery Dennison vinyl.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Vijetha Digital',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Vijetha Digital',
+    },
+    category: 'Vehicle Branding',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: '8000',
+      priceCurrency: 'INR',
+      priceValidUntil: '2027-12-31',
+      seller: {
+        '@type': 'Organization',
+        name: 'Vijetha Digital',
+      },
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Material',
+        value: '3M vinyl wrap or Avery Dennison cast vinyl',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Application Time',
+        value: '1-2 days depending on vehicle size',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Durability',
+        value: '5-7 years outdoor',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'UV Protection',
+        value: 'UV-resistant lamination included',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Vehicle Types',
+        value: '2-wheelers, cars, vans, buses, trucks',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Removal',
+        value: 'Clean removal without paint damage',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': 'https://vijethadigital.com/products/flex-vinyl-printing',
+    name: 'Flex & Vinyl Printing',
+    description: 'High-resolution large format flex and vinyl printing using HP Latex 570 for banners, hoardings, and outdoor displays.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Vijetha Digital',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Vijetha Digital',
+    },
+    category: 'Digital Printing',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: '35',
+      priceCurrency: 'INR',
+      priceValidUntil: '2027-12-31',
+      seller: {
+        '@type': 'Organization',
+        name: 'Vijetha Digital',
+      },
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Equipment',
+        value: 'HP Latex 570, Epson Surecolor S80670',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Maximum Width',
+        value: '64 inches (5.3 feet)',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Resolution',
+        value: 'Up to 1440 dpi',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Daily Capacity',
+        value: '10,000+ sq.ft per day',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Turnaround',
+        value: 'Same day for orders under 500 sq.ft',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Material Options',
+        value: 'Frontlit flex, backlit flex, vinyl, mesh, canvas',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': 'https://vijethadigital.com/products/offset-printing',
+    name: 'Offset Printing Services',
+    description: 'Premium offset printing for brochures, catalogs, stationery, packaging with spot UV, foil stamping and die-cutting capabilities.',
+    brand: {
+      '@type': 'Brand',
+      name: 'Vijetha Digital',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Vijetha Digital',
+    },
+    category: 'Offset Printing',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: '2',
+      priceCurrency: 'INR',
+      priceValidUntil: '2027-12-31',
+      seller: {
+        '@type': 'Organization',
+        name: 'Vijetha Digital',
+      },
+    },
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Minimum Order',
+        value: '500 copies for cost efficiency',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Paper Weights',
+        value: '80 GSM to 400 GSM',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Color Capability',
+        value: 'CMYK 4-color process',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Finishing Options',
+        value: 'Spot UV, embossing, foil stamping, die-cutting, lamination',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Lead Time',
+        value: '3-5 working days',
+      },
+    ],
+  },
+];

@@ -106,7 +106,7 @@ export default function HeroSection() {
               transition:  'opacity 1s cubic-bezier(0.37,0,0.63,1) 0.25s, transform 1s cubic-bezier(0.87,0,0.13,1) 0.25s',
             }}
           >
-            Print Your<br />Vision to Life
+            Commercial Printing<br />Hyderabad
           </h1>
           {/* CTA — smaller on mobile */}
           <div

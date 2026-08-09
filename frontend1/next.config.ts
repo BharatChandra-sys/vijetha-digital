@@ -62,6 +62,32 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: '/rss.xml',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/rss+xml; charset=utf-8',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=7200',
+          },
+        ],
+      },
+      {
+        source: '/atom.xml',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/atom+xml; charset=utf-8',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=7200',
+          },
+        ],
+      },
     ];
   },
   images: {

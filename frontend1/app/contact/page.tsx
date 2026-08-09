@@ -266,6 +266,21 @@ export default function ContactPage() {
 
       <Footer />
       <JsonLd data={contactFaqSchema} />
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': 'https://vijethadigital.com/contact#webpage',
+        url: 'https://vijethadigital.com/contact',
+        name: 'Contact Vijetha Digital | Get a Free Quote | Hyderabad Printing & Signage',
+        isPartOf: { '@id': 'https://vijethadigital.com/#website' },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://vijethadigital.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://vijethadigital.com/contact' },
+          ],
+        },
+      }} />
 
       <style>{`
         .contact-grid {

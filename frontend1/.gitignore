@@ -51,3 +51,8 @@ public/images/DIGITAL_PRINT_COMPANY_*
 public/images/print-shop.jpg
 public/images/hero-banner.jpg
 public/images/*-wix.webp
+
+# SEO documentation (internal use only - do not commit)
+SEO_*.md
+HIDDEN_SEO_ENHANCEMENTS.md
+*SEO*Playbook*.pdf

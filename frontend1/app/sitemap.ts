@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 
 const baseUrl = 'https://vijethadigital.com';
 
+// Build date for lastModified
+const BUILD_DATE = new Date('2026-08-08T12:00:00Z');
+
 // Helper to convert product name to slug
 const toSlug = (value: string) =>
   value
@@ -13,57 +16,170 @@ const toSlug = (value: string) =>
 // All products for dynamic sitemap generation
 const PRODUCTS = [
   // Signage Solutions
-  'LED Sign Board', 'ACP Cladding Sign', 'Acrylic Letter Sign', 'Fascia Sign Board', 'Flex Board Hoarding', 'Pylon Sign',
+  { name: 'LED Sign Board', date: '2026-08-01' },
+  { name: 'ACP Cladding Sign', date: '2026-08-01' },
+  { name: 'Acrylic Letter Sign', date: '2026-08-01' },
+  { name: 'Fascia Sign Board', date: '2026-08-01' },
+  { name: 'Flex Board Hoarding', date: '2026-08-01' },
+  { name: 'Pylon Sign', date: '2026-08-01' },
   // Internal Branding
-  'Office Wall Branding', 'Reception & Lobby', 'Retail In-Shop Branding', 'Hospital Branding',
+  { name: 'Office Wall Branding', date: '2026-08-01' },
+  { name: 'Reception & Lobby', date: '2026-08-01' },
+  { name: 'Retail In-Shop Branding', date: '2026-08-01' },
+  { name: 'Hospital Branding', date: '2026-08-01' },
   // Vehicle Branding
-  'Car / 4-Wheeler Wrap', 'Bus / Van Branding', '2-Wheeler Branding', 'Heavy Vehicle Branding',
+  { name: 'Car / 4-Wheeler Wrap', date: '2026-08-01' },
+  { name: 'Bus / Van Branding', date: '2026-08-01' },
+  { name: '2-Wheeler Branding', date: '2026-08-01' },
+  { name: 'Heavy Vehicle Branding', date: '2026-08-01' },
   // Digital Printing
-  'Flex / Vinyl Printing', 'UV Print', '3D Canvas Print', 'Eco-Solvent Print',
+  { name: 'Flex / Vinyl Printing', date: '2026-08-01' },
+  { name: 'UV Print', date: '2026-08-01' },
+  { name: '3D Canvas Print', date: '2026-08-01' },
+  { name: 'Eco-Solvent Print', date: '2026-08-01' },
   // Offset Printing
-  'Brochure / Catalogue', 'Flyers & Pamphlets', 'Corporate Stationery', 'Packaging & Gift Boxes',
+  { name: 'Brochure / Catalogue', date: '2026-08-01' },
+  { name: 'Flyers & Pamphlets', date: '2026-08-01' },
+  { name: 'Corporate Stationery', date: '2026-08-01' },
+  { name: 'Packaging & Gift Boxes', date: '2026-08-01' },
   // Display & Exhibition
-  'Roll-Up Standee', 'Demo Tent / Canopy', 'Fabric Light Box', 'Trade Show Booth',
+  { name: 'Roll-Up Standee', date: '2026-08-01' },
+  { name: 'Demo Tent / Canopy', date: '2026-08-01' },
+  { name: 'Fabric Light Box', date: '2026-08-01' },
+  { name: 'Trade Show Booth', date: '2026-08-01' },
   // Outdoor Advertising
-  'Flags & Bunting', 'Backdrop / Stage Banner', 'Stickers & Decals', 'Canopy & Tent Branding',
+  { name: 'Flags & Bunting', date: '2026-08-01' },
+  { name: 'Backdrop / Stage Banner', date: '2026-08-01' },
+  { name: 'Stickers & Decals', date: '2026-08-01' },
+  { name: 'Canopy & Tent Branding', date: '2026-08-01' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Main static routes
-  const routes = [
-    { route: '', priority: 1.0, changeFrequency: 'weekly' as const },
-    { route: '/about', priority: 0.96, changeFrequency: 'monthly' as const },
-    { route: '/services', priority: 0.96, changeFrequency: 'weekly' as const },
-    { route: '/services/signage', priority: 0.92, changeFrequency: 'monthly' as const },
-    { route: '/services/vehicle-branding', priority: 0.92, changeFrequency: 'monthly' as const },
-    { route: '/services/digital-printing', priority: 0.92, changeFrequency: 'monthly' as const },
-    { route: '/products', priority: 0.94, changeFrequency: 'weekly' as const },
-    { route: '/projects', priority: 0.9, changeFrequency: 'weekly' as const },
-    { route: '/contact', priority: 0.95, changeFrequency: 'weekly' as const },
-    { route: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
-    { route: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
-    { route: '/sitemap', priority: 0.4, changeFrequency: 'monthly' as const },
-    // SEO landing pages
-    { route: '/hyderabad-printing-signage', priority: 0.88, changeFrequency: 'monthly' as const },
-    { route: '/hyderabad-printing-services', priority: 0.88, changeFrequency: 'monthly' as const },
-    { route: '/hyderabad-signage-company', priority: 0.88, changeFrequency: 'monthly' as const },
-    { route: '/hyderabad-vehicle-branding', priority: 0.88, changeFrequency: 'monthly' as const },
+  // Core pages — highest priority
+  const coreRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/services`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/products`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.94,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.92,
+    },
   ];
 
-  // Generate product page URLs
-  const productRoutes = PRODUCTS.map((productName) => ({
-    route: `/products/${toSlug(productName)}`,
-    priority: 0.85,
-    changeFrequency: 'monthly' as const,
+  // Service sub-pages
+  const serviceRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/services/signage`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/services/vehicle-branding`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/services/digital-printing`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/projects`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.88,
+    },
+  ];
+
+  // Local SEO landing pages
+  const localSeoRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/hyderabad-printing-signage`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.88,
+    },
+    {
+      url: `${baseUrl}/hyderabad-printing-services`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.88,
+    },
+    {
+      url: `${baseUrl}/hyderabad-signage-company`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.88,
+    },
+    {
+      url: `${baseUrl}/hyderabad-vehicle-branding`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.88,
+    },
+  ];
+
+  // Product pages
+  const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map(({ name, date }) => ({
+    url: `${baseUrl}/products/${toSlug(name)}`,
+    lastModified: new Date(date),
+    changeFrequency: 'monthly',
+    priority: 0.82,
   }));
 
-  // Combine all routes
-  const allRoutes = [...routes, ...productRoutes];
+  // Utility pages — lower priority
+  const utilityRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/sitemap`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+  ];
 
-  return allRoutes.map(({ route, priority, changeFrequency }) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency,
-    priority,
-  }));
+  return [
+    ...coreRoutes,
+    ...serviceRoutes,
+    ...localSeoRoutes,
+    ...productRoutes,
+    ...utilityRoutes,
+  ];
 }

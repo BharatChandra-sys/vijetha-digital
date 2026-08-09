@@ -1,15 +1,17 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import JsonLd from '@/components/seo/JsonLd';
+import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
 import { WA_URL } from '@/lib/constants';
 import { serviceFaqContent } from './faq';
+import { printingProcessSchemas } from '@/lib/howto-schemas';
 
 export const metadata: Metadata = {
   title: 'Printing & Signage Services in Hyderabad | Vijetha Digital',
   description:
-    'Discover Vijetha Digital’s services for signage boards, vehicle branding, digital printing, offset printing, screen printing, exhibition displays, and outdoor advertising in Hyderabad.',
+    'Vijetha Digital offers LED signage, ACP cladding, vehicle branding, digital printing, offset printing, screen printing, exhibition displays, and outdoor advertising in Hyderabad. Get a free quote today.',
   alternates: {
     canonical: 'https://vijethadigital.com/services',
   },
@@ -95,6 +97,18 @@ export default function ServicesPage() {
     <>
       <ScrollAnimations />
       <Header />
+
+      {/* Hidden SEO — not visible to users */}
+      <HiddenSEOContent content={[
+        'Vijetha Digital services include signage solutions, internal branding, vehicle branding, digital printing, offset printing, screen printing, display and exhibition, and outdoor advertising.',
+        'Signage: LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex boards, glass film, and modular displays in Hyderabad.',
+        'Vehicle Branding: 2-wheeler to heavy transport, UV-resistant vinyl wraps, design visualisation, and nationwide fleet support.',
+        'Digital Printing: HP Latex 570, Epson Surecolor, flex vinyl canvas UV print 3D eco-solvent, 1 lakh sq.ft per day capacity.',
+        'Offset Printing: Brochures, flyers, stationery, packaging, spot UV, foil stamping, die-cutting, high-volume bulk runs.',
+        'Display and Exhibition: Standees, demo tents, fabric light boxes, trade show booths, easel stands in Hyderabad.',
+        'Outdoor Advertising: Flags, backdrops, stickers, decals, canopies, tents, posters across South India.',
+        'Infrastructure: 10000 sq.ft production facility Nacharam IDA Hyderabad, 7 specialized manufacturing systems.',
+      ]} />
 
       {/* Page hero */}
       <section style={{
@@ -249,6 +263,37 @@ export default function ServicesPage() {
 
       <Footer />
       <JsonLd data={servicesFaqSchema} />
+      {printingProcessSchemas.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': 'https://vijethadigital.com/services#webpage',
+        url: 'https://vijethadigital.com/services',
+        name: 'Printing & Signage Services in Hyderabad | Vijetha Digital',
+        isPartOf: { '@id': 'https://vijethadigital.com/#website' },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://vijethadigital.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://vijethadigital.com/services' },
+          ],
+        },
+      }} />
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Vijetha Digital Services',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Signage Solutions', url: 'https://vijethadigital.com/services/signage' },
+          { '@type': 'ListItem', position: 2, name: 'Vehicle Branding', url: 'https://vijethadigital.com/services/vehicle-branding' },
+          { '@type': 'ListItem', position: 3, name: 'Digital Printing', url: 'https://vijethadigital.com/services/digital-printing' },
+          { '@type': 'ListItem', position: 4, name: 'Offset Printing', url: 'https://vijethadigital.com/services' },
+          { '@type': 'ListItem', position: 5, name: 'Display & Exhibition', url: 'https://vijethadigital.com/services' },
+          { '@type': 'ListItem', position: 6, name: 'Outdoor Advertising', url: 'https://vijethadigital.com/services' },
+        ],
+      }} />
 
       <style>{`
         /* Tablet: hide specs column */
