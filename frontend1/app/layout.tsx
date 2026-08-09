@@ -281,21 +281,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  classification: 'Business',
-  category: 'Printing, Signage, Branding',
-  other: {
-    'theme-color': '#0f0f10',
-    'format-detection': 'telephone=no',
-    'msapplication-TileColor': '#0f0f10',
-    'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'black-translucent',
-    'author': 'Vijetha Digital',
-    'publisher': 'Vijetha Digital',
-    'geo.region': 'IN-TG',
-    'geo.placename': 'Hyderabad',
-    'geo.position': '17.385044;78.486671',
-    'ICBM': '17.385044, 78.486671',
-  },
   icons: {
     icon: [
       { url: '/vd-logo.jpeg', sizes: 'any' },
@@ -308,12 +293,42 @@ export const metadata: Metadata = {
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
-  verification: {
-    google: 'google9f42b8a0d05f7d64f',
-    yandex: 'yandex-verification',
-    other: {
-      'bing': 'bing-site-verification',
-    },
+  // NOTE: Bing and Google verification done via DNS TXT records + HTML file method
+  // — NOT in frontend code. Go to bing.com/webmasters → Add site → choose
+  // "XML file" method → upload the file to /public/ folder.
+  // Google already verified via google9f42b8a0d05f7d64f.html file in /public/.
+  classification: 'Business',
+  category: 'Printing, Signage, Branding',
+  other: {
+    // Browser / PWA
+    'theme-color': '#0f0f10',
+    'format-detection': 'telephone=no',
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': 'Vijetha Digital',
+    'application-name': 'Vijetha Digital',
+    // Windows / Edge / IE tiles (Bing reads these)
+    'msapplication-TileColor': '#0f0f10',
+    'msapplication-TileImage': '/vd-logo.jpeg',
+    'msapplication-navbutton-color': '#0f0f10',
+    'msapplication-starturl': 'https://vijethadigital.com/',
+    // Authorship
+    'author': 'Vijetha Digital',
+    'publisher': 'Vijetha Digital',
+    // Geo tags — read by Bing, Yahoo, Baidu for local relevance
+    'geo.region': 'IN-TG',
+    'geo.placename': 'Hyderabad, Telangana, India',
+    'geo.position': '17.385044;78.486671',
+    'ICBM': '17.385044, 78.486671',
+    // Content classification signals
+    'rating': 'general',
+    'revisit-after': '7 days',
+    'language': 'en-IN',
+    'coverage': 'India',
+    'target': 'all',
+    'HandheldFriendly': 'True',
+    'MobileOptimized': '320',
   },
 };
 

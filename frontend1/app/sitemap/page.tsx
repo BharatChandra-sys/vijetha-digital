@@ -6,7 +6,7 @@ import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Sitemap | Vijetha Digital',
-  description: 'Navigate through all sections of the Vijetha Digital website.',
+  description: 'Complete sitemap for Vijetha Digital — navigate to printing services, signage products, vehicle branding, about, contact, and all pages on vijethadigital.com.',
 };
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
