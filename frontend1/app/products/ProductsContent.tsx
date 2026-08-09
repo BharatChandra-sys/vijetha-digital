@@ -120,9 +120,7 @@ export default function ProductsContent({ scrollToId }: { scrollToId?: string })
                   {items.map((product, i) => (
                     <a
                       key={product.id}
-                      href={`${WA}${encodeURIComponent(product.name)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={`/products/${toSlug(product.name)}`}
                       className={`prod-card wix-motion wix-fade-up wix-delay-${(i % 4) + 1}`}
                     >
                       <div className="wix-img-wrap" style={{ aspectRatio: '4/3', marginBottom: '16px', backgroundColor: '#f1f0eb' }}>
@@ -141,9 +139,9 @@ export default function ProductsContent({ scrollToId }: { scrollToId?: string })
                       <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>
                         {product.price}
                       </p>
-                      <div className="enquire-link">
+                      <div className="view-details-link">
                         <span style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.06em', color: '#000' }}>
-                          Enquire on WhatsApp →
+                          View Details →
                         </span>
                       </div>
                     </a>
@@ -192,8 +190,8 @@ export default function ProductsContent({ scrollToId }: { scrollToId?: string })
         @media (max-width: 768px)  { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; } }
         @media (max-width: 400px)  { .products-grid { grid-template-columns: 1fr; } }
         .prod-card { text-decoration: none; color: inherit; display: block; cursor: pointer; }
-        .prod-card:hover .enquire-link { opacity: 0.6; }
-        .enquire-link { border-bottom: 1px solid #000; display: inline-block; padding-bottom: 2px; }
+        .prod-card:hover .view-details-link { opacity: 0.6; }
+        .view-details-link { border-bottom: 1px solid #000; display: inline-block; padding-bottom: 2px; }
         .cat-tab:hover { border-bottom-color: #000 !important; }
         div[style*='overflow-x: auto']::-webkit-scrollbar { display: none; }
       `}</style>
