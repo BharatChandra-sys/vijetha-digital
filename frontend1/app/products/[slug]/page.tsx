@@ -138,7 +138,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <HiddenSEOContent content={hiddenContent} />
 
       {/* Breadcrumb — visible */}
-      <div style={{ backgroundColor: '#f9f9f7', borderBottom: '1px solid #e8e8e4', padding: '12px 0' }}>
+      <div className="product-breadcrumb" style={{ backgroundColor: '#f9f9f7', borderBottom: '1px solid #e8e8e4', paddingTop: '88px', paddingBottom: '12px' }}>
         <div className="wix-container">
           <p style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)' }}>
             <a href="/" style={{ color: 'rgb(85,78,78)', textDecoration: 'none' }}>Home</a>
@@ -263,8 +263,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={breadcrumbSchema} />
 
       <style>{`
+        .product-breadcrumb { padding-top: 88px; }
         .prod-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
-        @media (max-width: 900px) { .prod-hero-grid { grid-template-columns: 1fr; gap: 36px; } }
+        @media (max-width: 900px) { 
+          .prod-hero-grid { grid-template-columns: 1fr; gap: 36px; }
+        }
+        @media (max-width: 768px) {
+          .product-breadcrumb { padding-top: 80px !important; }
+        }
         @media (max-width: 600px) {
           div[style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
         }
