@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import ProductsContent from './ProductsContent';
 import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
 import JsonLd from '@/components/seo/JsonLd';
+import FAQAccordion from '@/components/ui/FAQAccordion';
 import { productsFaqContent } from './faq';
 import { featuredProductSchemas } from '@/lib/product-schemas';
 
@@ -84,14 +85,7 @@ export default function ProductsPage() {
           <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
             Common questions about our printing and signage products
           </h2>
-          <div style={{ display: 'grid', gap: '16px' }}>
-            {productsFaqContent.map((item) => (
-              <div key={item.question} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <FAQAccordion items={productsFaqContent} />
         </div>
       </section>
 

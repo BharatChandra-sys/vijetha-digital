@@ -458,20 +458,13 @@ const branchIndiraParkSchema = {
 };
 
 // ─── REVIEW SCHEMA ────────────────────────────────────────────────────────────
-// Explicit review structured data builds trust signals for the Knowledge Panel
-// and reinforces the AggregateRating on the Organization schema.
+// Separate Review schema to avoid "multiple aggregate ratings" error in GSC.
+// This keeps the Organization aggregateRating separate from individual reviews.
 const reviewSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': 'Organization',
   '@id': 'https://vijethadigital.com/#organization',
   name: 'Vijetha Digital',
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-    worstRating: '1',
-  },
   review: [
     {
       '@type': 'Review',
