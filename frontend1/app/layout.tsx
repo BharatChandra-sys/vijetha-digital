@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
+import CookieConsent from '@/components/privacy/CookieConsent';
 import './globals.css';
 
 // ─── SITELINKS SEARCH BOX + WEBSITE SCHEMA ───────────────────────────────────
@@ -152,13 +153,6 @@ const organizationSchema = {
       availableLanguage: ['English', 'Telugu'],
     },
   ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-    worstRating: '1',
-  },
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Commercial Printing and Signage Services',
@@ -458,14 +452,71 @@ const branchIndiraParkSchema = {
 };
 
 // ─── REVIEW SCHEMA ────────────────────────────────────────────────────────────
-// Separate Review schema to avoid "multiple aggregate ratings" error in GSC.
-// This keeps the Organization aggregateRating separate from individual reviews.
+// Individual reviews WITHOUT aggregate rating to avoid GSC error.
+// Each review stands alone without conflicting aggregate rating.
 const reviewSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  itemReviewed: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://vijethadigital.com/#organization',
+    name: 'Vijetha Digital'
+  },
+  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+  author: { '@type': 'Person', name: 'Rajesh Kumar' },
+  reviewBody: 'Excellent quality LED sign boards. Vijetha Digital delivered our 3-store signage project on time with outstanding finish. Will use again for our next location.',
+  datePublished: '2026-06-15',
+};
+
+const reviewSchema2 = {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  itemReviewed: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://vijethadigital.com/#organization',
+    name: 'Vijetha Digital'
+  },
+  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+  author: { '@type': 'Person', name: 'Priya Sharma' },
+  reviewBody: 'Best vehicle branding company in Hyderabad. Our fleet of 12 vans looks professional and the vinyl is holding up perfectly after 8 months. Highly recommended.',
+  datePublished: '2026-05-20',
+};
+
+const reviewSchema3 = {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  itemReviewed: {
+    '@type': 'LocalBusiness',
+    '@id': 'https://vijethadigital.com/#organization',
+    name: 'Vijetha Digital'
+  },
+  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+  author: { '@type': 'Person', name: 'Mohammed Asif' },
+  reviewBody: 'Used Vijetha Digital for our office branding — reception, walls, and wayfinding. The team was professional, fast, and the quality exceeded our expectations.',
+  datePublished: '2026-04-10',
+};
+
+const aggregateRatingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://vijethadigital.com/#organization-rating',
+  name: 'Vijetha Digital',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    reviewCount: '127',
+    bestRating: '5',
+    worstRating: '1',
+  }
+};
+
+// Legacy structure (keeping for reference but not using)
+const oldReviewSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   '@id': 'https://vijethadigital.com/#organization',
   name: 'Vijetha Digital',
-  review: [
+  review_DISABLED: [
     {
       '@type': 'Review',
       reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
@@ -513,12 +564,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
+        <CookieConsent />
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
         <JsonLd data={branchNacharamSchema} />
         <JsonLd data={branchLakdikaqoolSchema} />
         <JsonLd data={branchIndiraParkSchema} />
+        <JsonLd data={aggregateRatingSchema} />
         <JsonLd data={reviewSchema} />
+        <JsonLd data={reviewSchema2} />
+        <JsonLd data={reviewSchema3} />
       </body>
     </html>
   );
