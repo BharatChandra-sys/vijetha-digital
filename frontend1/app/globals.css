@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ━━━ CRITICAL CSS ━━━ Loads first for instant render */
-
 /* Shimmer animation for skeletons */
 @keyframes shimmer {
   0% {

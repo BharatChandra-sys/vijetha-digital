@@ -4,8 +4,13 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const host = request.headers.get('host') || '';
+  
+  // Skip all middleware in development
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next();
+  }
 
-  // 1. Redirect www to non-www (canonical)
+  // 1. Redirect www to non-www (canonical) - PRODUCTION ONLY
   if (host.startsWith('www.')) {
     const newUrl = request.nextUrl.clone();
     newUrl.host = host.replace('www.', '');
@@ -36,9 +41,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(newUrl, 301);
   }
 
-  // 3. Redirect http to https (if not already https)
+  // 3. Redirect http to https - PRODUCTION ONLY
   const proto = request.headers.get('x-forwarded-proto');
-  if (proto === 'http') {
+  if (proto === 'http' && process.env.NODE_ENV === 'production') {
     const newUrl = request.nextUrl.clone();
     newUrl.protocol = 'https:';
     return NextResponse.redirect(newUrl, 301);

@@ -581,44 +581,8 @@ export default function RootLayout({
         {/* DNS prefetch for third-party resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        
-        {/* Inline critical CSS - loads instantly, no blocking */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          /* Critical above-the-fold styles */
-          *,::before,::after{box-sizing:border-box;margin:0;padding:0}
-          html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4}
-          body{font-family:helvetica-w01-roman,'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:inherit;margin:0}
-          
-          /* Instant header - prevents layout shift */
-          .header-instant{position:fixed;top:0;left:0;right:0;height:4rem;background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;border-bottom:1px solid rgba(0,0,0,0.05)}
-          @media(min-width:768px){.header-instant{height:4.5rem}}
-          
-          /* Container - prevents width jump */
-          .container-instant{width:100%;max-width:1280px;margin:0 auto;padding:0 1.25rem}
-          @media(min-width:768px){.container-instant{padding:0 2.5rem}}
-          
-          /* Skeleton shimmer - smooth loading animation */
-          @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-          .skeleton{position:relative;overflow:hidden;background:#e8e8e4;border-radius:4px}
-          .skeleton::before{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 2s infinite}
-          
-          /* Prevent flash of unstyled content */
-          main{min-height:100vh;padding-top:4rem}
-          @media(min-width:768px){main{padding-top:4.5rem}}
-          
-          /* Font smoothing */
-          body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
-        `}} />
       </head>
       <body>
-        {/* Instant visible placeholder */}
-        <div className="header-instant" id="header-placeholder">
-          <div className="container-instant" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div className="skeleton" style={{ height: '20px', width: '140px' }}></div>
-            <div className="skeleton" style={{ height: '40px', width: '120px', display: 'none' }} id="header-cta"></div>
-          </div>
-        </div>
-
         {children}
         <CookieConsent />
         <Analytics />
@@ -632,16 +596,6 @@ export default function RootLayout({
         <JsonLd data={reviewSchema} />
         <JsonLd data={reviewSchema2} />
         <JsonLd data={reviewSchema3} />
-        
-        {/* Remove placeholder when real header loads */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          if(typeof window!=='undefined'){
-            window.addEventListener('DOMContentLoaded',function(){
-              var p=document.getElementById('header-placeholder');
-              if(p)setTimeout(function(){p.style.display='none'},100);
-            });
-          }
-        `}} />
       </body>
     </html>
   );
