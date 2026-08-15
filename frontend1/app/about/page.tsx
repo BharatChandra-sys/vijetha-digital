@@ -127,7 +127,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CLIENT PORTFOLIO ── */}
-      <section style={{ backgroundColor: '#f1f0eb', padding: '96px 0' }}>
+      <section id="clients" style={{ backgroundColor: '#f1f0eb', padding: '96px 0' }}>
         <div className="wix-container">
           <div className="wix-motion wix-fade-up" style={{ textAlign: 'center', marginBottom: '64px' }}>
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>

@@ -27,6 +27,54 @@ const websiteSchema = {
     },
     'query-input': 'required name=search_term_string',
   },
+  // Enhanced navigation for sitelinks
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: [
+      {
+        '@type': 'SiteNavigationElement',
+        position: 1,
+        name: 'Our Clients',
+        description: 'Trusted by 1000+ businesses including Samsung, Microsoft, Airtel, and Reliance',
+        url: 'https://vijethadigital.com/about#clients',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 2,
+        name: 'About Us',
+        description: '15+ years of printing and signage expertise with world-class manufacturing',
+        url: 'https://vijethadigital.com/about',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 3,
+        name: 'LED Sign Boards',
+        description: 'Premium LED illuminated signage for 24/7 brand visibility',
+        url: 'https://vijethadigital.com/products/led-sign-board',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 4,
+        name: 'Vehicle Branding',
+        description: 'Professional vehicle wraps and fleet graphics with 3M vinyl',
+        url: 'https://vijethadigital.com/products/vehicle-branding',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 5,
+        name: 'ACP Cladding Signs',
+        description: 'Aluminium composite panel signage with premium corporate finish',
+        url: 'https://vijethadigital.com/products/acp-cladding-sign',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 6,
+        name: 'Digital Printing',
+        description: 'High-resolution flex and vinyl printing for banners and displays',
+        url: 'https://vijethadigital.com/products/flex-vinyl-printing',
+      },
+    ],
+  },
 };
 
 const organizationSchema = {
@@ -516,51 +564,6 @@ const aggregateRatingSchema = {
     bestRating: '5',
     worstRating: '1',
   }
-};
-
-// Legacy structure (keeping for reference but not using)
-const oldReviewSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  '@id': 'https://vijethadigital.com/#organization',
-  name: 'Vijetha Digital',
-  review_DISABLED: [
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-      author: { '@type': 'Person', name: 'Rajesh Kumar' },
-      reviewBody: 'Excellent quality LED sign boards. Vijetha Digital delivered our 3-store signage project on time with outstanding finish. Will use again for our next location.',
-      datePublished: '2026-06-15',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-      author: { '@type': 'Person', name: 'Priya Sharma' },
-      reviewBody: 'Best vehicle branding company in Hyderabad. Our fleet of 12 vans looks professional and the vinyl is holding up perfectly after 8 months. Highly recommended.',
-      datePublished: '2026-05-20',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-      author: { '@type': 'Person', name: 'Mohammed Asif' },
-      reviewBody: 'Used Vijetha Digital for our office branding — reception, walls, and wayfinding. The team was professional, fast, and the quality exceeded our expectations.',
-      datePublished: '2026-04-10',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '4', bestRating: '5' },
-      author: { '@type': 'Person', name: 'Lakshmi Reddy' },
-      reviewBody: 'Good quality flex printing and standees for our trade show. Quick turnaround in 24 hours for our urgent requirement. Prices are fair for the quality.',
-      datePublished: '2026-03-28',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-      author: { '@type': 'Person', name: 'Venkat Rao' },
-      reviewBody: 'Vijetha Digital handled our hospital wayfinding and internal branding project across 3 floors. Precise work, professional installation team, and great project management.',
-      datePublished: '2026-02-14',
-    },
-  ],
 };
 
 export default function RootLayout({

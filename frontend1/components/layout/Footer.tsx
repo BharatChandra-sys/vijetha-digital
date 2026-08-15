@@ -51,16 +51,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ── COL 2: Products ── */}
+          {/* ── COL 2: Popular Services ── */}
           <div>
-            <p className="footer-col-heading">Products</p>
+            <p className="footer-col-heading">Popular Services</p>
             <ul className="footer-link-list">
               {[
-                ['Sign Boards',       '/products/sign-boards'],
-                ['Printing Services', '/products/printing-services'],
-                ['Banner Stands',     '/products/banner-stands'],
-                ['Demo Tents',        '/products/demo-tents'],
-                ['Promotional Items', '/products/promotional-items'],
+                ['LED Sign Boards',      '/products/led-sign-board'],
+                ['ACP Cladding Signs',   '/products/acp-cladding-sign'],
+                ['Vehicle Branding',     '/products/car-4-wheeler-wrap'],
+                ['Flex Printing',        '/products/flex-vinyl-printing'],
+                ['Exhibition Displays',  '/products/trade-show-booth'],
+                ['Roll-Up Standees',     '/products/roll-up-standee'],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link href={href} className="footer-nav-link">{label}</Link>
@@ -74,11 +75,13 @@ export default function Footer() {
             <p className="footer-col-heading">Company</p>
             <ul className="footer-link-list">
               {[
-                ['Services',      '/services'],
-                ['Products',      '/products'],
-                ['About',         '/about'],
-                ['Contact',       '/contact'],
-                ['Privacy Policy','/privacy'],
+                ['About Us',       '/about'],
+                ['Our Clients',    '/about#clients'],
+                ['Services',       '/services'],
+                ['Products',       '/products'],
+                ['Contact',        '/contact'],
+                ['Privacy Policy', '/privacy'],
+                ['Sitemap',        '/sitemap'],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link href={href} className="footer-nav-link">{label}</Link>
@@ -201,10 +204,10 @@ export default function Footer() {
         {/* ── BOTTOM BAR ── */}
         <div className="footer-bottom-bar">
           <p style={{ fontFamily: font, fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-            © 2002–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.
+            © 2009–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            {[['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Sitemap', '/sitemap']].map(([label, href]) => (
+            {[['Sitemap', '/sitemap'], ['Privacy Policy', '/privacy']].map(([label, href]) => (
               <Link key={label} href={href} className="footer-bottom-link">{label}</Link>
             ))}
           </div>

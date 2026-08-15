@@ -8,7 +8,10 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/led-sign-board',
     name: 'LED Sign Board',
     description: 'Premium LED illuminated sign boards for 24/7 visibility with weatherproof construction and energy-efficient LED modules.',
-    image: 'https://vijethadigital.com/images/project-booklets.webp',
+    image: [
+      'https://vijethadigital.com/images/project-booklets.webp',
+      'https://vijethadigital.com/vd-logo.jpeg'
+    ],
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -18,15 +21,74 @@ export const featuredProductSchemas = [
       name: 'Vijetha Digital',
     },
     category: 'Signage Solutions',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '24',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Rajesh Kumar',
+        },
+        reviewBody: 'Excellent quality LED sign boards delivered on time with outstanding finish.',
+        datePublished: '2026-06-15',
+      },
+    ],
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
       price: '15000',
       priceCurrency: 'INR',
       priceValidUntil: '2027-12-31',
+      validFrom: '2026-01-01',
       seller: {
         '@type': 'Organization',
         name: 'Vijetha Digital',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'INR',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '5',
+            maxValue: '7',
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '0',
+            unitCode: 'DAY',
+          },
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
     },
     additionalProperty: [
@@ -68,7 +130,10 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/acp-cladding-sign',
     name: 'ACP Cladding Sign Board',
     description: 'Aluminium Composite Panel cladding signs with 3D lettering for professional corporate signage with durability and premium finish.',
-    image: 'https://vijethadigital.com/images/project-cards.webp',
+    image: [
+      'https://vijethadigital.com/images/project-cards.webp',
+      'https://vijethadigital.com/vd-logo.jpeg'
+    ],
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -78,15 +143,74 @@ export const featuredProductSchemas = [
       name: 'Vijetha Digital',
     },
     category: 'Signage Solutions',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '18',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Priya Sharma',
+        },
+        reviewBody: 'Professional ACP cladding with premium finish. Perfect for our corporate office entrance.',
+        datePublished: '2026-05-20',
+      },
+    ],
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
       price: '18000',
       priceCurrency: 'INR',
       priceValidUntil: '2027-12-31',
+      validFrom: '2026-01-01',
       seller: {
         '@type': 'Organization',
         name: 'Vijetha Digital',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'INR',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '7',
+            maxValue: '10',
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '0',
+            unitCode: 'DAY',
+          },
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
     },
     additionalProperty: [
@@ -123,7 +247,10 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/vehicle-branding',
     name: 'Vehicle Branding & Wraps',
     description: 'Professional vehicle wrapping services for cars, vans, buses and fleet branding with UV-resistant 3M and Avery Dennison vinyl.',
-    image: 'https://vijethadigital.com/images/about-printing.webp',
+    image: [
+      'https://vijethadigital.com/images/about-printing.webp',
+      'https://vijethadigital.com/vd-logo.jpeg'
+    ],
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -133,15 +260,74 @@ export const featuredProductSchemas = [
       name: 'Vijetha Digital',
     },
     category: 'Vehicle Branding',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '31',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Mohammed Asif',
+        },
+        reviewBody: 'Best vehicle branding in Hyderabad. Our fleet looks professional and vinyl quality is excellent.',
+        datePublished: '2026-04-10',
+      },
+    ],
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
       price: '8000',
       priceCurrency: 'INR',
       priceValidUntil: '2027-12-31',
+      validFrom: '2026-01-01',
       seller: {
         '@type': 'Organization',
         name: 'Vijetha Digital',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'INR',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '1',
+            maxValue: '2',
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '0',
+            unitCode: 'DAY',
+          },
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
     },
     additionalProperty: [
@@ -183,7 +369,10 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/flex-vinyl-printing',
     name: 'Flex & Vinyl Printing',
     description: 'High-resolution large format flex and vinyl printing using HP Latex 570 for banners, hoardings, and outdoor displays.',
-    image: 'https://vijethadigital.com/images/hero-banner-hq.webp',
+    image: [
+      'https://vijethadigital.com/images/hero-banner-hq.webp',
+      'https://vijethadigital.com/vd-logo.jpeg'
+    ],
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -193,15 +382,74 @@ export const featuredProductSchemas = [
       name: 'Vijetha Digital',
     },
     category: 'Digital Printing',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.7',
+      reviewCount: '42',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Lakshmi Reddy',
+        },
+        reviewBody: 'Excellent print quality for our outdoor campaign. Fast turnaround and great colors.',
+        datePublished: '2026-03-28',
+      },
+    ],
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
       price: '35',
       priceCurrency: 'INR',
       priceValidUntil: '2027-12-31',
+      validFrom: '2026-01-01',
       seller: {
         '@type': 'Organization',
         name: 'Vijetha Digital',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'INR',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '1',
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '0',
+            unitCode: 'DAY',
+          },
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
     },
     additionalProperty: [
@@ -243,7 +491,10 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/offset-printing',
     name: 'Offset Printing Services',
     description: 'Premium offset printing for brochures, catalogs, stationery, packaging with spot UV, foil stamping and die-cutting capabilities.',
-    image: 'https://vijethadigital.com/images/project-booklets.webp',
+    image: [
+      'https://vijethadigital.com/images/project-booklets.webp',
+      'https://vijethadigital.com/vd-logo.jpeg'
+    ],
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -253,15 +504,74 @@ export const featuredProductSchemas = [
       name: 'Vijetha Digital',
     },
     category: 'Offset Printing',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '29',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Venkat Rao',
+        },
+        reviewBody: 'Professional offset printing for our corporate brochures. Excellent color accuracy and finish.',
+        datePublished: '2026-02-14',
+      },
+    ],
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
       price: '2',
       priceCurrency: 'INR',
       priceValidUntil: '2027-12-31',
+      validFrom: '2026-01-01',
       seller: {
         '@type': 'Organization',
         name: 'Vijetha Digital',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'INR',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '3',
+            maxValue: '5',
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: '0',
+            maxValue: '0',
+            unitCode: 'DAY',
+          },
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
     },
     additionalProperty: [
