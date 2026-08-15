@@ -1,30 +1,50 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  /* config options here */
   reactStrictMode: true,
-  poweredByHeader: false,
+  
+  // Performance optimizations
   compress: true,
-  // Set the workspace root for proper tracing (removed for Vercel compatibility)
-  // outputFileTracingRoot: path.join(__dirname),
-  // Generate static sitemap at build time
-  trailingSlash: false,
-  // SEO: Generate proper meta tags
-  generateEtags: true,
-  eslint: {
-    ignoreDuringBuilds: true,
+  poweredByHeader: false,
+  
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  typescript: {
-    ignoreBuildErrors: false,
+  
+  // Compiler optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
   },
-  // Headers for better SEO and performance
+  
+  // Experimental features for performance
+  experimental: {
+    optimizePackageImports: ['@/components', '@/lib'],
+    webpackBuildWorker: true,
+  },
+  
+  // Headers for security and performance
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/:path*',
         headers: [
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
           {
             key: 'X-Frame-Options',
@@ -38,80 +58,31 @@ const nextConfig: NextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
           },
-        ],
-      },
-      {
-        source: '/sitemap.xml',
-        headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600',
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },
       {
-        source: '/robots.txt',
+        source: '/fonts/:path*',
         headers: [
           {
-            key: 'Content-Type',
-            value: 'text/plain',
-          },
-          {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
-        source: '/rss.xml',
+        source: '/_next/static/:path*',
         headers: [
           {
-            key: 'Content-Type',
-            value: 'application/rss+xml; charset=utf-8',
-          },
-          {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=7200',
-          },
-        ],
-      },
-      {
-        source: '/atom.xml',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/atom+xml; charset=utf-8',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=7200',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
     ];
-  },
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'static.wixstatic.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.google.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'logo.clearbit.com',
-      },
-    ],
   },
 };
 

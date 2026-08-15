@@ -2,6 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ━━━ CRITICAL CSS ━━━ Loads first for instant render */
+
+/* Shimmer animation for skeletons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Prevent layout shift during load */
+.wix-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .wix-container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Instant header visibility - prevents flash */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Prevent cumulative layout shift */
+main {
+  min-height: 100vh;
+  contain: layout style;
+}
+
+/* Font loading optimization */
+body {
+  font-family: 'helvetica-w01-roman', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Instant footer visibility */
+footer {
+  contain: layout style paint;
+}
+
+/* Performance: GPU acceleration for animations */
+.wix-motion,
+[class*="fade"],
+[class*="slide"],
+.social-icon,
+.footer-nav-link,
+.sitemap-link {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Prevent invisible text flash */
+@font-face {
+  font-family: 'helvetica-w01-roman';
+  font-display: swap;
+  src: local('Helvetica Neue'), local('Helvetica'), local('Arial');
+}
+
+@font-face {
+  font-family: 'helvetica-w01-bold';
+  font-display: swap;
+  src: local('Helvetica Neue Bold'), local('Helvetica Bold'), local('Arial Bold');
+}
+
+/* Loading state utilities */
+.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.loading * {
+  cursor: wait !important;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── WIX EXACT COLOR PALETTE (extracted from --color_N variables) ─── */
 :root {
   --wix-white:        rgb(255, 255, 255);   /* color_11 */
