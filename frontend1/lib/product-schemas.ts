@@ -8,6 +8,7 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/led-sign-board',
     name: 'LED Sign Board',
     description: 'Premium LED illuminated sign boards for 24/7 visibility with weatherproof construction and energy-efficient LED modules.',
+    image: 'https://vijethadigital.com/images/project-booklets.webp',
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -67,6 +68,7 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/acp-cladding-sign',
     name: 'ACP Cladding Sign Board',
     description: 'Aluminium Composite Panel cladding signs with 3D lettering for professional corporate signage with durability and premium finish.',
+    image: 'https://vijethadigital.com/images/project-cards.webp',
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -121,6 +123,7 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/vehicle-branding',
     name: 'Vehicle Branding & Wraps',
     description: 'Professional vehicle wrapping services for cars, vans, buses and fleet branding with UV-resistant 3M and Avery Dennison vinyl.',
+    image: 'https://vijethadigital.com/images/about-printing.webp',
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -180,6 +183,7 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/flex-vinyl-printing',
     name: 'Flex & Vinyl Printing',
     description: 'High-resolution large format flex and vinyl printing using HP Latex 570 for banners, hoardings, and outdoor displays.',
+    image: 'https://vijethadigital.com/images/hero-banner-hq.webp',
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',
@@ -239,6 +243,7 @@ export const featuredProductSchemas = [
     '@id': 'https://vijethadigital.com/products/offset-printing',
     name: 'Offset Printing Services',
     description: 'Premium offset printing for brochures, catalogs, stationery, packaging with spot UV, foil stamping and die-cutting capabilities.',
+    image: 'https://vijethadigital.com/images/project-booklets.webp',
     brand: {
       '@type': 'Brand',
       name: 'Vijetha Digital',

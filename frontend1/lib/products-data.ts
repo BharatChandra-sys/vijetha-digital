@@ -52,7 +52,7 @@ export const PRODUCTS: Product[] = [
     category: 'Signage Solutions',
     price: 'Rs 2,200 onwards',
     priceNumeric: 2200,
-    image: '/images/project-cards.jpg',
+    image: '/images/project-cards.webp',
     desc: 'Aluminium composite panel cladding for professional, weather-resistant outdoor signage.',
     longDesc: 'ACP cladding signs from Vijetha Digital use 4mm Goldplus aluminium composite panels with 3D letter fabrication. Available in glossy, matte, brushed, and mirror finishes. Structurally mounted with MS frames and chemical anchors for wind resistance. Ideal for corporate building facades, showroom frontages, and commercial complexes. Outdoor durability of 7-10 years.',
     specs: [
@@ -76,7 +76,7 @@ export const PRODUCTS: Product[] = [
     category: 'Signage Solutions',
     price: 'Rs 1,800 onwards',
     priceNumeric: 1800,
-    image: '/images/about-printing.jpg',
+    image: '/images/about-printing.webp',
     desc: 'Precision-cut acrylic 3D lettering for shopfronts, offices and brand walls.',
     longDesc: 'Vijetha Digital produces precision acrylic letter signs using CNC routing for exact tolerances. Available in backlit (with LEDs inside), front-lit, and non-illuminated options. Acrylic thickness from 5mm to 25mm. Colors from Asian Paints palette. Suitable for company name boards, reception walls, entrance signs, and brand displays.',
     specs: [
@@ -99,7 +99,7 @@ export const PRODUCTS: Product[] = [
     category: 'Signage Solutions',
     price: 'Rs 4,500 onwards',
     priceNumeric: 4500,
-    image: '/images/hero-banner-hq.jpg',
+    image: '/images/hero-banner-hq.webp',
     desc: 'Full-width fascia boards for storefronts and commercial complexes.',
     longDesc: 'Fascia sign boards span the full width of a storefront for maximum brand visibility at street level. Vijetha Digital fabricates fascia signs in flex-lit, ACP, LED-backlit, and acrylic variants. Custom sizes, illumination options, and brand color matching available.',
     specs: [
@@ -120,7 +120,7 @@ export const PRODUCTS: Product[] = [
     category: 'Signage Solutions',
     price: 'Rs 18-35 per sq.ft',
     priceNumeric: 18,
-    image: '/images/project-booklets.jpg',
+    image: '/images/project-booklets.webp',
     desc: 'High-resolution flex printing for large hoardings, outdoor banners and backdrops.',
     longDesc: 'Flex board hoardings from Vijetha Digital are printed on HP Latex 570 for vivid, UV-resistant output. Available in frontlit and backlit flex, with eyelets and hem finishing for outdoor installation. Bulk orders at 1 lakh sq.ft per day capacity. Same-day available for orders under 500 sq.ft.',
     specs: [
@@ -143,7 +143,7 @@ export const PRODUCTS: Product[] = [
     category: 'Signage Solutions',
     price: 'Rs 8,000 onwards',
     priceNumeric: 8000,
-    image: '/images/project-cards.jpg',
+    image: '/images/project-cards.webp',
     desc: 'Tall freestanding pylon signs for maximum visibility at malls, hospitals and industrial sites.',
     longDesc: 'Pylon signs are tall freestanding structures that provide visibility from long distances. Vijetha Digital fabricates single and double-sided pylons with LED illumination, ACP cladding, and custom branding. Suitable for petrol stations, malls, hospitals, industrial parks, and highway commercial properties. Structural drawings and PMC approvals coordinated.',
     specs: [
@@ -160,7 +160,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 7, name: 'Office Wall Branding', slug: 'office-wall-branding', category: 'Internal Branding',
-    price: 'On request', priceNumeric: 15000, image: '/images/about-printing.jpg',
+    price: 'On request', priceNumeric: 15000, image: '/images/about-printing.webp',
     desc: 'Transform office walls into powerful brand statements with murals, typography and graphics.',
     longDesc: 'Vijetha Digital creates immersive office wall branding using high-resolution vinyl wall graphics, UV prints, canvas murals, and 3D dimensional lettering. We cover reception areas, conference rooms, corridors, and feature walls. Turnkey design-to-installation service for corporate offices in Hyderabad.',
     specs: [{ label: 'Types', value: 'Vinyl wrap, UV print, canvas mural, 3D letters' }, { label: 'Finish', value: 'Matte, glossy, textured' }, { label: 'Turnaround', value: '7-14 working days' }],
@@ -169,7 +169,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 8, name: 'Reception & Lobby', slug: 'reception-and-lobby', category: 'Internal Branding',
-    price: 'On request', priceNumeric: 25000, image: '/images/hero-banner-hq.jpg',
+    price: 'On request', priceNumeric: 25000, image: '/images/hero-banner-hq.webp',
     desc: 'Premium reception and lobby branding that creates unforgettable first impressions.',
     longDesc: 'First impressions matter. Vijetha Digital designs and installs complete reception and lobby branding including company name walls, backlit logo panels, feature wall graphics, wayfinding elements, and branded counters. We have executed reception branding for IT companies, hospitals, banks, and hotels across Hyderabad.',
     specs: [{ label: 'Elements', value: 'Logo wall, backlit panels, wayfinding, feature wall' }, { label: 'Materials', value: 'Acrylic, ACP, vinyl, LED backlit' }, { label: 'Turnaround', value: '10-21 working days' }],
@@ -178,7 +178,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 9, name: 'Retail In-Shop Branding', slug: 'retail-in-shop-branding', category: 'Internal Branding',
-    price: 'On request', priceNumeric: 30000, image: '/images/project-booklets.jpg',
+    price: 'On request', priceNumeric: 30000, image: '/images/project-booklets.webp',
     desc: 'Complete in-shop branding for retail stores — walls, ceilings, floors and windows.',
     longDesc: 'Vijetha Digital provides complete retail in-shop branding for single stores and multi-location rollouts. Services include wall graphics, window frosting, floor graphics, ceiling branding, POS display fabrication, shelf branding, and promotional display stands. We have executed store branding for Samsung, Reliance Digital, Airtel, and Vivo across Hyderabad.',
     specs: [{ label: 'Coverage', value: 'Walls, windows, floors, ceilings, POS' }, { label: 'Materials', value: 'Vinyl, canvas, frosted glass film, 3D elements' }, { label: 'Scale', value: 'Single store to 100+ location rollouts' }],
@@ -187,7 +187,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 10, name: 'Hospital Branding', slug: 'hospital-branding', category: 'Internal Branding',
-    price: 'On request', priceNumeric: 40000, image: '/images/project-cards.jpg',
+    price: 'On request', priceNumeric: 40000, image: '/images/project-cards.webp',
     desc: 'Wayfinding, signage and branding solutions tailored for healthcare environments.',
     longDesc: 'Vijetha Digital specializes in healthcare branding including hospital wayfinding systems, department signage, directional boards, outdoor hospital signs, and interior wall graphics. Our healthcare branding solutions comply with patient safety guidelines and use fire-retardant materials where required.',
     specs: [{ label: 'Specialization', value: 'Wayfinding, department signs, directional' }, { label: 'Materials', value: 'Fire-retardant substrates available' }, { label: 'Compliance', value: 'Patient safety and exit signage standards' }],
@@ -196,7 +196,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 11, name: 'Car / 4-Wheeler Wrap', slug: 'car-4-wheeler-wrap', category: 'Vehicle Branding',
-    price: 'Rs 3,500 onwards', priceNumeric: 3500, image: '/images/about-printing.jpg',
+    price: 'Rs 3,500 onwards', priceNumeric: 3500, image: '/images/about-printing.webp',
     desc: 'Full or partial vehicle wraps for cars, jeeps and SUVs. UV-resistant, professionally installed.',
     longDesc: 'Vijetha Digital applies professional car wraps using premium 3M and Avery Dennison cast vinyl. Full wraps, partial wraps, bonnet wraps, and door panel graphics available. Printed at 1440 dpi on Epson Surecolor for photo-realistic brand graphics. UV lamination protects against Hyderabad heat and rain. Clean removal without paint damage.',
     specs: [{ label: 'Material', value: '3M vinyl or Avery Dennison cast vinyl' }, { label: 'Lamination', value: 'UV-resistant gloss or matte' }, { label: 'Durability', value: '5-7 years outdoor' }, { label: 'Turnaround', value: '1-2 working days' }],
@@ -208,7 +208,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 12, name: 'Bus / Van Branding', slug: 'bus-van-branding', category: 'Vehicle Branding',
-    price: 'Rs 6,000 onwards', priceNumeric: 6000, image: '/images/hero-banner-hq.jpg',
+    price: 'Rs 6,000 onwards', priceNumeric: 6000, image: '/images/hero-banner-hq.webp',
     desc: 'Large-format bus and van branding that turns your fleet into moving billboards.',
     longDesc: 'Bus and van branding from Vijetha Digital covers full-body wraps, partial side graphics, rear branding, and window perforated vinyl for buses and vans. We print on Epson Surecolor at 1440 dpi with UV lamination. Fleet pricing available for 5+ vehicles. Nationally we have branded vehicles for Pepsi, Heritage Foods, Airtel, and other major brands.',
     specs: [{ label: 'Coverage', value: 'Full wrap, side panels, rear, windows' }, { label: 'Window Vinyl', value: 'Perforated one-way vision vinyl' }, { label: 'Fleet Pricing', value: 'Available for 5+ vehicles' }],
@@ -217,7 +217,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 13, name: '2-Wheeler Branding', slug: '2-wheeler-branding', category: 'Vehicle Branding',
-    price: 'Rs 800 onwards', priceNumeric: 800, image: '/images/project-booklets.jpg',
+    price: 'Rs 800 onwards', priceNumeric: 800, image: '/images/project-booklets.webp',
     desc: 'Eye-catching delivery bike and scooter branding for food, logistics and promo campaigns.',
     longDesc: 'Vijetha Digital brands 2-wheelers with precision-cut vinyl decals, half-body wraps, and full scooter/bike wraps. Popular for Zomato, Swiggy, delivery apps, logistics companies, and promotional campaigns. Same-day production for urgent fleet requirements.',
     specs: [{ label: 'Options', value: 'Decals, half wrap, full wrap' }, { label: 'Turnaround', value: 'Same day for standard designs' }, { label: 'Fleet', value: '50+ bike fleet branding expertise' }],
@@ -226,7 +226,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 14, name: 'Heavy Vehicle Branding', slug: 'heavy-vehicle-branding', category: 'Vehicle Branding',
-    price: 'On request', priceNumeric: 20000, image: '/images/project-cards.jpg',
+    price: 'On request', priceNumeric: 20000, image: '/images/project-cards.webp',
     desc: 'Full truck and heavy transport branding for maximum road presence and brand reach.',
     longDesc: 'Vijetha Digital brands trucks, lorries, container vehicles, and heavy commercial vehicles with large-format prints on high-tack vinyl for commercial vehicle surfaces. Maximum road presence for FMCG, logistics, and manufacturing companies with nationwide fleet support.',
     specs: [{ label: 'Vehicle Types', value: 'Trucks, lorries, containers, tankers' }, { label: 'Material', value: 'High-tack commercial vehicle vinyl' }, { label: 'Fleet Support', value: 'Nationwide coordination available' }],
@@ -235,7 +235,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 15, name: 'Flex / Vinyl Printing', slug: 'flex-vinyl-printing', category: 'Digital Printing',
-    price: 'Rs 18-35 per sq.ft', priceNumeric: 18, image: '/images/about-printing.jpg',
+    price: 'Rs 18-35 per sq.ft', priceNumeric: 18, image: '/images/about-printing.webp',
     desc: 'High-resolution flex and vinyl printing for banners, hoardings and backdrops.',
     longDesc: 'Vijetha Digital operates HP Latex 570 and Epson Surecolor S80670 for flex and vinyl printing at 1440 dpi. Daily capacity of 1 lakh sq.ft. Available in frontlit flex, backlit flex, self-adhesive vinyl, one-way vision vinyl, mesh, and canvas. Same-day for orders under 500 sq.ft submitted before 12 PM.',
     specs: [{ label: 'Equipment', value: 'HP Latex 570, Epson Surecolor S80670' }, { label: 'Max Width', value: '64 inches (5.3 feet)' }, { label: 'Resolution', value: '1440 dpi' }, { label: 'Capacity', value: '1 lakh sq.ft/day' }, { label: 'Materials', value: 'Frontlit flex, backlit flex, vinyl, mesh, canvas' }],
@@ -247,7 +247,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 16, name: 'UV Print', slug: 'uv-print', category: 'Digital Printing',
-    price: 'Rs 45 per sq.ft', priceNumeric: 45, image: '/images/hero-banner-hq.jpg',
+    price: 'Rs 45 per sq.ft', priceNumeric: 45, image: '/images/hero-banner-hq.webp',
     desc: 'UV-cured printing for vibrant, scratch-resistant output on rigid and flexible substrates.',
     longDesc: 'UV printing uses ultraviolet-cured inks for exceptional color vibrancy, scratch resistance, and instant drying. Vijetha Digital offers UV printing on acrylic, glass, metal, foam board, corrugated sheets, and flexible materials. No minimum order. Suitable for premium displays, awards, and point-of-sale materials.',
     specs: [{ label: 'Substrates', value: 'Acrylic, glass, metal, foam board, corrugated' }, { label: 'Properties', value: 'UV-cured, scratch-resistant, waterproof' }, { label: 'Minimum Order', value: 'No minimum' }],
@@ -256,7 +256,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 17, name: '3D Canvas Print', slug: '3d-canvas-print', category: 'Digital Printing',
-    price: 'Rs 120 per sq.ft', priceNumeric: 120, image: '/images/project-booklets.jpg',
+    price: 'Rs 120 per sq.ft', priceNumeric: 120, image: '/images/project-booklets.webp',
     desc: 'Textured 3D canvas printing for premium wall art, retail displays and exhibitions.',
     longDesc: 'Vijetha Digital produces premium 3D canvas prints for wall art, retail feature walls, and exhibition displays. Printed on high-quality canvas with photographic accuracy, stretched over wooden frames or presented as gallery wraps. Popular for hotels, restaurants, corporate lobbies, and retail stores.',
     specs: [{ label: 'Material', value: 'Artist canvas 380-450 GSM' }, { label: 'Mounting', value: 'Wooden frame or gallery wrap' }, { label: 'Resolution', value: 'Up to 1440 dpi' }],
@@ -265,7 +265,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 18, name: 'Eco-Solvent Print', slug: 'eco-solvent-print', category: 'Digital Printing',
-    price: 'Rs 20 per sq.ft', priceNumeric: 20, image: '/images/project-cards.jpg',
+    price: 'Rs 20 per sq.ft', priceNumeric: 20, image: '/images/project-cards.webp',
     desc: 'Durable eco-solvent outdoor printing on Roland Soljet EJ 640 for long-lasting results.',
     longDesc: 'Eco-solvent printing on the Roland Soljet EJ 640 delivers weather-resistant, UV-resistant output for outdoor applications. Suitable for vehicle decals, outdoor banners, and long-duration signage applications where durability is critical. 3-5 year outdoor rating without lamination.',
     specs: [{ label: 'Equipment', value: 'Roland Soljet EJ 640' }, { label: 'Durability', value: '3-5 years outdoor without lamination' }, { label: 'Max Width', value: '64 inches' }],
@@ -274,7 +274,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 19, name: 'Brochure / Catalogue', slug: 'brochure-catalogue', category: 'Offset Printing',
-    price: 'Rs 2,500 onwards', priceNumeric: 2500, image: '/images/about-printing.jpg',
+    price: 'Rs 2,500 onwards', priceNumeric: 2500, image: '/images/about-printing.webp',
     desc: 'Full-colour perfect-bound or saddle-stitched brochures and product catalogues.',
     longDesc: 'Vijetha Digital prints premium product catalogues, company brochures, and annual reports using 4-color offset printing. Saddle-stitch (stapled) for 8-48 pages and perfect-bound (glued spine) for 48+ pages. Available in 100-300 GSM coated art paper with optional spot UV, foil stamping, and soft-touch lamination.',
     specs: [{ label: 'Binding', value: 'Saddle-stitch, perfect-bind, wire-o' }, { label: 'Paper', value: '100-300 GSM coated art paper' }, { label: 'Finishing', value: 'Spot UV, foil, lamination, embossing' }, { label: 'Min Quantity', value: '500 copies' }, { label: 'Turnaround', value: '5-7 working days' }],
@@ -283,7 +283,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 20, name: 'Flyers & Pamphlets', slug: 'flyers-and-pamphlets', category: 'Offset Printing',
-    price: 'Rs 800 per 1000', priceNumeric: 800, image: '/images/hero-banner-hq.jpg',
+    price: 'Rs 800 per 1000', priceNumeric: 800, image: '/images/hero-banner-hq.webp',
     desc: 'High-quality offset flyers and pamphlets for promotions, events and campaigns.',
     longDesc: 'Vijetha Digital prints A4, A5, and DL-size flyers and pamphlets for events, promotions, and campaigns. 170-250 GSM art paper with single or double-sided printing. Fast turnaround: standard flyers ready in 3-5 days, urgent in 24-48 hours. Bulk pricing for 5,000+ pieces.',
     specs: [{ label: 'Sizes', value: 'A4, A5, DL, A6, custom' }, { label: 'Paper', value: '170-250 GSM art paper' }, { label: 'Turnaround', value: '3-5 days, urgent 24-48 hours' }, { label: 'Min Quantity', value: '500 pieces' }],
@@ -292,7 +292,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 21, name: 'Corporate Stationery', slug: 'corporate-stationery', category: 'Offset Printing',
-    price: 'Rs 1,200 onwards', priceNumeric: 1200, image: '/images/project-booklets.jpg',
+    price: 'Rs 1,200 onwards', priceNumeric: 1200, image: '/images/project-booklets.webp',
     desc: 'Letterheads, envelopes, visiting cards and notepads with consistent brand identity.',
     longDesc: 'Vijetha Digital provides complete corporate stationery packages including letterheads, envelopes, visiting cards, notepads, presentation folders, and ID card holders. Consistent color matching across all stationery items ensures strong brand identity for corporate clients.',
     specs: [{ label: 'Items', value: 'Letterhead, envelope, visiting card, notepad, folder' }, { label: 'Visiting Cards', value: '90-350 GSM, matte/gloss/spot UV options' }, { label: 'Turnaround', value: '3-5 working days' }],
@@ -301,7 +301,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 22, name: 'Packaging & Gift Boxes', slug: 'packaging-and-gift-boxes', category: 'Offset Printing',
-    price: 'Rs 3,000 onwards', priceNumeric: 3000, image: '/images/project-cards.jpg',
+    price: 'Rs 3,000 onwards', priceNumeric: 3000, image: '/images/project-cards.webp',
     desc: 'Custom packaging boxes and gift sets with spot UV, foil stamping and die-cutting.',
     longDesc: 'Vijetha Digital manufactures custom packaging boxes and gift boxes for FMCG, retail, and corporate gifting. Die-cut rigid boxes, folding cartons, sleeve boxes, and corrugated shipping boxes available. Finishing options include spot UV, foil stamping, embossing, soft-touch lamination, and window cutouts.',
     specs: [{ label: 'Types', value: 'Rigid box, folding carton, sleeve, corrugated' }, { label: 'Finishing', value: 'Spot UV, foil, embossing, window cutout' }, { label: 'Min Quantity', value: '500 pieces' }],
@@ -310,7 +310,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 23, name: 'Roll-Up Standee', slug: 'roll-up-standee', category: 'Display & Exhibition',
-    price: 'Rs 1,800 onwards', priceNumeric: 1800, image: '/images/about-printing.jpg',
+    price: 'Rs 1,800 onwards', priceNumeric: 1800, image: '/images/about-printing.webp',
     desc: 'Portable roll-up standees for exhibitions, events and retail point-of-sale displays.',
     longDesc: 'Roll-up standees from Vijetha Digital include standard (85x200cm), mini (60x160cm), and wide (120x200cm) sizes. Premium aluminum spring-loaded mechanism for smooth retraction. Includes custom printed graphic on 540 GSM backlit film. Same-day production for standard designs. Carry bag included.',
     specs: [{ label: 'Sizes', value: '60x160cm, 85x200cm, 120x200cm' }, { label: 'Mechanism', value: 'Aluminum spring-loaded base' }, { label: 'Print', value: '540 GSM backlit film' }, { label: 'Turnaround', value: 'Same day for standard size' }],
@@ -319,7 +319,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 24, name: 'Demo Tent / Canopy', slug: 'demo-tent-canopy', category: 'Display & Exhibition',
-    price: 'Rs 8,500 onwards', priceNumeric: 8500, image: '/images/hero-banner-hq.jpg',
+    price: 'Rs 8,500 onwards', priceNumeric: 8500, image: '/images/hero-banner-hq.webp',
     desc: 'Branded demo tents for outdoor promotions, trade fairs and road shows.',
     longDesc: 'Vijetha Digital supplies and prints promotional pop-up tents, canopies, and demo tents in 6x6 ft, 10x10 ft, and 10x20 ft sizes. Water-resistant polyester fabric printing, aluminium frame, and carry bag. Custom branding on all 4 walls, roof panels, and back wall available.',
     specs: [{ label: 'Sizes', value: '6x6ft, 10x10ft, 10x20ft' }, { label: 'Material', value: 'Water-resistant polyester + aluminium frame' }, { label: 'Branding', value: 'All 4 walls, roof, back wall' }],
@@ -328,7 +328,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 25, name: 'Fabric Light Box', slug: 'fabric-light-box', category: 'Display & Exhibition',
-    price: 'Rs 5,500 onwards', priceNumeric: 5500, image: '/images/project-booklets.jpg',
+    price: 'Rs 5,500 onwards', priceNumeric: 5500, image: '/images/project-booklets.webp',
     desc: 'Illuminated fabric tension displays for high-impact retail and exhibition environments.',
     longDesc: 'Fabric light boxes from Vijetha Digital use SEG (silicone edge graphics) fabric printing stretched on an illuminated aluminium frame. Even backlit glow with no hot spots. Slim profile. Fabric is washable and replaceable. Ideal for retail brand walls, exhibition booths, and hotel lobbies.',
     specs: [{ label: 'System', value: 'SEG silicone edge graphics on LED backlit frame' }, { label: 'Profile', value: '85mm slim frame' }, { label: 'Fabric', value: 'Washable, replaceable' }],
@@ -337,7 +337,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 26, name: 'Trade Show Booth', slug: 'trade-show-booth', category: 'Display & Exhibition',
-    price: 'On request', priceNumeric: 50000, image: '/images/project-cards.jpg',
+    price: 'On request', priceNumeric: 50000, image: '/images/project-cards.webp',
     desc: 'Complete trade show booth design and fabrication for conferences, expos and product launches.',
     longDesc: 'Vijetha Digital designs and fabricates modular and custom trade show booths for exhibitions, expos, and product launches. Services include booth design, graphic production (fabric, flex, acrylic), structural fabrication, furniture rental, lighting, and on-site installation. We have executed booths for major Hyderabad and national trade shows.',
     specs: [{ label: 'Types', value: 'Modular, custom, island, inline' }, { label: 'Services', value: 'Design, fabrication, installation, dismantle' }, { label: 'Sizes', value: '10x10 to 40x40 sq.ft and beyond' }],
@@ -346,7 +346,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 27, name: 'Flags & Bunting', slug: 'flags-and-bunting', category: 'Outdoor Advertising',
-    price: 'Rs 350 onwards', priceNumeric: 350, image: '/images/about-printing.jpg',
+    price: 'Rs 350 onwards', priceNumeric: 350, image: '/images/about-printing.webp',
     desc: 'Printed flags, buntings and feather flags for outdoor events and brand promotions.',
     longDesc: 'Vijetha Digital prints all flag types: rectangular flags, feather flags (teardrop), swooper flags, table flags, and string buntings. Fabric dye-sublimation printing for vivid, long-lasting color. Aluminium poles and ground spikes included. Popular for store openings, events, and roadside brand activations.',
     specs: [{ label: 'Types', value: 'Rectangular, feather, swooper, table, bunting' }, { label: 'Printing', value: 'Dye-sublimation fabric printing' }, { label: 'Includes', value: 'Aluminium pole and ground spike' }],
@@ -355,7 +355,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 28, name: 'Backdrop / Stage Banner', slug: 'backdrop-stage-banner', category: 'Outdoor Advertising',
-    price: 'Rs 1,200 onwards', priceNumeric: 1200, image: '/images/hero-banner-hq.jpg',
+    price: 'Rs 1,200 onwards', priceNumeric: 1200, image: '/images/hero-banner-hq.webp',
     desc: 'Large format backdrops and stage banners for events, press conferences and launches.',
     longDesc: 'Vijetha Digital prints event backdrops and stage banners on premium backlit flex or fabric for press conferences, product launches, award ceremonies, and weddings. Custom sizes up to 20 feet wide. Retractable backdrop stand systems available. Same-day production for urgent events.',
     specs: [{ label: 'Material', value: 'Backlit flex or fabric' }, { label: 'Max Width', value: '20 feet continuous' }, { label: 'Stand', value: 'Retractable stand available on hire/purchase' }],
@@ -364,7 +364,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 29, name: 'Stickers & Decals', slug: 'stickers-and-decals', category: 'Outdoor Advertising',
-    price: 'Rs 5 per sq.ft', priceNumeric: 5, image: '/images/project-booklets.jpg',
+    price: 'Rs 5 per sq.ft', priceNumeric: 5, image: '/images/project-booklets.webp',
     desc: 'Custom stickers and vinyl decals for vehicles, walls, floors and glass surfaces.',
     longDesc: 'Vijetha Digital produces custom stickers and vinyl decals for virtually any application — vehicle decals, wall stickers, floor graphics, glass stickers, laptop stickers, and waterproof labels. Die-cut to any shape. Self-adhesive vinyl with removable or permanent options. Minimum order as low as 50 pieces.',
     specs: [{ label: 'Applications', value: 'Vehicle, wall, floor, glass, product labels' }, { label: 'Options', value: 'Removable or permanent adhesive' }, { label: 'Cutting', value: 'Die-cut to any custom shape' }, { label: 'Min Order', value: '50 pieces' }],
@@ -373,7 +373,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 30, name: 'Canopy & Tent Branding', slug: 'canopy-and-tent-branding', category: 'Outdoor Advertising',
-    price: 'Rs 2,200 onwards', priceNumeric: 2200, image: '/images/project-cards.jpg',
+    price: 'Rs 2,200 onwards', priceNumeric: 2200, image: '/images/project-cards.webp',
     desc: 'Branded promotional canopies and pop-up tents for outdoor activations and events.',
     longDesc: 'Canopy branding from Vijetha Digital covers umbrella canopies, gazebo tents, and pop-up canopies with printed panels in frontlit flex or polyester fabric. Popular for outdoor restaurant seating, market stalls, petrol station canopies, and promotional activations.',
     specs: [{ label: 'Sizes', value: '2m, 3m, 4m diameter canopies' }, { label: 'Material', value: 'Frontlit flex or polyester fabric' }, { label: 'Poles', value: 'Aluminium or MS depending on size' }],
@@ -396,3 +396,4 @@ export function getRelatedProducts(product: Product): Product[] {
     .map(s => PRODUCTS.find(p => p.slug === s))
     .filter(Boolean) as Product[];
 }
+

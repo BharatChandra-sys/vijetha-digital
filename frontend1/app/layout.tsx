@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import JsonLd from '@/components/seo/JsonLd';
 import CookieConsent from '@/components/privacy/CookieConsent';
 import './globals.css';
@@ -187,6 +188,13 @@ const organizationSchema = {
         ],
       },
     ],
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    reviewCount: '127',
+    bestRating: '5',
+    worstRating: '1',
   },
 };
 
@@ -499,7 +507,7 @@ const reviewSchema3 = {
 const aggregateRatingSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  '@id': 'https://vijethadigital.com/#organization-rating',
+  '@id': 'https://vijethadigital.com/#organization',
   name: 'Vijetha Digital',
   aggregateRating: {
     '@type': 'AggregateRating',
@@ -565,12 +573,12 @@ export default function RootLayout({
       <body>
         {children}
         <CookieConsent />
+        <Analytics />
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
         <JsonLd data={branchNacharamSchema} />
         <JsonLd data={branchLakdikaqoolSchema} />
         <JsonLd data={branchIndiraParkSchema} />
-        <JsonLd data={aggregateRatingSchema} />
         <JsonLd data={reviewSchema} />
         <JsonLd data={reviewSchema2} />
         <JsonLd data={reviewSchema3} />

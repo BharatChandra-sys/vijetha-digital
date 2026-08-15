@@ -1,0 +1,10 @@
+# Browsers that we support - Modern baseline (2024+)
+# This prevents transpiling modern JavaScript features that all current browsers support
+
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+not IE 11
+not dead
+> 0.5%
