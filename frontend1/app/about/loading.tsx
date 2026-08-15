@@ -1,9 +1,8 @@
-import { HeaderSkeleton, HeroSkeleton, ContentGridSkeleton, FooterSkeleton, TextSkeleton } from '@/components/ui/SkeletonLoader';
+import { HeroSkeleton, ContentGridSkeleton, FooterSkeleton } from '@/components/ui/SkeletonLoader';
 
 export default function AboutLoading() {
   return (
     <>
-      <HeaderSkeleton />
       <section className="pt-[140px] pb-20 bg-[#1c1d20]">
         <div className="wix-container">
           <div className="skeleton h-3 w-24 mb-4 bg-white/10" />

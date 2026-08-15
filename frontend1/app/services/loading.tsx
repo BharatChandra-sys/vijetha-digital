@@ -1,9 +1,8 @@
-import { HeaderSkeleton, HeroSkeleton, ListSkeleton, FooterSkeleton } from '@/components/ui/SkeletonLoader';
+import { HeroSkeleton, ListSkeleton, FooterSkeleton } from '@/components/ui/SkeletonLoader';
 
 export default function ServicesLoading() {
   return (
     <>
-      <HeaderSkeleton />
       <HeroSkeleton />
       <section className="bg-white py-20">
         <div className="wix-container">

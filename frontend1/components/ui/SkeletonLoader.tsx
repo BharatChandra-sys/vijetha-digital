@@ -131,10 +131,10 @@ export function FooterSkeleton() {
 }
 
 // Full page skeleton (combines all)
+// Note: HeaderSkeleton excluded to preserve original Header animations
 export function PageSkeleton() {
   return (
     <>
-      <HeaderSkeleton />
       <HeroSkeleton />
       <section className="py-20 bg-white">
         <div className="wix-container">
