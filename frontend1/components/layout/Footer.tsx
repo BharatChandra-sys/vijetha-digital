@@ -200,7 +200,7 @@ export default function Footer() {
 
         {/* ── BOTTOM BAR ── */}
         <div className="footer-bottom-bar">
-          <p style={{ fontFamily: font, fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>
+          <p style={{ fontFamily: font, fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
             © 2002–2026 Vijetha Digital · Prop. Krishnam Raju · All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
@@ -328,11 +328,12 @@ export default function Footer() {
         .footer-bottom-link {
           font-family: ${font};
           font-size: 12px;
-          color: rgba(255,255,255,0.35);
+          color: rgba(255,255,255,0.5);
           text-decoration: none;
           transition: color 0.2s ease;
+          font-weight: 500;
         }
-        .footer-bottom-link:hover { color: rgba(255,255,255,0.7); }
+        .footer-bottom-link:hover { color: rgba(255,255,255,0.85); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {

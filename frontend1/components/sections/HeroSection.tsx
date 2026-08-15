@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export default function HeroSection() {
@@ -42,20 +43,29 @@ export default function HeroSection() {
         backgroundColor: '#000',
       }}
     >
-      {/* Background image */}
+      {/* Background image - Optimized WebP with priority loading */}
       <div
         style={{
-          position:           'absolute',
-          inset:              0,
-          backgroundImage:    'url(/images/hero-banner-hq.jpg)',
-          backgroundSize:     'cover',
-          backgroundPosition: isMobile ? 'center center' : 'center top',
-          backgroundRepeat:   'no-repeat',
-          transform:          `translateY(${parallaxY}px) scale(${isMobile ? 1 : 1.08})`,
-          willChange:         'transform',
-          transformOrigin:    'center top',
+          position: 'absolute',
+          inset: 0,
+          transform: `translateY(${parallaxY}px) scale(${isMobile ? 1 : 1.08})`,
+          willChange: 'transform',
+          transformOrigin: 'center top',
         }}
-      />
+      >
+        <Image
+          src="/images/hero-banner-hq.webp"
+          alt="Commercial Printing Hyderabad - Vijetha Digital"
+          fill
+          priority
+          quality={90}
+          sizes="100vw"
+          style={{
+            objectFit: 'cover',
+            objectPosition: isMobile ? 'center center' : 'center top',
+          }}
+        />
+      </div>
 
       {/* Overlay — slightly heavier on mobile for readability */}
       <div
