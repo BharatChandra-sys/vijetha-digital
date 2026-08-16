@@ -253,7 +253,7 @@ export const metadata: Metadata = {
     template: '%s | Vijetha Digital',
   },
   description:
-    'Leading printing, signage and branding company in Hyderabad. We offer LED signage, ACP cladding, vehicle branding, flex printing, offset printing, exhibition displays, and complete branding solutions with world-class quality and fast delivery across India.',
+    'Leading printing and signage company in Hyderabad. LED signage, ACP cladding, vehicle branding, flex printing, offset printing, and exhibition displays across India.',
   keywords: [
     'Vijetha Digital',
     'printing services Hyderabad',
@@ -296,7 +296,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vijetha Digital | Premium Printing, Signage & Branding Solutions',
     description:
-      'Leading printing, signage and branding company in Hyderabad offering LED signage, vehicle branding, digital printing, and complete branding solutions with world-class quality.',
+      'Leading printing and signage company in Hyderabad offering LED signage, vehicle branding, digital printing, and complete branding solutions.',
     url: 'https://vijethadigital.com/',
     siteName: 'Vijetha Digital',
     locale: 'en_IN',
@@ -315,9 +315,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vijetha Digital | Premium Printing, Signage & Branding Solutions',
     description:
-      'Leading printing, signage and branding company in Hyderabad offering LED signage, vehicle branding, and complete branding solutions.',
+      'Leading printing and signage company in Hyderabad offering LED signage, vehicle branding, and complete branding solutions.',
     images: ['/vd-logo.jpeg'],
     creator: '@vijethadigital',
+    site: '@vijethadigital',
   },
   robots: {
     index: true,
@@ -352,6 +353,7 @@ export const metadata: Metadata = {
   other: {
     // Browser / PWA
     'theme-color': '#0f0f10',
+    'color-scheme': 'light',
     'format-detection': 'telephone=no',
     'mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-capable': 'yes',
@@ -363,22 +365,45 @@ export const metadata: Metadata = {
     'msapplication-TileImage': '/vd-logo.jpeg',
     'msapplication-navbutton-color': '#0f0f10',
     'msapplication-starturl': 'https://vijethadigital.com/',
+    'msapplication-tooltip': 'Vijetha Digital - Printing & Signage',
+    'msapplication-config': '/browserconfig.xml',
     // Authorship
     'author': 'Vijetha Digital',
     'publisher': 'Vijetha Digital',
-    // Geo tags — read by Bing, Yahoo, Baidu for local relevance
+    'copyright': 'Vijetha Digital',
+    // Geo tags — Bing-optimized format (15-20 characters for placename)
     'geo.region': 'IN-TG',
-    'geo.placename': 'Hyderabad, Telangana, India',
+    'geo.placename': 'Hyderabad, India',
     'geo.position': '17.385044;78.486671',
     'ICBM': '17.385044, 78.486671',
     // Content classification signals
     'rating': 'general',
+    'distribution': 'global',
     'revisit-after': '7 days',
     'language': 'en-IN',
     'coverage': 'India',
     'target': 'all',
+    'audience': 'all',
+    'robots': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    // Mobile optimization
     'HandheldFriendly': 'True',
     'MobileOptimized': '320',
+    'viewport': 'width=device-width, initial-scale=1.0',
+    // Search engine specific
+    'googlebot': 'index, follow, max-image-preview:large',
+    'bingbot': 'index, follow',
+    'yandex': 'index, follow',
+    'slurp': 'index, follow',
+    // Business identifiers
+    'business:contact_data:street_address': 'H No. 11-5-456, Shop No. 5, Sanapride Complex',
+    'business:contact_data:locality': 'Lakdikapool',
+    'business:contact_data:region': 'Telangana',
+    'business:contact_data:postal_code': '500004',
+    'business:contact_data:country_name': 'India',
+    'business:contact_data:phone_number': '+917942643004',
+    'business:contact_data:website': 'https://vijethadigital.com',
+    // Referrer policy for privacy
+    'referrer': 'origin-when-cross-origin',
   },
 };
 
@@ -555,7 +580,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" prefix="og: https://ogp.me/ns#">
       <head>
         {/* Preconnect to external domains for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -564,6 +589,25 @@ export default function RootLayout({
         {/* DNS prefetch for third-party resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* Alternate language versions for international SEO */}
+        <link rel="alternate" hrefLang="en-IN" href="https://vijethadigital.com/" />
+        <link rel="alternate" hrefLang="en" href="https://vijethadigital.com/" />
+        <link rel="alternate" hrefLang="x-default" href="https://vijethadigital.com/" />
+        
+        {/* Search engine verification - Add your verification codes */}
+        {/* Google Search Console verification already done via HTML file */}
+        {/* Bing Webmaster Tools - Add when you get verification code */}
+        {/* <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" /> */}
+        
+        {/* Yandex Webmaster verification */}
+        {/* <meta name="yandex-verification" content="YOUR_YANDEX_CODE" /> */}
+        
+        {/* Pinterest verification */}
+        {/* <meta name="p:domain_verify" content="YOUR_PINTEREST_CODE" /> */}
+        
+        {/* Baidu verification */}
+        {/* <meta name="baidu-site-verification" content="YOUR_BAIDU_CODE" /> */}
       </head>
       <body>
         {children}
