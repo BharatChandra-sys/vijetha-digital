@@ -58,12 +58,15 @@ export default function HeroSection() {
           alt="Commercial Printing Hyderabad - Vijetha Digital"
           fill
           priority
-          quality={90}
-          sizes="100vw"
+          fetchPriority="high"
+          quality={85}
+          sizes="(max-width: 768px) 100vw, 100vw"
           style={{
             objectFit: 'cover',
             objectPosition: isMobile ? 'center center' : 'center top',
           }}
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCMAFmB//Z"
         />
       </div>
 

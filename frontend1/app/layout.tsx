@@ -586,6 +586,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://vitals.vercel-insights.com" />
         
+        {/* Preload critical hero image */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/hero-banner-hq.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+        
         {/* DNS prefetch for third-party resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
