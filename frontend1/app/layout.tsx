@@ -609,8 +609,9 @@ export default function RootLayout({
   return (
     <html lang="en" prefix="og: https://ogp.me/ns#">
       <head>
-        {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* Preconnect to external domains for faster loading - with crossorigin for fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://vitals.vercel-insights.com" />
         
         {/* Preload critical hero image */}
@@ -644,6 +645,13 @@ export default function RootLayout({
         
         {/* Baidu verification */}
         {/* <meta name="baidu-site-verification" content="YOUR_BAIDU_CODE" /> */}
+        
+        {/* Inline critical CSS for instant render */}
+        <style dangerouslySetInnerHTML={{__html: `
+          body{margin:0;font-family:helvetica-w01-roman,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;color:#000;background:#fff}
+          .wix-container{width:100%;max-width:1280px;margin:0 auto;padding:0 1.25rem}
+          @media(min-width:768px){.wix-container{padding:0 2.5rem}}
+        `}} />
       </head>
       <body>
         {children}

@@ -15,7 +15,7 @@ export default function AboutSection() {
           <div className="wix-motion wix-fade-right">
             <div className="wix-img-wrap" style={{ aspectRatio: '4/3' }}>
               <img
-                src="/images/about-printing.jpg"
+                src="/images/about-printing.webp"
                 alt="Vijetha Digital printing facility — Hyderabad"
                 loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}

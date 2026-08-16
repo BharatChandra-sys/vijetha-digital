@@ -59,7 +59,7 @@ export default function HeroSection() {
           fill
           priority
           fetchPriority="high"
-          quality={85}
+          quality={75}
           sizes="(max-width: 768px) 100vw, 100vw"
           style={{
             objectFit: 'cover',
@@ -84,7 +84,7 @@ export default function HeroSection() {
         className="wix-container"
         style={{ position: 'relative', zIndex: 2 }}
       >
-        <div style={{ maxWidth: isMobile ? '100%' : '560px' }}>
+        <div style={{ maxWidth: isMobile ? '100%' : '680px' }}>
 
           {/* Label */}
           <p
@@ -113,7 +113,7 @@ export default function HeroSection() {
               fontWeight:  400,
               lineHeight:  1.1,
               color:       '#ffffff',
-              marginBottom: isMobile ? '20px' : '32px',
+              marginBottom: isMobile ? '16px' : '24px',
               opacity:     loaded ? 1 : 0,
               transform:   loaded ? 'none' : 'translateY(32px)',
               transition:  'opacity 1s cubic-bezier(0.37,0,0.63,1) 0.25s, transform 1s cubic-bezier(0.87,0,0.13,1) 0.25s',
@@ -121,6 +121,23 @@ export default function HeroSection() {
           >
             Commercial Printing<br />Hyderabad
           </h1>
+          
+          {/* Product clarity - What we offer */}
+          <p
+            style={{
+              fontFamily:     "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize:       isMobile ? '15px' : '18px',
+              fontWeight:     400,
+              lineHeight:     1.6,
+              color:          'rgba(255,255,255,0.9)',
+              marginBottom:   isMobile ? '24px' : '32px',
+              opacity:        loaded ? 1 : 0,
+              transform:      loaded ? 'none' : 'translateY(20px)',
+              transition:     'opacity 0.9s cubic-bezier(0.37,0,0.63,1) 0.35s, transform 0.9s cubic-bezier(0.87,0,0.13,1) 0.35s',
+            }}
+          >
+            LED Sign Boards • Vehicle Branding • Flex Printing • Offset Printing • Exhibition Displays
+          </p>
           {/* CTA — stronger action buttons */}
           <div
             style={{

@@ -22,7 +22,7 @@ const projects = [
     category: 'Print',
     description:
       'Premium saddle-stitched booklets for product catalogues and corporate brochures. Produced on 130gsm gloss art paper with full-colour printing.',
-    image: '/images/project-booklets.jpg',
+    image: '/images/project-booklets.webp',
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const projects = [
     category: 'Print',
     description:
       'High-impact visiting cards with spot UV coating on matte laminate. Custom die-cut shapes and foil options available for premium brands.',
-    image: '/images/project-cards.jpg',
+    image: '/images/project-cards.webp',
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ const projects = [
     category: 'Stationery',
     description:
       'Complete branded stationery suite — letterheads, envelopes, compliment slips and presentation folders for a Hyderabad-based technology firm.',
-    image: '/images/about-printing.jpg',
+    image: '/images/about-printing.webp',
   },
 ];
 
