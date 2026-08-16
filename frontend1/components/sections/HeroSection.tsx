@@ -121,33 +121,76 @@ export default function HeroSection() {
           >
             Commercial Printing<br />Hyderabad
           </h1>
-          {/* CTA — smaller on mobile */}
+          {/* CTA — stronger action buttons */}
           <div
             style={{
               opacity:   loaded ? 1 : 0,
               transform: loaded ? 'none' : 'translateY(16px)',
               transition:'opacity 0.8s cubic-bezier(0.37,0,0.63,1) 0.45s, transform 0.8s cubic-bezier(0.87,0,0.13,1) 0.45s',
+              display: 'flex',
+              gap: isMobile ? '12px' : '16px',
+              flexWrap: 'wrap',
             }}
           >
-            <Link
-              href="#about"
+            <a
+              href="https://wa.me/919248195552?text=Hi%20Vijetha%20Digital%2C%20I%20need%20a%20quote%20for"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display:         'inline-flex',
                 alignItems:      'center',
                 justifyContent:  'center',
+                gap:             '8px',
                 backgroundColor: '#000000',
                 color:           '#ffffff',
                 fontFamily:      "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
-                fontSize:        isMobile ? '13px' : '15px',
+                fontSize:        isMobile ? '14px' : '16px',
                 fontWeight:      400,
-                letterSpacing:   '0.03em',
-                // Smaller padding on mobile
-                padding:         isMobile ? '12px 28px' : '16px 40px',
+                letterSpacing:   '0.02em',
+                padding:         isMobile ? '14px 24px' : '18px 36px',
                 textDecoration:  'none',
+                transition:      'all 0.2s',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#333333';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#000000';
+                e.currentTarget.style.transform = 'none';
               }}
             >
-              Read More
-            </Link>
+              Get Free Quote
+            </a>
+            
+            <a
+              href="tel:+917942643004"
+              style={{
+                display:         'inline-flex',
+                alignItems:      'center',
+                justifyContent:  'center',
+                gap:             '8px',
+                backgroundColor: '#ffffff',
+                color:           '#000000',
+                fontFamily:      "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif",
+                fontSize:        isMobile ? '14px' : '16px',
+                fontWeight:      400,
+                letterSpacing:   '0.02em',
+                padding:         isMobile ? '14px 24px' : '18px 36px',
+                textDecoration:  'none',
+                transition:      'all 0.2s',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#f0f0f0';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              Call Now
+            </a>
           </div>
 
         </div>

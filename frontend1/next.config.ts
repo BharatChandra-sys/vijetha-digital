@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   
+  // Fix workspace root warning
+  output: 'standalone',
+  outputFileTracingRoot: require('path').join(__dirname, '../'),
+  
   // Performance optimizations
   compress: true,
   poweredByHeader: false,

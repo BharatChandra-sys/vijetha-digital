@@ -69,7 +69,7 @@ function MarqueeRow({
 
 export default function ClientsSection() {
   return (
-    <section style={{ backgroundColor: '#ffedc9', width: '100%', padding: '96px 0', overflow: 'hidden' }}>
+    <section style={{ backgroundColor: '#ffedc9', width: '100%', padding: '96px 0', overflow: 'hidden', position: 'relative', zIndex: 5 }}>
 
       {/* Centered header */}
       <div className="wix-container" style={{ textAlign: 'center' }}>

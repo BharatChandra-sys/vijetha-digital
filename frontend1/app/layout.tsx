@@ -19,14 +19,29 @@ const websiteSchema = {
   publisher: {
     '@id': 'https://vijethadigital.com/#organization',
   },
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://vijethadigital.com/products?q={search_term_string}',
+  potentialAction: [
+    {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://vijethadigital.com/products?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
     },
-    'query-input': 'required name=search_term_string',
-  },
+    {
+      '@type': 'OrderAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://vijethadigital.com/contact',
+        actionPlatform: [
+          'http://schema.org/DesktopWebPlatform',
+          'http://schema.org/MobileWebPlatform',
+        ],
+      },
+      name: 'Request Quote',
+      description: 'Get a free quote for printing and signage services',
+    },
+  ],
   // Enhanced navigation for sitelinks
   mainEntity: {
     '@type': 'ItemList',
@@ -100,6 +115,18 @@ const organizationSchema = {
   foundingDate: '2009',
   numberOfEmployees: { '@type': 'QuantitativeValue', value: 25 },
   slogan: 'Premium Printing & Signage Solutions',
+  // Entity linking for Knowledge Graph - Critical for AI citations
+  mentions: [
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q11060274', name: 'Printing' },
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q1052592', name: 'Signage' },
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q1361', name: 'Hyderabad' },
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q1159', name: 'Andhra Pradesh' },
+  ],
+  about: [
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q11060274', name: 'Commercial Printing Industry' },
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q1052592', name: 'Signage Manufacturing' },
+    { '@type': 'Thing', '@id': 'https://www.wikidata.org/wiki/Q329618', name: 'Graphic Design Services' },
+  ],
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'H No. 11-5-456, Shop No. 5, Sanapride Complex',
