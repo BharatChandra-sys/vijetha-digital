@@ -21,7 +21,7 @@ export default function Footer() {
               Vijetha Digital
             </p>
             <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgba(255,255,255,0.65)', marginBottom: '28px', maxWidth: '260px' }}>
-              Established 2002. Hyderabad&apos;s trusted print partner for sign boards, flex printing, banner stands &amp; promotional tents. Serving 500+ businesses across Telangana.
+              Established 2009. Hyderabad&apos;s trusted print partner for sign boards, flex printing, banner stands &amp; promotional tents. Serving 1,000+ businesses across Telangana.
             </p>
 
             {/* Social icons */}

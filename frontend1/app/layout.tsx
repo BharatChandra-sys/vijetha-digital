@@ -508,61 +508,44 @@ const branchIndiraParkSchema = {
 };
 
 // ─── REVIEW SCHEMA ────────────────────────────────────────────────────────────
-// Individual reviews WITHOUT aggregate rating to avoid GSC error.
-// Each review stands alone without conflicting aggregate rating.
+// Individual reviews that reference the organization.
+// AggregateRating is ONLY in organizationSchema to avoid "multiple aggregate ratings" GSC error.
 const reviewSchema = {
   '@context': 'https://schema.org',
   '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital'
-  },
   reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
   author: { '@type': 'Person', name: 'Rajesh Kumar' },
   reviewBody: 'Excellent quality LED sign boards. Vijetha Digital delivered our 3-store signage project on time with outstanding finish. Will use again for our next location.',
   datePublished: '2026-06-15',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Vijetha Digital'
+  }
 };
 
 const reviewSchema2 = {
   '@context': 'https://schema.org',
   '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital'
-  },
   reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
   author: { '@type': 'Person', name: 'Priya Sharma' },
   reviewBody: 'Best vehicle branding company in Hyderabad. Our fleet of 12 vans looks professional and the vinyl is holding up perfectly after 8 months. Highly recommended.',
   datePublished: '2026-05-20',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Vijetha Digital'
+  }
 };
 
 const reviewSchema3 = {
   '@context': 'https://schema.org',
   '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital'
-  },
   reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
   author: { '@type': 'Person', name: 'Mohammed Asif' },
   reviewBody: 'Used Vijetha Digital for our office branding — reception, walls, and wayfinding. The team was professional, fast, and the quality exceeded our expectations.',
   datePublished: '2026-04-10',
-};
-
-const aggregateRatingSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  '@id': 'https://vijethadigital.com/#organization',
-  name: 'Vijetha Digital',
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-    worstRating: '1',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Vijetha Digital'
   }
 };
 
