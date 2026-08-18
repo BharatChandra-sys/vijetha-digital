@@ -49,6 +49,7 @@
 ## Overview
 
 Vijetha Digital is a full-stack commerce platform built for digital printing businesses. It replaces fragmented manual workflows — WhatsApp orders, phone-based pricing, spreadsheet tracking — with a structured, auditable system that scales.
+static is live with seo https://vijethadigital.com/
 
 ### Core Capabilities
 
