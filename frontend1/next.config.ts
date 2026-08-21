@@ -88,6 +88,97 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // SEO-friendly redirects: service+location → product pages
+  async redirects() {
+    return [
+      // LED Sign Board location variants
+      {
+        source: '/led-sign-board-kukatpally',
+        destination: '/products/led-sign-board',
+        permanent: true,
+      },
+      {
+        source: '/led-sign-board-gachibowli',
+        destination: '/products/led-sign-board',
+        permanent: true,
+      },
+      {
+        source: '/led-sign-board-madhapur',
+        destination: '/products/led-sign-board',
+        permanent: true,
+      },
+      {
+        source: '/led-sign-board-nacharam',
+        destination: '/products/led-sign-board',
+        permanent: true,
+      },
+      // Vehicle Branding location variants
+      {
+        source: '/vehicle-branding-kukatpally',
+        destination: '/products/car-4-wheeler-wrap',
+        permanent: true,
+      },
+      {
+        source: '/vehicle-branding-gachibowli',
+        destination: '/products/car-4-wheeler-wrap',
+        permanent: true,
+      },
+      {
+        source: '/vehicle-branding-madhapur',
+        destination: '/products/car-4-wheeler-wrap',
+        permanent: true,
+      },
+      // Flex Printing location variants
+      {
+        source: '/flex-printing-kukatpally',
+        destination: '/products/flex-vinyl-printing',
+        permanent: true,
+      },
+      {
+        source: '/flex-printing-gachibowli',
+        destination: '/products/flex-vinyl-printing',
+        permanent: true,
+      },
+      {
+        source: '/flex-printing-nacharam',
+        destination: '/products/flex-vinyl-printing',
+        permanent: true,
+      },
+      // ACP Cladding location variants
+      {
+        source: '/acp-cladding-kukatpally',
+        destination: '/products/acp-cladding-sign',
+        permanent: true,
+      },
+      {
+        source: '/acp-cladding-gachibowli',
+        destination: '/products/acp-cladding-sign',
+        permanent: true,
+      },
+      // General printing services by location
+      {
+        source: '/printing-services-kukatpally',
+        destination: '/products',
+        permanent: true,
+      },
+      {
+        source: '/printing-services-gachibowli',
+        destination: '/products',
+        permanent: true,
+      },
+      {
+        source: '/printing-services-madhapur',
+        destination: '/products',
+        permanent: true,
+      },
+      {
+        source: '/printing-services-nacharam',
+        destination: '/products',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

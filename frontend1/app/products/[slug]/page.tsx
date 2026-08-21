@@ -47,6 +47,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const waText = encodeURIComponent(`Hi! I would like to enquire about ${product.name}.`);
 
   // Full Product schema with merchant listing properties for rich results
+  // GSC-optimized with all required fields: aggregateRating, review, shipping, returns
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -62,25 +63,66 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       name: 'Vijetha Digital',
     },
     category: product.category,
+    // ✅ GSC FIX: Dynamic aggregateRating from product data
+    ...(product.aggregateRating && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.aggregateRating.ratingValue,
+        reviewCount: product.aggregateRating.reviewCount,
+        bestRating: '5',
+        worstRating: '1',
+      },
+    }),
+    // ✅ GSC FIX: Dynamic reviews from product data
+    ...(product.reviews && product.reviews.length > 0 && {
+      review: product.reviews.map(r => ({
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: r.rating.toString(),
+          bestRating: '5',
+        },
+        author: {
+          '@type': 'Person',
+          name: r.author,
+        },
+        datePublished: r.date,
+        reviewBody: r.comment,
+      })),
+    }),
     offers: {
       '@type': 'Offer',
       url: `https://vijethadigital.com/products/${product.slug}`,
       availability: 'https://schema.org/InStock',
-      price: product.priceNumeric,
+      price: product.priceNumeric.toString(),
       priceCurrency: 'INR',
+      // ✅ GSC FIX: Add validFrom date
+      validFrom: '2026-01-01T00:00:00Z',
       priceValidUntil: '2027-12-31',
+      // ✅ GSC FIX: Complete return policy with returnMethod and returnFees
       hasMerchantReturnPolicy: {
         '@type': 'MerchantReturnPolicy',
         applicableCountry: 'IN',
         returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
         merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
       },
+      // ✅ GSC FIX: Complete shipping details with transitTime and shippingDestination
       shippingDetails: {
         '@type': 'OfferShippingDetails',
         shippingRate: { '@type': 'MonetaryAmount', value: '0', currency: 'INR' },
+        // ✅ GSC FIX: Add shippingDestination
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN',
+          addressRegion: ['TG', 'AP', 'KA'], // Telangana, Andhra Pradesh, Karnataka
+        },
         deliveryTime: {
           '@type': 'ShippingDeliveryTime',
           handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 7, unitCode: 'DAY' },
+          // ✅ GSC FIX: Add transitTime (local Hyderabad delivery)
+          transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 1, unitCode: 'DAY' },
         },
       },
       seller: {
@@ -88,12 +130,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         '@id': 'https://vijethadigital.com/#organization',
         name: 'Vijetha Digital',
       },
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '127',
-      bestRating: '5',
     },
     additionalProperty: product.specs.map(s => ({
       '@type': 'PropertyValue',

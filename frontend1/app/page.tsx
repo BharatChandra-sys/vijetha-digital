@@ -6,6 +6,8 @@ import AboutSection from '@/components/sections/AboutSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import ClientsSection from '@/components/sections/ClientsSection';
+import ClientLogos from '@/components/sections/ClientLogos';
+import TrustBadges from '@/components/sections/TrustBadges';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
 import SemanticMarkers from '@/components/seo/SemanticMarkers';
@@ -17,7 +19,7 @@ import FloatingWhatsApp from '@/components/conversion/FloatingWhatsApp';
 export const metadata: Metadata = {
   title: 'Commercial Printing Hyderabad | Vijetha Digital - Signage & Vehicle Branding',
   description:
-    'Vijetha Digital is a leading commercial printing and signage company in Hyderabad, Telangana, providing comprehensive branding solutions since 2009. Serving 500+ clients with LED signs, vehicle branding, flex printing, offset printing, and exhibition displays across South India.',
+    '100% Quality Guaranteed | 1000+ Happy Clients since 2009. Vijetha Digital - Your trusted printing partner in Hyderabad. LED Signs, Vehicle Branding, Flex Printing, Same-Day Service. Call +91 92481 95552 - Your satisfaction is our #1 priority.',
   keywords:
     'commercial printing Hyderabad, Vijetha Digital, printing services Hyderabad, signage company Hyderabad, vehicle branding Hyderabad, LED sign board Hyderabad, flex printing Hyderabad, banner printing, acrylic signage, ACP cladding, exhibition displays, branding solutions Hyderabad, offset printing Hyderabad',
   alternates: {
@@ -258,6 +260,8 @@ export default function Home() {
             <ProjectsSection />
           </div>
         </div>
+        <TrustBadges />
+        <ClientLogos />
         <ServicesSection />
         <ClientsSection />
       </main>

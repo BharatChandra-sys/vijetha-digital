@@ -126,6 +126,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/vijetha-digital`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.92 },
   ];
 
+  // Service + Location SEO routes (redirect to product pages via next.config.ts)
+  // These URLs capture location-specific searches and redirect to relevant products
+  const serviceLocationRoutes: MetadataRoute.Sitemap = [
+    // LED Sign Board locations
+    { url: `${baseUrl}/led-sign-board-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${baseUrl}/led-sign-board-gachibowli`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${baseUrl}/led-sign-board-madhapur`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    // Vehicle Branding locations
+    { url: `${baseUrl}/vehicle-branding-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${baseUrl}/vehicle-branding-gachibowli`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    // Flex Printing locations
+    { url: `${baseUrl}/flex-printing-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${baseUrl}/flex-printing-nacharam`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
+  ];
+
   // Product pages
   const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map(({ name, date }) => ({
     url: `${baseUrl}/products/${toSlug(name)}`,

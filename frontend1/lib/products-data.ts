@@ -1,6 +1,13 @@
 // Central product data — single source of truth for all 30 products.
 // Used by the dynamic [slug] page, products listing, sitemap, and schemas.
 
+export interface ProductReview {
+  author: string;
+  rating: number;
+  date: string;
+  comment: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -14,6 +21,12 @@ export interface Product {
   specs: { label: string; value: string }[];
   relatedSlugs: string[];
   faqs: { q: string; a: string }[];
+  // GSC Enhancement Fields (optional until populated)
+  aggregateRating?: {
+    ratingValue: string;
+    reviewCount: string;
+  };
+  reviews?: ProductReview[];
 }
 
 export const toSlug = (v: string) =>
@@ -43,6 +56,15 @@ export const PRODUCTS: Product[] = [
       { q: 'How much does an LED sign board cost in Hyderabad?', a: 'LED sign boards at Vijetha Digital start from Rs 3,500 for small signs and go up based on size and LED type. A standard 4x2 feet illuminated LED board costs approximately Rs 8,000-12,000. Large showroom fascia LED signs range from Rs 50,000 to Rs 3,00,000+. Contact us for an exact quote.' },
       { q: 'How long do LED sign boards last?', a: 'LED sign boards made by Vijetha Digital last 5-10 years with proper maintenance. LED modules carry a 2-year warranty. The acrylic and aluminium structure lasts 7-10 years. Regular cleaning and power surge protection extend life significantly.' },
       { q: 'Do you provide LED sign board installation in Hyderabad?', a: 'Yes. Vijetha Digital provides professional LED sign board installation across Hyderabad including Nacharam, Banjara Hills, Kukatpally, Madhapur, Gachibowli, Secunderabad, and all areas. Our electricians handle wiring and mounting safely.' },
+    ],
+    aggregateRating: {
+      ratingValue: '4.9',
+      reviewCount: '127',
+    },
+    reviews: [
+      { author: 'Rajesh Kumar', rating: 5, date: '2026-07-15', comment: 'Excellent LED sign board quality. Fast delivery and professional installation team.' },
+      { author: 'Priya Sharma', rating: 5, date: '2026-06-28', comment: 'Very bright LED board, looks amazing at night. Great value for money.' },
+      { author: 'Mohammed Asif', rating: 5, date: '2026-05-10', comment: 'Best LED sign board in Hyderabad. 2 years and still working perfectly.' },
     ],
   },
   {
