@@ -7,7 +7,8 @@ import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Sitemap | Vijetha Digital - Complete Site Navigation',
-  description: 'Complete sitemap for Vijetha Digital. Browse all printing services, signage products, vehicle branding, exhibition displays, and branding solutions. Navigate to any page on vijethadigital.com.',
+  description:
+    'Complete sitemap for Vijetha Digital. Browse printing services, signage products, vehicle branding and exhibition displays at vijethadigital.com.',
   alternates: {
     canonical: 'https://vijethadigital.com/sitemap',
   },
@@ -44,8 +45,7 @@ const groups = [
       { label: 'Acrylic Letter Sign', href: '/products/acrylic-letter-sign', desc: 'Precision-cut 3D acrylic letters' },
       { label: 'Fascia Sign Board', href: '/products/fascia-sign-board', desc: 'Storefront fascia boards' },
       { label: 'Pylon Sign', href: '/products/pylon-sign', desc: 'Towering pylon signage' },
-      { label: 'Glow Sign Board', href: '/products/glow-sign-board', desc: 'Backlit glow signs' },
-      { label: 'Non-Lit Sign Board', href: '/products/non-lit-sign-board', desc: 'Non-illuminated signage' },
+      { label: 'Flex Board Hoarding', href: '/products/flex-board-hoarding', desc: 'Outdoor flex hoardings' },
     ],
   },
   {
@@ -54,8 +54,8 @@ const groups = [
     links: [
       { label: 'Car / 4-Wheeler Wrap', href: '/products/car-4-wheeler-wrap', desc: 'Car and SUV wraps' },
       { label: 'Bus / Van Branding', href: '/products/bus-van-branding', desc: 'Large vehicle branding' },
-      { label: '2-Wheeler Branding', href: '/products/two-wheeler-branding', desc: 'Bike and scooter graphics' },
-      { label: 'Fleet Graphics', href: '/products/bus-van-branding', desc: 'Complete fleet branding' },
+      { label: '2-Wheeler Branding', href: '/products/2-wheeler-branding', desc: 'Bike and scooter graphics' },
+      { label: 'Heavy Vehicle Branding', href: '/products/heavy-vehicle-branding', desc: 'Truck and fleet branding' },
     ],
   },
   {
@@ -73,9 +73,9 @@ const groups = [
     description: 'Corporate and marketing collateral',
     links: [
       { label: 'Brochure / Catalogue', href: '/products/brochure-catalogue', desc: 'Corporate brochures and catalogs' },
-      { label: 'Visiting Card', href: '/products/visiting-card', desc: 'Professional business cards' },
-      { label: 'Letterhead Printing', href: '/products/letterhead-printing', desc: 'Corporate letterheads' },
-      { label: 'Flyer / Pamphlet', href: '/products/brochure-catalogue', desc: 'Marketing flyers' },
+      { label: 'Corporate Stationery', href: '/products/corporate-stationery', desc: 'Letterheads, visiting cards, notepads' },
+      { label: 'Flyers & Pamphlets', href: '/products/flyers-and-pamphlets', desc: 'Marketing flyers and pamphlets' },
+      { label: 'Packaging & Gift Boxes', href: '/products/packaging-and-gift-boxes', desc: 'Custom packaging with die-cutting' },
     ],
   },
   {
@@ -84,9 +84,19 @@ const groups = [
     links: [
       { label: 'Roll-Up Standee', href: '/products/roll-up-standee', desc: 'Portable roll-up standees' },
       { label: 'Trade Show Booth', href: '/products/trade-show-booth', desc: 'Custom exhibition booths' },
-      { label: 'Demo Tent', href: '/products/demo-tent', desc: 'Promotional tents' },
+      { label: 'Demo Tent / Canopy', href: '/products/demo-tent-canopy', desc: 'Promotional tents and canopies' },
       { label: 'Fabric Light Box', href: '/products/fabric-light-box', desc: 'Backlit fabric displays' },
-      { label: 'X-Stand Banner', href: '/products/x-stand-banner', desc: 'Portable X-banner stands' },
+      { label: 'Backdrop / Stage Banner', href: '/products/backdrop-stage-banner', desc: 'Event backdrops up to 20ft wide' },
+    ],
+  },
+  {
+    heading: 'Outdoor Advertising',
+    description: 'Flags, backdrops, stickers and outdoor branding',
+    links: [
+      { label: 'Flags & Bunting', href: '/products/flags-and-bunting', desc: 'Dye-sublimation printed flags' },
+      { label: 'Backdrop / Stage Banner', href: '/products/backdrop-stage-banner', desc: 'Large-format event backdrops' },
+      { label: 'Stickers & Decals', href: '/products/stickers-and-decals', desc: 'Custom vinyl stickers and decals' },
+      { label: 'Canopy & Tent Branding', href: '/products/canopy-and-tent-branding', desc: 'Branded promotional canopies' },
     ],
   },
   {

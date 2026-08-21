@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Signage Company in Hyderabad | LED Signs, ACP Cladding & Acrylic | Vijetha Digital',
   description:
-    'Best signage company in Hyderabad. LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex hoardings, and glow signs. Vijetha Digital — 15+ years, 1,000+ clients, 3 Hyderabad branches.',
+    'Best signage company in Hyderabad. LED sign boards, ACP cladding, acrylic letters, fascia boards, pylon signs. 15+ years, 1,000+ clients, 3 branches.',
   keywords:
     'signage company Hyderabad, LED sign board Hyderabad, ACP cladding Hyderabad, acrylic letter sign Hyderabad, fascia sign Hyderabad, pylon sign Hyderabad, sign board Hyderabad, signage manufacturers Hyderabad, signage fabricators Hyderabad',
   alternates: {
@@ -107,20 +108,10 @@ const faqSchema = {
   ],
 };
 
-const hiddenContent = [
-  'Signage company Hyderabad — Vijetha Digital manufactures and installs LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, and flex hoardings in Hyderabad since 2009.',
-  'LED sign board Hyderabad: aluminium frame, acrylic face, LED modules, transformer. IP65 weatherproof. 2-year warranty on electronics. CNC precision cut.',
-  'ACP cladding Hyderabad: Goldplus ACP sheets 4mm, brushed or glossy finish, aluminium structural frame, 7-10 year outdoor durability.',
-  'Signage types Hyderabad: glow signs, non-lit signs, backlit signs, front-lit signs, box signs, channel letters, 3D letters, directory boards, pylon signs.',
-  'Signage industries Hyderabad: retail stores, shopping malls, hospitals, hotels, banks, schools, colleges, government buildings, factories, warehouses.',
-  'Sign board installation areas Hyderabad: Banjara Hills, Jubilee Hills, Madhapur, Gachibowli, Kondapur, Kukatpally, Nacharam, Secunderabad, Lakdikapool, Ameerpet, Himayatnagar, Somajiguda.',
-];
-
 export default function HyderabadSignageCompanyPage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
         <div className="wix-container">
@@ -182,6 +173,19 @@ export default function HyderabadSignageCompanyPage() {
               </div>
             ))}
           </div>
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Signage Manufacturing & Installation Details"
+            content={[
+              'Signage company Hyderabad — Vijetha Digital manufactures and installs LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, and flex hoardings in Hyderabad since 2009.',
+              'LED sign board Hyderabad: aluminium frame, acrylic face, LED modules, transformer. IP65 weatherproof. 2-year warranty on electronics. CNC precision cut.',
+              'ACP cladding Hyderabad: Goldplus ACP sheets 4mm, brushed or glossy finish, aluminium structural frame, 7-10 year outdoor durability.',
+              'Signage types Hyderabad: glow signs, non-lit signs, backlit signs, front-lit signs, box signs, channel letters, 3D letters, directory boards, pylon signs.',
+              'Signage industries Hyderabad: retail stores, shopping malls, hospitals, hotels, banks, schools, colleges, government buildings, factories, warehouses.',
+              'Sign board installation areas Hyderabad: Banjara Hills, Jubilee Hills, Madhapur, Gachibowli, Kondapur, Kukatpally, Nacharam, Secunderabad, Lakdikapool, Ameerpet, Himayatnagar, Somajiguda.',
+            ]}
+          />
         </div>
       </section>
 

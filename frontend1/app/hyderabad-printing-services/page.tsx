@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Printing Services in Hyderabad | Offset, Digital & Flex Printing | Vijetha Digital',
   description:
-    'Professional printing services in Hyderabad. Offset printing, digital printing, flex printing, UV printing, screen printing for brochures, banners, stationery, packaging. Vijetha Digital — 15+ years, same-day available.',
+    'Professional printing services in Hyderabad — offset, digital, flex, UV and screen printing for brochures, banners, stationery. Same-day available.',
   keywords:
     'printing services Hyderabad, offset printing Hyderabad, digital printing Hyderabad, flex printing Hyderabad, UV printing Hyderabad, screen printing Hyderabad, brochure printing Hyderabad, banner printing Hyderabad, catalogue printing Hyderabad, stationery printing Hyderabad',
   alternates: {
@@ -89,20 +90,10 @@ const faqSchema = {
   ],
 };
 
-const hiddenContent = [
-  'Printing services Hyderabad — Vijetha Digital offers offset printing, digital printing, flex printing, UV printing, screen printing in Hyderabad with same-day turnaround available.',
-  'Offset printing Hyderabad: brochures, flyers, catalogs, stationery, packaging, spot UV, foil stamping, die-cutting, embossing. Minimum 500 copies.',
-  'Digital printing Hyderabad: HP Latex 570, Epson Surecolor S80670, 64-inch wide format, 1440 dpi, 1 lakh sq.ft per day capacity, same-day for under 500 sq.ft.',
-  'Flex printing Hyderabad: frontlit flex, backlit flex, vinyl, mesh, canvas, eco-solvent. Rs 35 per sq.ft starting price.',
-  'Screen printing Hyderabad: regulatory boards, no parking boards, government boards, UV print, 3D print, pole boards, flute boards.',
-  'Printing areas Hyderabad: Nacharam IDA, Secunderabad, Madhapur, Gachibowli, Banjara Hills, Kukatpally, Ameerpet, Lakdikapool.',
-];
-
 export default function HyderabadPrintingServicesPage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
         <div className="wix-container">
@@ -201,6 +192,19 @@ export default function HyderabadPrintingServicesPage() {
               </div>
             ))}
           </div>
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Printing Services Technical Information"
+            content={[
+              'Printing services Hyderabad — Vijetha Digital offers offset printing, digital printing, flex printing, UV printing, screen printing in Hyderabad with same-day turnaround available.',
+              'Offset printing Hyderabad: brochures, flyers, catalogs, stationery, packaging, spot UV, foil stamping, die-cutting, embossing. Minimum 500 copies.',
+              'Digital printing Hyderabad: HP Latex 570, Epson Surecolor S80670, 64-inch wide format, 1440 dpi, 1 lakh sq.ft per day capacity, same-day for under 500 sq.ft.',
+              'Flex printing Hyderabad: frontlit flex, backlit flex, vinyl, mesh, canvas, eco-solvent. Rs 35 per sq.ft starting price.',
+              'Screen printing Hyderabad: regulatory boards, no parking boards, government boards, UV print, 3D print, pole boards, flute boards.',
+              'Printing areas Hyderabad: Nacharam IDA, Secunderabad, Madhapur, Gachibowli, Banjara Hills, Kukatpally, Ameerpet, Lakdikapool.',
+            ]}
+          />
         </div>
       </section>
 

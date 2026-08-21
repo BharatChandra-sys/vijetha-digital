@@ -1,8 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
+import Script from 'next/script';
 import JsonLd from '@/components/seo/JsonLd';
 import CookieConsent from '@/components/privacy/CookieConsent';
 import './globals.css';
+
+// ─── GA4 MEASUREMENT ID ──────────────────────────────────────────────────────
+// Replace with your actual GA4 ID from Google Analytics → Admin → Data Streams
+const GA4_ID = 'G-XXXXXXXXXX'; // ← UPDATE THIS with your real GA4 ID
 
 // ─── SITELINKS SEARCH BOX + WEBSITE SCHEMA ───────────────────────────────────
 // This is the PRIMARY schema that enables Google sitelinks in search results.
@@ -42,51 +47,44 @@ const websiteSchema = {
       description: 'Get a free quote for printing and signage services',
     },
   ],
-  // Enhanced navigation for sitelinks
+  // Enhanced navigation for sitelinks — MUST match exact header nav URLs
   mainEntity: {
     '@type': 'ItemList',
     itemListElement: [
       {
         '@type': 'SiteNavigationElement',
         position: 1,
-        name: 'Our Clients',
-        description: 'Trusted by 1000+ businesses including Samsung, Microsoft, Airtel, and Reliance',
-        url: 'https://vijethadigital.com/about#clients',
+        name: 'Services',
+        description: 'LED signage, vehicle branding, digital printing, offset printing and exhibition solutions in Hyderabad',
+        url: 'https://vijethadigital.com/services',
       },
       {
         '@type': 'SiteNavigationElement',
         position: 2,
-        name: 'About Us',
-        description: '15+ years of printing and signage expertise with world-class manufacturing',
-        url: 'https://vijethadigital.com/about',
+        name: 'Products',
+        description: 'Browse 30+ printing and signage products — LED boards, vehicle wraps, flex printing, standees and more',
+        url: 'https://vijethadigital.com/products',
       },
       {
         '@type': 'SiteNavigationElement',
         position: 3,
-        name: 'LED Sign Boards',
-        description: 'Premium LED illuminated signage for 24/7 brand visibility',
-        url: 'https://vijethadigital.com/products/led-sign-board',
+        name: 'About Us',
+        description: '15+ years of printing and signage expertise. 1,000+ clients. 3 branches in Hyderabad.',
+        url: 'https://vijethadigital.com/about',
       },
       {
         '@type': 'SiteNavigationElement',
         position: 4,
-        name: 'Vehicle Branding',
-        description: 'Professional vehicle wraps and fleet graphics with 3M vinyl',
-        url: 'https://vijethadigital.com/products/vehicle-branding',
+        name: 'Our Work',
+        description: 'Portfolio of printing and branding projects delivered across Hyderabad and South India',
+        url: 'https://vijethadigital.com/projects',
       },
       {
         '@type': 'SiteNavigationElement',
         position: 5,
-        name: 'ACP Cladding Signs',
-        description: 'Aluminium composite panel signage with premium corporate finish',
-        url: 'https://vijethadigital.com/products/acp-cladding-sign',
-      },
-      {
-        '@type': 'SiteNavigationElement',
-        position: 6,
-        name: 'Digital Printing',
-        description: 'High-resolution flex and vinyl printing for banners and displays',
-        url: 'https://vijethadigital.com/products/flex-vinyl-printing',
+        name: 'Contact Us',
+        description: 'Get a free quote from Vijetha Digital — Hyderabad printing and signage company',
+        url: 'https://vijethadigital.com/contact',
       },
     ],
   },
@@ -654,6 +652,23 @@ export default function RootLayout({
         `}} />
       </head>
       <body>
+        {/* Google Analytics GA4 — tracks user behavior signals Google uses for sitelinks */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA4_ID}', {
+              page_path: window.location.pathname,
+              send_page_view: true
+            });
+          `}
+        </Script>
+
         {children}
         <CookieConsent />
         <Analytics />

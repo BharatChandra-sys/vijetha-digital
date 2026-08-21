@@ -10,12 +10,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/api/',
           '/private/',
-          '/_next/static/',
           '/admin/',
-          '/_next/image',
           '/checkout/',
           '/cart/',
-          '/*?*',  // Disallow query parameters
         ],
         crawlDelay: 0,
       },
@@ -28,8 +25,8 @@ export default function robots(): MetadataRoute.Robots {
       // Google StoreBot - Product pages
       {
         userAgent: 'Storebot-Google',
-        allow: ['/products/', '/services/'],
-        disallow: ['/*?*'],
+        allow: '/',
+        disallow: ['/api/', '/admin/'],
       },
       // Bingbot - Microsoft search
       {

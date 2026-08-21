@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { PRODUCTS, getProductBySlug, getRelatedProducts } from '@/lib/products-data';
 import { WA_URL, PHONE_RAW } from '@/lib/constants';
 
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: `${product.name} in Hyderabad | Vijetha Digital`,
-    description: `${product.longDesc.slice(0, 155)}`,
+    description: `${product.longDesc.slice(0, 150)}`,
     keywords: `${product.name} Hyderabad, ${product.name.toLowerCase()} price, ${product.category} Hyderabad, Vijetha Digital`,
     alternates: {
       canonical: `https://vijethadigital.com/products/${product.slug}`,
@@ -160,18 +161,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ],
   };
 
-  const hiddenContent = [
-    `${product.name} in Hyderabad — manufactured and supplied by Vijetha Digital, leading ${product.category} company in Hyderabad since 2009.`,
-    `${product.longDesc}`,
-    `${product.name} specifications: ${product.specs.map(s => `${s.label}: ${s.value}`).join(', ')}.`,
-    `Contact Vijetha Digital for ${product.name} price in Hyderabad: call +91 92481 95552 or WhatsApp for instant quote.`,
-    `${product.name} available for delivery across Hyderabad, Secunderabad, Telangana, Andhra Pradesh, Karnataka, and pan-India.`,
-  ];
-
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       {/* Breadcrumb — visible */}
       <div className="product-breadcrumb" style={{ backgroundColor: '#f9f9f7', borderBottom: '1px solid #e8e8e4', paddingTop: '88px', paddingBottom: '12px' }}>
@@ -275,6 +267,41 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
+      {/* Complete Product Information — SEO-rich visible content */}
+      <section style={{ backgroundColor: '#f9f9f7', padding: '72px 0', borderTop: '1px solid #e8e8e4' }}>
+        <div className="wix-container" style={{ maxWidth: '860px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 400, color: '#000', marginBottom: '28px' }}>
+            Complete information about {product.name} in Hyderabad
+          </h2>
+          <div style={{ display: 'grid', gap: '16px' }}>
+            <div style={{ backgroundColor: '#fff', padding: '20px 24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>Manufacturing & Supply</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                {product.name} manufactured and supplied by Vijetha Digital, leading {product.category} company in Hyderabad since 2009. {product.longDesc}
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#fff', padding: '20px 24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>Technical Specifications</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                {product.specs.map(s => `${s.label}: ${s.value}`).join(' • ')}
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#fff', padding: '20px 24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>Pricing & Contact</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Contact Vijetha Digital for {product.name} price in Hyderabad: call +91 92481 95552 or WhatsApp for instant quote. Typical response time: 1-2 hours.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#fff', padding: '20px 24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>Delivery Coverage</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                {product.name} available for delivery across Hyderabad, Secunderabad, Telangana, Andhra Pradesh, Karnataka, and pan-India shipping supported for bulk orders.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section style={{ backgroundColor: '#1c1d20', padding: '64px 0' }}>
         <div className="wix-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px' }}>
@@ -290,6 +317,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: '#fff', color: '#000', fontFamily: font, fontSize: '14px', padding: '15px 40px', textDecoration: 'none', flexShrink: 0 }}>
             WhatsApp Now
           </a>
+        </div>
+        {/* Structured SEO Content */}
+        <div className="wix-container" style={{ marginTop: '40px' }}>
+          <StructuredContent
+            title={`${product.name} - Complete Specifications & Service Details`}
+            content={[
+              `${product.name} in Hyderabad — manufactured and supplied by Vijetha Digital, leading ${product.category} company in Hyderabad since 2009.`,
+              `${product.longDesc}`,
+              `${product.name} specifications: ${product.specs.map(s => `${s.label}: ${s.value}`).join(', ')}.`,
+              `Contact Vijetha Digital for ${product.name} price in Hyderabad: call +91 92481 95552 or WhatsApp for instant quote.`,
+              `${product.name} available for delivery across Hyderabad, Secunderabad, Telangana, Andhra Pradesh, Karnataka, and pan-India.`,
+            ]}
+          />
         </div>
       </section>
 

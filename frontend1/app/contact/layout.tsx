@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Contact Vijetha Digital | Get a Free Quote | Hyderabad Printing & Signage',
   description:
-    'Contact Vijetha Digital for printing and signage quotes in Hyderabad. 3 branches: Nacharam, Indira Park, Lakdikapool. Call +91 92481 95552. Fast response, free consultation, professional installation.',
+    'Get free quotes from Vijetha Digital. 3 Hyderabad branches: Nacharam, Indira Park, Lakdikapool. Call +91 92481 95552.',
   keywords:
     'contact Vijetha Digital, printing quote Hyderabad, signage quote Hyderabad, vehicle branding quote, Hyderabad printing company contact, Nacharam printing',
   alternates: {

@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 
 // Brand entity page — the single authoritative source for "Vijetha Digital" as a named entity.
@@ -12,7 +13,7 @@ import { WA_URL } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'Vijetha Digital | Commercial Printing & Signage Company Hyderabad',
   description:
-    'Vijetha Digital is a premium commercial printing and signage company in Hyderabad, established in 2009 by Krishnam Raju. 15+ years, 1,000+ clients, 3 branches, 10,000 sq.ft production facility. GST: 36AGBPC3175H1ZP.',
+    'Vijetha Digital is a trusted printing and signage company in Hyderabad since 2009. 15+ years, 1,000+ clients, 3 branches, 10,000 sq.ft production facility.',
   keywords:
     'Vijetha Digital, Vijetha Digital Hyderabad, Vijetha Digital printing, Vijetha Digital signage, Krishnam Raju printing, vijethadigital.com',
   alternates: {
@@ -98,22 +99,10 @@ const entitySchema = {
   },
 };
 
-const hiddenContent = [
-  'Vijetha Digital — official company information. Vijetha Digital is a commercial printing and signage company in Hyderabad, Telangana, established in 2009.',
-  'Founder: Krishnam Raju, Proprietor. GST Number: 36AGBPC3175H1ZP. Registered address: Lakdikapool, Hyderabad 500004.',
-  'Production facility: 42/B, No. 16, IDA, Nacharam, Hyderabad 500076. 10,000 sq.ft factory with 7 manufacturing systems.',
-  'Services: LED sign boards, ACP cladding signs, acrylic letter signs, vehicle branding, car wraps, bus branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, trade show booths, office branding, outdoor advertising.',
-  'Major clients: Samsung, Reliance Digital, Airtel, Jio, Pepsi, Heritage Foods, SBI, HDFC Bank, Microsoft, Vivo, Dr Reddys Laboratories, GHMC, Telangana Tourism Board.',
-  'Three branches in Hyderabad: Nacharam IDA (main production), Lakdikapool Sanapride Complex, Indira Park near NTR Stadium.',
-  'Website: vijethadigital.com. Phone: +91 92481 95552. Email: info@vijethadigital.com.',
-  'Social media: facebook.com/vijethadigital, instagram.com/vijethadigital, linkedin.com/company/vijetha-digital.',
-];
-
 export default function VijethaDigitalPage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
         <div className="wix-container">
@@ -215,6 +204,21 @@ export default function VijethaDigitalPage() {
               </a>
             ))}
           </div>
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Company Information & Client Portfolio"
+            content={[
+              'Vijetha Digital — official company information. Vijetha Digital is a commercial printing and signage company in Hyderabad, Telangana, established in 2009.',
+              'Founder: Krishnam Raju, Proprietor. GST Number: 36AGBPC3175H1ZP. Registered address: Lakdikapool, Hyderabad 500004.',
+              'Production facility: 42/B, No. 16, IDA, Nacharam, Hyderabad 500076. 10,000 sq.ft factory with 7 manufacturing systems.',
+              'Services: LED sign boards, ACP cladding signs, acrylic letter signs, vehicle branding, car wraps, bus branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, trade show booths, office branding, outdoor advertising.',
+              'Major clients: Samsung, Reliance Digital, Airtel, Jio, Pepsi, Heritage Foods, SBI, HDFC Bank, Microsoft, Vivo, Dr Reddys Laboratories, GHMC, Telangana Tourism Board.',
+              'Three branches in Hyderabad: Nacharam IDA (main production), Lakdikapool Sanapride Complex, Indira Park near NTR Stadium.',
+              'Website: vijethadigital.com. Phone: +91 92481 95552. Email: info@vijethadigital.com.',
+              'Social media: facebook.com/vijethadigital, instagram.com/vijethadigital, linkedin.com/company/vijetha-digital.',
+            ]}
+          />
         </div>
       </section>
 

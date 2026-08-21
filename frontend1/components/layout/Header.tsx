@@ -75,7 +75,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-10" aria-label="Main Navigation">
             {navLinks.map((link) => (
               <Link
                 key={link.label}

@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Vehicle Branding in Hyderabad | Car, Bus & Fleet Wrapping | Vijetha Digital',
   description:
-    'Professional vehicle branding in Hyderabad. Car wraps, bus branding, van graphics, 2-wheeler decals, and fleet branding using 3M and Avery Dennison vinyl. 5-7 year outdoor durability. Vijetha Digital — 15+ years.',
+    'Professional vehicle branding in Hyderabad — car wraps, bus branding, van graphics, fleet wrapping using 3M vinyl. 5-7 year durability. 15+ years experience.',
   keywords:
     'vehicle branding Hyderabad, car wrap Hyderabad, vehicle wrap Hyderabad, bus branding Hyderabad, van branding Hyderabad, fleet branding Hyderabad, 2 wheeler branding Hyderabad, vehicle graphics Hyderabad, vinyl wrap Hyderabad',
   alternates: {
@@ -119,20 +120,10 @@ const faqSchema = {
   ],
 };
 
-const hiddenContent = [
-  'Vehicle branding Hyderabad — Vijetha Digital provides professional car wrap, bus branding, van graphics, 2-wheeler decals, and fleet branding in Hyderabad, Telangana.',
-  'Vehicle branding materials: 3M vinyl wrap, Avery Dennison cast vinyl, UV-resistant lamination. 5-7 years outdoor durability in Indian weather.',
-  'Vehicle branding process: design mockup, printing on premium vinyl, surface preparation, vinyl application with heat gun, edge sealing, quality inspection.',
-  'Vehicle types: 2-wheelers (bikes, scooters), cars, hatchbacks, sedans, SUVs, vans, minivans, buses, trucks, heavy commercial vehicles.',
-  'Fleet branding Hyderabad: standardized templates, volume pricing, scheduled production, nationwide installation support.',
-  'Vehicle branding areas in Hyderabad: Nacharam, Secunderabad, Banjara Hills, Kukatpally, Gachibowli, Madhapur, Kondapur, Miyapur, LB Nagar, Dilsukhnagar.',
-];
-
 export default function HyderabadVehicleBrandingPage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
         <div className="wix-container">
@@ -227,6 +218,19 @@ export default function HyderabadVehicleBrandingPage() {
               </div>
             ))}
           </div>
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Vehicle Branding Technical Specifications"
+            content={[
+              'Vehicle branding Hyderabad — Vijetha Digital provides professional car wrap, bus branding, van graphics, 2-wheeler decals, and fleet branding in Hyderabad, Telangana.',
+              'Vehicle branding materials: 3M vinyl wrap, Avery Dennison cast vinyl, UV-resistant lamination. 5-7 years outdoor durability in Indian weather.',
+              'Vehicle branding process: design mockup, printing on premium vinyl, surface preparation, vinyl application with heat gun, edge sealing, quality inspection.',
+              'Vehicle types: 2-wheelers (bikes, scooters), cars, hatchbacks, sedans, SUVs, vans, minivans, buses, trucks, heavy commercial vehicles.',
+              'Fleet branding Hyderabad: standardized templates, volume pricing, scheduled production, nationwide installation support.',
+              'Vehicle branding areas in Hyderabad: Nacharam, Secunderabad, Banjara Hills, Kukatpally, Gachibowli, Madhapur, Kondapur, Miyapur, LB Nagar, Dilsukhnagar.',
+            ]}
+          />
         </div>
       </section>
 

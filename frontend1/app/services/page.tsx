@@ -3,7 +3,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 import { serviceFaqContent } from './faq';
 import { printingProcessSchemas } from '@/lib/howto-schemas';
@@ -11,7 +12,7 @@ import { printingProcessSchemas } from '@/lib/howto-schemas';
 export const metadata: Metadata = {
   title: 'Printing & Signage Services in Hyderabad | Vijetha Digital',
   description:
-    'Vijetha Digital offers LED signage, ACP cladding, vehicle branding, digital printing, offset printing, screen printing, exhibition displays, and outdoor advertising in Hyderabad. Get a free quote today.',
+    'Vijetha Digital offers LED signage, ACP cladding, vehicle branding, digital printing, offset printing, screen printing and exhibition displays in Hyderabad.',
   alternates: {
     canonical: 'https://vijethadigital.com/services',
   },
@@ -97,18 +98,6 @@ export default function ServicesPage() {
     <>
       <ScrollAnimations />
       <Header />
-
-      {/* Hidden SEO — not visible to users */}
-      <HiddenSEOContent content={[
-        'Vijetha Digital services include signage solutions, internal branding, vehicle branding, digital printing, offset printing, screen printing, display and exhibition, and outdoor advertising.',
-        'Signage: LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex boards, glass film, and modular displays in Hyderabad.',
-        'Vehicle Branding: 2-wheeler to heavy transport, UV-resistant vinyl wraps, design visualisation, and nationwide fleet support.',
-        'Digital Printing: HP Latex 570, Epson Surecolor, flex vinyl canvas UV print 3D eco-solvent, 1 lakh sq.ft per day capacity.',
-        'Offset Printing: Brochures, flyers, stationery, packaging, spot UV, foil stamping, die-cutting, high-volume bulk runs.',
-        'Display and Exhibition: Standees, demo tents, fabric light boxes, trade show booths, easel stands in Hyderabad.',
-        'Outdoor Advertising: Flags, backdrops, stickers, decals, canopies, tents, posters across South India.',
-        'Infrastructure: 10000 sq.ft production facility Nacharam IDA Hyderabad, 7 specialized manufacturing systems.',
-      ]} />
 
       {/* Page hero */}
       <section style={{
@@ -239,6 +228,53 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Complete Service Information — SEO-rich visible content */}
+      <section style={{ backgroundColor: '#fff', padding: '80px 0', borderTop: '1px solid #e8e8e4' }}>
+        <div className="wix-container">
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
+            Complete printing and signage capabilities in Hyderabad
+          </h2>
+          <div style={{ display: 'grid', gap: '24px', maxWidth: '900px' }}>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Signage Manufacturing</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex boards, glass film graphics, and modular display systems manufactured in Hyderabad. Complete in-house fabrication with CNC precision cutting.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Solutions</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                2-wheeler to heavy transport vehicle branding with UV-resistant 3M and Avery Dennison vinyl wraps. Design visualisation mockups provided. Nationwide fleet support available for multi-city operations.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Digital Printing Infrastructure</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                HP Latex 570 and Epson Surecolor S80670 wide-format printers delivering flex, vinyl, canvas, UV print, 3D print, and eco-solvent output. Production capacity: 1 lakh sq.ft per day from our Nacharam facility.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Offset Printing Services</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Brochures, flyers, corporate stationery, packaging, and gift boxes with premium finishing options including spot UV, foil stamping, die-cutting, and embossing. High-volume bulk runs supported.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Exhibition & Display Products</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Roll-up standees, demo tents, fabric light boxes, trade show booths, and easel stands for exhibitions, conferences, and promotional events across Hyderabad and South India.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Production Facility</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                10,000 sq.ft manufacturing facility at Nacharam IDA, Hyderabad with 7 specialized systems: HP Latex 570, Epson Surecolor, Roland Soljet, K Tech CNC Router, laser engraving, 4-pillar screen printer, and Graphtec plotter.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA strip */}
       <section style={{ backgroundColor: '#ffedc9', padding: '80px 0' }}>
         <div className="wix-container" style={{ textAlign: 'center' }}>
@@ -258,6 +294,25 @@ export default function ServicesPage() {
               Get a Quote
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* Structured SEO Content - Expandable */}
+      <section style={{ backgroundColor: '#fff', padding: '0 0 60px 0' }}>
+        <div className="wix-container">
+          <StructuredContent
+            title="Complete Service Information & Technical Specifications"
+            content={[
+              'Vijetha Digital services include signage solutions, internal branding, vehicle branding, digital printing, offset printing, screen printing, display and exhibition, and outdoor advertising.',
+              'Signage: LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex boards, glass film, and modular displays in Hyderabad.',
+              'Vehicle Branding: 2-wheeler to heavy transport, UV-resistant vinyl wraps, design visualisation, and nationwide fleet support.',
+              'Digital Printing: HP Latex 570, Epson Surecolor, flex vinyl canvas UV print 3D eco-solvent, 1 lakh sq.ft per day capacity.',
+              'Offset Printing: Brochures, flyers, stationery, packaging, spot UV, foil stamping, die-cutting, high-volume bulk runs.',
+              'Display and Exhibition: Standees, demo tents, fabric light boxes, trade show booths, easel stands in Hyderabad.',
+              'Outdoor Advertising: Flags, backdrops, stickers, decals, canopies, tents, posters across South India.',
+              'Infrastructure: 10000 sq.ft production facility Nacharam IDA Hyderabad, 7 specialized manufacturing systems.',
+            ]}
+          />
         </div>
       </section>
 

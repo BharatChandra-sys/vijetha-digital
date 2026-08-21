@@ -92,24 +92,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Service sub-pages
   const serviceRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}/services/signage`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.90,
-    },
-    {
-      url: `${baseUrl}/services/vehicle-branding`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.90,
-    },
-    {
-      url: `${baseUrl}/services/digital-printing`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'monthly',
-      priority: 0.90,
-    },
-    {
       url: `${baseUrl}/projects`,
       lastModified: BUILD_DATE,
       changeFrequency: 'weekly',
@@ -126,20 +108,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/vijetha-digital`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.92 },
   ];
 
-  // Service + Location SEO routes (redirect to product pages via next.config.ts)
-  // These URLs capture location-specific searches and redirect to relevant products
-  const serviceLocationRoutes: MetadataRoute.Sitemap = [
-    // LED Sign Board locations
-    { url: `${baseUrl}/led-sign-board-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${baseUrl}/led-sign-board-gachibowli`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${baseUrl}/led-sign-board-madhapur`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    // Vehicle Branding locations
-    { url: `${baseUrl}/vehicle-branding-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${baseUrl}/vehicle-branding-gachibowli`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    // Flex Printing locations
-    { url: `${baseUrl}/flex-printing-kukatpally`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-    { url: `${baseUrl}/flex-printing-nacharam`, lastModified: BUILD_DATE, changeFrequency: 'monthly', priority: 0.85 },
-  ];
+  // Service + Location SEO routes (these redirect to product pages via next.config.ts)
+  // NOTE: Redirect URLs are intentionally excluded from sitemap.
+  // Google should index the destination product pages, not the redirect sources.
+  const serviceLocationRoutes: MetadataRoute.Sitemap = [];
 
   // Product pages
   const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map(({ name, date }) => ({
@@ -175,6 +147,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...coreRoutes,
     ...serviceRoutes,
     ...localSeoRoutes,
+    ...serviceLocationRoutes,
     ...productRoutes,
     ...utilityRoutes,
   ];

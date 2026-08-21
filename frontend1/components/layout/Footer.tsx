@@ -52,7 +52,7 @@ export default function Footer() {
           </div>
 
           {/* ── COL 2: Popular Services ── */}
-          <div>
+          <nav aria-label="Popular Services">
             <p className="footer-col-heading">Popular Services</p>
             <ul className="footer-link-list">
               {[
@@ -68,15 +68,15 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* ── COL 3: Company ── */}
-          <div>
+          <nav aria-label="Company Navigation">
             <p className="footer-col-heading">Company</p>
             <ul className="footer-link-list">
               {[
                 ['About Us',       '/about'],
-                ['Our Clients',    '/about#clients'],
+                ['Our Work',       '/projects'],
                 ['Services',       '/services'],
                 ['Products',       '/products'],
                 ['Contact',        '/contact'],
@@ -88,7 +88,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* ── COL 4: Contact / Branches ── */}
           <div>

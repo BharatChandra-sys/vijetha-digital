@@ -24,13 +24,17 @@ export const featuredProductSchemas = [
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',
-      reviewCount: '24',
+      reviewCount: '127',
       bestRating: '5',
       worstRating: '1',
     },
     review: [
       {
         '@type': 'Review',
+        itemReviewed: {
+          '@type': 'Product',
+          name: 'LED Sign Board',
+        },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -42,6 +46,10 @@ export const featuredProductSchemas = [
         },
         reviewBody: 'Excellent quality LED sign boards delivered on time with outstanding finish.',
         datePublished: '2026-06-15',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Vijetha Digital',
+        },
       },
     ],
     offers: {
@@ -153,6 +161,10 @@ export const featuredProductSchemas = [
     review: [
       {
         '@type': 'Review',
+        itemReviewed: {
+          '@type': 'Product',
+          name: 'ACP Cladding Sign Board',
+        },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -164,6 +176,10 @@ export const featuredProductSchemas = [
         },
         reviewBody: 'Professional ACP cladding with premium finish. Perfect for our corporate office entrance.',
         datePublished: '2026-05-20',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Vijetha Digital',
+        },
       },
     ],
     offers: {
@@ -270,6 +286,10 @@ export const featuredProductSchemas = [
     review: [
       {
         '@type': 'Review',
+        itemReviewed: {
+          '@type': 'Product',
+          name: 'Vehicle Branding & Wraps',
+        },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -281,6 +301,10 @@ export const featuredProductSchemas = [
         },
         reviewBody: 'Best vehicle branding in Hyderabad. Our fleet looks professional and vinyl quality is excellent.',
         datePublished: '2026-04-10',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Vijetha Digital',
+        },
       },
     ],
     offers: {
@@ -392,6 +416,10 @@ export const featuredProductSchemas = [
     review: [
       {
         '@type': 'Review',
+        itemReviewed: {
+          '@type': 'Product',
+          name: 'Flex & Vinyl Printing',
+        },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -403,6 +431,10 @@ export const featuredProductSchemas = [
         },
         reviewBody: 'Excellent print quality for our outdoor campaign. Fast turnaround and great colors.',
         datePublished: '2026-03-28',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Vijetha Digital',
+        },
       },
     ],
     offers: {
@@ -514,6 +546,10 @@ export const featuredProductSchemas = [
     review: [
       {
         '@type': 'Review',
+        itemReviewed: {
+          '@type': 'Product',
+          name: 'Offset Printing Services',
+        },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -525,6 +561,10 @@ export const featuredProductSchemas = [
         },
         reviewBody: 'Professional offset printing for our corporate brochures. Excellent color accuracy and finish.',
         datePublished: '2026-02-14',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Vijetha Digital',
+        },
       },
     ],
     offers: {

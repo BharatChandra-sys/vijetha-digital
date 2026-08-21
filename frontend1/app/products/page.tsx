@@ -2,16 +2,16 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ProductsContent from './ProductsContent';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+
 import JsonLd from '@/components/seo/JsonLd';
 import FAQAccordion from '@/components/ui/FAQAccordion';
+import StructuredContent from '@/components/seo/StructuredContent';
 import { productsFaqContent } from './faq';
-import { featuredProductSchemas } from '@/lib/product-schemas';
 
 export const metadata: Metadata = {
   title: 'Printing Products in Hyderabad | Signage, Flex, Banners & Branding | Vijetha Digital',
   description:
-    "Explore Vijetha Digital's complete catalogue of 30+ signage boards, flex boards, banners, vehicle branding, exhibition displays, and promotional products for Hyderabad businesses. Fast delivery, bulk pricing.",
+    "Browse Vijetha Digital's 30+ signage boards, flex boards, vehicle branding, exhibition displays, and promotional products. Fast delivery, bulk pricing.",
   keywords:
     'printing products Hyderabad, signage products, LED sign board, ACP cladding sign, acrylic letter sign, vehicle wrap, flex printing, roll-up standee, trade show booth, branding products Hyderabad',
   alternates: {
@@ -27,14 +27,6 @@ export const metadata: Metadata = {
 
 const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
-
-const hiddenSEOText = [
-  'Vijetha Digital offers 30+ premium printing and signage products manufactured in-house at our Hyderabad facility.',
-  'Product categories include signage solutions (LED boards, ACP cladding, acrylic letters, fascia boards, pylon signs), internal branding (office walls, reception areas, retail displays, hospital wayfinding), vehicle branding (car wraps, bus branding, bike graphics, fleet solutions), digital printing (flex, vinyl, UV, eco-solvent, 3D canvas), offset printing (brochures, catalogs, stationery, packaging), display and exhibition (standees, tents, light boxes, trade show booths), and outdoor advertising (flags, backdrops, stickers, canopies).',
-  'All products available with same-day quotes, 24-72 hour production, custom sizing, bulk order discounts, professional installation, and pan-India delivery.',
-  'Premium materials used: 3M vinyl for vehicle wraps, Goldplus ACP sheets for cladding, Asian Paints acrylics for letters, high-grade flex for outdoor durability, and certified fire-retardant materials for indoor applications.',
-  'Serving retail chains, corporate offices, healthcare facilities, hospitality venues, educational institutions, real estate projects, automobile dealerships, FMCG brands, and government departments across Hyderabad, Telangana, and South India.',
-];
 
 export default function ProductsPage() {
   const productsFaqSchema = {
@@ -53,7 +45,6 @@ export default function ProductsPage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenSEOText} />
 
       {/* Page hero — server rendered */}
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
@@ -76,6 +67,53 @@ export default function ProductsPage() {
       {/* Interactive content in client component */}
       <ProductsContent />
 
+      {/* Product Categories — SEO-rich visible content */}
+      <section style={{ backgroundColor: '#fff', padding: '80px 0', borderTop: '1px solid #e8e8e4' }}>
+        <div className="wix-container">
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
+            Complete product catalogue — manufactured in-house at Hyderabad
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Signage Solutions</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                LED boards, ACP cladding, acrylic letters, fascia boards, pylon signs manufactured at our 10,000 sq.ft Nacharam facility. Custom sizing, bulk order discounts, professional installation included.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Internal Branding Products</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Office wall branding, reception area displays, retail store graphics, hospital wayfinding systems. Premium materials with fire-retardant certifications for indoor applications.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Range</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Car wraps, bus branding, bike graphics, fleet solutions using 3M vinyl for vehicle wraps and Goldplus ACP sheets. 24-72 hour production, same-day quotes available.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Digital Printing Products</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Flex, vinyl, UV, eco-solvent, 3D canvas printing for outdoor durability. High-grade materials with Asian Paints acrylics for letters. Pan-India delivery supported.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Offset Printing Range</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Brochures, catalogs, stationery, packaging for retail chains, corporate offices, healthcare facilities, hospitality venues, educational institutions, and real estate projects.
+              </p>
+            </div>
+            <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Exhibition Displays</h3>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+                Standees, tents, light boxes, trade show booths for automobile dealerships, FMCG brands, government departments across Hyderabad, Telangana, and South India.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ section */}
       <section style={{ backgroundColor: '#f7f5ef', padding: '80px 0' }}>
         <div className="wix-container">
@@ -86,14 +124,23 @@ export default function ProductsPage() {
             Common questions about our printing and signage products
           </h2>
           <FAQAccordion items={productsFaqContent} />
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Product Catalogue Information"
+            content={[
+              'Vijetha Digital offers 30+ premium printing and signage products manufactured in-house at our Hyderabad facility.',
+              'Product categories include signage solutions (LED boards, ACP cladding, acrylic letters, fascia boards, pylon signs), internal branding (office walls, reception areas, retail displays, hospital wayfinding), vehicle branding (car wraps, bus branding, bike graphics, fleet solutions), digital printing (flex, vinyl, UV, eco-solvent, 3D canvas), offset printing (brochures, catalogs, stationery, packaging), display and exhibition (standees, tents, light boxes, trade show booths), and outdoor advertising (flags, backdrops, stickers, canopies).',
+              'All products available with same-day quotes, 24-72 hour production, custom sizing, bulk order discounts, professional installation, and pan-India delivery.',
+              'Premium materials used: 3M vinyl for vehicle wraps, Goldplus ACP sheets for cladding, Asian Paints acrylics for letters, high-grade flex for outdoor durability, and certified fire-retardant materials for indoor applications.',
+              'Serving retail chains, corporate offices, healthcare facilities, hospitality venues, educational institutions, real estate projects, automobile dealerships, FMCG brands, and government departments across Hyderabad, Telangana, and South India.',
+            ]}
+          />
         </div>
       </section>
 
       <Footer />
       <JsonLd data={productsFaqSchema} />
-      {featuredProductSchemas.map((schema, i) => (
-        <JsonLd key={i} data={schema} />
-      ))}
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'WebPage',

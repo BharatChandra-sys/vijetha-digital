@@ -56,3 +56,7 @@ public/images/*-wix.webp
 SEO_*.md
 HIDDEN_SEO_ENHANCEMENTS.md
 *SEO*Playbook*.pdf
+
+# All markdown documentation files except README.md
+*.md
+!README.md

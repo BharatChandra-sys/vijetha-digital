@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
-import HiddenSEOContent from '@/components/seo/HiddenSEOContent';
+import StructuredContent from '@/components/seo/StructuredContent';
+
 import { WA_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Printing & Signage Company in Hyderabad | Vijetha Digital',
   description:
-    'Vijetha Digital is a trusted printing and signage company in Hyderabad offering LED sign boards, ACP cladding, vehicle branding, flex printing, offset printing, and exhibition displays since 2009. 3 branches across Hyderabad.',
+    'Vijetha Digital — trusted printing and signage company in Hyderabad since 2009. LED signs, vehicle branding, flex printing, 3 branches, 10,000 sq.ft facility.',
   keywords:
     'printing signage company Hyderabad, signage Hyderabad, LED sign board Hyderabad, ACP cladding Hyderabad, printing company Hyderabad, commercial printing Hyderabad, vehicle branding Hyderabad, flex printing Hyderabad',
   alternates: {
@@ -82,20 +83,10 @@ const faqSchema = {
   ],
 };
 
-const hiddenContent = [
-  'Vijetha Digital is the leading printing and signage company in Hyderabad, Telangana with 15+ years of experience since 2009.',
-  'Printing and signage services in Hyderabad include LED sign boards, ACP cladding, acrylic letters, vehicle branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, and outdoor advertising.',
-  'Three Hyderabad branches: Nacharam IDA (main production, 10,000 sq.ft), Lakdikapool Sanapride Complex, and Indira Park near NTR Stadium.',
-  'Clients in Hyderabad include Samsung, Reliance Digital, Airtel, Jio, SBI, HDFC, Microsoft, Pepsi, Heritage Foods, Dr Reddys, GHMC, and Telangana Tourism.',
-  'Same-day printing available in Hyderabad. LED signage Hyderabad ready in 5-7 days. Vehicle branding Hyderabad 1-2 days per vehicle.',
-  'Areas served in Hyderabad: Nacharam, Secunderabad, Kukatpally, Gachibowli, Madhapur, Banjara Hills, Jubilee Hills, Ameerpet, Lakdikapool, Begumpet, Somajiguda, Himayatnagar, Kondapur, Miyapur.',
-];
-
 export default function HyderabadPrintingSignagePage() {
   return (
     <>
       <Header />
-      <HiddenSEOContent content={hiddenContent} />
 
       <section style={{ backgroundColor: '#f1f0eb', paddingTop: '140px', paddingBottom: '72px' }}>
         <div className="wix-container">
@@ -184,6 +175,19 @@ export default function HyderabadPrintingSignagePage() {
               </div>
             ))}
           </div>
+          
+          {/* Structured SEO Content */}
+          <StructuredContent
+            title="Complete Company & Service Coverage Information"
+            content={[
+              'Vijetha Digital is the leading printing and signage company in Hyderabad, Telangana with 15+ years of experience since 2009.',
+              'Printing and signage services in Hyderabad include LED sign boards, ACP cladding, acrylic letters, vehicle branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, and outdoor advertising.',
+              'Three Hyderabad branches: Nacharam IDA (main production, 10,000 sq.ft), Lakdikapool Sanapride Complex, and Indira Park near NTR Stadium.',
+              'Clients in Hyderabad include Samsung, Reliance Digital, Airtel, Jio, SBI, HDFC, Microsoft, Pepsi, Heritage Foods, Dr Reddys, GHMC, and Telangana Tourism.',
+              'Same-day printing available in Hyderabad. LED signage Hyderabad ready in 5-7 days. Vehicle branding Hyderabad 1-2 days per vehicle.',
+              'Areas served in Hyderabad: Nacharam, Secunderabad, Kukatpally, Gachibowli, Madhapur, Banjara Hills, Jubilee Hills, Ameerpet, Lakdikapool, Begumpet, Somajiguda, Himayatnagar, Kondapur, Miyapur.',
+            ]}
+          />
         </div>
       </section>
 

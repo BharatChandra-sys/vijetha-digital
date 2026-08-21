@@ -2,8 +2,11 @@ import { NextResponse } from 'next/server';
 
 const baseUrl = 'https://vijethadigital.com';
 
-// Escape all XML special characters so the feed parses cleanly in every reader.
-// &  must become &amp; FIRST — otherwise we'd double-escape other replacements.
+// Static build date — same principle as rss.xml.
+// Atom feeds with ever-changing <updated> dates look like "constantly updated content" to crawlers.
+const BUILD_DATE_ISO = '2026-08-21T12:00:00Z';
+const YEAR = 2026;
+
 function xmlEscape(str: string): string {
   return str
     .replace(/&/g, '&amp;')
@@ -13,158 +16,101 @@ function xmlEscape(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
-// Helper to convert product name to slug
 const toSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
+  value.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-// All products for feed
-const PRODUCTS = [
-  'LED Sign Board',
-  'ACP Cladding Sign',
-  'Acrylic Letter Sign',
-  'Fascia Sign Board',
-  'Flex Board Hoarding',
-  'Pylon Sign',
-  'Office Wall Branding',
-  'Reception & Lobby',
-  'Retail In-Shop Branding',
-  'Hospital Branding',
-  'Car / 4-Wheeler Wrap',
-  'Bus / Van Branding',
-  '2-Wheeler Branding',
-  'Heavy Vehicle Branding',
-  'Flex / Vinyl Printing',
-  'UV Print',
-  '3D Canvas Print',
-  'Eco-Solvent Print',
-  'Brochure / Catalogue',
-  'Flyers & Pamphlets',
-  'Corporate Stationery',
-  'Packaging & Gift Boxes',
-  'Roll-Up Standee',
-  'Demo Tent / Canopy',
-  'Fabric Light Box',
-  'Trade Show Booth',
-  'Flags & Bunting',
-  'Backdrop / Stage Banner',
-  'Stickers & Decals',
-  'Canopy & Tent Branding',
+const PRODUCTS: { name: string; desc: string; updated: string }[] = [
+  { name: 'LED Sign Board', desc: 'Premium LED sign boards for 24/7 business visibility in Hyderabad. IP65 weatherproof, 2-year warranty. From Rs 3,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'ACP Cladding Sign', desc: 'Goldplus 4mm ACP cladding with 3D letter fabrication. Brushed, matte, or glossy finish. 7-10 year durability. From Rs 2,200.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Acrylic Letter Sign', desc: 'Precision CNC-cut acrylic 3D letters. Backlit, front-lit, or non-illuminated. From Rs 1,800.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Fascia Sign Board', desc: 'Full-width illuminated fascia boards for storefronts. From Rs 4,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Flex Board Hoarding', desc: 'HP Latex 570 flex printing for hoardings. Same-day under 500 sq.ft. From Rs 18/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Pylon Sign', desc: 'Freestanding illuminated pylon signs for highway visibility. From Rs 8,000.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Office Wall Branding', desc: 'Office wall murals, UV prints, and 3D lettering for corporate interiors in Hyderabad.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Reception & Lobby', desc: 'Reception branding with backlit logo walls, wayfinding systems, and branded counters.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Retail In-Shop Branding', desc: 'Complete retail store branding — walls, windows, floors, POS. Multi-location rollouts handled.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Hospital Branding', desc: 'Hospital wayfinding, department signage, and interior branding with fire-retardant materials.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Car / 4-Wheeler Wrap', desc: '3M cast vinyl car and SUV wraps. Full wrap, partial wrap, bonnet wrap. From Rs 3,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Bus / Van Branding', desc: 'Large-format bus and van vinyl branding. Fleet pricing for 5+ vehicles. From Rs 6,000.', updated: '2026-08-01T00:00:00Z' },
+  { name: '2-Wheeler Branding', desc: 'Delivery bike and scooter vinyl graphics. Same-day service. From Rs 800.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Heavy Vehicle Branding', desc: 'Truck and HCV branding with high-tack commercial vinyl. Fleet coordination available.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Flex / Vinyl Printing', desc: 'HP Latex 570 printing. 1,440 dpi, 1 lakh sq.ft/day. Frontlit, backlit, vinyl. From Rs 18/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'UV Print', desc: 'UV-cured printing on acrylic, glass, metal, and rigid substrates. From Rs 45/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: '3D Canvas Print', desc: 'Premium canvas at 1440 dpi, 380-450 GSM. Gallery wrap options. From Rs 120/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Eco-Solvent Print', desc: 'Roland Soljet EJ 640 outdoor printing. 3-5 year durability without lamination. From Rs 20/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Brochure / Catalogue', desc: 'Offset-printed brochures with spot UV, foil stamping, and perfect binding. From Rs 2,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Flyers & Pamphlets', desc: 'A4/A5/DL flyers on 170-250 GSM paper. 3-5 day turnaround. From Rs 800 per 1,000.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Corporate Stationery', desc: 'Letterheads, visiting cards, notepads and envelopes with consistent brand identity. From Rs 1,200.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Packaging & Gift Boxes', desc: 'Custom gift boxes and packaging with die-cutting, foil stamping, and embossing. From Rs 3,000.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Roll-Up Standee', desc: 'Aluminum roll-up standees with 540 GSM print. Same-day for standard size. From Rs 1,800.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Demo Tent / Canopy', desc: 'Branded pop-up tents in 6x6ft to 10x20ft. Water-resistant, 4-side printing. From Rs 8,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Fabric Light Box', desc: 'SEG fabric displays on LED backlit frames. Even glow, washable graphic. From Rs 5,500.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Trade Show Booth', desc: 'Complete trade show booth design, fabrication, and installation for Hyderabad exhibitions.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Flags & Bunting', desc: 'Dye-sublimation printed flags — feather, rectangular, swooper, bunting. From Rs 350.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Backdrop / Stage Banner', desc: 'Event backdrops up to 20ft wide on backlit flex or fabric. Same-day available. From Rs 1,200.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Stickers & Decals', desc: 'Die-cut vinyl stickers for vehicles, walls, floors, and glass. From Rs 5/sq.ft.', updated: '2026-08-01T00:00:00Z' },
+  { name: 'Canopy & Tent Branding', desc: 'Branded promotional canopies for outdoor activations. From Rs 2,200.', updated: '2026-08-01T00:00:00Z' },
 ];
 
 const MAIN_PAGES = [
-  {
-    url: '',
-    title: 'Vijetha Digital - Premium Printing & Signage Solutions in Hyderabad',
-    description:
-      'Leading printing and signage company in Hyderabad. Offering high-quality signage, vehicle branding, digital printing, and offset printing services since 2009.',
-    updated: '2026-08-08T12:00:00Z',
-  },
-  {
-    url: '/services',
-    title: 'Our Services - Signage, Printing & Branding Solutions',
-    description:
-      'Comprehensive printing and signage services including LED sign boards, vehicle branding, digital printing, offset printing, and display solutions.',
-    updated: '2026-08-08T12:00:00Z',
-  },
-  {
-    url: '/products',
-    title: 'Our Products - Complete Printing & Signage Catalog',
-    description:
-      'Browse our extensive range of 30+ signage and printing products. From LED signs to vehicle wraps, we offer premium solutions for your business.',
-    updated: '2026-08-08T12:00:00Z',
-  },
-  {
-    url: '/about',
-    title: 'About Vijetha Digital - 15+ Years of Excellence',
-    description:
-      'Learn about Vijetha Digital, Hyderabad\'s trusted printing and signage partner since 2009. Serving 500+ clients with premium quality solutions.',
-    updated: '2026-08-08T12:00:00Z',
-  },
-  {
-    url: '/contact',
-    title: 'Contact Us - Get a Free Quote Today',
-    description:
-      'Connect with Vijetha Digital for all your printing and signage needs. Located in Patlanthimaus, Hyderabad. Call +91-40-1234-5678.',
-    updated: '2026-08-08T12:00:00Z',
-  },
+  { url: '/', title: 'Vijetha Digital — Printing, Signage & Vehicle Branding Hyderabad', desc: 'Leading commercial printing and signage company in Hyderabad since 2009. LED signs, vehicle branding, flex printing, offset printing, exhibition displays.', updated: '2026-08-21T12:00:00Z' },
+  { url: '/services', title: 'Printing & Signage Services in Hyderabad | Vijetha Digital', desc: 'LED signage, vehicle branding, digital printing, offset printing, screen printing and exhibition display solutions for businesses across Hyderabad.', updated: '2026-08-21T12:00:00Z' },
+  { url: '/products', title: 'Printing Products in Hyderabad | Vijetha Digital', desc: 'Browse 30+ printing and signage products — LED boards, vehicle wraps, flex printing, standees, brochures and more.', updated: '2026-08-21T12:00:00Z' },
+  { url: '/about', title: 'About Vijetha Digital | Printing & Signage Company Since 2009', desc: '15+ years of expertise. 1,000+ clients, 3 branches, 10,000 sq.ft production facility in Nacharam IDA, Hyderabad.', updated: '2026-08-21T12:00:00Z' },
+  { url: '/contact', title: 'Contact Vijetha Digital | Free Quote | Hyderabad', desc: 'Get a free printing and signage quote. 3 Hyderabad branches — Nacharam, Lakdikapool, Indira Park. Call +91 92481 95552.', updated: '2026-08-21T12:00:00Z' },
+  { url: '/projects', title: 'Our Work | Printing & Signage Projects | Vijetha Digital', desc: '1,000+ completed projects across Hyderabad — LED signs, vehicle fleets, office branding, exhibitions.', updated: '2026-08-21T12:00:00Z' },
 ];
 
-function generateProductDescription(productName: string): string {
-  const descriptions: Record<string, string> = {
-    'LED Sign Board': 'Premium LED sign boards for eye-catching business visibility. Energy-efficient and customizable designs.',
-    'ACP Cladding Sign': 'Durable ACP cladding signage with modern aesthetics. Weather-resistant and long-lasting.',
-    'Acrylic Letter Sign': 'Elegant acrylic letter signage for professional business branding. 3D letters with LED options.',
-    'Fascia Sign Board': 'High-visibility fascia sign boards for storefronts. Premium quality materials.',
-    'Flex Board Hoarding': 'Large format flex board hoardings for maximum exposure. Outdoor-ready printing.',
-    'Pylon Sign': 'Towering pylon signs for highway and commercial visibility. Illuminated options available.',
-  };
-  
-  return descriptions[productName] || `Professional ${productName} solutions from Vijetha Digital. Premium quality printing and signage services in Hyderabad.`;
-}
-
 export async function GET() {
-  const updated = new Date().toISOString();
-
-  const productEntries = PRODUCTS.map((productName) => {
-    const slug = toSlug(productName);
-    const desc = xmlEscape(generateProductDescription(productName));
-    const safeName = xmlEscape(`${productName} - Vijetha Digital`);
+  const productEntries = PRODUCTS.map(({ name, desc, updated }) => {
+    const slug = toSlug(name);
     return `
-    <entry>
-      <title>${safeName}</title>
-      <link href="${baseUrl}/products/${slug}" rel="alternate" type="text/html"/>
-      <id>${baseUrl}/products/${slug}</id>
-      <updated>${updated}</updated>
-      <published>${updated}</published>
-      <summary type="html">${desc}</summary>
-      <category term="Products"/>
-      <category term="Printing"/>
-      <category term="Signage"/>
-      <author>
-        <name>Vijetha Digital</name>
-        <email>info@vijethadigital.com</email>
-        <uri>${baseUrl}</uri>
-      </author>
-    </entry>`;
+  <entry>
+    <title>${xmlEscape(name + ' — Vijetha Digital Hyderabad')}</title>
+    <link href="${baseUrl}/products/${slug}" rel="alternate" type="text/html"/>
+    <id>${baseUrl}/products/${slug}</id>
+    <updated>${updated}</updated>
+    <published>${updated}</published>
+    <summary type="html">${xmlEscape(desc)}</summary>
+    <category term="Products"/>
+    <category term="Printing"/>
+    <category term="Signage"/>
+    <author>
+      <name>Vijetha Digital</name>
+      <email>info@vijethadigital.com</email>
+      <uri>${baseUrl}</uri>
+    </author>
+  </entry>`;
   }).join('');
 
-  // Generate main page entries
-  const mainPageEntries = MAIN_PAGES.map((page) => {
-    const safeTitle = xmlEscape(page.title);
-    const safeDesc  = xmlEscape(page.description);
-    return `
-    <entry>
-      <title>${safeTitle}</title>
-      <link href="${baseUrl}${page.url}" rel="alternate" type="text/html"/>
-      <id>${baseUrl}${page.url || '/'}</id>
-      <updated>${page.updated}</updated>
-      <published>${page.updated}</published>
-      <summary type="html">${safeDesc}</summary>
-      <category term="Main"/>
-      <author>
-        <name>Vijetha Digital</name>
-        <email>info@vijethadigital.com</email>
-        <uri>${baseUrl}</uri>
-      </author>
-    </entry>`;
-  }).join('');
+  const mainPageEntries = MAIN_PAGES.map(({ url, title, desc, updated }) => `
+  <entry>
+    <title>${xmlEscape(title)}</title>
+    <link href="${baseUrl}${url}" rel="alternate" type="text/html"/>
+    <id>${baseUrl}${url}</id>
+    <updated>${updated}</updated>
+    <published>${updated}</published>
+    <summary type="html">${xmlEscape(desc)}</summary>
+    <category term="Pages"/>
+    <author>
+      <name>Vijetha Digital</name>
+      <email>info@vijethadigital.com</email>
+      <uri>${baseUrl}</uri>
+    </author>
+  </entry>`).join('');
 
   const atomFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-IN">
-  <title>Vijetha Digital - Printing &amp; Signage Solutions</title>
-  <subtitle>Premium printing and signage services in Hyderabad. LED signs, vehicle branding, digital printing, and more. Trusted by 500+ businesses since 2009.</subtitle>
+  <title>Vijetha Digital — Printing &amp; Signage Solutions Hyderabad</title>
+  <subtitle>Premium printing and signage services in Hyderabad. LED signs, vehicle branding, flex printing, offset printing, and exhibition displays. 1,000+ clients since 2009.</subtitle>
   <link href="${baseUrl}" rel="alternate" type="text/html"/>
   <link href="${baseUrl}/atom.xml" rel="self" type="application/atom+xml"/>
   <id>${baseUrl}/</id>
-  <updated>${updated}</updated>
-  <rights>Copyright ${new Date().getFullYear()} Vijetha Digital. All rights reserved.</rights>
-  <generator uri="https://nextjs.org/" version="14">Next.js</generator>
-  <logo>${baseUrl}/logo.png</logo>
-  <icon>${baseUrl}/favicon.ico</icon>
+  <updated>${BUILD_DATE_ISO}</updated>
+  <rights>Copyright ${YEAR} Vijetha Digital. All rights reserved.</rights>
+  <generator uri="https://nextjs.org/" version="15">Next.js</generator>
+  <logo>${baseUrl}/vd-logo.jpeg</logo>
+  <icon>${baseUrl}/vd-logo.jpeg</icon>
   <author>
     <name>Vijetha Digital</name>
     <email>info@vijethadigital.com</email>
@@ -173,8 +119,6 @@ export async function GET() {
   <category term="Printing"/>
   <category term="Signage"/>
   <category term="Branding"/>
-  <category term="Digital Printing"/>
-  <category term="Vehicle Branding"/>
   ${mainPageEntries}
   ${productEntries}
 </feed>`;
@@ -182,7 +126,7 @@ export async function GET() {
   return new NextResponse(atomFeed, {
     headers: {
       'Content-Type': 'application/atom+xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=7200',
+      'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
       'X-Robots-Tag': 'index, follow',
     },
   });
