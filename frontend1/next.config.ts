@@ -177,6 +177,31 @@ const nextConfig: NextConfig = {
         destination: '/products',
         permanent: true,
       },
+
+      // ── Legacy orphan redirects (pre-migration URLs still indexed by Google) ──
+      // These were confirmed live in Google's index via the Aug 2026 GSC audit.
+      // Without these, Google keeps two split sets of signals — blocking sitelinks.
+
+      // Old static HTML pages → current routes (301 permanent)
+      { source: '/contact.html',  destination: '/contact',  permanent: true },
+      { source: '/work.html',     destination: '/projects', permanent: true },
+      { source: '/services.html', destination: '/services', permanent: true },
+
+      // Old PHP catalog pages → closest current product category
+      {
+        source: '/display-standees-embossing-printing-manufacturers-hyderabad.php',
+        destination: '/products?category=Display%20%26%20Exhibition',
+        permanent: true,
+      },
+      {
+        source: '/clip-on-snap-frames-manufacturers-hyderabad.php',
+        destination: '/products?category=Signage%20Solutions',
+        permanent: true,
+      },
+
+      // Catch-all for any other old .php or .html legacy URLs
+      { source: '/:path*.php',  destination: '/products', permanent: true },
+      { source: '/:path*.html', destination: '/',         permanent: true },
     ];
   },
 };
