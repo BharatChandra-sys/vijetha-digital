@@ -621,6 +621,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://vitals.vercel-insights.com" />
+
+        {/* LLMs.txt — structured context for AI crawlers (ChatGPT, Perplexity, Claude, Gemini) */}
+        <link rel="llms" type="text/plain" href="https://vijethadigital.com/llms.txt" title="LLM Context" />
+        <link rel="llms-full" type="text/plain" href="https://vijethadigital.com/llms-full.txt" title="LLM Full Reference" />
         
         {/* Preload critical hero image */}
         <link

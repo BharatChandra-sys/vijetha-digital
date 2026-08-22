@@ -98,5 +98,9 @@ export default function robots(): MetadataRoute.Robots {
       'https://vijethadigital.com/rss.xml',
       'https://vijethadigital.com/atom.xml',
     ],
+    // llms.txt — structured context file for AI language model crawlers
+    // (ChatGPT, Perplexity, Claude, Gemini, Bing Copilot)
+    // Discoverable at https://vijethadigital.com/llms.txt
+    // Extended reference at https://vijethadigital.com/llms-full.txt
   };
 }
