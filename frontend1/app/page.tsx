@@ -6,7 +6,6 @@ import AboutSection from '@/components/sections/AboutSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import ClientsSection from '@/components/sections/ClientsSection';
-import ClientLogos from '@/components/sections/ClientLogos';
 import TrustBadges from '@/components/sections/TrustBadges';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import JsonLd from '@/components/seo/JsonLd';
@@ -186,7 +185,7 @@ export default function Home() {
       <ScrollAnimations />
       <Header variant="home" />
       <main>
-        <div style={{ position: 'relative', height: '300vh' }}>
+        <div style={{ position: 'relative', height: '300vh', isolation: 'isolate' }}>
           <div style={{ position: 'sticky', top: 0, zIndex: 1 }}>
             <HeroSection />
           </div>
@@ -197,10 +196,11 @@ export default function Home() {
             <ProjectsSection />
           </div>
         </div>
-        <TrustBadges />
-        <ClientLogos />
-        <ServicesSection />
-        <ClientsSection />
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <ServicesSection />
+          <TrustBadges />
+          <ClientsSection />
+        </div>
       </main>
       <Footer />
       <StickyContactBar />

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { toSlug } from '@/lib/products-data';
 
 const baseUrl = 'https://vijethadigital.com';
 
@@ -16,8 +17,6 @@ function xmlEscape(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
-const toSlug = (value: string) =>
-  value.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
 const PRODUCTS: { name: string; desc: string; updated: string }[] = [
   { name: 'LED Sign Board', desc: 'Premium LED sign boards for 24/7 business visibility in Hyderabad. IP65 weatherproof, 2-year warranty. From Rs 3,500.', updated: '2026-08-01T00:00:00Z' },

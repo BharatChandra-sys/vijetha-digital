@@ -30,7 +30,13 @@ export interface Product {
 }
 
 export const toSlug = (v: string) =>
-  v.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  v.toLowerCase()
+   .replace(/&/g, 'and')
+   .replace(/\//g, '')       // strip forward slashes
+   .replace(/\s+/g, '-')
+   .replace(/[^a-z0-9-]/g, '')
+   .replace(/-{2,}/g, '-')   // collapse double dashes
+   .replace(/^-|-$/g, '');   // trim leading/trailing dashes
 
 export const PRODUCTS: Product[] = [
   {

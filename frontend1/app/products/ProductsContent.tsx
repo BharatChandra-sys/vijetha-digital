@@ -3,17 +3,11 @@
 import { useEffect } from 'react';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import { WA_URL, PHONE_RAW } from '@/lib/constants';
+import { toSlug } from '@/lib/products-data';
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
 const WA       = `https://wa.me/${PHONE_RAW}?text=Hi%21%20I%20would%20like%20to%20enquire%20about%20`;
-
-const toSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
 
 const PRODUCTS = [
   // Signage Solutions
@@ -108,7 +102,7 @@ export default function ProductsContent({ scrollToId }: { scrollToId?: string })
             return (
               <div key={category} id={toSlug(category)} style={{ marginBottom: '80px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '36px', paddingBottom: '16px', borderBottom: '1px solid #e8e8e4' }}>
-                  <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(20px, 2vw, 26px)', fontWeight: 400, color: '#000' }}>
+                  <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2vw, 26px)', fontWeight: 400, color: '#000' }}>
                     {category}
                   </h2>
                   <span style={{ fontFamily: font, fontSize: '13px', color: 'rgb(85,78,78)' }}>
@@ -130,13 +124,13 @@ export default function ProductsContent({ scrollToId }: { scrollToId?: string })
                       <p style={{ fontFamily: font, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '6px' }}>
                         {product.category}
                       </p>
-                      <h3 style={{ fontFamily: fontBold, fontSize: 'clamp(14px, 1.3vw, 16px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '6px' }}>
+                      <h3 style={{ fontFamily: font, fontSize: 'clamp(14px, 1.3vw, 16px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '6px' }}>
                         {product.name}
                       </h3>
                       <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.55em', color: 'rgb(85,78,78)', marginBottom: '10px' }}>
                         {product.desc}
                       </p>
-                      <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>
+                      <p style={{ fontFamily: font, fontSize: '13px', color: 'rgb(85,78,78)', marginBottom: '10px' }}>
                         {product.price}
                       </p>
                       <div className="view-details-link">

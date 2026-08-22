@@ -1,17 +1,10 @@
 import type { MetadataRoute } from 'next';
+import { toSlug } from '@/lib/products-data';
 
 const baseUrl = 'https://vijethadigital.com';
 
 // Build date for lastModified
 const BUILD_DATE = new Date('2026-08-08T12:00:00Z');
-
-// Helper to convert product name to slug
-const toSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
 
 // All products for dynamic sitemap generation
 const PRODUCTS = [
