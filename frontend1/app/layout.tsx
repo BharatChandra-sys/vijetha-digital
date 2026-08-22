@@ -202,13 +202,17 @@ const organizationSchema = {
     },
   ],
   sameAs: [
-    'https://www.facebook.com/vijethadigital',
-    'https://www.instagram.com/vijethadigital',
-    'https://www.linkedin.com/company/vijetha-digital',
-    'https://twitter.com/vijethadigital',
-    'https://www.indiamart.com/vijethadigital/',
-    'https://www.youtube.com/@vijetha_print_signs',
-    'https://www.justdial.com/Hyderabad/Vijetha-Digital',
+    // Add URLs here ONLY after the profile/listing is live and verified.
+    // Pointing sameAs at non-existent profiles hurts entity confidence —
+    // Google crawls these and a 404 is worse than omitting the entry.
+    // 'https://www.facebook.com/vijethadigital',       // add when live
+    // 'https://www.instagram.com/vijethadigital',      // add when live
+    // 'https://www.linkedin.com/company/vijetha-digital', // add when live
+    // 'https://twitter.com/vijethadigital',            // add when live
+    // 'https://www.youtube.com/@vijetha_print_signs',  // add when live
+    // 'https://www.indiamart.com/vijethadigital/',     // add when live
+    // 'https://www.justdial.com/Hyderabad/Vijetha-Digital', // add when live
+    'https://www.kompass.com/z/in/c/vijetha-digital/in447237/', // ✅ confirmed live
   ],
   contactPoint: [
     {

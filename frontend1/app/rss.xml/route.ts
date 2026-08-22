@@ -128,6 +128,8 @@ export async function GET() {
       'Content-Type': 'application/rss+xml; charset=utf-8',
       'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
       'X-Robots-Tag': 'index, follow',
+      // Canonical header — ensures any www hit is treated as duplicate of apex
+      'Link': `<${baseUrl}/rss.xml>; rel="canonical"`,
     },
   });
 }
