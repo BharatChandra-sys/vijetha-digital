@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import JsonLd from '@/components/seo/JsonLd';
 import StructuredContent from '@/components/seo/StructuredContent';
+import FaqAccordion from '@/components/sections/FaqAccordion';
 
 import { WA_URL } from '@/lib/constants';
 import { serviceFaqContent } from './faq';

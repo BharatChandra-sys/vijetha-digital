@@ -202,6 +202,50 @@ const nextConfig: NextConfig = {
       // Catch-all for any other old .php or .html legacy URLs
       { source: '/:path*.php',  destination: '/products', permanent: true },
       { source: '/:path*.html', destination: '/',         permanent: true },
+
+      // ── GSC 404 Fixes (Aug 2026 Audit) ──
+      // These broken URLs were found in GSC with double-dashes from old toSlug() bug.
+      // Redirecting to correct single-dash slugs.
+      {
+        source: '/products/demo-tent--canopy',
+        destination: '/products/canopy-and-tent-branding',
+        permanent: true,
+      },
+      {
+        source: '/products/demo-tents',
+        destination: '/products/canopy-and-tent-branding',
+        permanent: true,
+      },
+      {
+        source: '/products/brochure--catalogue',
+        destination: '/products/brochure-catalogue',
+        permanent: true,
+      },
+      {
+        source: '/products/backdrop--stage-banner',
+        destination: '/products/backdrop-stage-banner',
+        permanent: true,
+      },
+      {
+        source: '/products/bus--van-branding',
+        destination: '/products/bus-van-branding',
+        permanent: true,
+      },
+      {
+        source: '/products/car--4-wheeler-wrap',
+        destination: '/products/car-4-wheeler-wrap',
+        permanent: true,
+      },
+      {
+        source: '/products/flex--vinyl-printing',
+        destination: '/products/flex-vinyl-printing',
+        permanent: true,
+      },
+      {
+        source: '/products/offset-printing',
+        destination: '/products/brochure-catalogue',
+        permanent: true,
+      },
     ];
   },
 };

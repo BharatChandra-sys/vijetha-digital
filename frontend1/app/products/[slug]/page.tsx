@@ -59,24 +59,7 @@ export default async function ProductPage(
       name: 'Vijetha Digital',
     },
     category: product.category,
-    ...(product.aggregateRating && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: product.aggregateRating.ratingValue,
-        reviewCount: product.aggregateRating.reviewCount,
-        bestRating: '5',
-        worstRating: '1',
-      },
-    }),
-    ...(product.reviews && product.reviews.length > 0 && {
-      review: product.reviews.map(r => ({
-        '@type': 'Review',
-        reviewRating: { '@type': 'Rating', ratingValue: r.rating.toString(), bestRating: '5' },
-        author: { '@type': 'Person', name: r.author },
-        datePublished: r.date,
-        reviewBody: r.comment,
-      })),
-    }),
+    // aggregateRating and review removed - will be re-added with real data
     offers: {
       '@type': 'Offer',
       url: `https://vijethadigital.com/products/${product.slug}`,

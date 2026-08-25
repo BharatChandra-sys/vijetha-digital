@@ -92,7 +92,11 @@ const websiteSchema = {
 
 const organizationSchema = {
   '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'Organization', 'ProfessionalService'],
+  // PrintingService + SignShop are the closest Schema.org subtypes to
+  // GBP categories "Printing service" and "Sign shop".
+  // Google cross-references @type with GBP category — matching them
+  // reduces entity ambiguity and reinforces the correct category signal.
+  '@type': ['LocalBusiness', 'Organization', 'ProfessionalService', 'PrintingService', 'SignShop'],
   '@id': 'https://vijethadigital.com/#organization',
   name: 'Vijetha Digital',
   alternateName: 'Vijetha Digital Printing & Signage',
@@ -266,13 +270,7 @@ const organizationSchema = {
       },
     ],
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-    worstRating: '1',
-  },
+  // aggregateRating removed — will be re-added with real review data from Google/Justdial
 };
 
 export const metadata: Metadata = {
@@ -449,7 +447,7 @@ export const viewport: Viewport = {
 // which is critical for map pack visibility and local "near me" queries.
 const branchNacharamSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
   '@id': 'https://vijethadigital.com/#branch-nacharam',
   name: 'Vijetha Digital – Nacharam (Main Production)',
   parentOrganization: { '@id': 'https://vijethadigital.com/#organization' },
@@ -485,7 +483,7 @@ const branchNacharamSchema = {
 
 const branchLakdikaqoolSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
   '@id': 'https://vijethadigital.com/#branch-lakdikapool',
   name: 'Vijetha Digital – Lakdikapool',
   parentOrganization: { '@id': 'https://vijethadigital.com/#organization' },
@@ -527,7 +525,7 @@ const branchLakdikaqoolSchema = {
 
 const branchIndiraParkSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
   '@id': 'https://vijethadigital.com/#branch-indirapark',
   name: 'Vijetha Digital – Indira Park',
   parentOrganization: { '@id': 'https://vijethadigital.com/#organization' },
@@ -561,53 +559,10 @@ const branchIndiraParkSchema = {
   hasMap: 'https://maps.google.com/?q=NTR+Stadium+LIC+Colony+Road+Hyderabad',
 };
 
-// ─── REVIEW SCHEMA ────────────────────────────────────────────────────────────
-// Individual reviews that reference the organization directly.
-// itemReviewed is REQUIRED by Google's Review schema spec.
-const reviewSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital',
-  },
-  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-  author: { '@type': 'Person', name: 'Rajesh Kumar' },
-  reviewBody: 'Excellent quality LED sign boards. Vijetha Digital delivered our 3-store signage project on time with outstanding finish. Will use again for our next location.',
-  datePublished: '2026-06-15',
-  publisher: { '@type': 'Organization', name: 'Vijetha Digital' },
-};
-
-const reviewSchema2 = {
-  '@context': 'https://schema.org',
-  '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital',
-  },
-  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-  author: { '@type': 'Person', name: 'Priya Sharma' },
-  reviewBody: 'Best vehicle branding company in Hyderabad. Our fleet of 12 vans looks professional and the vinyl is holding up perfectly after 8 months. Highly recommended.',
-  datePublished: '2026-05-20',
-  publisher: { '@type': 'Organization', name: 'Vijetha Digital' },
-};
-
-const reviewSchema3 = {
-  '@context': 'https://schema.org',
-  '@type': 'Review',
-  itemReviewed: {
-    '@type': 'LocalBusiness',
-    '@id': 'https://vijethadigital.com/#organization',
-    name: 'Vijetha Digital',
-  },
-  reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-  author: { '@type': 'Person', name: 'Mohammed Asif' },
-  reviewBody: 'Used Vijetha Digital for our office branding — reception, walls, and wayfinding. The team was professional, fast, and the quality exceeded our expectations.',
-  datePublished: '2026-04-10',
-  publisher: { '@type': 'Organization', name: 'Vijetha Digital' },
-};
+// ─── REVIEW SCHEMA REMOVED ────────────────────────────────────────────────────
+// Fabricated review schemas removed to comply with Google's review spam policies.
+// Will be re-added when real reviews from Google Business Profile or Justdial
+// are available with proper attribution and verification.
 
 export default function RootLayout({
   children,
@@ -693,9 +648,6 @@ export default function RootLayout({
         <JsonLd data={branchNacharamSchema} />
         <JsonLd data={branchLakdikaqoolSchema} />
         <JsonLd data={branchIndiraParkSchema} />
-        <JsonLd data={reviewSchema} />
-        <JsonLd data={reviewSchema2} />
-        <JsonLd data={reviewSchema3} />
       </body>
     </html>
   );

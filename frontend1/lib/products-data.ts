@@ -21,18 +21,17 @@ export interface Product {
   specs: { label: string; value: string }[];
   relatedSlugs: string[];
   faqs: { q: string; a: string }[];
-  // GSC Enhancement Fields (optional until populated)
-  aggregateRating?: {
-    ratingValue: string;
-    reviewCount: string;
-  };
-  reviews?: ProductReview[];
+  // REMOVED: aggregateRating and reviews fields
+  // These contained fabricated review data (reviewCount: '127' copy-pasted across dozens
+  // of products) which violates Google's structured data policies and can trigger
+  // review spam penalties. Will be re-added when real review data from Google Business
+  // Profile or Justdial is available with proper attribution.
 }
 
 export const toSlug = (v: string) =>
   v.toLowerCase()
    .replace(/&/g, 'and')
-   .replace(/\//g, '')       // strip forward slashes
+   .replace(/\//g, '-')      // replace forward slashes with hyphens (FIX for double-dash bug)
    .replace(/\s+/g, '-')
    .replace(/[^a-z0-9-]/g, '')
    .replace(/-{2,}/g, '-')   // collapse double dashes
@@ -63,15 +62,6 @@ export const PRODUCTS: Product[] = [
       { q: 'How long do LED sign boards last?', a: 'LED sign boards made by Vijetha Digital last 5-10 years with proper maintenance. LED modules carry a 2-year warranty. The acrylic and aluminium structure lasts 7-10 years. Regular cleaning and power surge protection extend life significantly.' },
       { q: 'Do you provide LED sign board installation in Hyderabad?', a: 'Yes. Vijetha Digital provides professional LED sign board installation across Hyderabad including Nacharam, Banjara Hills, Kukatpally, Madhapur, Gachibowli, Secunderabad, and all areas. Our electricians handle wiring and mounting safely.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '127',
-    },
-    reviews: [
-      { author: 'Rajesh Kumar', rating: 5, date: '2026-07-15', comment: 'Excellent LED sign board quality. Fast delivery and professional installation team.' },
-      { author: 'Priya Sharma', rating: 5, date: '2026-06-28', comment: 'Very bright LED board, looks amazing at night. Great value for money.' },
-      { author: 'Mohammed Asif', rating: 5, date: '2026-05-10', comment: 'Best LED sign board in Hyderabad. 2 years and still working perfectly.' },
-    ],
   },
   {
     id: 2,
@@ -96,14 +86,6 @@ export const PRODUCTS: Product[] = [
       { q: 'What is ACP cladding signage?', a: 'ACP (Aluminium Composite Panel) cladding signage uses 4mm aluminium composite sheets bent and fabricated into 3D letters or flat panels. It provides a premium, modern look for corporate buildings and commercial frontages. ACP signs are weather-resistant, durable for 7-10 years, and available in multiple finishes including brushed aluminium.' },
       { q: 'How much does ACP cladding cost in Hyderabad?', a: 'ACP cladding signs at Vijetha Digital start from Rs 2,200 per letter for standard sizes. A complete storefront ACP cladding project typically costs Rs 25,000-1,50,000 depending on dimensions and finish. Contact us for a free site assessment and quote.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '94',
-    },
-    reviews: [
-      { author: 'Venkat Rao', rating: 5, date: '2026-07-20', comment: 'Premium ACP cladding with beautiful brushed finish. Looks very professional.' },
-      { author: 'Lakshmi Reddy', rating: 5, date: '2026-06-05', comment: 'Excellent quality ACP letters for our office entrance. Highly recommended.' },
-    ],
   },
   {
     id: 3,
@@ -127,14 +109,6 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'What is the difference between acrylic letters and ACP cladding?', a: 'Acrylic letters are individual precision-cut 3D letters mounted on a wall or backdrop, each letter separate. ACP cladding covers the entire facade surface with aluminium composite panels. Acrylic letters look more premium and 3D; ACP cladding provides a sleek flat panel look. Both are popular for corporate signage in Hyderabad.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '113',
-    },
-    reviews: [
-      { author: 'Srinivas Rao', rating: 5, date: '2026-07-10', comment: 'Beautiful 3D acrylic letters with perfect CNC cutting. Very satisfied.' },
-      { author: 'Anita Desai', rating: 5, date: '2026-06-18', comment: 'Backlit acrylic letters look stunning in our reception. Great work!' },
-    ],
   },
   {
     id: 4,
@@ -155,14 +129,6 @@ export const PRODUCTS: Product[] = [
     relatedSlugs: ['led-sign-board', 'acp-cladding-sign', 'pylon-sign'],
     faqs: [
       { q: 'What is a fascia sign board?', a: 'A fascia sign board is a horizontal sign running across the full width of a building frontage or shopfront, typically positioned above the entrance. It is one of the most visible and impactful signs for retail stores and commercial premises, providing clear brand identification from the street.' },
-    ],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '86',
-    },
-    reviews: [
-      { author: 'Ravi Kumar', rating: 5, date: '2026-07-12', comment: 'Complete fascia board installation done professionally. Very happy with result.' },
-      { author: 'Deepa Sharma', rating: 4, date: '2026-05-28', comment: 'Good quality fascia sign. Installation took slightly longer but final result is excellent.' },
     ],
   },
   {
@@ -187,14 +153,6 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'What is the price of flex board printing in Hyderabad?', a: 'Flex board printing at Vijetha Digital starts from Rs 18 per sq.ft for standard frontlit flex. Backlit flex is Rs 22-25 per sq.ft. Canvas printing is Rs 45-60 per sq.ft. Bulk orders above 1,000 sq.ft get volume discounts. Same-day service available.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '156',
-    },
-    reviews: [
-      { author: 'Kiran Patel', rating: 5, date: '2026-07-18', comment: 'Best flex printing in Hyderabad. Colors are vivid and delivery was same day.' },
-      { author: 'Suresh Babu', rating: 5, date: '2026-06-22', comment: 'Printed 500 sq ft flex for our hoarding. Quality exceeded expectations.' },
-    ],
   },
   {
     id: 6,
@@ -217,14 +175,6 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'How much does a pylon sign cost in Hyderabad?', a: 'Pylon sign prices at Vijetha Digital start from Rs 8,000 for small 8-foot pylons and can go up to Rs 5,00,000+ for large illuminated 30-foot pylons at commercial complexes. Price depends on height, structure material, illumination, and number of faces. Contact us for engineering drawings and quote.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.6',
-      reviewCount: '42',
-    },
-    reviews: [
-      { author: 'Ashok Reddy', rating: 5, date: '2026-07-05', comment: 'Tall pylon sign installed for our hospital. Very visible from highway.' },
-      { author: 'Naveen Kumar', rating: 4, date: '2026-05-15', comment: 'Quality pylon structure. Installation coordination was good.' },
-    ],
   },
   {
     id: 7, name: 'Office Wall Branding', slug: 'office-wall-branding', category: 'Internal Branding',
@@ -234,14 +184,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Types', value: 'Vinyl wrap, UV print, canvas mural, 3D letters' }, { label: 'Finish', value: 'Matte, glossy, textured' }, { label: 'Turnaround', value: '7-14 working days' }],
     relatedSlugs: ['reception-and-lobby', 'retail-in-shop-branding', 'acrylic-letter-sign'],
     faqs: [{ q: 'How much does office wall branding cost in Hyderabad?', a: 'Office wall branding costs depend on wall area, material choice, and design complexity. Vijetha Digital typically quotes Rs 150-400 per sq.ft for vinyl wall graphics including design and installation. Contact us for a site assessment.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '78',
-    },
-    reviews: [
-      { author: 'Meera Krishnan', rating: 5, date: '2026-07-22', comment: 'Office wall branding looks amazing. Team was very professional.' },
-      { author: 'Ramesh Naidu', rating: 5, date: '2026-06-10', comment: 'Transformed our office walls completely. Excellent design and execution.' },
-    ],
   },
   {
     id: 8, name: 'Reception & Lobby', slug: 'reception-and-lobby', category: 'Internal Branding',
@@ -251,14 +193,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Elements', value: 'Logo wall, backlit panels, wayfinding, feature wall' }, { label: 'Materials', value: 'Acrylic, ACP, vinyl, LED backlit' }, { label: 'Turnaround', value: '10-21 working days' }],
     relatedSlugs: ['office-wall-branding', 'acrylic-letter-sign', 'led-sign-board'],
     faqs: [{ q: 'What does reception branding include?', a: 'Reception branding at Vijetha Digital typically includes a company name/logo feature wall (acrylic or LED backlit), wall graphics, wayfinding signage, and branded elements for the reception counter. We provide design mockups before production for client approval.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '65',
-    },
-    reviews: [
-      { author: 'Sandeep Varma', rating: 5, date: '2026-07-08', comment: 'Reception branding created perfect first impression. Very satisfied.' },
-      { author: 'Kavita Singh', rating: 5, date: '2026-05-30', comment: 'Beautiful lobby branding with backlit logo wall. Highly professional work.' },
-    ],
   },
   {
     id: 9, name: 'Retail In-Shop Branding', slug: 'retail-in-shop-branding', category: 'Internal Branding',
@@ -268,14 +202,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Coverage', value: 'Walls, windows, floors, ceilings, POS' }, { label: 'Materials', value: 'Vinyl, canvas, frosted glass film, 3D elements' }, { label: 'Scale', value: 'Single store to 100+ location rollouts' }],
     relatedSlugs: ['office-wall-branding', 'hospital-branding', 'led-sign-board'],
     faqs: [{ q: 'Do you handle multi-store retail branding rollouts?', a: 'Yes. Vijetha Digital has executed retail branding rollouts for Samsung, Reliance Digital, Airtel, Jio, and Vivo across Hyderabad and South India. We manage design templates, production batching, logistics, and installation coordination for multi-location projects.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '92',
-    },
-    reviews: [
-      { author: 'Arun Merchants', rating: 5, date: '2026-07-25', comment: 'Complete store branding done excellently. Customers love the new look.' },
-      { author: 'Pooja Enterprises', rating: 5, date: '2026-06-15', comment: 'In-shop branding increased our store appeal significantly. Great job!' },
-    ],
   },
   {
     id: 10, name: 'Hospital Branding', slug: 'hospital-branding', category: 'Internal Branding',
@@ -285,14 +211,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Specialization', value: 'Wayfinding, department signs, directional' }, { label: 'Materials', value: 'Fire-retardant substrates available' }, { label: 'Compliance', value: 'Patient safety and exit signage standards' }],
     relatedSlugs: ['office-wall-branding', 'reception-and-lobby', 'led-sign-board'],
     faqs: [{ q: 'What signage does a hospital need?', a: 'Hospitals need: entrance sign boards, department name boards, wayfinding/directional signs, room number boards, fire exit signs, no smoking boards, canteen and pharmacy signs, parking signage, and outdoor pylon signs. Vijetha Digital provides complete hospital signage packages with fire-safe materials.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '54',
-    },
-    reviews: [
-      { author: 'Dr. Suresh Hospital', rating: 5, date: '2026-07-03', comment: 'Complete hospital wayfinding and signage. Very professional work.' },
-      { author: 'Apollo Clinic', rating: 4, date: '2026-05-20', comment: 'Good quality hospital signage with proper compliance.' },
-    ],
   },
   {
     id: 11, name: 'Car / 4-Wheeler Wrap', slug: 'car-4-wheeler-wrap', category: 'Vehicle Branding',
@@ -305,14 +223,6 @@ export const PRODUCTS: Product[] = [
       { q: 'How much does a car wrap cost in Hyderabad?', a: 'Car wrapping at Vijetha Digital Hyderabad: Bonnet wrap Rs 3,500-6,000, partial wrap (2 doors) Rs 8,000-15,000, full car wrap Rs 25,000-60,000 depending on car size and design complexity. All prices include design, printing, and installation at our Nacharam facility.' },
       { q: 'Does car wrap damage paint?', a: 'No. Premium cast vinyl used by Vijetha Digital (3M and Avery Dennison) does not damage car paint when properly applied and removed. The vinyl actually protects original paint from UV fading and minor scratches. Clean removal is possible for up to 7 years after application.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '143',
-    },
-    reviews: [
-      { author: 'Akash Motors', rating: 5, date: '2026-07-28', comment: 'Car wrap looks fantastic! Premium 3M vinyl with excellent application.' },
-      { author: 'Sanjay Kumar', rating: 5, date: '2026-06-25', comment: 'Full car wrap done perfectly. No bubbles, perfect alignment.' },
-    ],
   },
   {
     id: 12, name: 'Bus / Van Branding', slug: 'bus-van-branding', category: 'Vehicle Branding',
@@ -322,14 +232,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Coverage', value: 'Full wrap, side panels, rear, windows' }, { label: 'Window Vinyl', value: 'Perforated one-way vision vinyl' }, { label: 'Fleet Pricing', value: 'Available for 5+ vehicles' }],
     relatedSlugs: ['car-4-wheeler-wrap', '2-wheeler-branding', 'heavy-vehicle-branding'],
     faqs: [{ q: 'How much does bus branding cost in Hyderabad?', a: 'Bus branding prices at Vijetha Digital: Mini bus/Tempo Traveller partial sides Rs 6,000-15,000, full wrap Rs 20,000-45,000. Standard bus full wrap Rs 40,000-90,000. Price depends on bus size and coverage area. Fleet discounts available.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '87',
-    },
-    reviews: [
-      { author: 'Heritage Foods', rating: 5, date: '2026-07-15', comment: 'Complete fleet branding for 15 vehicles. Excellent coordination.' },
-      { author: 'Logistics Plus', rating: 5, date: '2026-06-08', comment: 'Van branding looks professional. Vinyl quality is top-notch.' },
-    ],
   },
   {
     id: 13, name: '2-Wheeler Branding', slug: '2-wheeler-branding', category: 'Vehicle Branding',
@@ -339,14 +241,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Options', value: 'Decals, half wrap, full wrap' }, { label: 'Turnaround', value: 'Same day for standard designs' }, { label: 'Fleet', value: '50+ bike fleet branding expertise' }],
     relatedSlugs: ['car-4-wheeler-wrap', 'bus-van-branding'],
     faqs: [{ q: 'How much does bike branding cost in Hyderabad?', a: 'Bike and scooter branding at Vijetha Digital: Basic decal set Rs 800-1,500, half-body wrap Rs 2,000-3,500, full body wrap Rs 3,500-6,000. Fleet pricing available for 10+ bikes.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '198',
-    },
-    reviews: [
-      { author: 'FoodExpress', rating: 5, date: '2026-07-20', comment: 'Branded 50 delivery bikes. Fast turnaround and consistent quality.' },
-      { author: 'QuickDelivery', rating: 5, date: '2026-06-12', comment: 'Same day bike branding service is excellent. Very happy.' },
-    ],
   },
   {
     id: 14, name: 'Heavy Vehicle Branding', slug: 'heavy-vehicle-branding', category: 'Vehicle Branding',
@@ -356,14 +250,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Vehicle Types', value: 'Trucks, lorries, containers, tankers' }, { label: 'Material', value: 'High-tack commercial vehicle vinyl' }, { label: 'Fleet Support', value: 'Nationwide coordination available' }],
     relatedSlugs: ['bus-van-branding', 'car-4-wheeler-wrap'],
     faqs: [{ q: 'Do you brand trucks and HCV fleets?', a: 'Yes. Vijetha Digital brands trucks, lorries, and heavy commercial vehicles for FMCG brands, logistics companies, and manufacturers. We use high-tack commercial vinyl rated for 5+ years. Fleet coordination available pan-India.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '58',
-    },
-    reviews: [
-      { author: 'Transport Corp', rating: 5, date: '2026-07-10', comment: 'Truck branding across 10 vehicles. Professional execution.' },
-      { author: 'Logistics King', rating: 4, date: '2026-05-25', comment: 'Good quality truck wraps. Fleet looks unified now.' },
-    ],
   },
   {
     id: 15, name: 'Flex / Vinyl Printing', slug: 'flex-vinyl-printing', category: 'Digital Printing',
@@ -376,14 +262,6 @@ export const PRODUCTS: Product[] = [
       { q: 'What is the difference between flex and vinyl printing?', a: 'Flex is a soft PVC material used for banners, hoardings, and backdrops — it is flexible and can be rolled. Vinyl is a firmer self-adhesive film used for vehicle graphics, wall stickers, and window graphics. Both are printed on the same large-format machines at Vijetha Digital.' },
       { q: 'What is the price of flex printing per square foot in Hyderabad?', a: 'Flex printing prices at Vijetha Digital: Frontlit flex Rs 18/sq.ft, backlit flex Rs 22-25/sq.ft, self-adhesive vinyl Rs 35-45/sq.ft, one-way vision Rs 55-65/sq.ft, canvas Rs 45-60/sq.ft. Bulk discounts apply for 1000+ sq.ft orders.' },
     ],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '234',
-    },
-    reviews: [
-      { author: 'Events Company', rating: 5, date: '2026-07-30', comment: 'Consistent flex printing quality for all our events. Reliable partner.' },
-      { author: 'Marketing Agency', rating: 5, date: '2026-06-18', comment: 'Fast vinyl printing service. 1 lakh sq ft capacity is impressive.' },
-    ],
   },
   {
     id: 16, name: 'UV Print', slug: 'uv-print', category: 'Digital Printing',
@@ -393,14 +271,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Substrates', value: 'Acrylic, glass, metal, foam board, corrugated' }, { label: 'Properties', value: 'UV-cured, scratch-resistant, waterproof' }, { label: 'Minimum Order', value: 'No minimum' }],
     relatedSlugs: ['flex-vinyl-printing', '3d-canvas-print', 'eco-solvent-print'],
     faqs: [{ q: 'What is UV printing used for?', a: 'UV printing is used for premium displays, awards, decorative panels, rigid sign boards, point-of-sale materials, acrylic standees, and any application requiring vivid colors on rigid substrates. UV inks cure instantly and are scratch and water resistant.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '76',
-    },
-    reviews: [
-      { author: 'Retail Display Co', rating: 5, date: '2026-07-22', comment: 'UV print quality on acrylic is outstanding. Colors are vivid.' },
-      { author: 'Exhibition Experts', rating: 5, date: '2026-06-05', comment: 'Scratch-resistant UV prints perfect for our displays.' },
-    ],
   },
   {
     id: 17, name: '3D Canvas Print', slug: '3d-canvas-print', category: 'Digital Printing',
@@ -410,14 +280,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Material', value: 'Artist canvas 380-450 GSM' }, { label: 'Mounting', value: 'Wooden frame or gallery wrap' }, { label: 'Resolution', value: 'Up to 1440 dpi' }],
     relatedSlugs: ['uv-print', 'flex-vinyl-printing', 'office-wall-branding'],
     faqs: [{ q: 'What is 3D canvas printing?', a: '3D canvas printing refers to photographic prints on thick textured artist canvas, typically stretched over a wooden frame to create a dimensional display effect. Vijetha Digital prints canvas at 1440 dpi for photo-quality results suitable for commercial and decorative use.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '64',
-    },
-    reviews: [
-      { author: 'Hotel Grandeur', rating: 5, date: '2026-07-18', comment: 'Beautiful canvas prints for our hotel lobby. Photo quality output.' },
-      { author: 'Restaurant Chain', rating: 5, date: '2026-06-10', comment: '3D canvas prints enhanced our restaurant ambiance perfectly.' },
-    ],
   },
   {
     id: 18, name: 'Eco-Solvent Print', slug: 'eco-solvent-print', category: 'Digital Printing',
@@ -427,14 +289,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Equipment', value: 'Roland Soljet EJ 640' }, { label: 'Durability', value: '3-5 years outdoor without lamination' }, { label: 'Max Width', value: '64 inches' }],
     relatedSlugs: ['flex-vinyl-printing', 'uv-print', 'car-4-wheeler-wrap'],
     faqs: [{ q: 'What is eco-solvent printing?', a: 'Eco-solvent printing uses mildly solvent-based inks that penetrate vinyl and other substrates for long-lasting outdoor durability. Vijetha Digital uses a Roland Soljet EJ 640 which produces vivid, UV-resistant prints rated for 3-5 years outdoors without lamination.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '91',
-    },
-    reviews: [
-      { author: 'Outdoor Ads', rating: 5, date: '2026-07-12', comment: 'Durable eco-solvent prints lasting 5+ years outdoor. Excellent.' },
-      { author: 'Fleet Owner', rating: 4, date: '2026-05-28', comment: 'Quality outdoor vinyl printing. Good UV resistance.' },
-    ],
   },
   {
     id: 19, name: 'Brochure / Catalogue', slug: 'brochure-catalogue', category: 'Offset Printing',
@@ -444,14 +298,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Binding', value: 'Saddle-stitch, perfect-bind, wire-o' }, { label: 'Paper', value: '100-300 GSM coated art paper' }, { label: 'Finishing', value: 'Spot UV, foil, lamination, embossing' }, { label: 'Min Quantity', value: '500 copies' }, { label: 'Turnaround', value: '5-7 working days' }],
     relatedSlugs: ['flyers-and-pamphlets', 'corporate-stationery', 'packaging-and-gift-boxes'],
     faqs: [{ q: 'What is the cost of brochure printing in Hyderabad?', a: 'Brochure printing at Vijetha Digital: 4-page A4 brochure at 1,000 copies costs approximately Rs 6,000-10,000 with standard lamination. 8-page bi-fold brochures at 1,000 copies Rs 12,000-18,000. Price depends on pages, paper weight, and finishing. Minimum 500 copies for cost-effective offset printing.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '145',
-    },
-    reviews: [
-      { author: 'Corporate Client', rating: 5, date: '2026-07-25', comment: 'Premium catalogue printing with spot UV. Clients are impressed.' },
-      { author: 'Manufacturing Co', rating: 5, date: '2026-06-15', comment: 'Product catalogue quality is excellent. Perfect binding looks professional.' },
-    ],
   },
   {
     id: 20, name: 'Flyers & Pamphlets', slug: 'flyers-and-pamphlets', category: 'Offset Printing',
@@ -461,14 +307,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Sizes', value: 'A4, A5, DL, A6, custom' }, { label: 'Paper', value: '170-250 GSM art paper' }, { label: 'Turnaround', value: '3-5 days, urgent 24-48 hours' }, { label: 'Min Quantity', value: '500 pieces' }],
     relatedSlugs: ['brochure-catalogue', 'corporate-stationery'],
     faqs: [{ q: 'How much does flyer printing cost in Hyderabad?', a: 'Flyer printing at Vijetha Digital: A4 single-side 1,000 copies Rs 1,200-1,800 on 170 GSM paper. Double-sided Rs 1,800-2,500. A5 1,000 copies Rs 800-1,200. Premium 250 GSM with lamination costs 30-40% more. Minimum 500 copies.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '187',
-    },
-    reviews: [
-      { author: 'Event Organizer', rating: 5, date: '2026-07-28', comment: 'Fast flyer printing service. 10,000 pieces ready in 3 days.' },
-      { author: 'Marketing Team', rating: 5, date: '2026-06-20', comment: 'Bulk pamphlet printing at competitive rates. Quality consistent.' },
-    ],
   },
   {
     id: 21, name: 'Corporate Stationery', slug: 'corporate-stationery', category: 'Offset Printing',
@@ -478,14 +316,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Items', value: 'Letterhead, envelope, visiting card, notepad, folder' }, { label: 'Visiting Cards', value: '90-350 GSM, matte/gloss/spot UV options' }, { label: 'Turnaround', value: '3-5 working days' }],
     relatedSlugs: ['brochure-catalogue', 'flyers-and-pamphlets', 'packaging-and-gift-boxes'],
     faqs: [{ q: 'How much do visiting cards cost in Hyderabad?', a: 'Visiting card printing at Vijetha Digital: 500 standard cards (4x2 inches, 300 GSM, glossy lamination) Rs 1,200-1,800. Spot UV cards Rs 2,000-2,800. Premium velvet lamination with foil Rs 3,500-5,000 per 500. Double-sided printing Rs 200 extra.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '132',
-    },
-    reviews: [
-      { author: 'IT Company', rating: 5, date: '2026-07-15', comment: 'Complete stationery package with consistent branding. Very professional.' },
-      { author: 'Law Firm', rating: 5, date: '2026-06-08', comment: 'Premium letterhead and visiting cards. Excellent quality.' },
-    ],
   },
   {
     id: 22, name: 'Packaging & Gift Boxes', slug: 'packaging-and-gift-boxes', category: 'Offset Printing',
@@ -495,14 +325,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Types', value: 'Rigid box, folding carton, sleeve, corrugated' }, { label: 'Finishing', value: 'Spot UV, foil, embossing, window cutout' }, { label: 'Min Quantity', value: '500 pieces' }],
     relatedSlugs: ['brochure-catalogue', 'corporate-stationery'],
     faqs: [{ q: 'Do you print custom gift boxes in Hyderabad?', a: 'Yes. Vijetha Digital manufactures custom gift boxes, product packaging, and presentation boxes for corporate gifting and retail. We handle design, die-making, printing, and finishing in-house. Minimum 500 pieces. Lead time 7-10 working days.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '98',
-    },
-    reviews: [
-      { author: 'Gift Shop', rating: 5, date: '2026-07-20', comment: 'Custom packaging boxes with beautiful printing. Customers love them.' },
-      { author: 'FMCG Brand', rating: 5, date: '2026-06-12', comment: 'Product packaging quality exceeded expectations. Great finishing.' },
-    ],
   },
   {
     id: 23, name: 'Roll-Up Standee', slug: 'roll-up-standee', category: 'Display & Exhibition',
@@ -512,14 +334,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Sizes', value: '60x160cm, 85x200cm, 120x200cm' }, { label: 'Mechanism', value: 'Aluminum spring-loaded base' }, { label: 'Print', value: '540 GSM backlit film' }, { label: 'Turnaround', value: 'Same day for standard size' }],
     relatedSlugs: ['demo-tent-canopy', 'fabric-light-box', 'trade-show-booth'],
     faqs: [{ q: 'What is the price of a roll-up standee in Hyderabad?', a: 'Roll-up standee prices at Vijetha Digital: Standard 85x200cm Rs 1,800-2,500 including printing, mini 60x160cm Rs 1,400-1,800, wide 120x200cm Rs 2,500-3,500. Premium premium standees with heavier base Rs 3,500-5,000. Bulk pricing for 10+ pieces.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '176',
-    },
-    reviews: [
-      { author: 'Exhibition Co', rating: 5, date: '2026-07-30', comment: 'Roll-up standees for 20+ exhibitions. Durable and portable.' },
-      { author: 'Retail Chain', rating: 5, date: '2026-06-25', comment: 'Quality standees used across 30 stores. Excellent value.' },
-    ],
   },
   {
     id: 24, name: 'Demo Tent / Canopy', slug: 'demo-tent-canopy', category: 'Display & Exhibition',
@@ -529,14 +343,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Sizes', value: '6x6ft, 10x10ft, 10x20ft' }, { label: 'Material', value: 'Water-resistant polyester + aluminium frame' }, { label: 'Branding', value: 'All 4 walls, roof, back wall' }],
     relatedSlugs: ['roll-up-standee', 'flags-and-bunting', 'canopy-and-tent-branding'],
     faqs: [{ q: 'How much does a branded tent cost in Hyderabad?', a: 'Branded promotional tents at Vijetha Digital: 6x6ft with 4-side printing Rs 8,500-12,000, 10x10ft Rs 15,000-22,000, 10x20ft Rs 25,000-38,000. Price includes aluminium frame, custom printing, and carry bag.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '84',
-    },
-    reviews: [
-      { author: 'Events Team', rating: 5, date: '2026-07-18', comment: 'Demo tents with custom branding. Sturdy and professional looking.' },
-      { author: 'Promotional Agency', rating: 4, date: '2026-06-05', comment: 'Good quality canopy tents. Setup is easy.' },
-    ],
   },
   {
     id: 25, name: 'Fabric Light Box', slug: 'fabric-light-box', category: 'Display & Exhibition',
@@ -546,14 +352,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'System', value: 'SEG silicone edge graphics on LED backlit frame' }, { label: 'Profile', value: '85mm slim frame' }, { label: 'Fabric', value: 'Washable, replaceable' }],
     relatedSlugs: ['trade-show-booth', 'roll-up-standee', 'office-wall-branding'],
     faqs: [{ q: 'What is a fabric light box?', a: 'A fabric light box is a slim aluminium frame with integrated LED backlighting and a stretched fabric graphic using SEG (silicone edge) technology. The fabric creates an even, glowing backlit display without visible hardware. Popular for retail brand walls, exhibition stands, and hotel lobbies.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '67',
-    },
-    reviews: [
-      { author: 'Retail Store', rating: 5, date: '2026-07-22', comment: 'Fabric light boxes look stunning. Even illumination throughout.' },
-      { author: 'Exhibition Displays', rating: 5, date: '2026-06-15', comment: 'Premium fabric light box quality. Easy to change graphics.' },
-    ],
   },
   {
     id: 26, name: 'Trade Show Booth', slug: 'trade-show-booth', category: 'Display & Exhibition',
@@ -563,14 +361,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Types', value: 'Modular, custom, island, inline' }, { label: 'Services', value: 'Design, fabrication, installation, dismantle' }, { label: 'Sizes', value: '10x10 to 40x40 sq.ft and beyond' }],
     relatedSlugs: ['fabric-light-box', 'roll-up-standee', 'backdrop-stage-banner'],
     faqs: [{ q: 'How much does a trade show booth cost in Hyderabad?', a: 'Trade show booth fabrication at Vijetha Digital: Small 10x10ft booth Rs 50,000-1,20,000, medium 20x20ft Rs 1,50,000-3,50,000, large 30x30ft+ Rs 4,00,000+. Price includes design, structure, graphics, and installation. Contact us for a site-specific quote.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '53',
-    },
-    reviews: [
-      { author: 'Tech Company', rating: 5, date: '2026-07-10', comment: 'Complete trade show booth setup. Professional and eye-catching.' },
-      { author: 'Manufacturing Firm', rating: 5, date: '2026-05-28', comment: 'Exhibition booth design and execution was flawless.' },
-    ],
   },
   {
     id: 27, name: 'Flags & Bunting', slug: 'flags-and-bunting', category: 'Outdoor Advertising',
@@ -580,14 +370,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Types', value: 'Rectangular, feather, swooper, table, bunting' }, { label: 'Printing', value: 'Dye-sublimation fabric printing' }, { label: 'Includes', value: 'Aluminium pole and ground spike' }],
     relatedSlugs: ['backdrop-stage-banner', 'canopy-and-tent-branding', 'demo-tent-canopy'],
     faqs: [{ q: 'How much do printed flags cost in Hyderabad?', a: 'Printed flag prices at Vijetha Digital: Table flags (30x45cm) Rs 350-600, standard 2x3ft flags Rs 500-900, feather flags 2.4m Rs 1,200-2,000 including pole, large 4x6ft flags Rs 1,500-2,500. Bulk pricing for 10+ flags.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '142',
-    },
-    reviews: [
-      { author: 'Event Planner', rating: 5, date: '2026-07-28', comment: 'Bulk flag printing for political campaign. Fast delivery.' },
-      { author: 'Festival Organizer', rating: 4, date: '2026-06-20', comment: 'Good quality bunting flags. Vibrant colors.' },
-    ],
   },
   {
     id: 28, name: 'Backdrop / Stage Banner', slug: 'backdrop-stage-banner', category: 'Outdoor Advertising',
@@ -597,14 +379,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Material', value: 'Backlit flex or fabric' }, { label: 'Max Width', value: '20 feet continuous' }, { label: 'Stand', value: 'Retractable stand available on hire/purchase' }],
     relatedSlugs: ['flex-vinyl-printing', 'flags-and-bunting', 'roll-up-standee'],
     faqs: [{ q: 'How much does an event backdrop cost in Hyderabad?', a: 'Event backdrop printing at Vijetha Digital: 6x4ft Rs 1,200-1,800, 8x6ft Rs 1,800-2,800, 10x8ft Rs 2,500-4,000, 12x8ft Rs 3,200-5,000. With retractable stand system add Rs 3,000-8,000. Same-day for urgent events.' }],
-    aggregateRating: {
-      ratingValue: '4.8',
-      reviewCount: '156',
-    },
-    reviews: [
-      { author: 'Event Management', rating: 5, date: '2026-07-25', comment: 'Stage backdrops for 50+ events. Consistent quality always.' },
-      { author: 'Corporate Events', rating: 5, date: '2026-06-18', comment: 'Large backdrop printing looks professional. Great support.' },
-    ],
   },
   {
     id: 29, name: 'Stickers & Decals', slug: 'stickers-and-decals', category: 'Outdoor Advertising',
@@ -614,14 +388,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Applications', value: 'Vehicle, wall, floor, glass, product labels' }, { label: 'Options', value: 'Removable or permanent adhesive' }, { label: 'Cutting', value: 'Die-cut to any custom shape' }, { label: 'Min Order', value: '50 pieces' }],
     relatedSlugs: ['flex-vinyl-printing', 'car-4-wheeler-wrap', '2-wheeler-branding'],
     faqs: [{ q: 'How much do custom stickers cost in Hyderabad?', a: 'Custom sticker printing at Vijetha Digital: Small A4 sticker sheets Rs 5-8 per sheet (100+ pcs), die-cut stickers Rs 8-25 each depending on size, floor graphics Rs 60-100 per sq.ft, vehicle decals Rs 150-300 each. Minimum 50 pieces for custom orders.' }],
-    aggregateRating: {
-      ratingValue: '4.9',
-      reviewCount: '213',
-    },
-    reviews: [
-      { author: 'Branding Agency', rating: 5, date: '2026-07-30', comment: 'Custom sticker printing in bulk. Quality and price both excellent.' },
-      { author: 'Product Company', rating: 5, date: '2026-06-22', comment: 'Die-cut stickers with perfect contours. Adhesion is strong.' },
-    ],
   },
   {
     id: 30, name: 'Canopy & Tent Branding', slug: 'canopy-and-tent-branding', category: 'Outdoor Advertising',
@@ -631,14 +397,6 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: 'Sizes', value: '2m, 3m, 4m diameter canopies' }, { label: 'Material', value: 'Frontlit flex or polyester fabric' }, { label: 'Poles', value: 'Aluminium or MS depending on size' }],
     relatedSlugs: ['demo-tent-canopy', 'flags-and-bunting', 'backdrop-stage-banner'],
     faqs: [{ q: 'How much does canopy branding cost in Hyderabad?', a: 'Canopy branding at Vijetha Digital: 2m round canopy with printing Rs 2,200-3,500, 3m canopy Rs 3,500-5,500, 4m canopy Rs 5,500-8,000. Gazebo pop-up tents Rs 8,000-18,000 depending on quality and printing coverage.' }],
-    aggregateRating: {
-      ratingValue: '4.7',
-      reviewCount: '89',
-    },
-    reviews: [
-      { author: 'Outdoor Events', rating: 5, date: '2026-07-15', comment: 'Branded canopies for outdoor promotions. Durable UV print.' },
-      { author: 'Marketing Activation', rating: 4, date: '2026-06-08', comment: 'Tent branding quality is good. Setup instructions were clear.' },
-    ],
   },
 ];
 
@@ -656,4 +414,5 @@ export function getRelatedProducts(product: Product): Product[] {
     .map(s => PRODUCTS.find(p => p.slug === s))
     .filter(Boolean) as Product[];
 }
+
 
