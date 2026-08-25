@@ -52,12 +52,23 @@ const PRODUCTS: { name: string; desc: string; pubDate: string }[] = [
   { name: 'Canopy & Tent Branding', desc: 'Branded promotional canopies and gazebo tents for outdoor activations. From Rs 2,200.', pubDate: '2026-08-01T00:00:00Z' },
 ];
 
+// SITELINKS OPTIMIZATION:
+// Core navigation pages listed FIRST to signal site hierarchy to Google.
+// Service category pages included for better topical clustering.
 const MAIN_PAGES = [
+  // Primary navigation (sitelinks candidates)
   { url: '/', title: 'Vijetha Digital — Printing, Signage & Vehicle Branding in Hyderabad', desc: 'Leading commercial printing and signage company in Hyderabad since 2009. LED signs, vehicle branding, flex printing, offset printing, exhibition displays.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/services', title: 'Printing & Signage Services in Hyderabad | Vijetha Digital', desc: 'LED signage, vehicle branding, digital printing, offset printing, screen printing, display and exhibition solutions for businesses across Hyderabad.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/products', title: 'Printing Products in Hyderabad | Vijetha Digital', desc: 'Browse 30+ printing and signage products — LED boards, vehicle wraps, flex printing, standees, brochures and more for Hyderabad businesses.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/about', title: 'About Vijetha Digital | Printing & Signage Company Hyderabad Since 2009', desc: '15+ years of printing and signage expertise. 1,000+ clients, 3 branches, 10,000 sq.ft production facility in Nacharam IDA, Hyderabad.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/contact', title: 'Contact Vijetha Digital | Get a Free Quote | Hyderabad', desc: 'Get a free printing and signage quote from Vijetha Digital. 3 branches in Hyderabad — Nacharam, Lakdikapool, Indira Park. Call +91 92481 95552.', pubDate: '2026-08-21T12:00:00Z' },
+  
+  // Service categories (help Google understand site structure)
+  { url: '/services/signage', title: 'Signage Services in Hyderabad | LED Signs, ACP Cladding | Vijetha Digital', desc: 'Complete signage solutions in Hyderabad — LED sign boards, ACP cladding, acrylic letters, fascia boards, pylon signs. 15+ years experience.', pubDate: '2026-08-21T12:00:00Z' },
+  { url: '/services/vehicle-branding', title: 'Vehicle Branding Services in Hyderabad | Car Wraps, Bus Branding | Vijetha Digital', desc: 'Professional vehicle branding in Hyderabad using 3M vinyl. Cars, buses, vans, bikes, heavy vehicles. Fleet pricing available.', pubDate: '2026-08-21T12:00:00Z' },
+  { url: '/services/digital-printing', title: 'Digital Printing Services in Hyderabad | Flex, UV, Canvas | Vijetha Digital', desc: 'High-resolution digital printing services — flex, vinyl, UV print, canvas, eco-solvent. 1 lakh sq.ft daily capacity.', pubDate: '2026-08-21T12:00:00Z' },
+  
+  // Secondary pages
   { url: '/projects', title: 'Our Work | Printing & Signage Projects | Vijetha Digital', desc: '1,000+ completed printing and branding projects across Hyderabad and South India — LED signs, vehicle fleets, office branding, exhibitions.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/hyderabad-printing-signage', title: 'Commercial Printing & Signage Company in Hyderabad | Vijetha Digital', desc: 'Leading commercial printing and signage company in Hyderabad since 2009. 3 branches, 10,000 sq.ft facility, same-day service available.', pubDate: '2026-08-21T12:00:00Z' },
   { url: '/hyderabad-signage-company', title: 'Signage Company in Hyderabad | LED Signs, ACP Cladding | Vijetha Digital', desc: 'Best signage company in Hyderabad. LED sign boards, ACP cladding, acrylic letters, fascia boards, pylon signs. 15+ years, 1,000+ clients.', pubDate: '2026-08-21T12:00:00Z' },

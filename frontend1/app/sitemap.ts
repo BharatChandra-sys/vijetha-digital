@@ -82,8 +82,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Service sub-pages
+  // Service sub-pages — SITELINKS OPTIMIZATION
+  // Adding service category pages to help Google understand site structure
   const serviceRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/services/signage`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/services/vehicle-branding`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/services/digital-printing`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'weekly',
+      priority: 0.90,
+    },
     {
       url: `${baseUrl}/projects`,
       lastModified: BUILD_DATE,
