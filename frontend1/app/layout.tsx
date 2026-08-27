@@ -6,8 +6,9 @@ import CookieConsent from '@/components/privacy/CookieConsent';
 import './globals.css';
 
 // ─── GA4 MEASUREMENT ID ──────────────────────────────────────────────────────
-// Replace with your actual GA4 ID from Google Analytics → Admin → Data Streams
-const GA4_ID = 'G-XXXXXXXXXX'; // ← UPDATE THIS with your real GA4 ID
+// Set your actual GA4 ID from Google Analytics → Admin → Data Streams
+// Leave empty string to disable GA4 (won't load any GTM scripts)
+const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID || '';
 
 // ─── SITELINKS SEARCH BOX + WEBSITE SCHEMA ───────────────────────────────────
 // This is the PRIMARY schema that enables Google sitelinks in search results.
@@ -621,22 +622,26 @@ export default function RootLayout({
         `}} />
       </head>
       <body>
-        {/* Google Analytics GA4 — tracks user behavior signals Google uses for sitelinks */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA4_ID}', {
-              page_path: window.location.pathname,
-              send_page_view: true
-            });
-          `}
-        </Script>
+        {/* Google Analytics GA4 — only loads when real GA4 ID is configured */}
+        {GA4_ID && GA4_ID !== '' && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA4_ID}', {
+                  page_path: window.location.pathname,
+                  send_page_view: true
+                });
+              `}
+            </Script>
+          </>
+        )}
 
         {children}
         <CookieConsent />
