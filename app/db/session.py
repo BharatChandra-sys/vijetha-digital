@@ -8,6 +8,13 @@ from app.core.config import settings
 DATABASE_URL = settings.DATABASE_URL
 
 
+def _to_sync_database_url(url: str) -> str:
+    """Ensure sync URL uses psycopg2 driver."""
+    if url.startswith("postgresql://") and "+psycopg2://" not in url and "+asyncpg://" not in url:
+        return url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    return url
+
+
 def _to_async_database_url(url: str) -> str:
     if url.startswith("postgresql+psycopg2://"):
         return url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
@@ -16,11 +23,12 @@ def _to_async_database_url(url: str) -> str:
     return url
 
 
+SYNC_DATABASE_URL = _to_sync_database_url(DATABASE_URL)
 ASYNC_DATABASE_URL = _to_async_database_url(DATABASE_URL)
 
 # Engine with production-grade pool settings
 engine = create_engine(
-    DATABASE_URL,
+    SYNC_DATABASE_URL,
     pool_pre_ping=True,       # Detect stale connections
     pool_size=10,             # Number of persistent connections
     max_overflow=20,          # Extra connections beyond pool_size
