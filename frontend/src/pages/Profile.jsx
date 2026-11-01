@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getProfile, updateProfile } from "../api/auth";
+import usePageTitle from "../hooks/usePageTitle";
+import Breadcrumbs from "../components/store/Breadcrumbs";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -11,6 +13,7 @@ function formatDate(iso) {
 }
 
 export default function Profile() {
+  usePageTitle("My Profile");
   const { isAuthenticated, updateUserInfo } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,262 +69,149 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-warm-white font-display flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-plum-deep border-t-transparent rounded-full animate-spin" />
-      </div>
+      <main id="main" className="vd-wrap py-16 font-display" aria-busy="true">
+        <div className="h-40 vd-skeleton" />
+      </main>
     );
   }
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-warm-white font-display flex items-center justify-center text-text-muted">
-        Profile not available
-      </div>
+      <main id="main" className="vd-wrap min-h-[50vh] py-16 font-display">
+        <h1 className="vd-h2">Profile not available</h1>
+        {error && <p className="mt-2 text-ink-2">{error}</p>}
+      </main>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-warm-white font-display">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  const roleLabel = profile.iam_roles?.length > 0 ? profile.iam_roles[0] : profile.role;
 
-        {/* Breadcrumb */}
+  return (
+    <main id="main" className="font-display">
+      <div className="vd-wrap pb-14 pt-5 lg:pb-20">
         {isStaffContext ? (
-          <button
-            onClick={() => navigate("/staff/workspace")}
-            className="inline-flex items-center gap-1 text-sm font-medium text-text-muted hover:text-plum-deep transition-colors mb-8"
-          >
+          <button onClick={() => navigate("/staff/workspace")} className="vd-link inline-flex items-center gap-1 text-sm">
             <span className="material-symbols-outlined text-lg">arrow_back</span>
             Back to Workspace
           </button>
         ) : (
-          <nav className="flex items-center text-xs text-text-muted mb-8">
-            <Link to="/" className="hover:text-plum-deep transition-colors font-medium">Home</Link>
-            <span className="material-symbols-outlined text-xs mx-2">chevron_right</span>
-            <span className="text-plum-deep font-bold">My Profile</span>
-          </nav>
+          <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "My Profile" }]} />
         )}
 
-        <div className="grid lg:grid-cols-3 gap-6">
-
-          {/* ── Left sidebar ── */}
-          <div className="space-y-4">
-            {/* Avatar card */}
-            <div className="bg-white rounded-[12px] border border-stone-border shadow-card-default overflow-hidden">
-              <div className="h-20 bg-plum-deep" />
-              <div className="px-5 pb-5 -mt-10 flex flex-col items-center text-center">
-                <div className="w-20 h-20 rounded-2xl bg-plum-deep text-white flex items-center justify-center text-2xl font-bold shadow-soft-plum border-4 border-white">
-                  {avatarLetter}
-                </div>
-                <h2 className="text-base font-bold text-plum-deep mt-3">{profile.full_name}</h2>
-                <p className="text-[0.75rem] text-text-muted mt-0.5 truncate max-w-full">{profile.email}</p>
-                <div className="mt-2 inline-flex items-center gap-1.5 bg-plum-deep/5 px-3 py-1 rounded-full border border-plum-deep/10">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                  <span className="text-[0.6875rem] font-semibold text-plum-deep uppercase tracking-wide">
-                    {profile.iam_roles?.length > 0 ? profile.iam_roles[0] : profile.role}
-                  </span>
-                </div>
-              </div>
-              <div className="border-t border-stone-border px-5 py-4 space-y-3">
-                <div className="flex items-center justify-between text-[0.8125rem]">
-                  <span className="text-text-muted flex items-center gap-2">
-                    <span className="material-symbols-outlined text-base text-plum-deep/50">calendar_today</span>
-                    Member since
-                  </span>
-                  <span className="font-semibold text-plum-deep">{new Date(profile.created_at).getFullYear()}</span>
-                </div>
-                <div className="flex items-center justify-between text-[0.8125rem]">
-                  <span className="text-text-muted flex items-center gap-2">
-                    <span className="material-symbols-outlined text-base text-plum-deep/50">badge</span>
-                    Account type
-                  </span>
-                  <span className="font-semibold text-plum-deep capitalize">{profile.role}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick links */}
-            {[
-              { label: "My Orders",       sub: "View order history",  icon: "receipt_long",  to: isStaffContext ? "/staff/orders" : "/orders" },
-              { label: "Browse Products", sub: "Place a new order",   icon: "inventory_2",   to: isStaffContext ? "/staff/products" : "/products" },
-              { label: "Contact Us",      sub: "Get support",         icon: "mail",          to: "/contact" },
-            ].map(l => (
-              <Link key={l.label} to={l.to}
-                className="flex items-center justify-between bg-white rounded-[12px] border border-stone-border p-4 hover:border-plum-deep/30 hover:shadow-card-default transition-all group">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-[8px] bg-plum-deep/5 flex items-center justify-center group-hover:bg-plum-deep/10 transition-colors">
-                    <span className="material-symbols-outlined text-plum-deep text-lg">{l.icon}</span>
-                  </div>
-                  <div>
-                    <p className="text-[0.875rem] font-bold text-plum-deep">{l.label}</p>
-                    <p className="text-[0.75rem] text-text-muted">{l.sub}</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-text-muted text-lg group-hover:text-plum-deep transition-colors">arrow_forward</span>
-              </Link>
-            ))}
-          </div>
-
-          {/* ── Right: form ── */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-[12px] border border-stone-border shadow-card-default overflow-hidden">
-
-              {/* Header */}
-              <div className="px-6 py-5 border-b border-stone-border flex items-center justify-between">
-                <div>
-                  <h2 className="text-[1.125rem] font-bold text-plum-deep">Account Information</h2>
-                  <p className="text-[0.8125rem] text-text-muted mt-0.5">Update your personal details</p>
-                </div>
-                {!editing && (
-                  <button
-                    onClick={() => { setEditing(true); setSuccess(""); setError(""); }}
-                    className="inline-flex items-center gap-2 h-9 px-4 bg-plum-deep hover:bg-plum-light text-white rounded-[8px] text-sm font-semibold transition-all"
-                  >
-                    <span className="material-symbols-outlined text-base">edit</span>
-                    Edit
-                  </button>
-                )}
-              </div>
-
-              {/* Alerts */}
-              <div className="px-6 pt-5">
-                {error && (
-                  <div className="mb-4 flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-[8px] text-sm text-red-700">
-                    <span className="material-symbols-outlined text-base flex-shrink-0">error</span>
-                    {error}
-                  </div>
-                )}
-                {success && (
-                  <div className="mb-4 flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-[8px] text-sm text-green-700">
-                    <span className="material-symbols-outlined text-base flex-shrink-0">check_circle</span>
-                    {success}
-                  </div>
-                )}
-              </div>
-
-              {/* Fields */}
-              <div className="px-6 pb-6 grid md:grid-cols-2 gap-5">
-                {/* Full name */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Full Name</label>
-                  {editing ? (
-                    <input
-                      type="text"
-                      value={form.full_name}
-                      onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
-                      className="w-full h-11 px-4 border-2 border-plum-deep/20 rounded-[8px] text-[0.9375rem] font-medium text-plum-deep focus:outline-none focus:border-plum-deep transition-colors"
-                      placeholder="Your full name"
-                    />
-                  ) : (
-                    <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium text-plum-deep border border-stone-border">
-                      {profile.full_name}
-                    </div>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Email Address</label>
-                  <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium text-plum-deep border border-stone-border">
-                    {profile.email}
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Phone Number</label>
-                  {editing ? (
-                    <input
-                      type="tel"
-                      value={form.phone}
-                      onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                      placeholder="+91 98765 43210"
-                      className="w-full h-11 px-4 border-2 border-plum-deep/20 rounded-[8px] text-[0.9375rem] font-medium text-plum-deep focus:outline-none focus:border-plum-deep transition-colors"
-                    />
-                  ) : (
-                    <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium border border-stone-border">
-                      {profile.phone || <span className="text-text-muted font-normal">Not provided</span>}
-                    </div>
-                  )}
-                </div>
-
-                {/* Member since */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Member Since</label>
-                  <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium text-plum-deep border border-stone-border">
-                    {formatDate(profile.created_at)}
-                  </div>
-                </div>
-
-                {/* Account type */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Account Type</label>
-                  <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium text-plum-deep capitalize border border-stone-border">
-                    {profile.role}
-                  </div>
-                </div>
-
-                {/* Last login */}
-                <div>
-                  <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Last Login</label>
-                  <div className="h-11 flex items-center px-4 bg-stone-light rounded-[8px] text-[0.9375rem] font-medium text-plum-deep border border-stone-border">
-                    {formatDate(profile.last_login_at)}
-                  </div>
-                </div>
-
-                {/* IAM roles */}
-                {profile.iam_roles?.length > 0 && (
-                  <div className="md:col-span-2">
-                    <label className="block text-[0.6875rem] font-bold text-text-muted uppercase tracking-wider mb-1.5">Roles</label>
-                    <div className="flex flex-wrap gap-2">
-                      {profile.iam_roles.map(r => (
-                        <span key={r} className="inline-flex items-center gap-1.5 text-[0.75rem] bg-plum-deep/5 text-plum-deep font-semibold px-3 py-1 rounded-full border border-plum-deep/10 capitalize">
-                          <span className="w-1.5 h-1.5 rounded-full bg-plum-deep/50" />
-                          {r}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Footer actions */}
-              <div className="border-t border-stone-border px-6 py-4 flex items-center justify-between gap-4 flex-wrap bg-stone-light/30">
-                <Link to="/forgot-password" className="text-[0.8125rem] font-semibold text-plum-deep hover:text-coral-accent transition-colors">
-                  Change Password
-                </Link>
-                {editing && (
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={handleCancel}
-                      disabled={saving}
-                      className="h-9 px-4 text-sm font-semibold border border-stone-border text-text-muted rounded-[8px] hover:bg-stone-light disabled:opacity-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="h-9 px-5 text-sm bg-plum-deep text-white font-bold rounded-[8px] hover:bg-plum-light disabled:opacity-50 transition-all inline-flex items-center gap-2"
-                    >
-                      {saving ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          Saving…
-                        </>
-                      ) : (
-                        <>
-                          <span className="material-symbols-outlined text-base">save</span>
-                          Save Changes
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+        <div className="mt-5 flex items-center gap-4">
+          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-night text-xl font-bold text-white">{avatarLetter}</span>
+          <div className="min-w-0">
+            <h1 className="vd-h1 truncate !text-[1.75rem] lg:!text-[2.25rem]">{profile.full_name}</h1>
+            <p className="flex flex-wrap items-center gap-x-2 text-[0.9375rem] text-ink-2">
+              <span className="truncate">{profile.email}</span>
+              <span className="vd-chip capitalize">{roleLabel}</span>
+            </p>
           </div>
         </div>
+
+        <div className="mt-8 grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
+          {/* Account information */}
+          <section className="min-w-0 lg:col-span-8" aria-labelledby="account-info">
+            <div className="flex items-center justify-between gap-4 border-b border-line pb-3">
+              <div>
+                <h2 id="account-info" className="vd-h3">Account Information</h2>
+                <p className="text-sm text-ink-2">Update your personal details</p>
+              </div>
+              {!editing && (
+                <button onClick={() => { setEditing(true); setSuccess(""); setError(""); }} className="vd-btn vd-btn-quiet">
+                  <span className="material-symbols-outlined text-lg">edit</span>
+                  Edit
+                </button>
+              )}
+            </div>
+
+            {error && (
+              <div className="vd-alert vd-alert-error mt-4" role="alert">
+                <span className="material-symbols-outlined text-lg">error</span>{error}
+              </div>
+            )}
+            {success && (
+              <div className="vd-alert vd-alert-ok mt-4" role="status">
+                <span className="material-symbols-outlined text-lg">check_circle</span>{success}
+              </div>
+            )}
+
+            <div className="mt-5 grid gap-x-8 gap-y-5 md:grid-cols-2">
+              <ProfileField id="profile-name" label="Full Name" editing={editing} value={profile.full_name}>
+                <input id="profile-name" name="name" type="text" autoComplete="name" value={form.full_name}
+                  onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))} className="vd-input" placeholder="Your full name" />
+              </ProfileField>
+              <ProfileField label="Email Address" value={profile.email} />
+              <ProfileField id="profile-phone" label="Phone Number" editing={editing} value={profile.phone || <span className="text-ink-2">Not provided</span>}>
+                <input id="profile-phone" name="tel" type="tel" inputMode="tel" autoComplete="tel" value={form.phone}
+                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="+91 98765 43210" className="vd-input" />
+              </ProfileField>
+              <ProfileField label="Member Since" value={formatDate(profile.created_at)} />
+              <ProfileField label="Account Type" value={<span className="capitalize">{profile.role}</span>} />
+              <ProfileField label="Last Login" value={formatDate(profile.last_login_at)} />
+              {profile.iam_roles?.length > 0 && (
+                <div className="md:col-span-2">
+                  <p className="text-[0.8125rem] text-ink-2">Roles</p>
+                  <div className="mt-1 flex flex-wrap gap-2">
+                    {profile.iam_roles.map((r) => <span key={r} className="vd-chip capitalize">{r}</span>)}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-4">
+              <Link to="/forgot-password" className="vd-link text-sm">Change Password</Link>
+              {editing && (
+                <div className="flex items-center gap-3">
+                  <button onClick={handleCancel} disabled={saving} className="vd-btn vd-btn-quiet">Cancel</button>
+                  <button onClick={handleSave} disabled={saving} className="vd-btn vd-btn-ink">
+                    {saving ? "Saving…" : "Save Changes"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Quick links */}
+          <nav className="lg:col-span-4" aria-label="Account shortcuts">
+            <ul className="border-t border-line">
+              {[
+                { label: "My Orders", sub: "View order history", icon: "receipt_long", to: isStaffContext ? "/staff/orders" : "/orders" },
+                { label: "Browse Products", sub: "Place a new order", icon: "inventory_2", to: isStaffContext ? "/staff/products" : "/products" },
+                { label: "Contact Us", sub: "Get support", icon: "mail", to: "/contact" },
+              ].map((l) => (
+                <li key={l.label} className="border-b border-line">
+                  <Link to={l.to} className="group flex items-center gap-3 py-3.5">
+                    <span className="material-symbols-outlined text-2xl text-ink-2">{l.icon}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.9375rem] font-semibold group-hover:underline underline-offset-2">{l.label}</span>
+                      <span className="block text-[0.8125rem] text-ink-2">{l.sub}</span>
+                    </span>
+                    <span className="material-symbols-outlined text-xl text-ink-3 transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
+    </main>
+  );
+}
+
+function ProfileField({ id, label, value, editing, children }) {
+  if (editing && children) {
+    return (
+      <div>
+        <label htmlFor={id} className="vd-label">{label}</label>
+        {children}
+      </div>
+    );
+  }
+  return (
+    <div>
+      <p className="text-[0.8125rem] text-ink-2">{label}</p>
+      <p className="mt-0.5 break-words font-medium">{value}</p>
     </div>
   );
 }

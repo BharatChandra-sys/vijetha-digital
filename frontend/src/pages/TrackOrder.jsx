@@ -4,6 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import { getOrder, downloadInvoice } from "../api/orders";
 import { createPayment, verifyPayment } from "../api/payments";
 import useRazorpay from "../hooks/useRazorpay";
+import usePageTitle from "../hooks/usePageTitle";
+import Breadcrumbs from "../components/store/Breadcrumbs";
+import { BUSINESS } from "../config/business";
 
 const GST_RATE = 0.18;
 
@@ -14,11 +17,6 @@ function fmt(n) {
 function fmtDate(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-}
-function fmtDateTime(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return `${d.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}, ${d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true })}`;
 }
 function estDelivery(createdAt) {
   const base = createdAt ? new Date(createdAt) : new Date();
@@ -50,6 +48,7 @@ function getStepState(stepKey, orderStatus) {
 /* ══════════════════════════════════════════════════════════════════ */
 export default function TrackOrder() {
   useRazorpay();
+  usePageTitle("Track Your Order");
   const { orderId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -109,7 +108,7 @@ export default function TrackOrder() {
           name: user?.full_name || "",
           email: user?.email || "",
         },
-        theme: { color: "#3B2F63" },
+        theme: { color: "#1A2332" },
         handler: async (response) => {
           try {
             await verifyPayment(order.id, {
@@ -138,364 +137,193 @@ export default function TrackOrder() {
   /* ── loading ── */
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-warm-white font-display flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-plum-deep border-t-transparent rounded-full animate-spin" />
-      </div>
+      <main id="main" className="vd-wrap py-16 font-display" aria-busy="true">
+        <div className="h-40 vd-skeleton" />
+      </main>
     );
   }
 
-  /* ── error / not found ── */
-  if (error || !order) {
+  /* ── order could not be loaded at all ── */
+  if (!order) {
     return (
-      <div className="min-h-screen bg-warm-white font-display flex flex-col items-center justify-center gap-4 px-6">
-        <span className="material-symbols-outlined text-5xl text-red-400">error</span>
-        <p className="text-lg text-plum-deep font-bold">{error || "Order not found"}</p>
-        <Link to="/orders" className="text-sm text-coral-accent font-semibold hover:underline">View all orders</Link>
-      </div>
+      <main id="main" className="vd-wrap min-h-[50vh] py-16 font-display">
+        <h1 className="vd-h2">{error || "Order not found"}</h1>
+        <Link to="/orders" className="vd-btn vd-btn-ink mt-6">View all orders</Link>
+      </main>
     );
   }
 
   const subtotal = order.subtotal || 0;
   const gst = +(subtotal * GST_RATE).toFixed(2);
   const grandTotal = order.total_price || subtotal + gst;
-  const firstItem = order.items?.[0];
-  const itemLabel = firstItem?.product_name || firstItem?.material || "Custom Signage";
-  const itemImage = firstItem?.product_image || null;
   const orderNumber = `#VJ${String(order.id).padStart(8, "0")}`;
   const orderStatus = order.status || "placed";
   const isCancelled = orderStatus === "cancelled" || orderStatus === "refunded";
-
-  const statusBadge = (() => {
-    if (isCancelled) return { label: orderStatus === "cancelled" ? "CANCELLED" : "REFUNDED", cls: "bg-red-50 text-red-700 border-red-200" };
-    if (orderStatus === "delivered") return { label: "DELIVERED", cls: "bg-green-50 text-green-700 border-green-200" };
-    return { label: "IN PROGRESS", cls: "bg-plum-deep/10 text-plum-deep border-plum-deep/20" };
-  })();
+  const statusLabel = isCancelled
+    ? (orderStatus === "cancelled" ? "Cancelled" : "Refunded")
+    : orderStatus === "delivered" ? "Delivered" : "In Progress";
+  const addressLines = [
+    order.delivery_address,
+    [order.delivery_city, order.delivery_state].filter(Boolean).join(", "),
+    order.delivery_postal_code,
+  ].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-warm-white font-display">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-8 lg:py-12">
+    <main id="main" className="font-display">
+      <div className="vd-wrap pb-14 pt-5 lg:pb-20">
+        <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "My Orders", to: "/orders" }, { label: orderNumber }]} />
+        <h1 className="vd-h1 mt-4">Track Your Order</h1>
 
-        {/* page title */}
-        <h1 className="text-3xl lg:text-4xl font-extrabold text-plum-deep tracking-tight mb-8">Track Your Order</h1>
+        <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-line py-4 lg:grid-cols-4">
+          <div><dt className="text-[0.8125rem] text-ink-2">Order Number</dt><dd className="vd-price font-semibold">{orderNumber}</dd></div>
+          <div><dt className="text-[0.8125rem] text-ink-2">Placed On</dt><dd className="font-semibold">{fmtDate(order.created_at)}</dd></div>
+          <div><dt className="text-[0.8125rem] text-ink-2">Payment Method</dt><dd className="font-semibold">Razorpay</dd></div>
+          <div><dt className="text-[0.8125rem] text-ink-2">Est. Delivery</dt><dd className="font-semibold">{estDelivery(order.created_at)}</dd></div>
+        </dl>
 
-        {/* meta strip */}
-        <div className="bg-white rounded-[16px] border border-stone-border/60 shadow-product-card p-5 sm:p-6 mb-8">
-          <div className="flex flex-col sm:flex-row flex-wrap gap-6 sm:gap-0 sm:divide-x sm:divide-stone-border/60">
-            <MetaField label="Order Number" value={orderNumber} mono />
-            <MetaField label="Placed On" value={fmtDate(order.created_at)} />
-            <MetaField label="Payment Method" value="Razorpay" icon="credit_card" />
-            <MetaField label="Est. Delivery" value={estDelivery(order.created_at)} highlight={!isCancelled && orderStatus !== "delivered"} />
+        {error && (
+          <div className="vd-alert vd-alert-error mt-5" role="alert">
+            <span className="material-symbols-outlined text-lg">error</span>{error}
           </div>
-        </div>
+        )}
 
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
-
-          {/* ─── LEFT ─── */}
-          <div className="w-full lg:w-[65%] space-y-8">
-
-            {/* ── Timeline card ── */}
-            <div className="bg-white rounded-[20px] border border-stone-border/60 shadow-product-card p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-plum-deep mb-8">Order Status</h2>
-
-              <div className="relative pl-8 space-y-0">
-                {TIMELINE_STEPS.map((step, idx) => {
-                  const state = isCancelled ? "pending" : getStepState(step.key, orderStatus);
-                  const isLast = idx === TIMELINE_STEPS.length - 1;
-                  return (
-                    <TimelineStep
-                      key={step.key}
-                      step={step}
-                      state={state}
-                      isLast={isLast}
-                      timestamp={state === "done" || state === "active" ? fmtDateTime(order.created_at) : ""}
-                    />
-                  );
-                })}
-              </div>
-
+        <div className="mt-8 grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="min-w-0 space-y-10 lg:col-span-7">
+            <section>
+              <h2 className="vd-h3 mb-5">Order Status</h2>
+              <ol>
+                {TIMELINE_STEPS.map((step, idx) => (
+                  <TimelineStep
+                    key={step.key}
+                    step={step}
+                    state={isCancelled ? "pending" : getStepState(step.key, orderStatus)}
+                    isLast={idx === TIMELINE_STEPS.length - 1}
+                  />
+                ))}
+              </ol>
               {isCancelled && (
-                <div className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
-                  <span className="material-symbols-outlined text-red-500 text-xl">cancel</span>
-                  <p className="text-sm text-red-700 font-medium">
-                    This order has been {orderStatus === "cancelled" ? "cancelled" : "refunded"}.
-                  </p>
+                <div className="vd-alert vd-alert-error mt-5">
+                  <span className="material-symbols-outlined text-lg">cancel</span>
+                  This order has been {orderStatus === "cancelled" ? "cancelled" : "refunded"}.
                 </div>
               )}
-            </div>
+            </section>
 
-            {/* ── Shipping details card ── */}
-            <div className="bg-white rounded-[20px] border border-stone-border/60 shadow-product-card p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-plum-deep mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-plum-deep">local_shipping</span>
-                Shipping Details
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* address */}
-                <div>
-                  <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Delivery Address</h3>
-                  <div className="bg-stone-light/40 rounded-xl p-5 border border-stone-border/60 text-plum-deep leading-relaxed">
-                    <p className="font-extrabold text-base mb-1">{user?.full_name || "Customer"}</p>
-                    <p className="text-sm text-text-muted">Hyderabad, Telangana</p>
-                    {user?.email && (
-                      <p className="text-sm text-text-muted mt-2 flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-sm">phone</span>
-                        —
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* courier info */}
-                <div>
-                  <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Courier Information</h3>
-                  {orderStatus === "shipped" || orderStatus === "delivered" ? (
-                    <div className="space-y-4">
-                      <div className="bg-stone-light/40 rounded-xl p-5 border border-stone-border/60">
-                        <div className="flex items-start gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-plum-deep/10 flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-plum-deep text-lg">local_shipping</span>
-                          </div>
-                          <div>
-                            <p className="font-bold text-plum-deep text-sm">Delhivery Express</p>
-                            <p className="text-xs text-text-muted mt-0.5">
-                              Tracking ID: <span className="font-mono text-plum-deep font-semibold">—</span>
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-xs text-text-muted mt-3">
-                          Courier Status: <span className="font-semibold text-plum-deep">Label Created</span>
-                        </p>
-                      </div>
-                      <button className="w-full bg-white border border-stone-border hover:border-plum-deep/30 text-plum-deep font-semibold py-3 px-4 rounded-xl text-sm transition-all hover:bg-stone-50 flex items-center justify-center gap-2">
-                        Track on Courier Website
-                        <span className="material-symbols-outlined text-sm">open_in_new</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="bg-stone-light/40 rounded-xl p-5 border border-stone-border/60 flex items-center gap-3 text-text-muted">
-                      <span className="material-symbols-outlined text-xl">schedule</span>
-                      <p className="text-sm">Courier details will appear once the order is shipped.</p>
-                    </div>
-                  )}
-                </div>
+            <section className="grid gap-8 border-t border-line pt-8 md:grid-cols-2">
+              <div>
+                <h2 className="text-[0.9375rem] font-semibold">Delivery Address</h2>
+                <p className="mt-2 font-medium">{user?.full_name || "Customer"}</p>
+                {addressLines.length > 0
+                  ? addressLines.map((line) => <p key={line} className="text-[0.9375rem] text-ink-2">{line}</p>)
+                  : <p className="text-[0.9375rem] text-ink-2">Store pickup, or address confirmed by our team</p>}
               </div>
-            </div>
-
-            {/* ── Support banner ── */}
-            <div className="bg-plum-deep rounded-[16px] p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-white text-xl">support_agent</span>
-                </div>
-                <div className="text-white">
-                  <p className="font-bold text-sm">Need Help with your order?</p>
-                  <p className="text-xs text-white/70">Our support team is available 24/7 to assist you.</p>
-                </div>
+              <div>
+                <h2 className="text-[0.9375rem] font-semibold">Courier Information</h2>
+                {orderStatus === "shipped" || orderStatus === "delivered" ? (
+                  <p className="mt-2 text-[0.9375rem] text-ink-2">
+                    Handed over to our delivery partner. Call <a className="vd-link vd-price text-ink" href={BUSINESS.phoneHref}>{BUSINESS.phone}</a> for courier and tracking details.
+                  </p>
+                ) : (
+                  <p className="mt-2 text-[0.9375rem] text-ink-2">Courier details will appear once the order is shipped.</p>
+                )}
               </div>
-              <Link
-                to="/support"
-                className="bg-white text-plum-deep font-bold text-sm py-2.5 px-6 rounded-xl hover:bg-stone-50 transition-all shrink-0"
-              >
-                Contact Support
-              </Link>
-            </div>
+            </section>
+
+            <section className="flex flex-col gap-4 rounded-lg bg-shade p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-semibold">Need Help with your order?</p>
+                <p className="text-sm text-ink-2">Our support team is available 24/7 to assist you.</p>
+              </div>
+              <Link to="/contact" className="vd-btn vd-btn-outline flex-shrink-0">Contact Support</Link>
+            </section>
           </div>
 
-          {/* ─── RIGHT SIDEBAR ─── */}
-          <div className="w-full lg:w-[35%]">
-            <div className="bg-white rounded-[20px] p-6 shadow-product-card border border-stone-border/60 sticky top-24">
-              {/* header */}
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-stone-border/50">
-                <h2 className="text-lg font-bold text-plum-deep">Order Summary</h2>
-                <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${statusBadge.cls}`}>
-                  {statusBadge.label}
-                </span>
+          {/* Summary */}
+          <aside className="lg:sticky lg:top-[calc(var(--header-h)+1.25rem)] lg:col-span-5" aria-label="Order summary">
+            <div className="rounded-lg bg-surface p-5 shadow-[inset_0_0_0_1px_#DEDAD0] lg:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="vd-h3">Order Summary</h2>
+                <span className={`vd-chip ${isCancelled ? "!bg-[#FBEDEB] !text-[#8E2A20]" : orderStatus === "delivered" ? "!bg-[#E8F3EC] !text-[#17603C]" : ""}`}>{statusLabel}</span>
               </div>
 
-              {/* product */}
-              <div className="flex gap-4 mb-6 px-1">
-                <div className="w-20 h-20 rounded-lg bg-stone-100 overflow-hidden border border-stone-border flex-shrink-0">
-                  {itemImage ? (
-                    <img src={itemImage} alt={itemLabel} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-text-muted">
-                      <span className="material-symbols-outlined text-3xl">print</span>
+              <ul className="mt-4 space-y-3 border-b border-line pb-4">
+                {(order.items || []).map((item, idx) => (
+                  <li key={item.id ?? idx} className="flex gap-3">
+                    <div className="vd-frame h-14 w-14 flex-shrink-0">
+                      {item.product_image ? (
+                        <img src={item.product_image} alt="" width="56" height="56" />
+                      ) : (
+                        <span className="flex h-full items-center justify-center text-ink-3"><span className="material-symbols-outlined text-2xl">print</span></span>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div>
-                  <h3 className="font-bold text-plum-deep text-sm leading-tight mb-1">{itemLabel}</h3>
-                  {firstItem?.product_category && (
-                    <p className="text-xs text-text-muted mb-1">{firstItem.product_category}</p>
-                  )}
-                  <p className="text-sm font-bold text-plum-deep">
-                    ₹{fmt(firstItem?.unit_price || 0)}
-                    {firstItem && firstItem.quantity > 1 && (
-                      <span className="text-xs text-text-muted font-normal"> x {firstItem.quantity}</span>
-                    )}
-                  </p>
-                  {order.items.length > 1 && (
-                    <p className="text-xs text-text-muted mt-1">+{order.items.length - 1} more</p>
-                  )}
-                </div>
-              </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">{item.product_name || item.material || "Custom Signage"}</p>
+                      {item.product_category && <p className="truncate text-[0.8125rem] text-ink-2">{item.product_category}</p>}
+                      <p className="vd-price text-[0.8125rem] text-ink-2">₹{fmt(item.unit_price)}{item.quantity > 1 ? ` × ${item.quantity}` : ""}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
 
-              {/* pricing */}
-              <div className="space-y-3 pt-2 px-1 border-t border-stone-border/50">
-                <div className="flex justify-between text-sm text-text-muted">
-                  <span>Subtotal</span>
-                  <span className="font-medium text-plum-deep">₹{fmt(subtotal)}</span>
+              <dl className="vd-price mt-3 space-y-2 text-[0.9375rem]">
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">Subtotal</dt><dd className="font-medium">₹{fmt(subtotal)}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">GST (18%)</dt><dd className="font-medium">₹{fmt(gst)}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">Delivery</dt><dd className="font-semibold text-ok">Free</dd></div>
+                <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
+                  <dt className="font-semibold">Grand Total</dt>
+                  <dd className="text-2xl font-bold tracking-tight">₹{fmt(grandTotal)}</dd>
                 </div>
-                <div className="flex justify-between text-sm text-text-muted">
-                  <span>GST (18%)</span>
-                  <span className="font-medium text-plum-deep">₹{fmt(gst)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-green-600">
-                  <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">local_shipping</span>
-                    Delivery
-                  </span>
-                  <span className="font-bold">FREE</span>
-                </div>
-              </div>
+              </dl>
 
-              {/* total */}
-              <div className="mt-5 pt-4 border-t border-dashed border-stone-border flex justify-between items-center px-1">
-                <span className="text-sm font-bold text-text-muted">Grand Total</span>
-                <span className="text-2xl font-black text-plum-deep">₹{fmt(grandTotal)}</span>
-              </div>
-
-              {/* trust badges */}
-              <div className="mt-6 pt-4 border-t border-stone-border/50 space-y-3">
-                <div className="flex items-center gap-3 text-xs text-text-muted">
-                  <span className="material-symbols-outlined text-green-600 text-base">verified_user</span>
-                  <span>Secure Payment Processed</span>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-text-muted">
-                  <span className="material-symbols-outlined text-plum-deep/60 text-base">assignment_return</span>
-                  <span>Easy Returns within 7 days</span>
-                </div>
-              </div>
-
-              {/* Pay Now for unpaid orders */}
               {canPay && (
-                <div className="mt-4 pt-4 border-t border-amber-200/60">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-3">
-                    <p className="text-xs text-amber-700 font-medium flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm">info</span>
-                      {order.payment_status === "failed"
-                        ? "Payment failed. Please retry to confirm your order."
-                        : "Complete payment to confirm your order."}
-                    </p>
-                  </div>
-                  <button
-                    onClick={handlePayNow}
-                    disabled={paying}
-                    className="w-full bg-coral-accent hover:bg-coral-dark text-white font-bold py-3 px-6 rounded-xl transition-all text-sm uppercase tracking-wide shadow-lg hover:shadow-xl disabled:opacity-60 flex items-center justify-center gap-2"
-                  >
-                    {paying ? (
-                      <>
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Processing…
-                      </>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined text-sm">payment</span>
-                        Pay ₹{fmt(grandTotal)} Now
-                      </>
-                    )}
+                <div className="mt-4">
+                  <p className="vd-alert vd-alert-info">
+                    {order.payment_status === "failed"
+                      ? "Payment failed. Please retry to confirm your order."
+                      : "Complete payment to confirm your order."}
+                  </p>
+                  <button onClick={handlePayNow} disabled={paying} className="vd-btn vd-btn-lg vd-btn-accent vd-price mt-3 w-full">
+                    {paying ? "Processing…" : `Pay ₹${fmt(grandTotal)} Now`}
                   </button>
                 </div>
               )}
 
-              {/* download invoice */}
-              <div className="mt-4 pt-4 border-t border-stone-border/30">
-                <button
-                  onClick={handleDownloadInvoice}
-                  disabled={downloading}
-                  className="w-full text-plum-deep text-xs font-bold hover:text-coral-accent transition-colors flex items-center justify-center gap-2 group disabled:opacity-50"
-                >
-                  {downloading ? (
-                    <>
-                      <span className="w-3.5 h-3.5 border-2 border-plum-deep border-t-transparent rounded-full animate-spin" />
-                      Generating…
-                    </>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">download</span>
-                      Download Invoice
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
+              <button onClick={handleDownloadInvoice} disabled={downloading} className="vd-btn vd-btn-quiet mt-3 w-full">
+                <span className="material-symbols-outlined text-lg">download</span>
+                {downloading ? "Generating…" : "Download Invoice"}
+              </button>
 
+              <ul className="mt-4 space-y-1 text-[0.8125rem] text-ink-2">
+                <li>Secure Payment Processed</li>
+                <li>Easy Returns within 7 days</li>
+              </ul>
+            </div>
+          </aside>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
-
-
-/* ── MetaField (top strip) ── */
-function MetaField({ label, value, icon, mono, highlight }) {
-  return (
-    <div className="flex-1 sm:px-6 first:sm:pl-0 last:sm:pr-0">
-      <p className="text-xs text-text-muted font-semibold uppercase tracking-wider mb-1">{label}</p>
-      <div className="flex items-center gap-2">
-        {icon && <span className="material-symbols-outlined text-plum-deep text-lg">{icon}</span>}
-        <p className={`text-sm font-bold ${highlight ? "text-green-600" : "text-plum-deep"} ${mono ? "font-mono tracking-wide" : ""}`}>
-          {value}
-        </p>
-      </div>
-    </div>
-  );
-}
-
 
 /* ── TimelineStep ── */
-function TimelineStep({ step, state, isLast, timestamp }) {
+function TimelineStep({ step, state, isLast }) {
   const isDone = state === "done";
   const isActive = state === "active";
   const isPending = state === "pending";
 
-  const dotCls = isDone
-    ? "bg-green-500 text-white"
-    : isActive
-      ? "bg-amber-500 text-white"
-      : "bg-stone-200 text-stone-400";
-
-  const labelCls = isPending ? "text-text-muted/50" : "text-plum-deep";
-  const descCls = isPending ? "text-text-muted/40" : "text-text-muted";
-
   return (
-    <div className={`relative ${isLast ? "" : "pb-8"}`}>
-      {/* vertical line */}
-      {!isLast && (
-        <div className={`absolute left-[-16px] top-10 bottom-0 w-0.5 ${isDone ? "bg-green-400" : "bg-stone-200"}`} />
-      )}
-
-      {/* dot */}
-      <div className={`absolute left-[-24px] top-1 w-8 h-8 rounded-full flex items-center justify-center ${dotCls} shadow-sm z-10`}>
-        <span className="material-symbols-outlined text-base">
-          {isDone ? "check" : step.icon}
-        </span>
+    <li className={`relative flex gap-4 ${isLast ? "" : "pb-6"}`} aria-current={isActive ? "step" : undefined}>
+      {!isLast && <span className={`absolute left-[15px] top-8 bottom-0 w-0.5 ${isDone ? "bg-ok" : "bg-line"}`} aria-hidden="true" />}
+      <span className={`relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg ${isDone ? "bg-ok text-white" : isActive ? "bg-night text-white" : "bg-shade text-ink-3"}`}>
+        <span className="material-symbols-outlined text-lg">{isDone ? "check" : step.icon}</span>
+      </span>
+      <div className="min-w-0 pt-0.5">
+        <p className={`flex flex-wrap items-center gap-2 font-semibold ${isPending ? "text-ink-3" : ""}`}>
+          {step.label}
+          {isActive && <span className="vd-chip">In Progress</span>}
+        </p>
+        <p className={`text-[0.9375rem] leading-snug ${isPending ? "text-ink-3" : "text-ink-2"}`}>{step.desc}</p>
       </div>
-
-      {/* content */}
-      <div className="ml-4">
-        <p className={`font-bold text-sm ${labelCls}`}>{step.label}</p>
-        <p className={`text-xs mt-0.5 ${descCls}`}>{step.desc}</p>
-        {timestamp && !isPending && (
-          <p className="text-xs text-text-muted/60 mt-1">{timestamp}</p>
-        )}
-        {isActive && (
-          <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full">
-            In Progress
-          </span>
-        )}
-      </div>
-    </div>
+    </li>
   );
 }

@@ -1,82 +1,43 @@
-import { useEffect, useState, useMemo } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { getProducts } from "../api/products";
 import ProductCard, { ProductCardSkeleton } from "../components/product/ProductCard";
-
-/* ── Static data ────────────────────────────────────────────────────── */
-
-const CATEGORIES = ["Sign Boards", "Printing Services", "Banner Stands", "Demo Tents", "Promotional Items"];
+import Breadcrumbs from "../components/store/Breadcrumbs";
+import usePageTitle from "../hooks/usePageTitle";
+import { BUSINESS, CATEGORIES, CATEGORY_LINK } from "../config/business";
 
 const CATEGORY_META = {
   "": {
     title: "All Products", highlight: "Print Catalog",
     desc: "Explore our complete range of sign boards, printing services, banner stands, and demo tents.",
-    image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&q=80&auto=format&fit=crop",
   },
   "Sign Boards": {
     title: "Sign Boards", highlight: "Premium Signage",
     desc: "Vinyl, Glow, Aluminium, Open LED & 3D sign boards for shops, offices & hoardings.",
-    image: "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=600&q=80&auto=format&fit=crop",
   },
   "Printing Services": {
     title: "Printing Services", highlight: "Quality Printing",
-    desc: "Offset, flex, letterhead, catalogue, canvas & gift voucher printing — all under one roof.",
-    image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80&auto=format&fit=crop",
+    desc: "Offset, flex, letterhead, catalogue, canvas & gift voucher printing, all under one roof.",
   },
   "Banner Stands": {
     title: "Banner Stands", highlight: "Display Solutions",
     desc: "Roll-up standees, roller & heavy banner stands for exhibitions, events & retail displays.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80&auto=format&fit=crop",
   },
   "Demo Tents": {
     title: "Demo Tents", highlight: "Outdoor Events",
     desc: "Custom branded canopy & demo tents for outdoor events, promotions & road shows.",
-    image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80&auto=format&fit=crop",
   },
   "Promotional Items": {
     title: "Promotional Items", highlight: "Marketing Essentials",
-    desc: "Business cards, brochures, flute boards, cutouts, promo tables & more — everything for your next campaign.",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop",
+    desc: "Business cards, brochures, flute boards, cutouts, promo tables & more, for your next campaign.",
   },
 };
 
-const BADGE_MAP = {
-  "3D Sign Board":              { label: "Premium",      cls: "bg-purple-700" },
-  "Aluminium Sign Board":       { label: "Premium",      cls: "bg-purple-700" },
-  "Glow Sign Board":            { label: "Best Seller",  cls: "bg-red-600"    },
-  "Vinyl Sign Board":           { label: "Best Seller",  cls: "bg-red-600"    },
-  "Open LED Sign Board":        { label: "Best Seller",  cls: "bg-red-600"    },
-  "Canvas Printing":            { label: "Premium",      cls: "bg-purple-700" },
-  "Catalogue Printing":         { label: "Popular",      cls: "bg-blue-600"   },
-  "Flex Printing":              { label: "Best Seller",  cls: "bg-red-600"    },
-  "Gift Voucher Printing":      { label: "Eco Friendly", cls: "bg-green-600"  },
-  "Offset Printing":            { label: "Best Seller",  cls: "bg-red-600"    },
-  "Heavy Roll Up Banner Stand": { label: "Premium",      cls: "bg-purple-700" },
-  "Roller Banner Stand":        { label: "Best Seller",  cls: "bg-red-600"    },
-  "Outdoor Demo Tent":          { label: "Premium",      cls: "bg-purple-700" },
-  "Demo Tent 6×6×7 ft":         { label: "Best Seller",  cls: "bg-red-600"    },
-  "Demo Tent 4×4×7 ft":         { label: "Popular",      cls: "bg-blue-600"   },
-  "Acrylic Sign Board":          { label: "Popular",      cls: "bg-blue-600"   },
-  "LED Acrylic Sign Board":      { label: "Premium",      cls: "bg-purple-700" },
-  "ACP Board":                   { label: "Best Seller",  cls: "bg-red-600"    },
-  "Star Flex Printing":          { label: "Popular",      cls: "bg-blue-600"   },
-  "Vinyl Printing":              { label: "Best Seller",  cls: "bg-red-600"    },
-  "Business Card Printing":      { label: "Best Seller",  cls: "bg-red-600"    },
-  "Promo Table":                 { label: "Popular",      cls: "bg-blue-600"   },
-  "Cutout Sprint":               { label: "Popular",      cls: "bg-blue-600"   },
-  "Vehicle Branding":              { label: "Premium",      cls: "bg-purple-700" },
-  "T-Shirt Printing":              { label: "Popular",      cls: "bg-blue-600"   },
-  "SS Letter Sign Board":           { label: "Premium",      cls: "bg-purple-700" },
-  "ACP Cladding":                   { label: "Best Seller",  cls: "bg-red-600"    },
-  "In-Shop Branding":               { label: "Popular",      cls: "bg-blue-600"   },
-  "Translite Printing":             { label: "Popular",      cls: "bg-blue-600"   },
-};
-
 const PRICE_RANGES = [
-  { label: "Under \u20b9500",                 min: 0,    max: 500      },
-  { label: "\u20b9500 \u2013 \u20b92,000",    min: 500,  max: 2000     },
-  { label: "\u20b92,000 \u2013 \u20b95,000",  min: 2000, max: 5000     },
-  { label: "Above \u20b95,000",               min: 5000, max: Infinity },
+  { id: "u500",  label: "Under ₹500",        min: 0,    max: 500      },
+  { id: "500",   label: "₹500 – ₹2,000",     min: 500,  max: 2000     },
+  { id: "2000",  label: "₹2,000 – ₹5,000",   min: 2000, max: 5000     },
+  { id: "5000",  label: "Above ₹5,000",      min: 5000, max: Infinity },
 ];
 
 const SORT_OPTIONS = [
@@ -88,433 +49,357 @@ const SORT_OPTIONS = [
 
 const ITEMS_PER_PAGE = 12;
 
-/* ── Main component ─────────────────────────────────────────────────── */
-
 export default function Products() {
-  const navigate                        = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts]         = useState([]);
-  const [loading,  setLoading]          = useState(true);
-  const [drawerOpen, setDrawerOpen]     = useState(false);
-  const [sort,     setSort]             = useState("popular");
-  const [priceFilters, setPriceFilters] = useState([]);
-  const [bulkOnly, setBulkOnly]         = useState(false);
-  const [page,     setPage]             = useState(1);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const gridTopRef = useRef(null);
 
+  // Filter state lives in the URL so filtered views can be shared and survive Back
   const activeCategory = searchParams.get("category") ?? "";
+  const sort = searchParams.get("sort") || "popular";
+  const page = Math.max(1, Number(searchParams.get("page")) || 1);
+  const priceFilters = useMemo(() => (searchParams.get("price") || "").split(",").filter(Boolean), [searchParams]);
+  const bulkOnly = searchParams.get("bulk") === "1";
+  const activeFilterCount = priceFilters.length + (bulkOnly ? 1 : 0);
 
-  useEffect(() => {
-    getProducts().then(setProducts).catch(console.error).finally(() => setLoading(false));
-  }, []);
+  const meta = CATEGORY_META[activeCategory] || CATEGORY_META[""];
+  usePageTitle(meta.title);
 
-  const handleCategory = (cat) => {
-    setPriceFilters([]);
-    setPage(1);
-    cat ? setSearchParams({ category: cat }) : setSearchParams({});
+  const fetchProducts = () =>
+    getProducts()
+      .then(setProducts)
+      .catch((err) => { console.error(err); setLoadError(true); })
+      .finally(() => setLoading(false));
+
+  useEffect(() => { fetchProducts(); }, []);
+
+  const load = () => {
+    setLoading(true);
+    setLoadError(false);
+    fetchProducts();
   };
 
-  const togglePrice = (label) => {
-    setPage(1);
-    setPriceFilters(prev => prev.includes(label) ? prev.filter(l => l !== label) : [...prev, label]);
+  const updateParams = (changes, { keepPage = false } = {}) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(changes).forEach(([key, value]) => {
+      if (value) next.set(key, value);
+      else next.delete(key);
+    });
+    if (!keepPage) next.delete("page");
+    setSearchParams(next);
   };
-  const clearAll = () => { setPriceFilters([]); setBulkOnly(false); setPage(1); };
+
+  const togglePrice = (id) => {
+    const nextIds = priceFilters.includes(id) ? priceFilters.filter((p) => p !== id) : [...priceFilters, id];
+    updateParams({ price: nextIds.join(",") });
+  };
+  const clearAll = () => updateParams({ price: null, bulk: null });
 
   const allFiltered = useMemo(() => {
-    let list = products.filter(p => !activeCategory || p.category === activeCategory);
+    let list = products.filter((p) => !activeCategory || p.category === activeCategory);
     if (priceFilters.length) {
-      list = list.filter(p => {
+      list = list.filter((p) => {
         const price = Number(p.base_price);
-        return priceFilters.some(label => {
-          const range = PRICE_RANGES.find(r => r.label === label);
+        return priceFilters.some((id) => {
+          const range = PRICE_RANGES.find((r) => r.id === id);
           return range && price >= range.min && price < range.max;
         });
       });
     }
     if (bulkOnly) {
-      list = list.filter(p => {
+      list = list.filter((p) => {
         const u = (p.unit || "").toLowerCase();
         return u.includes("1000") || u.includes("sq ft") || Number(p.base_price) >= 1000;
       });
     }
-    if (sort === "price_asc")  list = [...list].sort((a,b) => Number(a.base_price) - Number(b.base_price));
-    if (sort === "price_desc") list = [...list].sort((a,b) => Number(b.base_price) - Number(a.base_price));
+    if (sort === "price_asc")  list = [...list].sort((a, b) => Number(a.base_price) - Number(b.base_price));
+    if (sort === "price_desc") list = [...list].sort((a, b) => Number(b.base_price) - Number(a.base_price));
+    if (sort === "newest")     list = [...list].sort((a, b) => Number(b.id) - Number(a.id));
     return list;
   }, [products, activeCategory, priceFilters, bulkOnly, sort]);
 
   const totalPages = Math.max(1, Math.ceil(allFiltered.length / ITEMS_PER_PAGE));
-  const visible    = allFiltered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const currentPage = Math.min(page, totalPages);
+  const visible = allFiltered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const meta = CATEGORY_META[activeCategory] || CATEGORY_META[""];
+  const goToPage = (p) => {
+    updateParams({ page: p > 1 ? String(p) : null }, { keepPage: true });
+    gridTopRef.current?.scrollIntoView({ block: "start" });
+  };
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [drawerOpen]);
 
-  return (
-    <div className="min-h-screen bg-warm-white font-display">
+  useEffect(() => {
+    if (!drawerOpen) return undefined;
+    const onEsc = (e) => { if (e.key === "Escape") setDrawerOpen(false); };
+    document.addEventListener("keydown", onEsc);
+    return () => document.removeEventListener("keydown", onEsc);
+  }, [drawerOpen]);
 
-      {/* Mobile filter drawer */}
+  const sidebarProps = {
+    priceFilters, togglePrice, bulkOnly,
+    setBulkOnly: (v) => updateParams({ bulk: v ? "1" : null }),
+  };
+
+  return (
+    <main id="main" className="font-display">
+
+      {/* Mobile filters: bottom sheet */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={() => setDrawerOpen(false)} />
-          <div className="relative w-[85%] max-w-sm bg-white z-10 flex flex-col overflow-y-auto shadow-2xl slide-in-left">
-            <div className="flex justify-between items-center px-5 py-4 border-b border-stone-border">
-              <span className="text-[1.125rem] font-bold text-plum-deep">Filters</span>
-              <button onClick={() => setDrawerOpen(false)} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-stone-light transition-colors">
-                <span className="material-symbols-outlined text-plum-deep text-xl">close</span>
+        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
+          <div className="absolute inset-0 bg-ink/50 animate-fade-in" onClick={() => setDrawerOpen(false)} />
+          <div className="relative flex max-h-[85vh] flex-col rounded-t-xl bg-surface">
+            <div className="flex items-center justify-between border-b border-line px-4 py-2">
+              <h2 className="vd-h3">Filters</h2>
+              <button onClick={() => setDrawerOpen(false)} className="vd-icon-btn -mr-2" aria-label="Close filters">
+                <span className="material-symbols-outlined text-2xl">close</span>
               </button>
             </div>
-            <div className="p-5 space-y-2 border-b border-stone-border">
-              <h3 className="font-bold text-plum-deep text-[0.8125rem] mb-3 uppercase tracking-wide">Category</h3>
-              {["", ...CATEGORIES].map(cat => (
-                <button key={cat || "all"} onClick={() => { handleCategory(cat); setDrawerOpen(false); }}
-                  className={`block w-full text-left text-sm px-3 py-2.5 rounded-[8px] font-medium transition-colors ${activeCategory === cat ? "bg-plum-deep text-white" : "text-text-muted hover:text-plum-deep hover:bg-stone-light"}`}>
-                  {cat || "All Products"}
-                </button>
-              ))}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5">
+              <SidebarContent {...sidebarProps} />
             </div>
-            <div className="p-5">
-              <SidebarContent priceFilters={priceFilters} togglePrice={togglePrice} bulkOnly={bulkOnly} setBulkOnly={v => { setBulkOnly(v); setPage(1); }} />
+            <div className="flex gap-3 border-t border-line p-4" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
+              <button className="vd-btn vd-btn-quiet flex-1" onClick={clearAll} disabled={!activeFilterCount}>Clear All</button>
+              <button className="vd-btn vd-btn-ink flex-[2]" onClick={() => setDrawerOpen(false)}>
+                Show {allFiltered.length} {allFiltered.length === 1 ? "product" : "products"}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Hero */}
-      <section className="relative bg-warm-white overflow-hidden">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-center">
-            <div className="w-full lg:w-1/2 space-y-3">
-              {/* Caption: 12px mobile → 12.8px desktop */}
-              <nav className="flex items-center text-xs lg:text-[0.8rem] text-text-muted overflow-x-auto no-scrollbar pb-1">
-                <Link to="/" className="hover:text-plum-deep transition-colors duration-200">Home</Link>
-                <span className="material-symbols-outlined text-xs mx-1">chevron_right</span>
-                <span className="text-plum-deep font-semibold">{meta.title}</span>
-              </nav>
-              {/* H1: 28px mobile → 44px desktop */}
-              {/* Display XL: 36px mobile → 48px desktop */}
-              <h1 className="text-[2.25rem] sm:text-[2.75rem] lg:text-[3rem] font-extrabold text-plum-deep leading-[1.15] tracking-[-0.02em]">
-                {meta.highlight.split(" ").slice(0, -1).join(" ")}{" "}
-                <span className="text-coral-accent">{meta.highlight.split(" ").slice(-1)[0]}</span>
-              </h1>
-              {/* Body: 14px mobile → 16px desktop */}
-              <p className="text-sm lg:text-base text-text-muted max-w-xl leading-[1.65]">{meta.desc}</p>
-              <div className="flex flex-wrap gap-2">
-                {/* Caption: 12px */}
-                {[
-                  { icon: "verified",       label: "Quality Guaranteed" },
-                  { icon: "receipt_long",   label: "GST Invoice"        },
-                  { icon: "local_shipping", label: "Fast Delivery"      },
-                ].map(b => (
-                  <div key={b.label} className="flex items-center gap-1.5 text-xs font-medium text-plum-deep/80 bg-white border border-stone-border px-2.5 py-1.5 rounded-full shadow-sm">
-                    <span className="material-symbols-outlined text-coral-accent text-sm">{b.icon}</span>
-                    {b.label}
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Hero image — desktop only */}
-            <div className="hidden lg:flex lg:w-1/2 justify-end">
-              <div className="relative w-full max-w-[320px] aspect-[4/3]">
-                <div className="absolute inset-0 bg-coral-accent/5 rounded-full blur-3xl transform translate-x-8 translate-y-8" />
-                <img key={meta.image} src={meta.image} alt={meta.title}
-                  className="relative z-10 w-full h-full object-cover rounded-[12px] shadow-architectural-xl hover:scale-[1.02] transition-transform duration-500" />
-                <div className="absolute -bottom-3 -left-3 z-20 bg-white py-2 px-3 rounded-[10px] shadow-card-enhanced border border-stone-border/50 max-w-[160px]">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="material-symbols-outlined text-coral-accent text-sm">stars</span>
-                    <span className="text-[0.625rem] font-bold text-plum-deep uppercase tracking-wider">Top Rated</span>
-                  </div>
-                  <p className="text-[0.625rem] text-text-muted leading-tight">Trusted by 500+ businesses</p>
-                </div>
-              </div>
-            </div>
+      {/* Page heading: compact, so products sit above the fold */}
+      <section className="vd-wrap pb-5 pt-5 lg:pb-7 lg:pt-8">
+        <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: meta.title }]} />
+        <div className="mt-3 grid gap-3 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
+            <h1 className="vd-h1">{meta.highlight}</h1>
+            <p className="mt-2 max-w-xl text-ink-2">{meta.desc}</p>
           </div>
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-2 lg:col-span-5 lg:justify-end">
+            <li>Quality Guaranteed</li>
+            <li>GST Invoice</li>
+            <li>Fast Delivery</li>
+          </ul>
         </div>
       </section>
 
-      <div className="w-full h-px bg-stone-border/60" />
-
       {/* Category tabs */}
-      <div className="bg-white border-b border-stone-border sticky top-[57px] z-30">
-        <div className="max-w-[1280px] mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto no-scrollbar">
-            {["", ...CATEGORIES].map(cat => (
-              <button key={cat || "all"} onClick={() => handleCategory(cat)}
-                className={`flex-shrink-0 whitespace-nowrap px-3 sm:px-4 lg:px-5 py-2.5 sm:py-3 text-[0.75rem] sm:text-[0.8125rem] lg:text-[0.875rem] font-semibold transition-all duration-150 border-b-2 ${
-                  activeCategory === cat
-                    ? "border-coral-accent text-plum-deep"
-                    : "border-transparent text-text-muted hover:text-plum-deep hover:border-plum-deep/20"
-                }`}>
+      <div className="sticky top-[var(--header-h)] z-30 border-y border-line bg-surface">
+        <nav aria-label="Product categories" className="vd-wrap">
+          <div className="flex gap-5 overflow-x-auto no-scrollbar lg:gap-7">
+            {["", ...CATEGORIES].map((cat) => (
+              <Link
+                key={cat || "all"}
+                to={cat ? CATEGORY_LINK(cat) : "/products"}
+                aria-current={activeCategory === cat ? "page" : undefined}
+                className={`flex h-12 flex-shrink-0 items-center whitespace-nowrap border-b-2 -mb-px text-[0.9375rem] transition-colors ${
+                  activeCategory === cat ? "border-accent font-semibold text-ink" : "border-transparent text-ink-2 hover:text-ink"
+                }`}
+              >
                 {cat || "All"}
-              </button>
+              </Link>
             ))}
           </div>
-        </div>
+        </nav>
       </div>
 
-      {/* Main content */}
-      <div className="bg-[#fbf9f4] min-h-screen pt-4 sm:pt-6">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div ref={gridTopRef} className="vd-wrap scroll-mt-[calc(var(--header-h)+3.5rem)] pb-16 pt-5 lg:pt-8">
+        <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
 
-          {/* Count + sort */}
-            <div className="flex items-center justify-between pb-3 border-b border-stone-border/60 mb-4">
-            <div className="flex items-center gap-2">
-              {/* Button md: h-11, rounded-xl */}
-              <button
-                className="lg:hidden inline-flex items-center gap-1.5 text-sm font-semibold text-plum-deep border border-stone-border bg-white px-3 h-11 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
-                onClick={() => setDrawerOpen(true)}
-                aria-label="Open filters"
-              >
-                <span className="material-symbols-outlined text-base">tune</span>
+          {/* Desktop filters */}
+          <aside className="hidden lg:block" aria-label="Filters">
+            <div className="sticky top-[calc(var(--header-h)+4.5rem)]">
+              <div className="mb-4 flex min-h-[44px] items-center justify-between">
+                <h2 className="text-[0.9375rem] font-semibold">Filters</h2>
+                {activeFilterCount > 0 && <button className="vd-link text-sm" onClick={clearAll}>Clear All</button>}
+              </div>
+              <SidebarContent {...sidebarProps} />
+            </div>
+          </aside>
+
+          <div className="min-w-0">
+            {/* Count + sort */}
+            <div className="mb-4 grid grid-cols-2 items-center gap-x-3 gap-y-3 lg:flex lg:justify-between">
+              <button className="vd-btn vd-btn-quiet w-full lg:hidden" onClick={() => setDrawerOpen(true)}>
+                <span className="material-symbols-outlined text-lg">tune</span>
                 Filters
-                {(priceFilters.length > 0 || bulkOnly) && (
-                  <span className="w-4 h-4 rounded-full bg-coral-accent text-white text-[0.5625rem] font-bold flex items-center justify-center">
-                    {priceFilters.length + (bulkOnly ? 1 : 0)}
-                  </span>
-                )}
+                {activeFilterCount > 0 && <span className="vd-chip vd-price !bg-ink !text-white">{activeFilterCount}</span>}
               </button>
-              {/* Body Small: 13px mobile → 14px desktop */}
-              <p className="text-text-muted text-[0.8125rem] lg:text-[0.875rem]">
-                <span className="text-plum-deep font-bold">{allFiltered.length}</span>
-                <span className="hidden sm:inline"> Products</span>
+              <p className="order-last col-span-2 text-sm text-ink-2 lg:order-none" aria-live="polite">
+                {loading ? "Loading…" : <><span className="vd-price font-semibold text-ink">{allFiltered.length}</span> Products</>}
               </p>
-            </div>
-            <div className="relative">
-              {/* Select h-11 per design system */}
-              <select value={sort} onChange={e => { setSort(e.target.value); setPage(1); }}
-                aria-label="Sort products"
-                className="appearance-none bg-white border border-stone-border text-plum-deep text-sm font-semibold h-11 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-plum-deep/20 cursor-pointer shadow-sm hover:shadow-md transition-all duration-200">
-                {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-plum-deep">
-                <span className="material-symbols-outlined text-lg">expand_more</span>
+              <div className="relative min-w-0">
+                <select
+                  value={sort}
+                  onChange={(e) => updateParams({ sort: e.target.value === "popular" ? null : e.target.value })}
+                  aria-label="Sort products"
+                  className="vd-input !min-h-[44px] appearance-none truncate !pr-9 font-medium lg:!w-auto"
+                >
+                  {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+                <span className="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-lg">expand_more</span>
               </div>
             </div>
-          </div>
 
-          {/* Active filter chips */}
-          {(priceFilters.length > 0 || bulkOnly) && (
-            <div className="flex flex-wrap items-center gap-2 mb-6">
-              <span className="text-xs font-semibold text-text-muted mr-1">Active Filters:</span>
-              {priceFilters.map(label => (
-                <div key={label} className="inline-flex items-center bg-white border border-stone-border rounded-full px-3 py-1 text-xs font-medium text-plum-deep shadow-sm">
-                  {label}
-                  <button className="ml-2 hover:text-coral-accent flex items-center" onClick={() => togglePrice(label)}>
-                    <span className="material-symbols-outlined text-sm">close</span>
-                  </button>
-                </div>
-              ))}
-              {bulkOnly && (
-                <div className="inline-flex items-center bg-white border border-stone-border rounded-full px-3 py-1 text-xs font-medium text-plum-deep shadow-sm">
-                  Bulk Orders
-                  <button className="ml-2 hover:text-coral-accent flex items-center" onClick={() => { setBulkOnly(false); setPage(1); }}>
-                    <span className="material-symbols-outlined text-sm">close</span>
-                  </button>
-                </div>
-              )}
-              <button className="text-xs font-bold text-coral-accent hover:text-coral-dark ml-1 underline decoration-dashed underline-offset-4" onClick={clearAll}>Clear All</button>
-            </div>
-          )}
-
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Desktop sidebar */}
-            <aside className="w-full lg:w-56 flex-shrink-0 hidden lg:block h-fit sticky top-[120px]">
-              <div className="bg-sidebar-bg p-5 rounded-[12px] border border-stone-border/60 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-bold text-plum-deep text-[0.9375rem]">Filters</h2>
-                  {(priceFilters.length > 0 || bulkOnly) && (
-                    <button className="text-[0.75rem] font-bold text-coral-accent hover:text-coral-dark" onClick={clearAll}>Clear All</button>
-                  )}
-                </div>
-                <SidebarContent priceFilters={priceFilters} togglePrice={togglePrice} bulkOnly={bulkOnly} setBulkOnly={v => { setBulkOnly(v); setPage(1); }} />
+            {/* Applied filters */}
+            {activeFilterCount > 0 && (
+              <div className="mb-5 flex flex-wrap items-center gap-2">
+                {priceFilters.map((id) => {
+                  const range = PRICE_RANGES.find((r) => r.id === id);
+                  if (!range) return null;
+                  return <FilterChip key={id} label={range.label} onRemove={() => togglePrice(id)} />;
+                })}
+                {bulkOnly && <FilterChip label="Bulk Orders" onRemove={() => updateParams({ bulk: null })} />}
+                <button className="vd-link ml-1 text-sm lg:hidden" onClick={clearAll}>Clear All</button>
               </div>
-            </aside>
+            )}
 
-            {/* Grid */}
-            <main className="flex-1">
-              {loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <ProductCardSkeleton key={i} />
-                  ))}
+            {loading ? (
+              <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:gap-x-6">
+                {Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+              </div>
+            ) : loadError ? (
+              <div className="border-t border-line py-14">
+                <h2 className="vd-h3">We couldn't load the catalog</h2>
+                <p className="mt-2 max-w-md text-ink-2">
+                  This is usually temporary. Try again, or call us on{" "}
+                  <a className="vd-link" href={BUSINESS.phoneHref}>{BUSINESS.phone}</a> and we'll quote directly.
+                </p>
+                <button onClick={load} className="vd-btn vd-btn-ink mt-5">Try Again</button>
+              </div>
+            ) : allFiltered.length === 0 ? (
+              <div className="border-t border-line py-14">
+                <h2 className="vd-h3">No products found</h2>
+                <p className="mt-2 max-w-md text-ink-2">
+                  {activeFilterCount
+                    ? "No products match your current filters. Try adjusting or clearing them."
+                    : "We couldn't find any products in this category right now."}
+                </p>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                  {activeFilterCount > 0 && <button onClick={clearAll} className="vd-btn vd-btn-ink">Clear Filters</button>}
+                  <Link to="/products" className="vd-btn vd-btn-outline">Browse All Products</Link>
                 </div>
-              ) : allFiltered.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-24 px-6 text-center animate-fade-in-up">
-                  <div className="w-24 h-24 rounded-full bg-stone-light flex items-center justify-center mb-6">
-                    <span className="material-symbols-outlined text-5xl text-plum-deep/30">search_off</span>
-                  </div>
-                  {/* H2: 22px mobile → 25.6px desktop */}
-                  <h3 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-2 leading-[1.25]">No products found</h3>
-                  {/* Body Small: 13px mobile → 14px desktop */}
-                  <p className="text-text-muted text-[0.8125rem] lg:text-[0.875rem] max-w-xs mb-6 leading-[1.65]">
-                    {priceFilters.length > 0 || bulkOnly
-                      ? "No products match your current filters. Try adjusting or clearing them."
-                      : "We couldn't find any products in this category right now."}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    {/* Button md: h-11, rounded-xl */}
-                    {(priceFilters.length > 0 || bulkOnly) && (
-                      <button
-                        onClick={clearAll}
-                        className="h-11 px-6 rounded-xl bg-plum-deep text-white font-semibold text-sm hover:bg-plum-light hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
-                      >
-                        Clear Filters
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleCategory("")}
-                      className="h-11 px-6 rounded-xl border-2 border-plum-deep text-plum-deep font-semibold text-sm hover:bg-plum-deep hover:text-white hover:shadow-lg transition-all duration-200 cursor-pointer"
-                    >
-                      Browse All Products
-                    </button>
-                  </div>
+              </div>
+            ) : (
+              <>
+                <div className="vd-reveal grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+                  {visible.map((product) => <ProductCard key={product.id} product={product} />)}
                 </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 stagger-children">
-                    {visible.map(product => <ProductCard key={product.id} product={product} navigate={navigate} />)}
-                  </div>
 
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2 mt-10 flex-wrap">
-                      <button
-                        onClick={() => setPage(p => Math.max(1, p - 1))}
-                        disabled={page === 1}
-                        className="w-9 h-9 flex items-center justify-center rounded-lg border border-stone-border bg-white text-plum-deep hover:bg-stone-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
-                      >
-                        <span className="material-symbols-outlined text-sm">chevron_left</span>
+                {totalPages > 1 && (
+                  <nav aria-label="Pagination" className="mt-12 border-t border-line pt-6">
+                    <div className="flex flex-wrap items-center justify-center gap-1">
+                      <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} className="vd-icon-btn disabled:opacity-40 disabled:hover:bg-transparent" aria-label="Previous page">
+                        <span className="material-symbols-outlined text-xl">chevron_left</span>
                       </button>
-
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                         <button
                           key={p}
-                          onClick={() => setPage(p)}
-                          className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold transition-colors shadow-sm ${
-                            p === page
-                              ? "bg-plum-deep text-white border border-plum-deep"
-                              : "border border-stone-border bg-white text-plum-deep hover:bg-stone-light"
-                          }`}
+                          onClick={() => goToPage(p)}
+                          aria-current={p === currentPage ? "page" : undefined}
+                          className={`vd-price h-11 w-11 rounded-lg text-sm font-semibold transition-colors ${p === currentPage ? "bg-night text-white" : "hover:bg-shade"}`}
                         >
                           {p}
                         </button>
                       ))}
-
-                      <button
-                        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                        disabled={page === totalPages}
-                        className="w-9 h-9 flex items-center justify-center rounded-lg border border-stone-border bg-white text-plum-deep hover:bg-stone-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
-                      >
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                      <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} className="vd-icon-btn disabled:opacity-40 disabled:hover:bg-transparent" aria-label="Next page">
+                        <span className="material-symbols-outlined text-xl">chevron_right</span>
                       </button>
                     </div>
-                  )}
-
-                  {/* Page info */}
-                  {totalPages > 1 && (
-                    <p className="text-center text-xs text-text-muted mt-3">
-                      Showing {(page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, allFiltered.length)} of {allFiltered.length} products
+                    <p className="vd-price mt-2 text-center text-[0.8125rem] text-ink-2">
+                      Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, allFiltered.length)} of {allFiltered.length} products
                     </p>
-                  )}
-                </>
-              )}
-            </main>
+                  </nav>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {/* B2B section */}
-      <section className="py-12 bg-beige-warm border-t border-stone-border relative overflow-hidden"
-        style={{ backgroundImage: "radial-gradient(#CFC8BD 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center gap-10 bg-white rounded-[12px] p-8 lg:p-12 shadow-architectural-lg border border-stone-border/50 relative overflow-hidden">
-            <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#3B2F63 1px, transparent 1px)", backgroundSize: "12px 12px" }} />
-            <div className="w-full md:w-1/2 z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-plum-deep/5 border border-plum-deep/10 mb-5">
-                <span className="w-2 h-2 rounded-full bg-coral-accent" />
-                {/* Caption: 12px */}
-                <span className="text-xs font-bold uppercase tracking-wider text-plum-deep">For Enterprise</span>
-              </div>
-              {/* H1: 28px mobile → 32px desktop */}
-              <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-4 leading-[1.25] tracking-[-0.01em]">Streamline Corporate Ordering</h2>
-              {/* Body: 14px mobile → 16px desktop */}
-              <p className="text-sm lg:text-base text-text-muted mb-7 leading-[1.65]">Ensure brand consistency across all branches. Dedicated bulk pricing, account support &amp; monthly invoicing for high-volume needs.</p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Button md: h-11, lg: h-12, rounded-xl */}
-                <Link to="/register" className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-8 bg-plum-deep hover:bg-plum-light hover:shadow-lg text-white font-bold rounded-xl transition-all duration-200 hover:-translate-y-0.5 text-sm cursor-pointer">
-                  Open Business Account
-                </Link>
-                <a href="tel:+917942643004" className="inline-flex items-center justify-center h-11 lg:h-12 px-6 lg:px-8 border border-plum-deep text-plum-deep hover:bg-plum-deep/5 hover:shadow-lg font-bold rounded-xl transition-all duration-200 text-sm cursor-pointer">
-                  Call +91 79426 43004
-                </a>
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 z-10">
-              <div className="relative h-56 md:h-64 w-full bg-stone-light/50 rounded-[12px] overflow-hidden border border-stone-border flex items-center justify-center shadow-inner">
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(#3B2F63 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-[60%] -translate-y-[40%] -rotate-6 w-48 h-24 bg-white rounded-[8px] shadow-2xl border-l-4 border-plum-deep flex flex-col p-3 z-10">
-                  <div className="w-7 h-7 rounded bg-plum-deep/10 mb-2" /><div className="h-2 w-20 bg-stone-200 rounded mb-1.5" /><div className="h-2 w-14 bg-stone-200 rounded" />
-                </div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-[40%] -translate-y-[60%] rotate-3 w-48 h-24 bg-white rounded-[8px] shadow-2xl border-l-4 border-coral-accent flex flex-col p-3 z-20">
-                  <div className="flex justify-between mb-2"><div className="w-7 h-7 rounded bg-coral-accent/10" /><div className="text-[8px] font-bold text-stone-400">VIJETHA</div></div>
-                  <div className="h-2 w-24 bg-stone-800 rounded mb-1.5" /><div className="h-2 w-16 bg-stone-300 rounded" />
-                </div>
-              </div>
-            </div>
+      <section className="bg-night text-white">
+        <div className="vd-wrap grid gap-8 py-12 lg:grid-cols-12 lg:items-center lg:py-16">
+          <div className="lg:col-span-7">
+            <p className="mb-2 text-sm font-semibold text-white/80">For Enterprise</p>
+            <h2 className="vd-h2">Streamline Corporate Ordering</h2>
+            <p className="mt-3 max-w-xl text-[1.0625rem] leading-relaxed text-white/85">
+              Ensure brand consistency across all branches. Dedicated bulk pricing, account support &amp; monthly invoicing for high-volume needs.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
+            <Link to="/register" className="vd-btn vd-btn-lg bg-white text-ink hover:bg-paper">Open Business Account</Link>
+            <a href={BUSINESS.phoneHref} className="vd-btn vd-btn-lg vd-btn-on-dark vd-price">Call {BUSINESS.phone}</a>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
 
-/* ── Sidebar ────────────────────────────────────────────────────────── */
+function FilterChip({ label, onRemove }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded bg-shade py-0.5 pl-2.5 pr-0.5 text-sm font-medium">
+      {label}
+      <button onClick={onRemove} className="flex h-8 w-8 items-center justify-center rounded hover:bg-line" aria-label={`Remove filter ${label}`}>
+        <span className="material-symbols-outlined text-base">close</span>
+      </button>
+    </span>
+  );
+}
+
 function SidebarContent({ priceFilters, togglePrice, bulkOnly, setBulkOnly }) {
   return (
     <div className="space-y-6">
-      <div className="border-b border-stone-border/50 pb-5">
-        <h3 className="font-bold text-plum-deep text-sm mb-3">Price Range</h3>
-        <div className="space-y-2.5">
-          {PRICE_RANGES.map(r => (
-            <label key={r.label} className="flex items-center gap-3 cursor-pointer group">
-              <input type="checkbox" className="form-checkbox text-plum-deep rounded border-stone-300 w-5 h-5 cursor-pointer"
-                checked={priceFilters.includes(r.label)} onChange={() => togglePrice(r.label)} />
-              <span className="text-sm text-text-muted group-hover:text-plum-deep transition-colors">{r.label}</span>
-            </label>
-          ))}
-        </div>
+      <fieldset>
+        <legend className="mb-1 text-sm font-semibold">Price Range</legend>
+        {PRICE_RANGES.map((r) => (
+          <label key={r.id} className="flex min-h-[40px] cursor-pointer items-center gap-3 text-[0.9375rem] text-ink-2 hover:text-ink">
+            <input
+              type="checkbox"
+              className="h-5 w-5 flex-shrink-0 cursor-pointer accent-[#1A2332]"
+              checked={priceFilters.includes(r.id)}
+              onChange={() => togglePrice(r.id)}
+            />
+            <span className="vd-price">{r.label}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      <div>
+        <p className="mb-1 text-sm font-semibold" id="order-type">Order Type</p>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={bulkOnly}
+          aria-labelledby="order-type bulk-label"
+          onClick={() => setBulkOnly(!bulkOnly)}
+          className="flex min-h-[40px] w-full items-center gap-3 text-left text-[0.9375rem] text-ink-2 hover:text-ink"
+        >
+          <span className={`relative h-6 w-10 flex-shrink-0 rounded-full transition-colors ${bulkOnly ? "bg-night" : "bg-line-strong"}`}>
+            <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${bulkOnly ? "translate-x-4" : ""}`} />
+          </span>
+          <span id="bulk-label">Bulk Orders Only</span>
+        </button>
       </div>
 
-      <div className="border-b border-stone-border/50 pb-5">
-        <h3 className="font-bold text-plum-deep text-sm mb-3">Order Type</h3>
-        <label className="flex items-center gap-3 cursor-pointer group">
-          <div
-            onClick={() => setBulkOnly(!bulkOnly)}
-            className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer flex-shrink-0 ${bulkOnly ? "bg-plum-deep" : "bg-stone-300"}`}
-          >
-            <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${bulkOnly ? "translate-x-5" : "translate-x-0"}`} />
-          </div>
-          <span className="text-sm text-text-muted group-hover:text-plum-deep transition-colors">Bulk Orders Only</span>
-        </label>
-      </div>
-
-      <div className="bg-white p-4 rounded-xl border border-stone-border shadow-sm">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="material-symbols-outlined text-coral-accent text-lg">receipt_long</span>
-          <span className="text-sm font-bold text-plum-deep">GST Invoice</span>
+      <dl className="space-y-3 border-t border-line pt-5 text-sm">
+        <div>
+          <dt className="font-semibold">GST Invoice</dt>
+          <dd className="mt-0.5 leading-snug text-ink-2">All orders include a valid GST invoice · {BUSINESS.gstin}</dd>
         </div>
-        <p className="text-xs text-text-muted leading-tight">All orders include a valid GST invoice · 36AGBPC3175H1ZP</p>
-      </div>
-      <div className="bg-white p-4 rounded-xl border border-stone-border shadow-sm">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="material-symbols-outlined text-coral-accent text-lg">bolt</span>
-          <span className="text-sm font-bold text-plum-deep">Fast Turnaround</span>
+        <div>
+          <dt className="font-semibold">Fast Turnaround</dt>
+          <dd className="mt-0.5 leading-snug text-ink-2">Most orders ready within 24–48 hours</dd>
         </div>
-        <p className="text-xs text-text-muted leading-tight">Most orders ready within 24–48 hours</p>
-      </div>
+      </dl>
     </div>
   );
 }
-
-

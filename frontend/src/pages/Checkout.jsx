@@ -5,6 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import { placeOrder } from "../api/orders";
 import { createPayment, verifyPayment } from "../api/payments";
 import useRazorpay from "../hooks/useRazorpay";
+import usePageTitle from "../hooks/usePageTitle";
+import Breadcrumbs from "../components/store/Breadcrumbs";
+import StickyBar from "../components/store/StickyBar";
+import { BRANCHES, BUSINESS } from "../config/business";
 
 const GST_RATE = 0.18;
 
@@ -15,8 +19,20 @@ function formatMoney(amount) {
   });
 }
 
+/* One-line description of what the customer configured */
+function describeItem(item) {
+  const cfg = item.config || {};
+  const parts = [];
+  if (cfg.width && cfg.height) parts.push(`${cfg.width} × ${cfg.height} ft`);
+  if (cfg.size) parts.push(cfg.size);
+  if (cfg.finish) parts.push(cfg.finish);
+  if (!(cfg.width && cfg.height)) parts.push(`Qty ${Number(item.quantity).toLocaleString("en-IN")}`);
+  return parts.join(" · ");
+}
+
 export default function Checkout() {
   useRazorpay();
+  usePageTitle("Checkout");
 
   const { items, cartLoaded, total, clearCart } = useCart();
   const { user, loading: authLoading } = useAuth();
@@ -24,6 +40,8 @@ export default function Checkout() {
 
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [pickupBranch, setPickupBranch] = useState(BRANCHES[0].id);
   const orderPlacedRef = useRef(false);
 
   const [deliveryMethod, setDeliveryMethod] = useState("home");
@@ -40,7 +58,7 @@ export default function Checkout() {
     street: "",
     city: "Hyderabad",
     state: "Telangana",
-    pincode: "500081",
+    pincode: "",
   });
   const [businessInfo, setBusinessInfo] = useState({
     companyName: "",
@@ -70,9 +88,9 @@ export default function Checkout() {
 
   if (authLoading || !cartLoaded) {
     return (
-      <div className="min-h-screen bg-warm-white font-display flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-plum-deep border-t-transparent rounded-full animate-spin" />
-      </div>
+      <main id="main" className="vd-wrap py-16 font-display" aria-busy="true">
+        <div className="h-40 vd-skeleton" />
+      </main>
     );
   }
 
@@ -82,40 +100,75 @@ export default function Checkout() {
   const advancePercent = deliveryMethod === "pickup" ? 50 : 100;
   const payableNow = (grandTotal * advancePercent) / 100;
   const remainingAtStore = Math.max(0, grandTotal - payableNow);
-  const summaryItem = items[0];
+
+  const clearFieldError = (field) => {
+    setFieldErrors((prev) => (prev[field] ? { ...prev, [field]: "" } : prev));
+  };
 
   const onContactChange = (field, value) => {
+    clearFieldError(field);
     setContact((prev) => ({ ...prev, [field]: value }));
   };
 
   const onAddressChange = (field, value) => {
+    clearFieldError(field);
     setAddress((prev) => ({ ...prev, [field]: value }));
   };
 
   const onBusinessChange = (field, value) => {
+    clearFieldError(field);
     setBusinessInfo((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateCheckout = () => {
-    if (!contact.fullName.trim()) return "Please enter your full name.";
-    if (!contact.email.trim()) return "Please enter your email address.";
-    if (!contact.phone.trim()) return "Please enter your phone number.";
+    const errors = {};
+    if (!contact.fullName.trim()) errors.fullName = "Please enter your full name.";
+    if (!contact.email.trim()) errors.email = "Please enter your email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())) errors.email = "Please enter a valid email, like name@example.com.";
+    if (!contact.phone.trim()) errors.phone = "Please enter your phone number.";
+    else if (contact.phone.replace(/\D/g, "").length < 10) errors.phone = "Please enter a 10-digit phone number.";
 
     if (deliveryMethod === "home") {
-      if (!address.street.trim()) return "Please enter your street address for home delivery.";
-      if (!address.city.trim()) return "Please enter your city for home delivery.";
-      if (!address.state.trim()) return "Please select your state for home delivery.";
-      if (!address.pincode.trim()) return "Please enter your pincode for home delivery.";
+      if (!address.street.trim()) errors.street = "Please enter your street address for home delivery.";
+      if (!address.city.trim()) errors.city = "Please enter your city for home delivery.";
+      if (!address.state.trim()) errors.state = "Please select your state for home delivery.";
+      if (!address.pincode.trim()) errors.pincode = "Please enter your pincode for home delivery.";
+      else if (!/^\d{6}$/.test(address.pincode.trim())) errors.pincode = "Pincode must be 6 digits.";
     }
 
-    return "";
+    if (showBusinessFields && businessInfo.gstin.trim() && businessInfo.gstin.trim().length !== 15) {
+      errors.gstin = "GSTIN must be 15 characters.";
+    }
+
+    return errors;
+  };
+
+  /* Everything the shop needs that has no dedicated order field */
+  const buildOrderNotes = () => {
+    const branch = BRANCHES.find((b) => b.id === pickupBranch);
+    const lines = [
+      deliveryMethod === "pickup" ? `Store pickup: ${branch?.name}` : "Home delivery",
+      `Customer: ${contact.fullName.trim()}, ${contact.phone.trim()}, ${contact.email.trim()}`,
+    ];
+    if (showBusinessFields && (businessInfo.companyName.trim() || businessInfo.gstin.trim())) {
+      lines.push(`Business: ${businessInfo.companyName.trim()} GSTIN ${businessInfo.gstin.trim().toUpperCase()}`);
+    }
+    items.forEach((item) => {
+      const designFile = item.config?.design_file;
+      lines.push(`${item.name}: ${describeItem(item)}${designFile ? `, design file ${designFile} (collect from customer)` : ""}`);
+    });
+    return lines.join("\n");
   };
 
   const handlePayment = async () => {
     setError("");
-    const validationError = validateCheckout();
-    if (validationError) {
-      setError(validationError);
+    const errors = validateCheckout();
+    setFieldErrors(errors);
+    const firstInvalid = Object.keys(errors).find((key) => errors[key]);
+    if (firstInvalid) {
+      const input = document.getElementById(firstInvalid);
+      input?.focus();
+      input?.scrollIntoView({ block: "center" });
       return;
     }
 
@@ -128,6 +181,15 @@ export default function Checkout() {
       setPaying(true);
 
       const orderPayload = {
+        delivery_notes: buildOrderNotes(),
+        ...(deliveryMethod === "home"
+          ? {
+              delivery_address: address.street.trim(),
+              delivery_city: address.city.trim(),
+              delivery_state: address.state,
+              delivery_postal_code: address.pincode.trim(),
+            }
+          : {}),
         items: items.map((i) => {
           if (i.product_id) {
             return { product_id: i.product_id, quantity: i.quantity };
@@ -171,8 +233,9 @@ export default function Checkout() {
           save_details: saveDetails ? "yes" : "no",
           business_order: showBusinessFields ? "yes" : "no",
           business_name: businessInfo.companyName || "",
+          ...(deliveryMethod === "pickup" ? { pickup_branch: pickupBranch } : {}),
         },
-        theme: { color: "#3B2F63" },
+        theme: { color: "#1A2332" },
         handler: async (response) => {
           try {
             await verifyPayment(order.id, {
@@ -183,7 +246,7 @@ export default function Checkout() {
             orderPlacedRef.current = true;
             clearCart();
             navigate(`/order-confirmation/${order.id}`, {
-              state: { deliveryMethod, paymentMethod, contact, address },
+              state: { deliveryMethod, paymentMethod, contact, address, pickupBranch },
               replace: true,
             });
           } catch {
@@ -216,423 +279,263 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-warm-white font-display py-6 lg:py-8">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
-        <nav className="flex items-center text-xs lg:text-[0.8rem] text-text-muted mb-4 overflow-x-auto whitespace-nowrap custom-scrollbar">
-          <Link to="/" className="hover:text-plum-deep transition-colors duration-200">Home</Link>
-          <span className="material-symbols-outlined text-sm mx-2 text-stone-400">chevron_right</span>
-          <Link to="/cart" className="hover:text-plum-deep transition-colors duration-200">Shopping Cart</Link>
-          <span className="material-symbols-outlined text-sm mx-2 text-stone-400">chevron_right</span>
-          <span className="text-plum-deep font-semibold">Checkout</span>
-        </nav>
+    <main id="main" className="font-display pb-[var(--sticky-bar,0px)]">
+      <div className="vd-wrap pb-14 pt-5 lg:pb-20">
+        <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Shopping Cart", to: "/cart" }, { label: "Checkout" }]} />
+        <h1 className="vd-h1 mt-4">Checkout Details</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            {/* H1: 28px mobile → 32px desktop */}
-            <h1 className="text-[1.75rem] lg:text-[2rem] font-extrabold text-plum-deep tracking-[-0.01em] leading-[1.25]">Checkout Details</h1>
+        <div className="mt-6 grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
+          <form className="min-w-0 space-y-10 lg:col-span-7" onSubmit={(e) => { e.preventDefault(); handlePayment(); }} noValidate>
 
             {error && (
-              <div className="text-sm text-red-700 bg-red-50 border-2 border-red-200 rounded-xl px-4 py-3 flex items-center gap-2">
-                <span className="material-symbols-outlined text-base flex-shrink-0">error</span>
+              <div className="vd-alert vd-alert-error" role="alert">
+                <span className="material-symbols-outlined text-lg">error</span>
                 {error}
               </div>
             )}
 
-            {/* Card Standard: p-6, rounded-xl, shadow-sm */}
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
-              {/* H2: 22px mobile → 25.6px desktop */}
-              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
-                <span className="material-symbols-outlined text-xl">person</span>
-                Contact Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  {/* Body Small: 13px mobile → 14px desktop */}
-                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Full Name</label>
-                  {/* Input md: h-11, rounded-xl, border-2 */}
-                  <input
-                    value={contact.fullName}
-                    onChange={(e) => onContactChange("fullName", e.target.value)}
-                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
-                    placeholder="John Doe"
-                    type="text"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Email Address</label>
-                  <input
-                    value={contact.email}
-                    onChange={(e) => onContactChange("email", e.target.value)}
-                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
-                    placeholder="john@example.com"
-                    type="email"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Phone Number</label>
-                  <input
-                    value={contact.phone}
-                    onChange={(e) => onContactChange("phone", e.target.value)}
-                    className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
-                    placeholder="+91 98765 43210"
-                    type="tel"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      checked={saveDetails}
-                      onChange={(e) => setSaveDetails(e.target.checked)}
-                      className="w-4 h-4 text-plum-deep border-stone-border rounded focus:ring-plum-deep"
-                      type="checkbox"
-                    />
-                    <span className="text-sm text-text-muted font-medium">Save details for next time</span>
-                  </label>
-                </div>
-              </div>
-            </section>
-
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
-              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
-                <span className="material-symbols-outlined text-xl">local_shipping</span>
-                Delivery Method
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <label className="relative cursor-pointer">
-                  <input
-                    className="peer sr-only"
-                    name="delivery_method"
-                    type="radio"
-                    value="home"
-                    checked={deliveryMethod === "home"}
-                    onChange={() => setDeliveryMethod("home")}
-                  />
-                  {/* Card Standard: p-6, rounded-xl, hover:shadow-md */}
-                  <div className="p-5 lg:p-6 rounded-xl border-2 border-stone-border bg-stone-50 hover:border-plum-deep hover:shadow-md peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-2 peer-checked:ring-plum-deep/20 transition-all duration-200 h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-plum-deep">local_shipping</span>
-                        {/* H4: 16px mobile → 18px desktop */}
-                        <span className="font-bold text-plum-deep text-base lg:text-[1.125rem]">Home Delivery</span>
-                      </div>
-                      <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
-                    </div>
-                    {/* Caption: 12px */}
-                    <p className="text-xs text-text-muted leading-[1.5]">Delivery to your address within 3-5 business days.</p>
-                  </div>
-                </label>
-                <label className="relative cursor-pointer">
-                  <input
-                    className="peer sr-only"
-                    name="delivery_method"
-                    type="radio"
-                    value="pickup"
-                    checked={deliveryMethod === "pickup"}
-                    onChange={() => setDeliveryMethod("pickup")}
-                  />
-                  <div className="p-5 lg:p-6 rounded-xl border-2 border-stone-border bg-stone-50 hover:border-plum-deep hover:shadow-md peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-2 peer-checked:ring-plum-deep/20 transition-all duration-200 h-full relative">
-                    {/* Tiny: 11px */}
-                    <div className="absolute -top-3 right-4 bg-green-600 text-white text-[0.6875rem] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">50% advance</div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-plum-deep">storefront</span>
-                        <span className="font-bold text-plum-deep text-base lg:text-[1.125rem]">Store Pickup</span>
-                      </div>
-                      <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
-                    </div>
-                    <p className="text-xs text-text-muted leading-[1.5]">Pay 50% now and collect from our Hyderabad store in 24 hours.</p>
-                  </div>
+            <CheckoutSection step={1} title="Contact Information">
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field id="fullName" label="Full Name" error={fieldErrors.fullName}>
+                  <input id="fullName" name="name" type="text" autoComplete="name" className="vd-input"
+                    aria-invalid={!!fieldErrors.fullName} placeholder="Your full name"
+                    value={contact.fullName} onChange={(e) => onContactChange("fullName", e.target.value)} />
+                </Field>
+                <Field id="email" label="Email Address" error={fieldErrors.email}>
+                  <input id="email" name="email" type="email" autoComplete="email" spellCheck={false} className="vd-input"
+                    aria-invalid={!!fieldErrors.email} placeholder="you@example.com"
+                    value={contact.email} onChange={(e) => onContactChange("email", e.target.value)} />
+                </Field>
+                <Field id="phone" label="Phone Number" error={fieldErrors.phone} className="md:col-span-2" hint="We call or WhatsApp this number about your artwork and delivery.">
+                  <input id="phone" name="tel" type="tel" inputMode="tel" autoComplete="tel" className="vd-input"
+                    aria-invalid={!!fieldErrors.phone} placeholder="+91 98765 43210"
+                    value={contact.phone} onChange={(e) => onContactChange("phone", e.target.value)} />
+                </Field>
+                <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-[0.9375rem] md:col-span-2">
+                  <input type="checkbox" className="h-5 w-5 accent-[#1A2332]" checked={saveDetails} onChange={(e) => setSaveDetails(e.target.checked)} />
+                  Save details for next time
                 </label>
               </div>
-            </section>
+            </CheckoutSection>
 
-            {deliveryMethod === "home" ? (
-              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
-                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
-                  <span className="material-symbols-outlined text-xl">map</span>
-                  Shipping Address
-                </h2>
-                <div className="space-y-5">
-                  <div>
-                    <label className="block text-[0.8125rem] lg:text-[0.875rem] font-bold text-text-muted mb-2">Street Address</label>
-                    <input
-                      value={address.street}
-                      onChange={(e) => onAddressChange("street", e.target.value)}
-                      className="w-full bg-stone-50 border-2 border-stone-border rounded-xl px-4 py-3 h-11 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all duration-200"
-                      placeholder="123 Print Avenue, Tech Park"
-                      type="text"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                      <label className="block text-sm font-bold text-text-muted mb-2">City</label>
-                      <input
-                        value={address.city}
-                        onChange={(e) => onAddressChange("city", e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
-                        placeholder="Hyderabad"
-                        type="text"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-text-muted mb-2">State</label>
-                      <select
-                        value={address.state}
-                        onChange={(e) => onAddressChange("state", e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all text-text-dark h-[46px]"
-                      >
-                        <option>Telangana</option>
-                        <option>Andhra Pradesh</option>
-                        <option>Karnataka</option>
-                        <option>Maharashtra</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-text-muted mb-2">Pincode</label>
-                      <input
-                        value={address.pincode}
-                        onChange={(e) => onAddressChange("pincode", e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
-                        placeholder="500081"
-                        type="text"
-                      />
-                      <p className="text-xs text-green-600 mt-1.5 font-medium">Delivery available across Telangana</p>
+            <CheckoutSection step={2} title="Delivery Method">
+              <div className="grid gap-3 md:grid-cols-2">
+                <RadioCard name="delivery_method" value="home" checked={deliveryMethod === "home"} onChange={() => setDeliveryMethod("home")}
+                  icon="local_shipping" title="Home Delivery" desc="Delivery to your address within 3-5 business days." />
+                <RadioCard name="delivery_method" value="pickup" checked={deliveryMethod === "pickup"} onChange={() => setDeliveryMethod("pickup")}
+                  icon="storefront" title="Store Pickup" badge="50% advance" desc="Pay 50% now and collect from our Hyderabad store in 24 hours." />
+              </div>
+
+              {deliveryMethod === "home" ? (
+                <div className="mt-6">
+                  <h3 className="mb-3 text-[0.9375rem] font-semibold">Shipping Address</h3>
+                  <div className="space-y-4">
+                    <Field id="street" label="Street Address" error={fieldErrors.street}>
+                      <input id="street" name="street-address" type="text" autoComplete="street-address" className="vd-input"
+                        aria-invalid={!!fieldErrors.street} placeholder="Shop or house number, building, street"
+                        value={address.street} onChange={(e) => onAddressChange("street", e.target.value)} />
+                    </Field>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <Field id="city" label="City" error={fieldErrors.city}>
+                        <input id="city" name="city" type="text" autoComplete="address-level2" className="vd-input"
+                          aria-invalid={!!fieldErrors.city} placeholder="Hyderabad"
+                          value={address.city} onChange={(e) => onAddressChange("city", e.target.value)} />
+                      </Field>
+                      <Field id="state" label="State" error={fieldErrors.state}>
+                        <select id="state" name="state" autoComplete="address-level1" className="vd-input"
+                          value={address.state} onChange={(e) => onAddressChange("state", e.target.value)}>
+                          <option>Telangana</option>
+                          <option>Andhra Pradesh</option>
+                          <option>Karnataka</option>
+                          <option>Maharashtra</option>
+                        </select>
+                      </Field>
+                      <Field id="pincode" label="Pincode" error={fieldErrors.pincode} hint={fieldErrors.pincode ? null : "Delivery available across Telangana"}>
+                        <input id="pincode" name="postal-code" type="text" inputMode="numeric" maxLength={6} autoComplete="postal-code" className="vd-input vd-price"
+                          aria-invalid={!!fieldErrors.pincode} placeholder="6 digits"
+                          value={address.pincode} onChange={(e) => onAddressChange("pincode", e.target.value.replace(/\D/g, ""))} />
+                      </Field>
                     </div>
                   </div>
                 </div>
-              </section>
-            ) : (
-              <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
-                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
-                  <span className="material-symbols-outlined text-xl">map</span>
-                  Pickup Location
-                </h2>
-                <div className="bg-stone-50 border border-stone-border rounded-[12px] p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-full bg-plum-deep/10 flex items-center justify-center shrink-0">
-                      <span className="material-symbols-outlined text-plum-deep text-2xl">store</span>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-plum-deep text-lg mb-1">Vijetha Digital Store</h3>
-                      <p className="text-sm text-text-muted leading-relaxed mb-3">
-                        123 Print Avenue, Tech Park, Madhapur,<br />
-                        Hyderabad, Telangana 500081
-                      </p>
-                      <div className="inline-flex items-center gap-2 text-xs font-medium text-plum-deep bg-white border border-stone-border rounded-lg px-3 py-2">
-                        <span className="material-symbols-outlined text-[16px]">schedule</span>
-                        <span>Pickup Hours: Mon-Sat: 10 AM - 7 PM</span>
-                      </div>
-                      <div className="mt-4 inline-flex text-xs font-semibold text-green-700 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
-                        Pay 50% now. Remaining 50% is due at store pickup.
-                      </div>
-                    </div>
+              ) : (
+                <fieldset className="mt-6">
+                  <legend className="mb-3 text-[0.9375rem] font-semibold">Pickup Location</legend>
+                  <div className="space-y-2">
+                    {BRANCHES.map((b) => (
+                      <label key={b.id} className="relative block cursor-pointer">
+                        <input type="radio" name="pickup_branch" className="sr-only" checked={pickupBranch === b.id} onChange={() => setPickupBranch(b.id)} />
+                        <span className="vd-option !p-4">
+                          <span className="material-symbols-outlined vd-option-tick !right-3 !top-3 text-xl" aria-hidden="true">check_circle</span>
+                          <span className="block pr-8 text-[0.9375rem] font-semibold">{b.name}</span>
+                          <span className="mt-0.5 block pr-8 text-sm leading-snug text-ink-2">{b.address}</span>
+                        </span>
+                      </label>
+                    ))}
                   </div>
-                </div>
-              </section>
-            )}
+                  <p className="vd-hint">Pickup Hours: {BUSINESS.hours}</p>
+                  <p className="vd-alert vd-alert-ok mt-3">Pay 50% now. Remaining 50% is due at store pickup.</p>
+                </fieldset>
+              )}
+            </CheckoutSection>
 
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm overflow-hidden">
+            <CheckoutSection step={3} title="Payment Method">
+              <div className="grid gap-3 md:grid-cols-2">
+                <RadioCard name="payment_method" value="online" checked={paymentMethod === "online"} onChange={() => setPaymentMethod("online")}
+                  title="Online Payment" badge="Recommended"
+                  desc={deliveryMethod === "pickup" ? "UPI, Cards, Netbanking for 50% pickup advance" : "UPI, Cards, Netbanking via Razorpay"} />
+                {deliveryMethod === "pickup" ? (
+                  <RadioCard name="payment_method" value="pay_at_store" checked={paymentMethod === "pay_at_store"} onChange={() => setPaymentMethod("pay_at_store")}
+                    title="Pay at Store" desc="Pay 50% now to confirm. Pay remaining 50% during pickup." />
+                ) : (
+                  <div className="rounded-lg bg-shade p-4 opacity-80" aria-disabled="true">
+                    <p className="flex items-center justify-between gap-2 text-[0.9375rem] font-semibold">
+                      Cash on Delivery
+                      <span className="text-[0.8125rem] font-medium text-ink-2">Unavailable</span>
+                    </p>
+                    <p className="mt-1 text-sm leading-snug text-ink-2">Currently unavailable. Please use online payment.</p>
+                  </div>
+                )}
+              </div>
+            </CheckoutSection>
+
+            {/* Optional: business billing */}
+            <div className="border-y border-line">
               <button
                 type="button"
                 onClick={() => setShowBusinessFields((prev) => !prev)}
-                className="w-full flex justify-between items-center p-5 lg:p-6 bg-stone-50/50 hover:bg-stone-50 transition-colors"
+                aria-expanded={showBusinessFields}
+                className="flex min-h-[56px] w-full items-center justify-between gap-3 text-left"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-stone-200/60 flex items-center justify-center text-plum-deep/80">
-                    <span className="material-symbols-outlined text-lg">domain</span>
-                  </div>
-                  <span className="text-base lg:text-lg font-bold text-plum-deep">Ordering for a Business?</span>
-                </div>
-                <span className={`material-symbols-outlined text-plum-deep transition-transform ${showBusinessFields ? "rotate-180" : ""}`}>expand_more</span>
+                <span className="text-[0.9375rem] font-semibold">Ordering for a Business? <span className="font-normal text-ink-2">Add your GSTIN</span></span>
+                <span className={`material-symbols-outlined text-xl text-ink-3 transition-transform ${showBusinessFields ? "rotate-180" : ""}`}>expand_more</span>
               </button>
               {showBusinessFields && (
-                <div className="p-5 lg:p-6 border-t border-stone-border/50 grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-bold text-text-muted mb-2">Company Name</label>
-                    <input
-                      value={businessInfo.companyName}
-                      onChange={(e) => onBusinessChange("companyName", e.target.value)}
-                      className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
-                      placeholder="Vijetha Digital Pvt Ltd"
-                      type="text"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-text-muted mb-2">GSTIN</label>
-                    <input
-                      value={businessInfo.gstin}
-                      onChange={(e) => onBusinessChange("gstin", e.target.value)}
-                      className="w-full bg-stone-50 border border-stone-border rounded-[12px] px-4 py-3 text-sm focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all"
-                      placeholder="36AAAAA0000A1Z5"
-                      type="text"
-                    />
-                  </div>
+                <div className="grid gap-4 pb-5 md:grid-cols-2">
+                  <Field id="company" label="Company Name">
+                    <input id="company" name="organization" type="text" autoComplete="organization" className="vd-input"
+                      placeholder="Your company name"
+                      value={businessInfo.companyName} onChange={(e) => onBusinessChange("companyName", e.target.value)} />
+                  </Field>
+                  <Field id="gstin" label="GSTIN" error={fieldErrors.gstin}>
+                    <input id="gstin" name="gstin" type="text" maxLength={15} autoComplete="off" spellCheck={false} className="vd-input uppercase"
+                      aria-invalid={!!fieldErrors.gstin} placeholder="36AAAAA0000A1Z5"
+                      value={businessInfo.gstin} onChange={(e) => onBusinessChange("gstin", e.target.value)} />
+                  </Field>
                 </div>
               )}
-            </section>
+            </div>
+          </form>
 
-            <section className="bg-white rounded-xl border border-stone-border shadow-sm p-5 lg:p-6">
-              <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-4 lg:mb-5 flex items-center gap-2 leading-[1.25] tracking-[-0.01em]">
-                <span className="material-symbols-outlined text-xl">payments</span>
-                Payment Method
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <label className="relative cursor-pointer">
-                  <input
-                    checked={paymentMethod === "online"}
-                    onChange={() => setPaymentMethod("online")}
-                    className="peer sr-only"
-                    name="payment_method"
-                    type="radio"
-                    value="online"
-                  />
-                  <div className="p-5 rounded-[12px] border border-stone-border bg-stone-50 hover:border-plum-deep peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-1 peer-checked:ring-plum-deep transition-all h-full relative">
-                    <div className="absolute -top-3 right-4 bg-plum-deep text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Recommended</div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-plum-deep">Online Payment</span>
-                      <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
-                    </div>
-                    <p className="text-xs text-text-muted">
-                      {deliveryMethod === "pickup"
-                        ? "UPI, Cards, Netbanking for 50% pickup advance"
-                        : "UPI, Cards, Netbanking via Razorpay"}
-                    </p>
-                  </div>
-                </label>
-
-                {deliveryMethod === "pickup" ? (
-                  <label className="relative cursor-pointer">
-                    <input
-                      checked={paymentMethod === "pay_at_store"}
-                      onChange={() => setPaymentMethod("pay_at_store")}
-                      className="peer sr-only"
-                      name="payment_method"
-                      type="radio"
-                      value="pay_at_store"
-                    />
-                    <div className="p-5 rounded-[12px] border border-stone-border bg-stone-50 hover:border-plum-deep peer-checked:border-plum-deep peer-checked:bg-plum-deep/5 peer-checked:ring-1 peer-checked:ring-plum-deep transition-all h-full">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-plum-deep">Pay at Store</span>
-                        <span className="material-symbols-outlined text-plum-deep opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
-                      </div>
-                      <p className="text-xs text-text-muted">Pay 50% now to confirm. Pay remaining 50% during pickup.</p>
-                    </div>
-                  </label>
-                ) : (
-                  <div className="p-5 rounded-[12px] border border-stone-border bg-stone-50/50 opacity-60 cursor-not-allowed h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-plum-deep">Cash on Delivery</span>
-                      <span className="text-[10px] font-semibold text-orange-600">Unavailable</span>
-                    </div>
-                    <p className="text-xs text-text-muted">Currently unavailable. Please use online payment.</p>
-                  </div>
-                )}
+          {/* Summary */}
+          <aside className="lg:sticky lg:top-[calc(var(--header-h)+1.25rem)] lg:col-span-5" aria-label="Order summary">
+            <div className="rounded-lg bg-surface p-5 shadow-[inset_0_0_0_1px_#DEDAD0] lg:p-6">
+              <div className="flex items-baseline justify-between gap-3">
+                <h2 className="vd-h3">Order Summary</h2>
+                <Link to="/cart" className="vd-link text-sm">Edit cart</Link>
               </div>
-            </section>
-          </div>
 
-          <aside className="lg:col-span-4 relative h-full">
-            <div className="sticky top-24 space-y-6">
-              <section className="bg-white rounded-xl shadow-md border border-stone-border p-5 lg:p-6">
-                <h2 className="text-[1.375rem] lg:text-[1.6rem] font-bold text-plum-deep mb-5 lg:mb-6 leading-[1.25] tracking-[-0.01em]">Order Summary</h2>
-
-                {summaryItem && (
-                  <div className="flex gap-4 mb-6 pb-6 border-b border-stone-border">
-                    <div className="w-20 h-20 bg-stone-light rounded-lg overflow-hidden border border-stone-border/50 shrink-0">
-                      {summaryItem.image_url ? (
-                        <img alt={summaryItem.name} className="w-full h-full object-cover" src={summaryItem.image_url} />
+              <ul className="mt-4 space-y-3 border-b border-line pb-4">
+                {items.map((item, idx) => (
+                  <li key={`${item.product_id}-${idx}`} className="flex gap-3">
+                    <div className="vd-frame h-14 w-14 flex-shrink-0">
+                      {item.image_url ? (
+                        <img alt="" src={item.image_url} width="56" height="56" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-plum-deep/40 text-3xl">inventory_2</span>
-                        </div>
+                        <span className="flex h-full items-center justify-center text-ink-3">
+                          <span className="material-symbols-outlined text-2xl">inventory_2</span>
+                        </span>
                       )}
                     </div>
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-plum-deep text-sm leading-tight mb-1 truncate">{summaryItem.name}</h4>
-                      <p className="text-xs text-text-muted">{items.length > 1 ? `${items.length} items in order` : "Single item order"}</p>
-                      <p className="text-sm font-semibold text-plum-deep mt-2">₹{formatMoney(subtotal)}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">{item.name}</p>
+                      <p className="truncate text-[0.8125rem] text-ink-2">{describeItem(item)}</p>
                     </div>
-                  </div>
-                )}
+                    <p className="vd-price whitespace-nowrap text-sm font-semibold">₹{formatMoney(Number(item.unit_price) * Number(item.quantity))}</p>
+                  </li>
+                ))}
+              </ul>
 
-                <div className="space-y-3 mb-6 border-b border-stone-border pb-6 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-text-muted">Subtotal</span>
-                    <span className="font-semibold text-text-dark">₹{formatMoney(subtotal)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-text-muted">GST (18%)</span>
-                    <span className="font-semibold text-text-dark">₹{formatMoney(gst)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-text-muted">{deliveryMethod === "pickup" ? "Pickup" : "Delivery"}</span>
-                    <span className="font-bold text-green-600">FREE</span>
-                  </div>
+              <dl className="vd-price mt-3 space-y-2 text-[0.9375rem]">
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">Subtotal</dt><dd className="font-medium">₹{formatMoney(subtotal)}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">GST (18%)</dt><dd className="font-medium">₹{formatMoney(gst)}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-ink-2">{deliveryMethod === "pickup" ? "Pickup" : "Delivery"}</dt><dd className="font-semibold text-ok">Free</dd></div>
+                <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
+                  <dt className="font-semibold">Grand Total</dt>
+                  <dd className="text-2xl font-bold tracking-tight">₹{formatMoney(grandTotal)}</dd>
                 </div>
-
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-lg font-bold text-plum-deep">Grand Total</span>
-                  <span className="text-3xl font-extrabold text-plum-deep">₹{formatMoney(grandTotal)}</span>
-                </div>
-
                 {deliveryMethod === "pickup" && (
-                  <div className="mb-6 rounded-xl border border-plum-deep/15 bg-plum-deep/[0.03] p-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-text-muted">Advance Payable Now (50%)</span>
-                      <span className="font-bold text-plum-deep">₹{formatMoney(payableNow)}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm mt-1">
-                      <span className="text-text-muted">Remaining at Store</span>
-                      <span className="font-semibold text-text-dark">₹{formatMoney(remainingAtStore)}</span>
-                    </div>
-                  </div>
+                  <>
+                    <div className="flex justify-between gap-4 pt-1"><dt className="font-semibold">Advance Payable Now (50%)</dt><dd className="font-semibold">₹{formatMoney(payableNow)}</dd></div>
+                    <div className="flex justify-between gap-4"><dt className="text-ink-2">Remaining at Store</dt><dd className="font-medium">₹{formatMoney(remainingAtStore)}</dd></div>
+                  </>
                 )}
+              </dl>
 
-                <button
-                  onClick={handlePayment}
-                  disabled={paying}
-                  className="w-full bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-darker shadow-soft-plum hover:shadow-card-hover transition-all flex items-center justify-center gap-2 text-base uppercase tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {paying ? (
-                    <>
-                      <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Processing
-                    </>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-[20px]">lock</span>
-                      Pay ₹{formatMoney(payableNow)}
-                    </>
-                  )}
-                </button>
+              <button onClick={handlePayment} disabled={paying} className="vd-btn vd-btn-lg vd-btn-accent vd-price mt-5 hidden w-full lg:inline-flex">
+                {paying ? "Processing…" : <><span className="material-symbols-outlined text-xl">lock</span>Pay ₹{formatMoney(payableNow)}</>}
+              </button>
 
-                <div className="mt-4 text-center">
-                  <p className="text-xs text-text-muted flex items-center justify-center gap-1">
-                    <span className="material-symbols-outlined text-[14px] text-green-600">verified_user</span>
-                    100% Secure Checkout
-                  </p>
-                  <p className="text-[10px] text-text-muted mt-1 opacity-75">Razorpay secured</p>
-                </div>
-              </section>
-
-              <div className="grid grid-cols-3 gap-0 bg-white border border-stone-border rounded-[16px]">
-                <div className="flex flex-col items-center justify-center text-center p-4">
-                  <span className="material-symbols-outlined text-slate-400 text-3xl mb-2">workspace_premium</span>
-                  <p className="text-[11px] font-bold text-slate-500 leading-tight">Quality Check</p>
-                </div>
-                <div className="flex flex-col items-center justify-center text-center p-4 border-x border-stone-border/60">
-                  <span className="material-symbols-outlined text-slate-400 text-3xl mb-2">assignment_return</span>
-                  <p className="text-[11px] font-bold text-slate-500 leading-tight">Easy Returns</p>
-                </div>
-                <div className="flex flex-col items-center justify-center text-center p-4">
-                  <span className="material-symbols-outlined text-slate-400 text-3xl mb-2">support_agent</span>
-                  <p className="text-[11px] font-bold text-slate-500 leading-tight">24/7 Support</p>
-                </div>
-              </div>
+              <p className="mt-3 text-center text-[0.8125rem] text-ink-2">100% Secure Checkout · Razorpay secured</p>
             </div>
+
+            <ul className="mt-4 flex justify-between gap-3 px-1 text-[0.8125rem] text-ink-2">
+              <li>Quality Check</li>
+              <li>Easy Returns</li>
+              <li>24/7 Support</li>
+            </ul>
           </aside>
         </div>
       </div>
+
+      <StickyBar>
+        <div className="min-w-0">
+          <p className="text-[0.75rem] leading-tight text-ink-2">{deliveryMethod === "pickup" ? "Pay now (50%)" : "Total incl. GST"}</p>
+          <p className="vd-price truncate text-lg font-bold leading-tight">₹{formatMoney(payableNow)}</p>
+        </div>
+        <button onClick={handlePayment} disabled={paying} className="vd-btn vd-btn-accent flex-shrink-0 !min-h-[48px] px-6">
+          {paying ? "Processing…" : <><span className="material-symbols-outlined text-xl">lock</span>Pay Now</>}
+        </button>
+      </StickyBar>
+    </main>
+  );
+}
+
+function CheckoutSection({ step, title, children }) {
+  return (
+    <section>
+      <h2 className="vd-h3 mb-4 flex items-baseline gap-2.5 border-b border-line pb-3">
+        <span className="vd-price text-ink-3">{step}</span>{title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+function Field({ id, label, error, hint, className = "", children }) {
+  return (
+    <div className={className}>
+      <label htmlFor={id} className="vd-label">{label}</label>
+      {children}
+      {error && <p className="vd-error" role="alert">{error}</p>}
+      {!error && hint && <p className="vd-hint">{hint}</p>}
     </div>
+  );
+}
+
+function RadioCard({ name, value, checked, onChange, icon, title, desc, badge }) {
+  return (
+    <label className="relative block cursor-pointer">
+      <input type="radio" name={name} value={value} className="sr-only" checked={checked} onChange={onChange} />
+      <span className="vd-option !justify-start !p-4">
+        <span className="material-symbols-outlined vd-option-tick !right-3 !top-3 text-xl" aria-hidden="true">check_circle</span>
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1 pr-7 text-[0.9375rem] font-semibold">
+          {icon && <span className="material-symbols-outlined text-xl text-ink-2" aria-hidden="true">{icon}</span>}
+          {title}
+          {badge && <span className="vd-chip">{badge}</span>}
+        </span>
+        <span className="mt-1 block text-sm leading-snug text-ink-2">{desc}</span>
+      </span>
+    </label>
   );
 }

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import AuthLayout from "../layouts/AuthLayout";
+import AuthShell from "../components/store/AuthShell";
+import usePageTitle from "../hooks/usePageTitle";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const GOOGLE_CONFIGURED = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
 const GOOGLE_LOGO = (
-  <svg className="w-5 h-5" viewBox="0 0 24 24">
+  <svg className="h-5 w-5" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
@@ -17,6 +18,7 @@ const GOOGLE_LOGO = (
 
 export default function Register() {
   const navigate = useNavigate();
+  usePageTitle("Create Account");
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const { register, loginWithGoogle } = useAuth();
@@ -46,120 +48,73 @@ export default function Register() {
   };
 
   return (
-    <AuthLayout
-      leftTag="WELCOME TO"
-      leftTitle="Vijetha Digital"
-      leftSubtitle="Join our premium printing network and bring your ideas to life."
-    >
-      <div className="w-full max-w-md">
+    <AuthShell eyebrow="Welcome To" title="Vijetha Digital" subtitle="Join our premium printing network and bring your ideas to life.">
+      <h1 className="vd-h1">Create Account</h1>
+      <p className="mt-2 text-ink-2">Sign up to start ordering premium print products.</p>
 
-        {/* Go to Home Link */}
-        <div className="mb-6">
-          <Link 
-            to="/" 
-            className="inline-flex items-center gap-1 text-sm text-plum-deep/60 hover:text-plum-deep transition-colors"
-          >
-            <span className="material-symbols-outlined text-base">arrow_back</span>
-            <span>Back to Home</span>
-          </Link>
+      {error && (
+        <div className="vd-alert vd-alert-error mt-5" role="alert">
+          <span className="material-symbols-outlined text-lg">error</span>{error}
         </div>
+      )}
+      {notice && (
+        <div className="vd-alert vd-alert-info mt-5" role="status">
+          <span className="material-symbols-outlined text-lg">info</span>{notice}
+        </div>
+      )}
 
-        <header className="mb-5">
-          <h2 className="text-[1.625rem] font-bold text-plum-deep mb-1">
-            Create{" "}
-            <span className="relative inline-block">
-              Account
-              <span className="absolute left-0 bottom-0 w-full h-[2px] bg-coral-accent rounded-full" />
-            </span>
-          </h2>
-          <p className="text-[0.8125rem] text-text-muted">Sign up to start ordering premium print products.</p>
-        </header>
-
-        {error && (
-          <div className="mb-3 flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-[0.8125rem] text-red-600">
-            <span className="material-symbols-outlined text-base flex-shrink-0">error</span>{error}
-          </div>
-        )}
-        {notice && (
-          <div className="mb-3 flex items-center gap-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-[0.8125rem] text-blue-700">
-            <span className="material-symbols-outlined text-base flex-shrink-0">info</span>{notice}
-          </div>
-        )}
-
+      <div className="mt-6">
         {GOOGLE_CONFIGURED ? (
-          <div className="mb-4">
-            <GoogleSignInButton
-              label="Sign up with Google"
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              className="border-stone-border hover:bg-stone-light hover:shadow-md hover:-translate-y-0.5 text-plum-deep transition-all duration-200"
-            />
-          </div>
+          <GoogleSignInButton label="Sign up with Google" onSuccess={handleGoogleSuccess} onError={handleGoogleError} className="border-line hover:border-ink text-ink" />
         ) : (
           <button
             type="button"
             onClick={() => { setNotice("Google Sign-In is coming soon. Please fill in the form below to register."); setError(""); }}
-            className="w-full h-11 flex items-center justify-center gap-2.5 bg-white border-2 border-stone-border rounded-xl hover:bg-stone-light hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-sm font-medium text-plum-deep mb-4"
+            className="vd-btn vd-btn-quiet w-full"
           >
             {GOOGLE_LOGO}
             Sign up with Google
           </button>
         )}
+      </div>
 
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 h-px bg-stone-border" />
-          <span className="text-[0.6875rem] font-medium text-text-muted whitespace-nowrap">or fill in details</span>
-          <div className="flex-1 h-px bg-stone-border" />
+      <div className="my-5 flex items-center gap-3 text-[0.8125rem] text-ink-2">
+        <span className="h-px flex-1 bg-line" />or fill in details<span className="h-px flex-1 bg-line" />
+      </div>
+
+      <form onSubmit={submit} className="space-y-4">
+        <div>
+          <label htmlFor="reg-name" className="vd-label">Full Name</label>
+          <input id="reg-name" name="name" type="text" autoComplete="name" required value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" className="vd-input" />
+        </div>
+        <div>
+          <label htmlFor="reg-email" className="vd-label">Email Address</label>
+          <input id="reg-email" name="email" type="email" autoComplete="email" spellCheck={false} required value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@example.com" className="vd-input" />
+        </div>
+        <div>
+          <label htmlFor="reg-password" className="vd-label">Password</label>
+          <input id="reg-password" name="password" type="password" autoComplete="new-password" required value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Minimum 6 characters" className="vd-input" />
         </div>
 
-        <form onSubmit={submit} className="space-y-4">
-          <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Full Name</label>
-            <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="John Doe"
-              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
-          </div>
-
-          <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Email Address</label>
-            <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="name@example.com"
-              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
-          </div>
-
-          <div>
-            <label className="block text-[0.6875rem] font-bold uppercase tracking-wider text-text-muted mb-2">Password</label>
-            <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-              placeholder="Minimum 6 characters"
-              className="w-full h-11 px-4 text-sm rounded-xl border-2 border-stone-border bg-white focus:ring-2 focus:ring-plum-deep/20 focus:border-plum-deep outline-none transition-all placeholder:text-text-muted/40" />
-          </div>
-
-          <label className="flex items-center gap-2 cursor-pointer text-[0.8125rem] text-text-muted">
-            <input type="checkbox" required className="rounded border-stone-border text-plum-deep focus:ring-plum-deep/20 flex-shrink-0" />
-            <span>
-              I accept the{" "}
-              <Link to="/terms" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Terms</Link>
-              {" "}&amp;{" "}
-              <Link to="/privacy-policy" className="text-plum-deep font-semibold hover:text-coral-accent underline underline-offset-2">Privacy</Link>
-            </span>
-          </label>
-
-          <button type="submit"
-            className="w-full h-11 bg-plum-deep text-white rounded-xl font-bold text-sm hover:bg-plum-light hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
-            Create Account
-            <span className="material-symbols-outlined text-lg">arrow_forward</span>
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-[0.8125rem] text-text-muted">
-          Already have an account?{" "}
-          <span onClick={() => navigate(redirectTo !== "/" ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login")}
-            className="text-plum-deep font-semibold cursor-pointer hover:text-coral-accent transition-colors">
-            Sign In
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-ink-2">
+          <input type="checkbox" required className="mt-0.5 h-5 w-5 flex-shrink-0 cursor-pointer accent-[#1A2332]" />
+          <span>
+            I accept the <Link to="/terms" className="vd-link text-ink">Terms</Link> &amp; <Link to="/privacy-policy" className="vd-link text-ink">Privacy</Link>
           </span>
-        </p>
+        </label>
 
-      </div>
-    </AuthLayout>
+        <button type="submit" className="vd-btn vd-btn-lg vd-btn-ink w-full">
+          Create Account <span className="material-symbols-outlined text-xl">arrow_forward</span>
+        </button>
+      </form>
+
+      <p className="mt-6 text-center text-[0.9375rem] text-ink-2">
+        Already have an account?{" "}
+        <Link to={redirectTo !== "/" ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login"} className="vd-link text-ink">Sign In</Link>
+      </p>
+    </AuthShell>
   );
 }

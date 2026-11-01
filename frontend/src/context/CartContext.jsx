@@ -28,9 +28,9 @@ export function CartProvider({ children }) {
         (i) => i.product_id === item.product_id && JSON.stringify(i.config) === JSON.stringify(item.config)
       );
       if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex].quantity += item.quantity;
-        return updated;
+        return prev.map((existing, i) =>
+          i === existingIndex ? { ...existing, quantity: existing.quantity + item.quantity } : existing
+        );
       }
       return [...prev, item];
     });
@@ -38,6 +38,11 @@ export function CartProvider({ children }) {
 
   const removeFromCart = (index) => {
     setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  /* Puts a removed line back where it was (undo) */
+  const restoreItem = (item, index) => {
+    setItems((prev) => [...prev.slice(0, index), item, ...prev.slice(index)]);
   };
 
   const updateQuantity = (index, newQty) => {
@@ -59,7 +64,7 @@ export function CartProvider({ children }) {
   }, [items]);
 
   return (
-    <CartContext.Provider value={{ items, cartLoaded, addToCart, removeFromCart, updateQuantity, clearCart, total }}>
+    <CartContext.Provider value={{ items, cartLoaded, addToCart, removeFromCart, restoreItem, updateQuantity, clearCart, total }}>
       {children}
     </CartContext.Provider>
   );

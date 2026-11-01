@@ -1,13 +1,30 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import MaintenanceOverlay from "./components/MaintenanceOverlay";
 import WhatsAppButton from "./components/ui/WhatsAppButton";
 import keepAliveService from "./utils/keepAlive";
 
-/* Scroll to top on every route change */
+/* Scroll to top on route change, or to the #anchor when the link has one */
 function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const target = document.getElementById(hash.slice(1));
+      if (target) { target.scrollIntoView(); return; }
+    }
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
+
+/* Marks customer pages so the storefront design system applies and the legacy
+   portal sheets do not. See postcss.config.js. */
+const PORTAL_PATH = /^\/(admin|staff|reception|workspace|maintenance)(\/|$)/;
+function SurfaceMarker() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useLayoutEffect(() => {
+    document.documentElement.dataset.surface = PORTAL_PATH.test(pathname) ? "portal" : "store";
+  }, [pathname]);
   return null;
 }
 
@@ -100,6 +117,7 @@ export default function App() {
 
   return (
     <>
+    <SurfaceMarker />
     <MaintenanceOverlay />
     <WhatsAppButton />
     <ScrollToTop />

@@ -12,7 +12,7 @@ export default function ResetPassword() {
       description: "Request a new admin account password reset link",
       icon: "admin_panel_settings",
       path: "/admin/forgot-password",
-      accentColor: "#FF6B5E",
+      accentColor: "#C0392B",
     },
     {
       id: "staff",
@@ -20,7 +20,7 @@ export default function ResetPassword() {
       description: "Request a new staff workspace password reset link",
       icon: "work",
       path: "/staff/forgot-password",
-      accentColor: "#3B2F63",
+      accentColor: "#1A2332",
     },
     {
       id: "customer",
@@ -45,7 +45,7 @@ export default function ResetPassword() {
             Reset{" "}
             <span className="relative inline-block">
               Password
-              <span className="absolute left-0 bottom-[-2px] w-full h-[2px] bg-[#FF6B5E]" />
+              <span className="absolute left-0 bottom-[-2px] w-full h-[2px] bg-[#C0392B]" />
             </span>
           </h2>
 
@@ -59,10 +59,10 @@ export default function ResetPassword() {
               <button
                 key={portal.id}
                 onClick={() => navigate(portal.path)}
-                className="w-full group relative overflow-hidden rounded-xl bg-gradient-to-br from-[#F8F7F4] to-[#F0EEEB] border-2 border-[#E6E3DD] hover:border-[#FF6B5E] p-6 transition-all hover:shadow-lg hover:scale-[1.01]"
+                className="w-full group relative overflow-hidden rounded-xl bg-gradient-to-br from-[#F8F7F4] to-[#F0EEEB] border-2 border-[#E6E3DD] hover:border-[#C0392B] p-6 transition-all hover:shadow-lg hover:scale-[1.01]"
               >
                 {/* Corner accent line */}
-                <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-[#FF6B5E]/10 to-transparent rounded-br-2xl" />
+                <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-[#C0392B]/10 to-transparent rounded-br-2xl" />
 
                 <div className="relative flex items-start gap-4">
                   {/* Icon */}
@@ -83,13 +83,13 @@ export default function ResetPassword() {
 
                   {/* Content */}
                   <div className="flex-1 text-left min-w-0">
-                    <h3 className="font-bold text-[#1C1C1C] text-lg mb-1 group-hover:text-[#FF6B5E] transition-colors">
+                    <h3 className="font-bold text-[#1C1C1C] text-lg mb-1 group-hover:text-[#C0392B] transition-colors">
                       {portal.title}
                     </h3>
                     <p className="text-sm text-[#6E6E73] mb-3">{portal.description}</p>
 
                     {/* CTA */}
-                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-[#3B2F63] group-hover:text-[#FF6B5E] transition-colors">
+                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-[#1A2332] group-hover:text-[#C0392B] transition-colors">
                       <span>Request New Link</span>
                       <span className="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform">
                         arrow_forward
@@ -104,7 +104,7 @@ export default function ResetPassword() {
           {/* Security Note */}
           <div className="mt-8 p-4 rounded-lg bg-[#F0EEEB] border border-[#E6E3DD]">
             <div className="flex gap-3">
-              <span className="material-symbols-outlined text-[#3B2F63] flex-shrink-0">security</span>
+              <span className="material-symbols-outlined text-[#1A2332] flex-shrink-0">security</span>
               <p className="text-xs text-[#6E6E73]">
                 Password reset links expire after 1 hour for security. Your email address will be verified before processing.
               </p>

@@ -1,49 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import AuthLayout from "../layouts/AuthLayout";
+import { Link } from "react-router-dom";
+import AuthShell from "../components/store/AuthShell";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function ResetLinkSent() {
-  const navigate = useNavigate();
+  usePageTitle("Reset Link Sent");
 
   return (
-    <AuthLayout
-      leftTag="ACCOUNT RECOVERY"
-      leftTitle="Check Your Email"
-      leftSubtitle="We’ve sent a secure password reset link to your registered email address."
-    >
-      <div className="w-full max-w-md text-center">
-
-        {/* Icon */}
-        <div className="mb-8 flex justify-center">
-          <div className="w-16 h-16 rounded-full bg-[#EDE9FE] flex items-center justify-center">
-            <span className="material-symbols-outlined text-plum-deep text-3xl">
-              mail
-            </span>
-          </div>
-        </div>
-
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-text-dark mb-4">
-          Reset <span className="relative inline-block">
-            Link Sent
-            <span className="absolute left-0 bottom-[-3px] w-full h-[3px] bg-coral-accent"></span>
-          </span>
-        </h2>
-
-        {/* Description */}
-        <p className="text-text-muted mb-8">
-          Please check your inbox and follow the instructions to reset your password.
-          If you don’t see the email, check your spam folder.
-        </p>
-
-        {/* Button */}
-        <button
-          onClick={() => navigate("/login")}
-          className="w-full bg-plum-deep text-white py-4 rounded-lg font-bold hover:bg-[#2D244C] transition-all"
-        >
-          Back to Sign In
-        </button>
-
-      </div>
-    </AuthLayout>
+    <AuthShell eyebrow="Account Recovery" title="Check Your Email" subtitle="We've sent a secure password reset link to your registered email address.">
+      <span className="material-symbols-outlined text-4xl text-ink-2">mail</span>
+      <h1 className="vd-h1 mt-3">Reset Link Sent</h1>
+      <p className="mt-2 text-ink-2">
+        Please check your inbox and follow the instructions to reset your password. If you don't see the email, check your spam folder.
+      </p>
+      <Link to="/login" className="vd-btn vd-btn-lg vd-btn-ink mt-6 w-full">Back to Sign In</Link>
+    </AuthShell>
   );
 }

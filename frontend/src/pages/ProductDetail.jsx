@@ -4,6 +4,11 @@ import { getProducts } from "../api/products";
 import { getReviews, getReviewSummary, getMyReview, postReview, uploadReviewMedia } from "../api/reviews";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import ProductCard from "../components/product/ProductCard";
+import Breadcrumbs from "../components/store/Breadcrumbs";
+import StickyBar from "../components/store/StickyBar";
+import usePageTitle from "../hooks/usePageTitle";
+import { BUSINESS, CATEGORY_ICON, CATEGORY_LINK, isTallCategory, rupees, whatsappUrl } from "../config/business";
 
 /* ── Finish options by category ─────────────────────────────────────── */
 const FINISH_OPTIONS = {
@@ -87,10 +92,45 @@ function getUnitLabel(p) {
   return p.unit || "per piece";
 }
 
-/* ── Format helper ──────────────────────────────────────────────────── */
-const fmtPrice = (p) => Number(p).toLocaleString("en-IN");
-
 /* ── Component ─────────────────────────────────────────────────────── */
+const GST_RATE = 0.18;
+
+/* Common board sizes, so most customers never have to type */
+const SIZE_PRESETS = [
+  { w: 3, h: 2 },
+  { w: 4, h: 3 },
+  { w: 6, h: 3 },
+  { w: 8, h: 4 },
+];
+
+const SERVICE_TABS = [["description", "Description"], ["specifications", "Specifications"], ["shipping", "Shipping Info"], ["faq", "FAQ"]];
+
+/* A labelled group of option tiles. Native radios keep keyboard use working. */
+function OptionGroup({ step, title, name, options, selected, onSelect, columns }) {
+  return (
+    <fieldset>
+      <legend className="mb-2.5 flex items-baseline gap-2 text-[0.9375rem] font-semibold">
+        <span className="vd-price text-ink-3">{step}</span>{title}
+      </legend>
+      <div className={`grid gap-2 ${columns}`}>
+        {options.map((opt, i) => (
+          <label key={opt.label} className="relative block cursor-pointer">
+            <input type="radio" name={name} className="peer sr-only" checked={selected === i} onChange={() => onSelect(i)} />
+            <span className="vd-option">
+              <span className="material-symbols-outlined vd-option-tick text-base" aria-hidden="true">check_circle</span>
+              <span className="block pr-4 text-sm font-semibold leading-tight">{opt.label}</span>
+              {opt.sub && <span className="vd-price mt-0.5 block text-[0.75rem] leading-tight text-ink-2">{opt.sub}</span>}
+            </span>
+            {opt.badge && (
+              <span className="vd-chip absolute -right-1 -top-2 !bg-accent !text-white">{opt.badge}</span>
+            )}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 export default function ProductDetail() {
   const { id }        = useParams();
   const navigate      = useNavigate();
@@ -105,9 +145,12 @@ export default function ProductDetail() {
   const [height,      setHeight]      = useState("");
   const [qty,         setQty]         = useState(null);
   const [activeTab,   setActiveTab]   = useState("description");
-  const [mainThumb,   setMainThumb]   = useState(0);
   const [designFile,  setDesignFile]  = useState(null);
+  const [sizeError,   setSizeError]   = useState("");
+  const [justAdded,   setJustAdded]   = useState(false);
+  const [dragOver,    setDragOver]    = useState(false);
   const fileInputRef = useRef(null);
+  const widthInputRef = useRef(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -116,6 +159,7 @@ export default function ProductDetail() {
   }, [id]);
 
   const product = useMemo(() => allProducts.find(p => String(p.id) === String(id)) || null, [allProducts, id]);
+  usePageTitle(product?.name);
 
   // Reset config when product changes
   useEffect(() => {
@@ -124,9 +168,10 @@ export default function ProductDetail() {
     setSizeIdx(0);
     setWidth("");
     setHeight("");
-    setMainThumb(0);
     setActiveTab("description");
     setDesignFile(null);
+    setSizeError("");
+    setJustAdded(false);
     if (product) {
       const opts = getQtyOptions(product);
       setQty(opts ? opts[0] : 1);
@@ -176,9 +221,8 @@ export default function ProductDetail() {
   }, [product, width, height, qty]);
 
   /* ── Add to cart ──────────────────────────────────────────────────── */
-  const doAddToCart = () => {
-    if (!user) { navigate("/login?redirect=" + encodeURIComponent("/products/" + id)); return; }
-    if (!product) return;
+  const addConfiguredItem = () => {
+    if (!product) return false;
 
     const finish_label = finishOptions[finish]?.label;
     const size_label   = sizeOptions ? sizeOptions[sizeIdx]?.label : null;
@@ -196,7 +240,12 @@ export default function ProductDetail() {
 
     if (usesDimensions(product)) {
       const w = Number(width), h = Number(height);
-      if (!w || !h || w <= 0 || h <= 0) { alert("Please enter valid width and height"); return; }
+      if (!w || !h || w <= 0 || h <= 0) {
+        setSizeError("Enter a width and height, or pick a common size.");
+        widthInputRef.current?.focus();
+        widthInputRef.current?.scrollIntoView({ block: "center" });
+        return false;
+      }
       addToCart({
         product_id: product.id, name: product.name, category: product.category,
         image_url: product.image_url || null,
@@ -217,504 +266,458 @@ export default function ProductDetail() {
         },
       });
     }
-    navigate("/cart");
+    return true;
+  };
+
+  const handleAddToCart = () => {
+    if (addConfiguredItem()) setJustAdded(true);
+  };
+
+  const handleOrderNow = () => {
+    if (addConfiguredItem()) navigate("/checkout");
   };
 
   /* ── Loading / not found ──────────────────────────────────────────── */
   if (loading) return (
-    <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-16 font-display animate-pulse">
-      <div className="grid lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-7"><div className="aspect-[4/3] bg-stone-light rounded-[16px]" /></div>
-        <div className="lg:col-span-5 space-y-4">
-          <div className="h-10 bg-stone-light rounded w-3/4" />
-          <div className="h-5 bg-stone-light rounded w-1/2" />
-          <div className="h-5 bg-stone-light rounded w-1/3" />
+    <main id="main" className="vd-wrap py-10 font-display" aria-busy="true">
+      <div className="grid gap-10 lg:grid-cols-12">
+        <div className="aspect-[4/3] vd-skeleton lg:col-span-7" />
+        <div className="space-y-4 lg:col-span-5">
+          <div className="h-10 w-3/4 vd-skeleton" />
+          <div className="h-5 w-1/2 vd-skeleton" />
+          <div className="h-24 vd-skeleton" />
+          <div className="h-24 vd-skeleton" />
         </div>
       </div>
-    </div>
+    </main>
   );
 
   if (!product) return (
-    <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-24 text-center font-display">
-      <span className="material-symbols-outlined text-5xl text-plum-deep/30 mb-4 block">search_off</span>
-      <p className="text-xl font-bold text-plum-deep mb-2">Product not found</p>
-      <Link to="/products" className="text-coral-accent font-semibold underline">Browse all products</Link>
-    </div>
+    <main id="main" className="vd-wrap py-24 font-display">
+      <h1 className="vd-h2">Product not found</h1>
+      <p className="mt-2 text-ink-2">This product may have moved or is no longer available.</p>
+      <Link to="/products" className="vd-btn vd-btn-ink mt-6">Browse all products</Link>
+    </main>
   );
 
-  const thumbImages = [product.image_url, product.image_url, product.image_url, null];
-  const unitLabel   = getUnitLabel(product);
+  const unitText = getUnitLabel(product);
+  const dimensional = usesDimensions(product);
+  const area = (Number(width) || 0) * (Number(height) || 0);
+  const gstAmount = totalPrice * GST_RATE;
+  const customSizeSelected = sizeOptions?.[sizeIdx]?.label === "Custom";
+
+  // Step numbers follow what this product actually asks for
+  const sizeStep = 2;
+  const quantityStep = dimensional || sizeOptions ? 3 : 2;
+  const artworkStep = qtyOptions ? quantityStep + 1 : quantityStep;
+
+  const priceLabel = totalPrice > 0 ? rupees(totalPrice) : dimensional ? "Enter size" : rupees(product.base_price);
 
   return (
-    <div className="min-h-screen bg-warm-white font-display">
-
-      {/* Breadcrumb */}
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10 pt-6">
-        <nav className="flex items-center text-xs text-text-muted overflow-x-auto whitespace-nowrap pb-2">
-          <Link to="/" className="hover:text-plum-deep transition-colors">Home</Link>
-          <span className="material-symbols-outlined text-xs mx-1 text-stone-400">chevron_right</span>
-          <Link to="/products" className="hover:text-plum-deep transition-colors">Products</Link>
-          <span className="material-symbols-outlined text-xs mx-1 text-stone-400">chevron_right</span>
-          <Link to={`/products?category=${encodeURIComponent(product.category)}`} className="hover:text-plum-deep transition-colors">{product.category}</Link>
-          <span className="material-symbols-outlined text-xs mx-1 text-stone-400">chevron_right</span>
-          <span className="text-plum-deep font-semibold">{product.name}</span>
-        </nav>
+    <main id="main" className="font-display pb-[var(--sticky-bar,0px)]">
+      <div className="vd-wrap pt-5">
+        <Breadcrumbs items={[
+          { label: "Home", to: "/" },
+          { label: "Products", to: "/products" },
+          { label: product.category, to: CATEGORY_LINK(product.category) },
+          { label: product.name },
+        ]} />
       </div>
 
-      {/* Main grid */}
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16">
+      <div className="vd-wrap pb-12 pt-5 lg:pb-16">
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
 
-          {/* Left: images */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            <div className="relative w-full aspect-[4/3] bg-stone-light rounded-[16px] overflow-hidden shadow-architectural border border-stone-border group">
-              {product.image_url
-                ? <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                : <div className="w-full h-full flex items-center justify-center"><span className="material-symbols-outlined text-plum-deep/20 text-8xl">image</span></div>}
-              <div className="absolute top-6 left-6 bg-white/95 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-plum-deep shadow-sm border border-plum-deep/5 tracking-wide uppercase">In Stock</div>
+          {/* Left: image, then product information */}
+          <div className="min-w-0 lg:col-span-7">
+            <div className={`vd-frame aspect-[4/3] ${isTallCategory(product.category) ? "vd-frame-contain" : ""}`}>
+              {product.image_url ? (
+                <img src={product.image_url} alt={product.name} width="800" height="600" fetchPriority="high" />
+              ) : (
+                <div className="flex h-full items-center justify-center text-ink-3">
+                  <span className="material-symbols-outlined text-5xl">{CATEGORY_ICON[product.category] || "image"}</span>
+                </div>
+              )}
+              <span className="vd-chip absolute left-3 top-3 !bg-surface">
+                <span className="material-symbols-outlined text-sm text-ok">check_circle</span> In Stock
+              </span>
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {thumbImages.map((src, i) => (
-                <button key={i} onClick={() => src && setMainThumb(i)}
-                  className={`aspect-square rounded-[16px] overflow-hidden transition-all shadow-sm hover:shadow-md ${mainThumb === i ? "border-2 border-plum-deep ring-2 ring-plum-deep/10 ring-offset-2" : "border border-stone-border opacity-70 hover:opacity-100"}`}>
-                  {src
-                    ? <img src={src} alt={`view ${i + 1}`} className="w-full h-full object-cover" />
-                    : <div className="w-full h-full bg-stone-light flex items-center justify-center"><span className="material-symbols-outlined text-plum-deep text-3xl opacity-40">play_circle</span></div>}
-                </button>
-              ))}
-            </div>
+
+            {/* Info tabs (desktop position; repeats below the panel order on mobile) */}
+            <section className="mt-10 hidden lg:block" aria-label="Product information">
+              <ProductTabs product={product} activeTab={activeTab} setActiveTab={setActiveTab} finishOptions={finishOptions} unitText={unitText} />
+            </section>
           </div>
 
           {/* Right: order panel */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-24">
-              <h1 className="text-xl lg:text-2xl font-bold text-plum-deep tracking-tight mb-2 leading-[1.2]">{product.name}</h1>
-              <p className="text-text-muted leading-relaxed mb-4 text-sm">{product.description || product.category}</p>
+          <div className="min-w-0 lg:col-span-5">
+            <div className="lg:sticky lg:top-[calc(var(--header-h)+1.25rem)]">
+              <h1 className="vd-h1 !text-[1.75rem] lg:!text-[2.125rem]">{product.name}</h1>
+              <p className="mt-2 text-[0.9375rem] leading-snug text-ink-2">{product.description || product.category}</p>
+              <p className="vd-price mt-3 text-sm text-ink-2">
+                <span className="text-2xl font-bold text-ink">{rupees(product.base_price)}</span> / {unitText} <span className="whitespace-nowrap">(Excl. GST)</span>
+              </p>
 
-              {/* Base price */}
-              <div className="flex items-center gap-3 mb-6 border-b border-stone-border pb-4">
-                <div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl font-extrabold text-plum-deep tracking-tight">&#8377;{fmtPrice(product.base_price)}</span>
-                    <span className="text-sm text-text-muted font-medium">/ {unitLabel}</span>
-                  </div>
-                  <span className="text-xs text-text-muted mt-0.5 font-medium inline-block">(Excl. GST)</span>
-                </div>
-                <span className="ml-auto text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1 flex-shrink-0">
-                  <span className="material-symbols-outlined text-[14px]">check_circle</span> In Stock
-                </span>
-              </div>
+              <form className="mt-6 space-y-6 border-t border-line pt-6" onSubmit={(e) => e.preventDefault()}>
+                <OptionGroup
+                  step={1}
+                  title={product.category === "Printing Services" ? "Paper Finish" : "Material / Type"}
+                  name="finish"
+                  options={finishOptions}
+                  selected={finish}
+                  onSelect={setFinish}
+                  columns={finishOptions.length === 3 ? "grid-cols-3" : finishOptions.length <= 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4"}
+                />
 
-              <form className="space-y-5" onSubmit={e => e.preventDefault()}>
-
-                {/* ── 1. Finish / Material ───────────────────────────── */}
-                <div>
-                  <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                    {product.category === "Printing Services" ? "Paper Finish" : "Material / Type"}
-                  </label>
-                  <div className={`grid gap-3 ${finishOptions.length <= 2 ? "grid-cols-2" : finishOptions.length === 3 ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-4"}`}>
-                    {finishOptions.map((opt, i) => (
-                      <label key={opt.label} className="cursor-pointer relative">
-                        <input type="radio" name="finish" className="sr-only" checked={finish === i} onChange={() => setFinish(i)} />
-                        <div className={`border rounded-[12px] p-3 text-center transition-all duration-200 h-full flex flex-col justify-center ${finish === i ? "border-plum-deep bg-plum-deep" : "bg-white border-stone-border hover:border-plum-deep/50"}`}>
-                          <span className={`block text-sm font-bold ${finish === i ? "text-white" : "text-text-dark"}`}>{opt.label}</span>
-                          <span className={`block text-[10px] mt-1 ${finish === i ? "text-white/80" : "text-text-muted"}`}>{opt.sub}</span>
-                          {finish === i && <span className="material-symbols-outlined absolute top-2 right-2 text-[14px] text-white">check_circle</span>}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* ── 2. Size selection ──────────────────────────────── */}
-
-                {/* A) Custom width × height (Sign Boards, Flex, Canvas) */}
-                {usesDimensions(product) && (
-                  <div>
-                    <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                      Size — Custom Dimensions (in feet)
-                    </label>
-                    <div className="grid grid-cols-2 gap-4">
+                {dimensional && (
+                  <fieldset>
+                    <legend className="mb-2.5 flex items-baseline gap-2 text-[0.9375rem] font-semibold">
+                      <span className="vd-price text-ink-3">{sizeStep}</span>Size in feet
+                    </legend>
+                    <div className="mb-3 grid grid-cols-4 gap-2">
+                      {SIZE_PRESETS.map((preset) => {
+                        const active = Number(width) === preset.w && Number(height) === preset.h;
+                        return (
+                          <button
+                            key={`${preset.w}x${preset.h}`}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => { setWidth(String(preset.w)); setHeight(String(preset.h)); setSizeError(""); }}
+                            className={`vd-price min-h-[44px] rounded-lg text-sm font-semibold transition-shadow ${active ? "shadow-[inset_0_0_0_2px_#14181F]" : "bg-surface shadow-[inset_0_0_0_1px_#DEDAD0] hover:shadow-[inset_0_0_0_1px_#14181F]"}`}
+                          >
+                            {preset.w}×{preset.h}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-text-muted font-semibold mb-1.5 block">Width (ft)</label>
-                        <input type="number" min="0.5" step="0.5" value={width} onChange={e => setWidth(e.target.value)} placeholder="e.g. 4"
-                          className="w-full border border-stone-border rounded-[12px] px-4 py-3 text-sm font-semibold text-plum-deep focus:outline-none focus:ring-2 focus:ring-plum-deep/20 bg-white" />
+                        <label htmlFor="size-width" className="vd-label">Width (ft)</label>
+                        <input
+                          ref={widthInputRef} id="size-width" name="width" type="number" inputMode="decimal"
+                          min="0.5" step="0.5" value={width} placeholder="e.g. 4"
+                          aria-invalid={!!sizeError && !(Number(width) > 0)}
+                          onChange={(e) => { setWidth(e.target.value); setSizeError(""); }}
+                          className="vd-input vd-price"
+                        />
                       </div>
                       <div>
-                        <label className="text-xs text-text-muted font-semibold mb-1.5 block">Height (ft)</label>
-                        <input type="number" min="0.5" step="0.5" value={height} onChange={e => setHeight(e.target.value)} placeholder="e.g. 3"
-                          className="w-full border border-stone-border rounded-[12px] px-4 py-3 text-sm font-semibold text-plum-deep focus:outline-none focus:ring-2 focus:ring-plum-deep/20 bg-white" />
+                        <label htmlFor="size-height" className="vd-label">Height (ft)</label>
+                        <input
+                          id="size-height" name="height" type="number" inputMode="decimal"
+                          min="0.5" step="0.5" value={height} placeholder="e.g. 3"
+                          aria-invalid={!!sizeError && !(Number(height) > 0)}
+                          onChange={(e) => { setHeight(e.target.value); setSizeError(""); }}
+                          className="vd-input vd-price"
+                        />
                       </div>
                     </div>
-                    {Number(width) > 0 && Number(height) > 0 && (
-                      <p className="text-xs text-text-muted mt-2 flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[14px] text-coral-accent">straighten</span>
-                        Area: <strong className="text-plum-deep">{(Number(width) * Number(height)).toFixed(1)} sq ft</strong>
-                        <span className="text-plum-deep/40 mx-1">·</span>
-                        <strong className="text-plum-deep">{Number(width)} × {Number(height)} ft</strong>
+                    {sizeError && <p className="vd-error" role="alert">{sizeError}</p>}
+                    {area > 0 && (
+                      <p className="vd-hint vd-price">Area: <strong className="font-semibold text-ink">{area.toFixed(1)} sq ft</strong> · {Number(width)} × {Number(height)} ft</p>
+                    )}
+                  </fieldset>
+                )}
+
+                {sizeOptions && (
+                  <div>
+                    <OptionGroup
+                      step={sizeStep}
+                      title={usesPaperSize(product) ? "Paper Size" : usesBannerSize(product) ? "Banner Size" : "Tent Size"}
+                      name="size"
+                      options={sizeOptions}
+                      selected={sizeIdx}
+                      onSelect={setSizeIdx}
+                      columns={sizeOptions.length === 4 ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3 sm:grid-cols-5"}
+                    />
+                    {customSizeSelected && (
+                      <p className="vd-hint">
+                        Tell us the size on <a className="vd-link" href={whatsappUrl(`Hello Vijetha Digital, I need a custom size for ${product.name}.`)} target="_blank" rel="noopener noreferrer">WhatsApp</a> or call <a className="vd-link vd-price" href={BUSINESS.phoneHref}>{BUSINESS.phone}</a> for an exact price.
                       </p>
                     )}
                   </div>
                 )}
 
-                {/* B) Paper size pills (Printing Services excluding Flex/Canvas) */}
-                {usesPaperSize(product) && (
-                  <div>
-                    <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                      Paper Size
-                    </label>
-                    <div className="grid grid-cols-5 gap-3">
-                      {PAPER_SIZES.map((opt, i) => (
-                        <label key={opt.label} className="cursor-pointer relative">
-                          <input type="radio" name="size" className="sr-only" checked={sizeIdx === i} onChange={() => setSizeIdx(i)} />
-                          <div className={`border rounded-[12px] p-3 text-center transition-all duration-200 h-full flex flex-col justify-center ${sizeIdx === i ? "border-coral-accent bg-coral-accent" : "bg-white border-stone-border hover:border-coral-accent/50"}`}>
-                            <span className={`block text-sm font-bold ${sizeIdx === i ? "text-white" : "text-text-dark"}`}>{opt.label}</span>
-                            <span className={`block text-[9px] mt-0.5 ${sizeIdx === i ? "text-white/80" : "text-text-muted"}`}>{opt.sub}</span>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* C) Banner sizes */}
-                {usesBannerSize(product) && (
-                  <div>
-                    <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                      Banner Size
-                    </label>
-                    <div className="grid grid-cols-5 gap-3">
-                      {BANNER_SIZES.map((opt, i) => (
-                        <label key={opt.label} className="cursor-pointer relative">
-                          <input type="radio" name="size" className="sr-only" checked={sizeIdx === i} onChange={() => setSizeIdx(i)} />
-                          <div className={`border rounded-[12px] p-3 text-center transition-all duration-200 h-full flex flex-col justify-center ${sizeIdx === i ? "border-coral-accent bg-coral-accent" : "bg-white border-stone-border hover:border-coral-accent/50"}`}>
-                            <span className={`block text-xs font-bold ${sizeIdx === i ? "text-white" : "text-text-dark"}`}>{opt.label}</span>
-                            <span className={`block text-[9px] mt-0.5 ${sizeIdx === i ? "text-white/80" : "text-text-muted"}`}>{opt.sub}</span>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* D) Tent sizes */}
-                {usesTentSize(product) && (
-                  <div>
-                    <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                      Tent Size
-                    </label>
-                    <div className="grid grid-cols-4 gap-3">
-                      {TENT_SIZES.map((opt, i) => (
-                        <label key={opt.label} className="cursor-pointer relative">
-                          <input type="radio" name="size" className="sr-only" checked={sizeIdx === i} onChange={() => setSizeIdx(i)} />
-                          <div className={`border rounded-[12px] p-3 py-4 text-center transition-all duration-200 h-full flex flex-col justify-center ${sizeIdx === i ? "border-coral-accent bg-coral-accent" : "bg-white border-stone-border hover:border-coral-accent/50"}`}>
-                            <span className={`block text-sm font-bold ${sizeIdx === i ? "text-white" : "text-text-dark"}`}>{opt.label}</span>
-                            <span className={`block text-[10px] mt-0.5 ${sizeIdx === i ? "text-white/80" : "text-text-muted"}`}>{opt.sub}</span>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* ── 3. Quantity ────────────────────────────────────── */}
                 {qtyOptions && qty !== null && (
-                  <div>
-                    <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                      {usesPaperSize(product) ? "Quantity (pieces)" : "Quantity"}
-                    </label>
-                    <div className={`grid gap-3 ${qtyOptions.length <= 4 ? "grid-cols-4" : "grid-cols-5"}`}>
-                      {qtyOptions.map((q, i) => (
-                        <label key={q} className="cursor-pointer relative">
-                          <input type="radio" name="quantity" className="sr-only" checked={qty === q} onChange={() => setQty(q)} />
-                          <div className={`border rounded-[12px] p-3 py-4 text-center transition-all relative ${qty === q ? "border-plum-deep bg-plum-deep" : "bg-white border-stone-border hover:border-plum-deep/50"}`}>
-                            <span className={`block text-sm font-bold ${qty === q ? "text-white" : "text-text-dark"}`}>
-                              {usesPaperSize(product) ? q.toLocaleString("en-IN") : q}
-                            </span>
-                            {usesPaperSize(product) && (
-                              <span className={`block text-[9px] mt-0.5 font-medium ${qty === q ? "text-white/70" : "text-text-muted"}`}>pcs</span>
-                            )}
-                            {i === qtyOptions.length - 1 && (
-                              <div className="absolute -top-2.5 -right-2 bg-coral-accent text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm z-10 border border-white">-20%</div>
-                            )}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+                  <OptionGroup
+                    step={quantityStep}
+                    title={usesPaperSize(product) ? "Quantity (pieces)" : "Quantity"}
+                    name="quantity"
+                    options={qtyOptions.map((q, i) => ({
+                      label: usesPaperSize(product) ? q.toLocaleString("en-IN") : String(q),
+                      badge: i === qtyOptions.length - 1 ? "-20%" : null,
+                    }))}
+                    selected={qtyOptions.indexOf(qty)}
+                    onSelect={(i) => setQty(qtyOptions[i])}
+                    columns={qtyOptions.length <= 4 ? "grid-cols-4" : "grid-cols-3 sm:grid-cols-6"}
+                  />
                 )}
 
-                {/* ── 4. Upload design ──────────────────────────────── */}
+                {/* Artwork */}
                 <div>
-                  <label className="block text-sm font-bold text-plum-deep uppercase tracking-wide mb-3">
-                    Upload Your Design <span className="text-text-muted text-xs normal-case font-normal">(optional)</span>
-                  </label>
-
-                  {/* Hidden file input */}
+                  <p className="mb-2.5 flex items-baseline gap-2 text-[0.9375rem] font-semibold">
+                    <span className="vd-price text-ink-3">{artworkStep}</span>Upload Your Design <span className="font-normal text-ink-2">(optional)</span>
+                  </p>
                   <input
                     ref={fileInputRef}
                     type="file"
+                    aria-label="Upload your design"
                     accept=".pdf,.ai,.psd,.png,.jpg,.jpeg,.eps,.tiff,.svg"
                     className="sr-only"
-                    onChange={e => {
+                    tabIndex={-1}
+                    onChange={(e) => {
                       const f = e.target.files?.[0];
                       if (f) setDesignFile(f);
                       e.target.value = "";
                     }}
                   />
-
                   {designFile ? (
-                    /* File selected state */
-                    <div className="border-2 border-plum-deep/40 bg-plum-deep/[0.03] rounded-[16px] p-5 flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-plum-deep flex items-center justify-center flex-shrink-0">
-                        <span className="material-symbols-outlined text-white text-xl">description</span>
+                    <div className="flex items-center gap-3 rounded-lg bg-surface p-3 shadow-[inset_0_0_0_1px_#DEDAD0]">
+                      <span className="material-symbols-outlined text-2xl text-ink-2">description</span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold">{designFile.name}</p>
+                        <p className="vd-price text-[0.8125rem] text-ink-2">{(designFile.size / 1024).toFixed(0)} KB</p>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-plum-deep text-sm truncate">{designFile.name}</p>
-                        <p className="text-xs text-text-muted mt-0.5">
-                          {(designFile.size / 1024).toFixed(0)} KB
-                          <span className="mx-1.5 text-stone-300">·</span>
-                          <span className="text-green-700 font-semibold">Ready to upload</span>
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="text-xs font-bold text-plum-deep hover:text-coral-accent transition-colors underline underline-offset-2"
-                        >
-                          Change
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDesignFile(null)}
-                          className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-text-muted hover:text-red-500 transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-lg">close</span>
-                        </button>
-                      </div>
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="vd-link min-h-[44px] px-1 text-sm">Change</button>
+                      <button type="button" onClick={() => setDesignFile(null)} className="vd-icon-btn" aria-label="Remove file">
+                        <span className="material-symbols-outlined text-xl">close</span>
+                      </button>
                     </div>
                   ) : (
-                    /* Drop zone */
-                    <div
-                      role="button"
-                      tabIndex={0}
+                    <button
+                      type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      onKeyDown={e => e.key === "Enter" && fileInputRef.current?.click()}
-                      onDragOver={e => e.preventDefault()}
-                      onDrop={e => {
+                      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                      onDragLeave={() => setDragOver(false)}
+                      onDrop={(e) => {
                         e.preventDefault();
+                        setDragOver(false);
                         const f = e.dataTransfer.files?.[0];
                         if (f) setDesignFile(f);
                       }}
-                      className="border-2 border-dashed border-plum-deep/30 rounded-[16px] p-6 text-center hover:bg-plum-deep/5 hover:border-plum-deep/60 transition-colors cursor-pointer group bg-white/50 outline-none focus:ring-2 focus:ring-plum-deep/20"
+                      className={`flex w-full items-center gap-3 rounded-lg border border-dashed p-3 text-left transition-colors hover:border-ink ${dragOver ? "border-ink bg-shade" : "border-line-strong bg-surface"}`}
                     >
-                      <div className="flex flex-col items-center">
-                        <div className="bg-plum-deep/10 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
-                          <span className="material-symbols-outlined text-3xl text-plum-deep">cloud_upload</span>
-                        </div>
-                        <h4 className="font-bold text-plum-deep text-sm mb-1">Upload Your Design</h4>
-                        <p className="text-xs text-text-muted">Drag &amp; drop or <span className="text-plum-deep font-semibold underline underline-offset-2">click to browse</span></p>
-                        <p className="text-[10px] text-text-muted/70 mt-1">PDF, AI, PSD, PNG · Min 150 DPI</p>
+                      <span className="material-symbols-outlined text-2xl text-ink-2">cloud_upload</span>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold">Drag &amp; drop or click to browse</span>
+                        <span className="block text-[0.8125rem] text-ink-2">PDF, AI, PSD, PNG · Min 150 DPI</span>
+                      </span>
+                    </button>
+                  )}
+                  <p className="vd-hint">No design yet? Order now and share it after. Our team will follow up by phone or WhatsApp.</p>
+                </div>
+
+                {/* Live price */}
+                <div className="rounded-lg bg-shade p-4" aria-live="polite">
+                  {totalPrice > 0 ? (
+                    <dl className="vd-price text-sm">
+                      <div className="flex justify-between gap-4">
+                        <dt className="text-ink-2">
+                          {pcsUnitProduct && usesPaperSize(product)
+                            ? `${rupees(product.base_price)} / 1,000 pcs × ${displayUnit}`
+                            : `${rupees(product.base_price)} × ${displayUnit}`}
+                        </dt>
+                        <dd className="font-medium">{rupees(totalPrice, 2)}</dd>
                       </div>
+                      <div className="mt-1 flex justify-between gap-4">
+                        <dt className="text-ink-2">GST (18%)</dt>
+                        <dd className="font-medium">{rupees(gstAmount, 2)}</dd>
+                      </div>
+                      <div className="mt-3 flex items-baseline justify-between gap-4 border-t border-line-strong/60 pt-3">
+                        <dt className="font-semibold">Estimated Total</dt>
+                        <dd className="text-2xl font-bold tracking-tight">{rupees(totalPrice + gstAmount, 2)}</dd>
+                      </div>
+                    </dl>
+                  ) : (
+                    <p className="text-sm text-ink-2">Enter a size to see your exact price, including GST.</p>
+                  )}
+                </div>
+
+                {/* CTAs */}
+                <div>
+                  <div className="hidden gap-3 lg:flex">
+                    <button type="button" onClick={handleAddToCart} className="vd-btn vd-btn-lg vd-btn-outline flex-1">
+                      <span className="material-symbols-outlined text-xl">shopping_cart</span> Add to Cart
+                    </button>
+                    <button type="button" onClick={handleOrderNow} className="vd-btn vd-btn-lg vd-btn-accent flex-[1.3]">
+                      Order Now <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                    </button>
+                  </div>
+                  {/* Mobile keeps Add to Cart inline; Order Now lives in the sticky bar */}
+                  <button type="button" onClick={handleAddToCart} className="vd-btn vd-btn-lg vd-btn-outline w-full lg:hidden">
+                    <span className="material-symbols-outlined text-xl">shopping_cart</span> Add to Cart
+                  </button>
+
+                  {justAdded && (
+                    <div className="vd-alert vd-alert-ok mt-3 items-center justify-between" role="status">
+                      <span className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-lg">check_circle</span>Added to your cart
+                      </span>
+                      <Link to="/cart" className="vd-link whitespace-nowrap">View cart</Link>
                     </div>
                   )}
                 </div>
 
-                {/* ── 5. Price summary ──────────────────────────────── */}
-                {totalPrice > 0 && (
-                  <div className="bg-stone-light/50 border border-stone-border rounded-[10px] px-4 py-2.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-text-muted font-medium">Estimated Total</p>
-                      <p className="text-lg font-extrabold text-plum-deep">&#8377;{fmtPrice(totalPrice)}</p>
-                    </div>
-                    <div className="text-right text-xs text-text-muted">
-                      {pcsUnitProduct && usesPaperSize(product) ? (
-                        <p>&#8377;{fmtPrice(product.base_price)} / 1,000 pcs</p>
-                      ) : (
-                        <p>&#8377;{fmtPrice(product.base_price)} × {displayUnit}</p>
-                      )}
-                      <p className="text-green-700 font-semibold mt-0.5">Excl. GST</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* ── 6. CTA buttons ────────────────────────────────── */}
-                <div className="flex gap-4 flex-col sm:flex-row">
-                  <button type="button" onClick={doAddToCart}
-                    className="flex-1 border border-plum-deep text-plum-deep font-bold py-4 rounded-[12px] hover:bg-plum-deep/5 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
-                    <span className="material-symbols-outlined text-[20px]">shopping_cart</span> Add to Cart
-                  </button>
-                  <button type="button" onClick={doAddToCart}
-                    className="flex-[1.5] bg-plum-deep text-white font-bold py-4 rounded-[12px] hover:bg-plum-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm uppercase tracking-wide">
-                    Order Now <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
-                  </button>
-                </div>
-
-                {/* ── 7. Trust badges ───────────────────────────────── */}
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-2 text-xs text-text-muted/80 justify-center sm:justify-start">
-                    <span className="material-symbols-outlined text-[18px] text-green-600">local_shipping</span>
-                    <span>Ready in <strong className="text-text-dark">24–48 hours</strong> · Hyderabad delivery</span>
-                  </div>
-                  <div className="flex items-center flex-wrap gap-3 justify-center sm:justify-start">
-                    {[["verified_user","GST Invoice"],["security","Secure Pay"],["thumb_up","Quality Check"]].map(([icon,lbl]) => (
-                      <span key={lbl} className="flex items-center gap-1.5 text-[10px] font-semibold text-text-muted uppercase tracking-wide bg-stone-100 px-2 py-1 rounded-md border border-stone-border/50">
-                        <span className="material-symbols-outlined text-[14px] text-plum-deep">{icon}</span>{lbl}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <ul className="space-y-1.5 text-[0.8125rem] text-ink-2">
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base">local_shipping</span>
+                    <span>Ready in <strong className="font-semibold text-ink">24–48 hours</strong> · Hyderabad delivery</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base">verified_user</span>
+                    GST Invoice · Secure Pay · Quality Check
+                  </li>
+                </ul>
               </form>
             </div>
           </div>
         </div>
 
-        {/* ── Description / Tabs ──────────────────────────────────── */}
-        <div className="mt-16 lg:mt-24 border-t border-stone-border pt-10">
-          <div className="flex flex-wrap gap-8 border-b border-stone-border/60 mb-8 overflow-x-auto pb-1">
-            {[["description","Description"],["specifications","Specifications"],["shipping","Shipping Info"],["faq","FAQ"]].map(([k,v]) => (
-              <button key={k} onClick={() => setActiveTab(k)}
-                className={`pb-3 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${activeTab === k ? "border-plum-deep text-plum-deep font-bold" : "border-transparent text-text-muted hover:text-plum-deep"}`}>
-                {v}
-              </button>
-            ))}
-          </div>
-          <div className="max-w-4xl">
-            {activeTab === "description" && (
-              <div>
-                <h3 className="text-xl font-bold text-plum-deep mb-4">About This Product</h3>
-                <p className="text-text-muted leading-relaxed mb-6 text-sm">{product.description || `${product.name} from Vijetha Digital, Hyderabad. Est. 2002, serving 500+ businesses across Telangana.`}</p>
-                <ul className="grid md:grid-cols-2 gap-y-4 gap-x-8">
-                  {[
-                    "High-resolution printing with sharp text and vibrant colors",
-                    "Premium materials sourced from trusted suppliers",
-                    "Quality checked before dispatch — zero compromise",
-                    "GST invoice with every order (36AGBPC3175H1ZP)",
-                  ].map(pt => (
-                    <li key={pt} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-stone-border/30">
-                      <span className="material-symbols-outlined text-coral-accent text-xl mt-0.5">check_circle</span>
-                      <span className="font-medium text-sm text-text-muted">{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {activeTab === "specifications" && (
-              <div>
-                <h3 className="text-xl font-bold text-plum-deep mb-4">Specifications</h3>
-                {[
-                  ["Category",    product.category],
-                  ["Unit",        unitLabel],
-                  ["Base Price",  `\u20b9${fmtPrice(product.base_price)} / ${unitLabel}`],
-                  ["Finish",      finishOptions.map(f => f.label).join(", ")],
-                  ...(usesPaperSize(product) ? [["Paper Sizes", PAPER_SIZES.map(s => s.label).join(", ")]] : []),
-                  ...(usesBannerSize(product) ? [["Banner Sizes", BANNER_SIZES.map(s => s.label).join(", ")]] : []),
-                  ...(usesTentSize(product)   ? [["Tent Sizes",   TENT_SIZES.map(s => s.label).join(", ")]] : []),
-                  ["GST",         "Applicable per government norms"],
-                  ["Turnaround",  "24–48 business hours"],
-                  ["Delivery",    "Hyderabad & surrounding areas"],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex items-start gap-4 py-3 border-b border-stone-border/40">
-                    <span className="w-36 text-sm font-bold text-plum-deep flex-shrink-0">{k}</span>
-                    <span className="text-sm text-text-muted">{v}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {activeTab === "shipping" && (
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-plum-deep mb-4">Shipping &amp; Delivery</h3>
-                {[
-                  { icon: "local_shipping", title: "Hyderabad Delivery",  desc: "Free delivery within city limits for orders above ₹2,000. Delivered within 2–3 business days." },
-                  { icon: "bolt",           title: "Express Turnaround",   desc: "Most orders processed and ready within 24–48 hours. Contact us for same-day emergency orders." },
-                  { icon: "storefront",     title: "Shop Pickup",          desc: "Pick up from our Lakdikapool or Indira Park showrooms. Call +91 79426 43004 to schedule." },
-                  { icon: "receipt_long",   title: "GST Invoice",          desc: "All orders include a valid GST invoice (GSTIN: 36AGBPC3175H1ZP)." },
-                ].map(item => (
-                  <div key={item.title} className="flex items-start gap-4 p-4 bg-white rounded-xl border border-stone-border/50">
-                    <span className="material-symbols-outlined text-coral-accent text-2xl mt-0.5">{item.icon}</span>
-                    <div><h4 className="font-bold text-plum-deep text-sm mb-1">{item.title}</h4><p className="text-xs text-text-muted leading-relaxed">{item.desc}</p></div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {activeTab === "faq" && (
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-plum-deep mb-4">Frequently Asked Questions</h3>
-                {[
-                  { q: "Do you provide design services?",   a: "Yes! We offer in-house design support. Share your brand guidelines and we'll create a print-ready file at no extra charge for orders above ₹2,000." },
-                  { q: "What file formats do you accept?",  a: "We accept PDF, AI, PSD, EPS, TIFF, and high-resolution PNG. Files should be at minimum 150 DPI (300 DPI preferred for print)." },
-                  { q: "Can I get bulk/corporate pricing?", a: "Absolutely. Corporate and bulk orders get special pricing tiers. Call us at +91 79426 43004 or register a business account." },
-                  { q: "Do you deliver outside Hyderabad?", a: "We primarily serve Hyderabad and Telangana. For outstation orders, courier is available at actuals. Contact us for a quote." },
-                ].map(item => (
-                  <div key={item.q} className="p-5 bg-white rounded-xl border border-stone-border/50">
-                    <h4 className="font-bold text-plum-deep text-sm mb-2 flex items-start gap-2">
-                      <span className="material-symbols-outlined text-coral-accent text-lg mt-0.5">help_outline</span>{item.q}
-                    </h4>
-                    <p className="text-xs text-text-muted leading-relaxed pl-7">{item.a}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Mobile position for product information */}
+        <section className="mt-10 lg:hidden" aria-label="Product information">
+          <ProductTabs product={product} activeTab={activeTab} setActiveTab={setActiveTab} finishOptions={finishOptions} unitText={unitText} />
+        </section>
 
-        {/* ── Reviews ─────────────────────────────────────────────── */}
         <ReviewSection productId={product.id} user={user} />
 
-        {/* ── Related products ────────────────────────────────────── */}
         {related.length > 0 && (
-          <div className="mt-20 border-t border-stone-border pt-16">
-            <div className="flex justify-between items-end mb-8">
-              <h2 className="text-2xl font-bold text-plum-deep">Related Products</h2>
-              <Link to={`/products?category=${encodeURIComponent(product.category)}`} className="text-sm font-bold text-coral-accent hover:text-coral-dark transition-colors hidden sm:block">
-                View All {product.category} →
-              </Link>
+          <section className="mt-16 border-t border-line pt-10 lg:mt-20 lg:pt-14">
+            <div className="mb-6 flex items-baseline justify-between gap-4">
+              <h2 className="vd-h2">Related Products</h2>
+              <Link to={CATEGORY_LINK(product.category)} className="vd-link hidden text-[0.9375rem] sm:inline-block">View All {product.category}</Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {related.map(rp => (
-                <div key={rp.id} onClick={() => navigate(`/products/${rp.id}`)}
-                  className="bg-white rounded-[16px] overflow-hidden shadow-product-card hover:shadow-card-hover transition-all duration-300 group border border-stone-border/50 flex flex-col cursor-pointer transform hover:-translate-y-1">
-                  <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
-                    {rp.image_url
-                      ? <img src={rp.image_url} alt={rp.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                      : <div className="w-full h-full bg-stone-light flex items-center justify-center"><span className="material-symbols-outlined text-plum-deep/20 text-4xl">image</span></div>}
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-base font-bold text-plum-deep mb-1 group-hover:text-coral-accent transition-colors line-clamp-1">{rp.name}</h3>
-                    <p className="text-text-muted/80 text-xs mb-4 font-medium line-clamp-2">{rp.description || rp.category}</p>
-                    <div className="mt-auto flex items-center justify-between border-t border-stone-border/40 pt-3">
-                      <span className="text-sm font-extrabold text-plum-deep">&#8377;{fmtPrice(rp.base_price)}</span>
-                      <span className="text-xs text-coral-accent font-bold group-hover:translate-x-1 transition-transform">View Details →</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-x-6">
+              {related.map((rp) => <ProductCard key={rp.id} product={rp} />)}
             </div>
-          </div>
+          </section>
         )}
-      </main>
+      </div>
 
-      {/* ── B2B CTA ─────────────────────────────────────────────── */}
-      <section className="py-20 bg-warm-white border-t border-stone-border relative overflow-hidden"
-        style={{ backgroundImage: "radial-gradient(#CFC8BD 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-          <div className="bg-white rounded-[24px] p-8 lg:p-12 shadow-architectural-lg border border-stone-border/50 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="md:w-2/3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-plum-deep/5 border border-plum-deep/10 mb-5">
-                <span className="w-2 h-2 rounded-full bg-coral-accent animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-wider text-plum-deep">B2B Solutions</span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-plum-deep mb-3">Bulk Orders &amp; Corporate Accounts</h2>
-              <p className="text-text-muted text-sm max-w-xl">Exclusive pricing tiers, dedicated account support &amp; simplified monthly invoicing for high-volume business needs.</p>
-            </div>
-            <Link to="/register" className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-4 px-8 rounded-[12px] transition-all transform hover:-translate-y-1 text-sm uppercase tracking-wide whitespace-nowrap">
-              Open Corporate Account <span className="material-symbols-outlined text-lg">arrow_forward</span>
-            </Link>
+      {/* B2B CTA */}
+      <section className="bg-shade">
+        <div className="vd-wrap flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between lg:py-14">
+          <div className="max-w-2xl">
+            <p className="vd-kicker mb-2">B2B Solutions</p>
+            <h2 className="vd-h2">Bulk Orders &amp; Corporate Accounts</h2>
+            <p className="mt-2 text-ink-2">Exclusive pricing tiers, dedicated account support &amp; simplified monthly invoicing for high-volume business needs.</p>
           </div>
+          <Link to="/register" className="vd-btn vd-btn-lg vd-btn-ink">Open Corporate Account</Link>
         </div>
       </section>
-    </div>
+
+      {/* Mobile purchase bar */}
+      <StickyBar>
+        <div className="min-w-0">
+          <p className="text-[0.75rem] leading-tight text-ink-2">{totalPrice > 0 ? "Before GST" : `${rupees(product.base_price)} / ${unitText}`}</p>
+          <p className="vd-price truncate text-lg font-bold leading-tight">{priceLabel}</p>
+        </div>
+        <button type="button" onClick={handleOrderNow} className="vd-btn vd-btn-accent flex-shrink-0 !min-h-[48px] px-6">
+          Order Now <span className="material-symbols-outlined text-xl">arrow_forward</span>
+        </button>
+      </StickyBar>
+    </main>
+  );
+}
+
+/* ── Product information tabs ───────────────────────────────────────── */
+function ProductTabs({ product, activeTab, setActiveTab, finishOptions, unitText }) {
+  return (
+    <>
+      <div className="flex gap-6 overflow-x-auto border-b border-line no-scrollbar" role="tablist" aria-label="Product information">
+        {SERVICE_TABS.map(([key, label]) => (
+          <button
+            key={key}
+            role="tab"
+            aria-selected={activeTab === key}
+            onClick={() => setActiveTab(key)}
+            className={`-mb-px min-h-[44px] whitespace-nowrap border-b-2 text-[0.9375rem] transition-colors ${activeTab === key ? "border-accent font-semibold text-ink" : "border-transparent text-ink-2 hover:text-ink"}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="pt-6" role="tabpanel">
+        {activeTab === "description" && (
+          <div>
+            <h3 className="vd-h3 mb-2">About This Product</h3>
+            <p className="max-w-2xl text-ink-2">{product.description || `${product.name} from Vijetha Digital, Hyderabad. Est. 2002, serving 500+ businesses across Telangana.`}</p>
+            <ul className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+              {[
+                "High-resolution printing with sharp text and vibrant colors",
+                "Premium materials sourced from trusted suppliers",
+                "Quality checked before dispatch, zero compromise",
+                `GST invoice with every order (${BUSINESS.gstin})`,
+              ].map((pt) => (
+                <li key={pt} className="flex items-start gap-2 text-[0.9375rem] leading-snug">
+                  <span className="material-symbols-outlined mt-0.5 text-lg text-ok">check</span>
+                  {pt}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {activeTab === "specifications" && (
+          <dl className="vd-rows max-w-2xl text-[0.9375rem]">
+            {[
+              ["Category", product.category],
+              ["Unit", unitText],
+              ["Base Price", `${rupees(product.base_price)} / ${unitText}`],
+              ["Finish", finishOptions.map((f) => f.label).join(", ")],
+              ...(usesPaperSize(product) ? [["Paper Sizes", PAPER_SIZES.map((s) => s.label).join(", ")]] : []),
+              ...(usesBannerSize(product) ? [["Banner Sizes", BANNER_SIZES.map((s) => s.label).join(", ")]] : []),
+              ...(usesTentSize(product) ? [["Tent Sizes", TENT_SIZES.map((s) => s.label).join(", ")]] : []),
+              ["GST", "Applicable per government norms"],
+              ["Turnaround", "24–48 business hours"],
+              ["Delivery", "Hyderabad & surrounding areas"],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <dt className="font-semibold">{k}</dt>
+                <dd className="vd-price text-right text-ink-2">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
+        {activeTab === "shipping" && (
+          <ul className="grid max-w-2xl gap-5 sm:grid-cols-2">
+            {[
+              { icon: "local_shipping", title: "Hyderabad Delivery", desc: "Free delivery within city limits for orders above ₹2,000. Delivered within 2–3 business days." },
+              { icon: "bolt", title: "Express Turnaround", desc: "Most orders processed and ready within 24–48 hours. Contact us for same-day emergency orders." },
+              { icon: "storefront", title: "Shop Pickup", desc: `Pick up from our Lakdikapool or Indira Park showrooms. Call ${BUSINESS.phone} to schedule.` },
+              { icon: "receipt_long", title: "GST Invoice", desc: `All orders include a valid GST invoice (GSTIN: ${BUSINESS.gstin}).` },
+            ].map((item) => (
+              <li key={item.title} className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-2xl text-ink-2">{item.icon}</span>
+                <div>
+                  <h3 className="text-[0.9375rem] font-semibold">{item.title}</h3>
+                  <p className="mt-0.5 text-sm leading-snug text-ink-2">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {activeTab === "faq" && (
+          <div className="max-w-2xl divide-y divide-line border-y border-line">
+            {[
+              { q: "Do you provide design services?", a: "Yes! We offer in-house design support. Share your brand guidelines and we'll create a print-ready file at no extra charge for orders above ₹2,000." },
+              { q: "What file formats do you accept?", a: "We accept PDF, AI, PSD, EPS, TIFF, and high-resolution PNG. Files should be at minimum 150 DPI (300 DPI preferred for print)." },
+              { q: "Can I get bulk/corporate pricing?", a: `Absolutely. Corporate and bulk orders get special pricing tiers. Call us at ${BUSINESS.phone} or register a business account.` },
+              { q: "Do you deliver outside Hyderabad?", a: "We primarily serve Hyderabad and Telangana. For outstation orders, courier is available at actuals. Contact us for a quote." },
+            ].map((item, i) => (
+              <details key={item.q} className="group/faq py-1" open={i === 0}>
+                <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 text-[0.9375rem] font-semibold [&::-webkit-details-marker]:hidden">
+                  {item.q}
+                  <span className="material-symbols-outlined text-xl text-ink-3 transition-transform group-open/faq:rotate-180">expand_more</span>
+                </summary>
+                <p className="pb-3 text-[0.9375rem] leading-snug text-ink-2">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -725,27 +728,39 @@ export default function ProductDetail() {
 
 const STAR_LABELS = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"];
 
-function StarRating({ value, max = 5, size = "text-xl", interactive, onChange }) {
+function StarRating({ value, max = 5, size = 20, interactive, onChange }) {
   const [hover, setHover] = useState(0);
+  const stars = Array.from({ length: max }, (_, i) => {
+    const star = i + 1;
+    const filled = star <= (interactive ? (hover || value) : value);
+    const icon = (
+      <span
+        className={`material-symbols-outlined ${filled ? "text-[#B7791F]" : "text-line-strong"}`}
+        style={{ fontSize: size, fontVariationSettings: filled ? "'FILL' 1, 'wght' 400" : "'FILL' 0, 'wght' 400" }}
+        aria-hidden="true"
+      >
+        star
+      </span>
+    );
+    if (!interactive) return <span key={star}>{icon}</span>;
+    return (
+      <button
+        key={star}
+        type="button"
+        aria-label={`${star} ${star === 1 ? "star" : "stars"}, ${STAR_LABELS[star]}`}
+        aria-pressed={value === star}
+        onClick={() => onChange?.(star)}
+        onMouseEnter={() => setHover(star)}
+        onMouseLeave={() => setHover(0)}
+        className="flex h-11 w-11 items-center justify-center"
+      >
+        {icon}
+      </button>
+    );
+  });
   return (
-    <div className="inline-flex items-center gap-0.5">
-      {Array.from({ length: max }, (_, i) => {
-        const star = i + 1;
-        const filled = star <= (interactive ? (hover || value) : value);
-        return (
-          <button
-            key={star}
-            type="button"
-            disabled={!interactive}
-            onClick={() => interactive && onChange?.(star)}
-            onMouseEnter={() => interactive && setHover(star)}
-            onMouseLeave={() => interactive && setHover(0)}
-            className={`${size} transition-colors ${interactive ? "cursor-pointer" : "cursor-default"} ${filled ? "text-amber-400" : "text-stone-300"}`}
-          >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: filled ? "'FILL' 1, 'wght' 400" : "'FILL' 0, 'wght' 400" }}>star</span>
-          </button>
-        );
-      })}
+    <div className="inline-flex items-center" {...(interactive ? {} : { role: "img", "aria-label": `${value} out of ${max} stars` })}>
+      {stars}
     </div>
   );
 }
@@ -753,74 +768,59 @@ function StarRating({ value, max = 5, size = "text-xl", interactive, onChange })
 function RatingBar({ stars, count, total }) {
   const pct = total ? Math.round((count / total) * 100) : 0;
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <span className="w-6 text-right font-semibold text-plum-deep">{stars}</span>
-      <span className="material-symbols-outlined text-amber-400 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-      <div className="flex-1 h-2.5 bg-stone-200 rounded-full overflow-hidden">
-        <div className="h-full bg-amber-400 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+    <div className="vd-price flex items-center gap-2 text-sm">
+      <span className="w-3 text-right font-medium">{stars}</span>
+      <span className="material-symbols-outlined text-sm text-[#B7791F]" style={{ fontVariationSettings: "'FILL' 1" }} aria-hidden="true">star</span>
+      <div className="h-1.5 flex-1 overflow-hidden rounded-sm bg-shade">
+        <div className="h-full bg-ink" style={{ width: `${pct}%` }} />
       </div>
-      <span className="w-8 text-xs text-text-muted font-medium">{count}</span>
+      <span className="w-6 text-right text-[0.8125rem] text-ink-2">{count}</span>
     </div>
   );
 }
 
 function ReviewCard({ review }) {
   const [expanded, setExpanded] = useState(false);
-  const initials = (review.user_name || "A").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
   const longBody = review.body && review.body.length > 200;
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-border/50 p-6 shadow-sm hover:shadow-md transition-shadow">
-      {/* Header */}
-      <div className="flex items-start gap-4 mb-4">
-        <div className="w-10 h-10 rounded-full bg-plum-deep/10 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm font-bold text-plum-deep">{initials}</span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-bold text-plum-deep text-sm">{review.user_name}</span>
-            {review.is_verified_purchase && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
-                <span className="material-symbols-outlined text-[12px]">verified</span> Verified Purchase
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <StarRating value={review.rating} size="text-base" />
-            <span className="text-xs text-text-muted">
-              {new Date(review.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-            </span>
-          </div>
-        </div>
+    <article className="border-t border-line py-5 first:border-t-0 first:pt-0">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <StarRating value={review.rating} size={16} />
+        <span className="text-[0.9375rem] font-semibold">{review.user_name}</span>
+        {review.is_verified_purchase && (
+          <span className="inline-flex items-center gap-1 text-[0.8125rem] font-medium text-ok">
+            <span className="material-symbols-outlined text-sm">verified</span> Verified Purchase
+          </span>
+        )}
+        <span className="text-[0.8125rem] text-ink-2">
+          {new Date(review.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+        </span>
       </div>
 
-      {/* Title */}
-      {review.title && <h4 className="font-bold text-plum-deep text-sm mb-2">{review.title}</h4>}
+      {review.title && <h3 className="mt-2 text-[0.9375rem] font-semibold">{review.title}</h3>}
 
-      {/* Body */}
       {review.body && (
-        <p className="text-sm text-text-muted leading-relaxed">
+        <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-2">
           {longBody && !expanded ? review.body.slice(0, 200) + "…" : review.body}
           {longBody && (
-            <button onClick={() => setExpanded(!expanded)} className="ml-1 text-plum-deep font-semibold text-xs hover:text-coral-accent">
+            <button onClick={() => setExpanded(!expanded)} className="vd-link ml-1 text-sm text-ink">
               {expanded ? "Show less" : "Read more"}
             </button>
           )}
         </p>
       )}
 
-      {/* Images */}
       {review.image_urls?.length > 0 && (
-        <div className="flex gap-3 mt-4 flex-wrap">
+        <div className="mt-3 flex flex-wrap gap-2">
           {review.image_urls.map((url, i) => (
-            <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-              className="w-20 h-20 rounded-xl overflow-hidden border border-stone-border hover:border-plum-deep transition-colors shadow-sm">
-              <img src={url} alt={`Review image ${i + 1}`} className="w-full h-full object-cover" />
+            <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="vd-frame block h-20 w-20">
+              <img src={url} alt={`Review image ${i + 1}`} width="80" height="80" loading="lazy" />
             </a>
           ))}
         </div>
       )}
-    </div>
+    </article>
   );
 }
 
@@ -927,6 +927,7 @@ function ReviewSection({ productId, user }) {
       setPage(1);
       getMyReview(productId).then(setMyReview).catch(() => {});
     } catch (err) {
+      setUploading(false);
       setSubmitError(err.response?.data?.detail || "Failed to submit review");
     } finally {
       setSubmitting(false);
@@ -937,188 +938,138 @@ function ReviewSection({ productId, user }) {
   const total = summary?.total_reviews || 0;
 
   return (
-    <div className="mt-16 lg:mt-24 border-t border-stone-border pt-10" id="reviews">
-      <div className="flex items-center justify-between mb-10">
-        <h2 className="text-2xl font-bold text-plum-deep">Customer Reviews</h2>
+    <section className="mt-14 border-t border-line pt-10 lg:mt-16 lg:pt-14" id="reviews">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="vd-h2">Customer Reviews</h2>
         {user && !myReview && !showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 bg-plum-deep hover:bg-plum-hover text-white font-bold py-2.5 px-6 rounded-xl transition-all text-sm"
-          >
+          <button onClick={() => setShowForm(true)} className="vd-btn vd-btn-outline">
             <span className="material-symbols-outlined text-lg">rate_review</span> Write a Review
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Left — Summary */}
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-4">
-          <div className="bg-white rounded-2xl border border-stone-border/50 p-8 shadow-sm sticky top-32">
-            {total > 0 ? (
-              <>
-                <div className="text-center mb-6">
-                  <div className="text-6xl font-extrabold text-plum-deep leading-none mb-2">{avg}</div>
-                  <StarRating value={Math.round(avg)} size="text-2xl" />
-                  <p className="text-sm text-text-muted mt-2 font-medium">
-                    Based on <strong className="text-plum-deep">{total}</strong> review{total !== 1 ? "s" : ""}
-                  </p>
+          {total > 0 ? (
+            <div className="lg:sticky lg:top-[calc(var(--header-h)+1.25rem)]">
+              <div className="flex items-center gap-4">
+                <span className="vd-price text-5xl font-bold leading-none tracking-tight">{avg}</span>
+                <div>
+                  <StarRating value={Math.round(avg)} size={20} />
+                  <p className="text-sm text-ink-2">Based on {total} review{total !== 1 ? "s" : ""}</p>
                 </div>
-                <div className="space-y-2">
-                  {[5, 4, 3, 2, 1].map((s) => (
-                    <RatingBar key={s} stars={s} count={summary?.distribution?.[s] || 0} total={total} />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-6">
-                <span className="material-symbols-outlined text-4xl text-plum-deep/20 mb-3 block">reviews</span>
-                <p className="font-semibold text-plum-deep mb-1">No Reviews Yet</p>
-                <p className="text-xs text-text-muted">Be the first to review this product!</p>
               </div>
-            )}
-          </div>
+              <div className="mt-4 space-y-1.5">
+                {[5, 4, 3, 2, 1].map((s) => (
+                  <RatingBar key={s} stars={s} count={summary?.distribution?.[s] || 0} total={total} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="font-semibold">No Reviews Yet</p>
+              <p className="text-sm text-ink-2">Be the first to review this product!</p>
+            </div>
+          )}
         </div>
 
-        {/* Right — Reviews list + form */}
-        <div className="lg:col-span-8">
-          {/* Write review form */}
+        <div className="min-w-0 lg:col-span-8">
           {showForm && (
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl border-2 border-plum-deep/20 p-8 shadow-md mb-8">
-              <h3 className="text-lg font-bold text-plum-deep mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-coral-accent">edit_note</span> Write Your Review
-              </h3>
+            <form onSubmit={handleSubmit} className="mb-8 rounded-lg bg-surface p-5 shadow-[inset_0_0_0_1px_#DEDAD0] sm:p-6">
+              <h3 className="vd-h3 mb-4">Write Your Review</h3>
 
-              {/* Stars */}
-              <div className="mb-6">
-                <label className="block text-sm font-bold text-plum-deep mb-2">Your Rating *</label>
-                <div className="flex items-center gap-3">
-                  <StarRating value={formRating} size="text-3xl" interactive onChange={setFormRating} />
-                  {formRating > 0 && <span className="text-sm font-semibold text-coral-accent">{STAR_LABELS[formRating]}</span>}
+              <div className="mb-4">
+                <p className="vd-label">Your Rating *</p>
+                <div className="flex items-center gap-2">
+                  <div className="-ml-2.5"><StarRating value={formRating} size={28} interactive onChange={setFormRating} /></div>
+                  {formRating > 0 && <span className="text-sm font-semibold">{STAR_LABELS[formRating]}</span>}
                 </div>
               </div>
 
-              {/* Title */}
               <div className="mb-4">
-                <label className="block text-sm font-bold text-plum-deep mb-2">Title <span className="text-text-muted font-normal">(optional)</span></label>
-                <input type="text" maxLength={200} value={formTitle} onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="Summarize your experience"
-                  className="w-full border border-stone-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-plum-deep/20 bg-white" />
+                <label htmlFor="review-title" className="vd-label">Title <span className="font-normal text-ink-2">(optional)</span></label>
+                <input id="review-title" name="title" type="text" maxLength={200} value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="Summarize your experience" className="vd-input" />
               </div>
 
-              {/* Body */}
               <div className="mb-4">
-                <label className="block text-sm font-bold text-plum-deep mb-2">Your Review <span className="text-text-muted font-normal">(optional)</span></label>
-                <textarea rows={4} value={formBody} onChange={(e) => setFormBody(e.target.value)}
-                  placeholder="What did you like or dislike? How was the quality?"
-                  className="w-full border border-stone-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-plum-deep/20 bg-white resize-none" />
+                <label htmlFor="review-body" className="vd-label">Your Review <span className="font-normal text-ink-2">(optional)</span></label>
+                <textarea id="review-body" name="body" rows={4} value={formBody} onChange={(e) => setFormBody(e.target.value)} placeholder="What did you like or dislike? How was the quality?" className="vd-input resize-y" />
               </div>
 
-              {/* Upload images / videos */}
-              <div className="mb-6">
-                <label className="block text-sm font-bold text-plum-deep mb-2">
-                  Photos / Videos <span className="text-text-muted font-normal">(optional — up to 5, max 10 MB each)</span>
-                </label>
-
-                {/* preview grid */}
+              <div className="mb-5">
+                <p className="vd-label">Photos / Videos <span className="font-normal text-ink-2">(optional, up to 5, max 10 MB each)</span></p>
                 {previewUrls.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mb-3">
+                  <div className="mb-3 flex flex-wrap gap-2">
                     {previewUrls.map((url, i) => (
-                      <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-stone-border group">
+                      <div key={url} className="vd-frame relative h-20 w-20">
                         {formFiles[i]?.type?.startsWith("video") ? (
-                          <video src={url} className="w-full h-full object-cover" muted />
+                          <video src={url} className="h-full w-full object-cover" muted />
                         ) : (
-                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          <img src={url} alt="" />
                         )}
-                        <button type="button" onClick={() => removeFile(i)}
-                          className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
+                        <button type="button" onClick={() => removeFile(i)} aria-label="Remove file" className="absolute right-0.5 top-0.5 flex h-7 w-7 items-center justify-center rounded bg-ink/80 text-white">
+                          <span className="material-symbols-outlined text-sm">close</span>
                         </button>
                       </div>
                     ))}
                   </div>
                 )}
-
                 {formFiles.length < 5 && (
-                  <label className="flex items-center gap-3 border-2 border-dashed border-stone-border rounded-xl px-4 py-3 cursor-pointer hover:border-plum-deep/40 transition-colors bg-stone-light/30">
-                    <span className="material-symbols-outlined text-plum-deep text-xl">add_photo_alternate</span>
-                    <span className="text-sm text-text-muted">
+                  <label className="flex min-h-[46px] cursor-pointer items-center gap-3 rounded-lg border border-dashed border-line-strong px-3 py-2 transition-colors hover:border-ink">
+                    <span className="material-symbols-outlined text-xl text-ink-2">add_photo_alternate</span>
+                    <span className="text-sm text-ink-2">
                       {formFiles.length === 0 ? "Tap to add photos or videos" : `Add more (${formFiles.length}/5)`}
                     </span>
-                    <input type="file" multiple accept="image/*,video/mp4,video/webm" onChange={handleFilePick}
-                      className="hidden" />
+                    <input type="file" multiple accept="image/*,video/mp4,video/webm" onChange={handleFilePick} className="sr-only" />
                   </label>
                 )}
               </div>
 
               {submitError && (
-                <div className="bg-red-50 text-red-700 text-sm font-semibold p-3 rounded-xl mb-4 border border-red-200 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-base">error</span> {submitError}
+                <div className="vd-alert vd-alert-error mb-4" role="alert">
+                  <span className="material-symbols-outlined text-lg">error</span>{submitError}
                 </div>
               )}
 
-              <div className="flex gap-3">
-                <button type="submit" disabled={submitting || uploading}
-                  className="flex-1 bg-plum-deep hover:bg-plum-hover text-white font-bold py-3 rounded-xl transition-all text-sm disabled:opacity-50 flex items-center justify-center gap-2">
-                  {uploading ? (
-                    <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading files…</>
-                  ) : submitting ? (
-                    <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Submitting…</>
-                  ) : (
-                    <><span className="material-symbols-outlined text-lg">send</span> Submit Review</>
-                  )}
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button type="submit" disabled={submitting || uploading} className="vd-btn vd-btn-ink flex-1">
+                  {uploading ? "Uploading files…" : submitting ? "Submitting…" : "Submit Review"}
                 </button>
-                <button type="button" onClick={() => { setShowForm(false); setSubmitError(""); }}
-                  className="px-6 py-3 border border-stone-border text-plum-deep font-bold rounded-xl hover:bg-stone-light transition-colors text-sm">
-                  Cancel
-                </button>
+                <button type="button" onClick={() => { setShowForm(false); setSubmitError(""); }} className="vd-btn vd-btn-quiet">Cancel</button>
               </div>
             </form>
           )}
 
-          {/* Existing user review */}
           {myReview && (
-            <div className="mb-6">
-              <div className="text-xs font-bold text-plum-deep uppercase tracking-wider mb-3 flex items-center gap-2">
-                <span className="material-symbols-outlined text-base text-coral-accent">person</span> Your Review
-              </div>
+            <div className="mb-6 rounded-lg bg-shade p-4">
+              <p className="mb-3 text-sm font-semibold">Your Review</p>
               <ReviewCard review={myReview} />
             </div>
           )}
 
-          {/* Reviews list */}
           {reviews.length > 0 ? (
-            <div className="space-y-4">
+            <div>
               {reviews.filter((r) => r.id !== myReview?.id).map((r) => (
                 <ReviewCard key={r.id} review={r} />
               ))}
             </div>
           ) : (
             !showForm && (
-              <div className="text-center py-12 text-text-muted">
-                <span className="material-symbols-outlined text-4xl opacity-30 mb-3 block">forum</span>
-                <p className="font-semibold">No reviews yet</p>
-                <p className="text-xs mt-1">
-                  {user ? "Be the first to share your experience!" : "Log in to write a review."}
-                </p>
-              </div>
+              <p className="text-[0.9375rem] text-ink-2">
+                {user ? "Be the first to share your experience!" : "Log in to write a review."}
+              </p>
             )
           )}
 
-          {/* Load more */}
           {hasMore && reviews.length > 0 && (
-            <div className="text-center mt-8">
-              <button onClick={handleLoadMore} disabled={loadingMore}
-                className="inline-flex items-center gap-2 text-sm font-bold text-plum-deep border border-stone-border bg-white px-6 py-3 rounded-xl hover:bg-stone-light transition-colors shadow-sm disabled:opacity-50">
-                {loadingMore ? (
-                  <><span className="w-4 h-4 border-2 border-plum-deep/30 border-t-plum-deep rounded-full animate-spin" /> Loading…</>
-                ) : (
-                  <><span className="material-symbols-outlined text-base">expand_more</span> Load More Reviews</>
-                )}
+            <div className="mt-6">
+              <button onClick={handleLoadMore} disabled={loadingMore} className="vd-btn vd-btn-quiet">
+                {loadingMore ? "Loading…" : "Load More Reviews"}
               </button>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

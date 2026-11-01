@@ -1,421 +1,320 @@
-import { useEffect, useState, Fragment } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { getProducts } from "../api/products";
 import ProductCarousel from "../components/product/ProductCarousel";
+import usePageTitle from "../hooks/usePageTitle";
+import {
+  BUSINESS, BRANCHES, CATEGORIES, CATEGORY_LINK, CATEGORY_PHOTO, isTallCategory, mapsLink, rupees, unitLabel,
+} from "../config/business";
 
-/* ── Icon-based services (matching Stitch design) ──────────────────── */
 const SERVICES = [
-  { icon: "badge",     title: "Business Cards",    desc: "Premium cardstocks, matte, gloss, and spot UV finishes for professional networking." },
-  { icon: "ad_units",  title: "Flex Printing",     desc: "High-resolution large format banners and hoardings for maximum visibility." },
-  { icon: "lightbulb", title: "LED Boards",        desc: "Illuminated signage solutions that make your business shine day and night." },
-  { icon: "menu_book", title: "Marketing Material", desc: "Brochures, flyers, and pamphlets designed to convert customers." },
+  { icon: "badge",     title: "Business Cards",     to: CATEGORY_LINK("Promotional Items"), desc: "Premium cardstocks, matte, gloss, and spot UV finishes for professional networking." },
+  { icon: "ad_units",  title: "Flex Printing",      to: CATEGORY_LINK("Printing Services"), desc: "High-resolution large format banners and hoardings for maximum visibility." },
+  { icon: "lightbulb", title: "LED Boards",         to: CATEGORY_LINK("Sign Boards"),       desc: "Illuminated signage solutions that make your business shine day and night." },
+  { icon: "menu_book", title: "Marketing Material", to: CATEGORY_LINK("Promotional Items"), desc: "Brochures, flyers, and pamphlets designed to convert customers." },
 ];
 
-const FEATURES = [
-  { icon: "stars",        label: "High Quality Offset" },
-  { icon: "aspect_ratio", label: "Large Format Experts" },
-  { icon: "bolt",         label: "Fast Turnaround" },
-  { icon: "receipt_long", label: "GST Billing Available" },
+const FEATURES = ["High Quality Offset", "Large Format Experts", "Fast Turnaround", "GST Billing Available"];
+
+const TRUST = [
+  { stat: "500+",   label: "Happy Businesses",   sub: "Across Hyderabad"   },
+  { stat: "24–48h", label: "Turnaround Time",    sub: "Print to delivery"  },
+  { stat: "GST",    label: "Tax Invoice",        sub: "On every order"     },
+  { stat: "100%",   label: "Quality Guaranteed", sub: "Or we reprint free" },
+];
+
+const STEPS = [
+  { title: "Choose Product", desc: "Browse our catalog and select the product that fits your need." },
+  { title: "Customise",      desc: "Pick size, material, quantity and upload your artwork or design." },
+  { title: "Pay Securely",   desc: "Pay online via UPI, card or net banking. GST invoice auto-generated." },
+  { title: "Fast Delivery",  desc: "We print and deliver to your doorstep within 24–48 hours." },
+];
+
+const BULK_POINTS = [
+  { title: "Volume Discounts",         desc: "Save up to 30% on bulk printing orders." },
+  { title: "Dedicated Design Support", desc: "Access to our professional design team for adjustments." },
+  { title: "GST Invoicing",            desc: "Compliant billing for easy input credit claims." },
+];
+
+const QUOTES = [
+  { name: "Sunitha Devi", role: "Retail Shop Owner", text: "Got a glow sign board and ACP panel done for my jewellery shop. The LED lighting is bright and the finish looks premium." },
+  { name: "Harish Babu",  role: "Corporate Buyer",   text: "We've been ordering flex banners, canvas prints and standees in bulk for 3 years. The pricing is very competitive and GST invoicing makes our accounting smooth." },
+  { name: "Priya Reddy",  role: "Marketing Manager", text: "We ordered 500 business cards and letterheads for our new office. Print quality is top-notch and they even helped with minor design adjustments at no extra cost." },
 ];
 
 export default function Home() {
+  usePageTitle("Printing & Signage in Hyderabad");
   const [products, setProducts] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getProducts()
-      .then(setProducts)
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    getProducts().then(setProducts).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  const popular = products.slice(0, 4);
+  /* One product from each category first, so the row shows the full range */
+  const popular = useMemo(() => {
+    const picks = CATEGORIES.map((c) => products.find((p) => p.category === c)).filter(Boolean);
+    const rest = products.filter((p) => !picks.includes(p));
+    return [...picks, ...rest].slice(0, 4);
+  }, [products]);
+
+  const lowestPrice = useMemo(() => {
+    const lowest = {};
+    products.forEach((p) => {
+      const price = Number(p.base_price);
+      if (!lowest[p.category] || price < lowest[p.category].price) {
+        lowest[p.category] = { price, unit: p.unit };
+      }
+    });
+    return lowest;
+  }, [products]);
 
   return (
-    <div className="font-display overflow-x-hidden relative">
+    <main id="main" className="font-display">
 
-      {/* Global watermark – right edge */}
-      <div className="fixed right-0 top-0 h-full w-[200px] pointer-events-none z-0 hidden lg:flex items-center justify-center opacity-[0.03]">
-        <div className="vertical-watermark text-[120px] font-black text-plum-deep leading-none whitespace-nowrap">
-          PRINT. BRAND. SCALE.
+      {/* ── HERO ── */}
+      <section className="vd-wrap grid items-center gap-10 pb-12 pt-8 lg:grid-cols-12 lg:gap-12 lg:pb-16 lg:pt-14">
+        <div className="vd-reveal lg:col-span-6">
+          <p className="flex items-center gap-3 text-sm font-medium text-ink-2">
+            <span className="vd-colorbar" aria-hidden="true"><i /><i /><i /><i /></span>
+            Printed in Hyderabad since {BUSINESS.established}
+          </p>
+          <h1 className="vd-display mt-4">
+            Premium Printing for <span className="text-accent">Businesses</span> &amp; Brands
+          </h1>
+          <p className="vd-lede mt-5 max-w-[34rem]">
+            From business cards to large-format signage. Premium-quality prints that elevate your brand across Hyderabad.
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <Link to="/products" className="vd-btn vd-btn-lg vd-btn-accent">Explore Products</Link>
+            <a href={BUSINESS.phoneHref} className="vd-btn vd-btn-lg vd-btn-outline">
+              <span className="material-symbols-outlined text-xl">call</span>
+              Get Custom Quote
+            </a>
+          </div>
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-2">
+            <li>500+ businesses trust us</li>
+            <li>GST Invoice included</li>
+          </ul>
         </div>
-      </div>
 
-      {/* ── HERO ────────────────────────────────────────────────── */}
-      <section className="relative pt-4 pb-6 sm:pt-6 sm:pb-8 lg:pt-14 lg:pb-20 overflow-hidden z-10">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-4 sm:gap-6 lg:gap-12 items-center">
-          {/* Left: copy */}
-          <div className="relative z-10 space-y-3 sm:space-y-4 animate-fade-in-up">
-            {/* Display XL: 36px mobile → 48px desktop */}
-            <h1 className="text-[2.25rem] sm:text-[2.75rem] lg:text-[3rem] font-extrabold text-plum-deep leading-[1.15] tracking-[-0.02em]">
-              Premium Printing for{" "}
-              <span className="text-coral-accent">Businesses</span>{" "}
-              &amp; Brands
-            </h1>
+        {/* Real work, not stock photography */}
+        <div className="lg:col-span-6">
+          <div className="vd-crop grid grid-cols-5 grid-rows-2 gap-2 sm:gap-3 aspect-[3/2] lg:aspect-[5/4]">
+            <Link to={CATEGORY_LINK("Printing Services")} className="col-span-3 row-span-2 block" aria-label="Printing services">
+              <div className="vd-frame h-full">
+                <img src="/products/offset-printing.jpg" alt="Offset press running a printed sheet" width="600" height="800" fetchPriority="high" />
+              </div>
+            </Link>
+            <Link to={CATEGORY_LINK("Sign Boards")} className="col-span-2 block" aria-label="Sign boards">
+              <div className="vd-frame h-full">
+                <img src="/products/glow-sign-board.jpg" alt="Lit glow sign board on a shopfront" width="400" height="300" />
+              </div>
+            </Link>
+            <Link to={CATEGORY_LINK("Sign Boards")} className="col-span-2 block" aria-label="Sign boards">
+              <div className="vd-frame h-full">
+                <img src="/products/aluminium-sign-board.jpg" alt="Aluminium letter sign on an office wall" width="400" height="300" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
 
-            {/* Body Large: 16px mobile → 18px desktop */}
-            <p className="text-base lg:text-[1.125rem] text-text-dark/80 leading-[1.65] max-w-[480px] font-medium">
-              From business cards to large-format signage — premium-quality prints that elevate your brand across Hyderabad.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
-              {/* Primary CTA Button - Perfect size: h-11 mobile, h-12 desktop */}
-              <Link
-                to="/products"
-                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-coral-accent hover:bg-coral-dark text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
-              >
-                Explore Products
+      {/* ── SHOP BY CATEGORY ── */}
+      <section aria-labelledby="shop-by" className="vd-wrap pb-14 lg:pb-20">
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 id="shop-by" className="vd-h3">Shop by category</h2>
+          <Link to="/products" className="vd-link text-sm">All products</Link>
+        </div>
+        <ul className="-mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:grid-cols-5 lg:gap-4">
+          {CATEGORIES.map((c) => (
+            <li key={c} className="w-[44vw] flex-shrink-0 snap-start sm:w-auto">
+              <Link to={CATEGORY_LINK(c)} className="block group">
+                <div className={`vd-frame aspect-square ${isTallCategory(c) ? "vd-frame-contain" : ""}`}>
+                  <img src={CATEGORY_PHOTO[c]} alt="" width="280" height="280" loading="lazy" />
+                </div>
+                <p className="mt-2 text-[0.9375rem] font-semibold leading-snug group-hover:underline underline-offset-2">{c}</p>
+                <p className="vd-price min-h-[1.25rem] text-[0.8125rem] text-ink-2">
+                  {lowestPrice[c] && `From ${rupees(lowestPrice[c].price)} / ${unitLabel(lowestPrice[c].unit)}`}
+                </p>
               </Link>
-              {/* Secondary CTA Button - outline style */}
-              <a
-                href="tel:+917942643004"
-                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-white border-2 border-plum-deep text-plum-deep hover:bg-plum-deep hover:text-white hover:border-plum-deep font-semibold rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
-              >
-                <span className="material-symbols-outlined text-lg sm:text-xl mr-2 leading-none">call</span>
-                Get Custom Quote
-              </a>
-            </div>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-            {/* Caption: 12px mobile → 12.8px desktop */}
-            <div className="flex flex-wrap items-center gap-4 pt-1">
-              <div className="flex items-center gap-1.5 text-xs lg:text-[0.8rem] text-plum-deep/70 font-medium">
-                <span className="material-symbols-outlined text-coral-accent text-base">verified_user</span>
-                <span>500+ businesses trust us</span>
+      {/* ── TRUST BAND ── */}
+      <section aria-label="Why Vijetha Digital" className="bg-night text-white">
+        <div className="vd-wrap py-10 lg:py-14">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4">
+            {TRUST.map((t) => (
+              <div key={t.label} className="border-l border-white/25 pl-4">
+                <dt className="sr-only">{t.label}</dt>
+                <dd>
+                  <span className="vd-price block text-[2rem] font-bold leading-none tracking-tight lg:text-[2.75rem]" style={{ fontStretch: "110%" }}>{t.stat}</span>
+                  <span className="mt-2 block text-[0.9375rem] font-semibold">{t.label}</span>
+                  <span className="block text-sm text-white/70">{t.sub}</span>
+                </dd>
               </div>
-              <div className="flex items-center gap-1.5 text-xs lg:text-[0.8rem] text-plum-deep/70 font-medium">
-                <span className="material-symbols-outlined text-coral-accent text-base">receipt_long</span>
-                <span>GST Invoice included</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: clean hero visual — desktop only */}
-          <div className="hidden lg:block relative">
-            {/* Main image */}
-            <div className="relative rounded-2xl overflow-hidden shadow-architectural-xl" style={{height:380}}>
-              <img
-                src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=900&q=85&auto=format&fit=crop"
-                alt="Vijetha Digital — Large Format Printing"
-                style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
-                loading="lazy"
-              />
-              {/* Lighter gradient overlay for better visibility */}
-              <div className="absolute inset-0" style={{background:"linear-gradient(135deg, rgba(59,47,99,0.08) 0%, transparent 60%)"}} />
-            </div>
-
-            {/* Floating stat card — bottom left */}
-            <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-card-enhanced border border-stone-border/50 px-4 py-3 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-coral-accent/10 flex items-center justify-center flex-shrink-0">
-                <span className="material-symbols-outlined text-coral-accent text-lg">groups</span>
-              </div>
-              <div>
-                <p className="text-[1.125rem] font-black text-plum-deep leading-none">500+</p>
-                <p className="text-[0.6875rem] text-text-muted font-medium">Happy Businesses</p>
-              </div>
-            </div>
-
-            {/* Floating badge — top right */}
-            <div className="absolute -top-3 -right-3 bg-plum-deep text-white rounded-xl px-3 py-2 flex items-center gap-2">
-              <span className="material-symbols-outlined text-coral-accent text-base">verified</span>
-              <span className="text-[0.75rem] font-bold">GST Invoice</span>
-            </div>
-
-            {/* Floating turnaround badge — right middle */}
-            <div className="absolute top-1/2 -right-5 -translate-y-1/2 bg-white rounded-xl shadow-card-enhanced border border-stone-border/50 px-3 py-2.5 text-center">
-              <p className="text-[1rem] font-black text-plum-deep leading-none">24h</p>
-              <p className="text-[0.625rem] text-text-muted font-semibold mt-0.5">Turnaround</p>
-            </div>
-          </div>
-
-          {/* Mobile hero image */}
-          <div className="lg:hidden">
-            <div className="relative rounded-2xl overflow-hidden shadow-architectural-xl" style={{height:220}}>
-              <img
-                src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?w=800&q=80&auto=format&fit=crop"
-                alt="Vijetha Digital Printing"
-                style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
-                loading="lazy"
-              />
-              {/* Lighter overlay for mobile */}
-              <div className="absolute inset-0" style={{background:"linear-gradient(135deg, rgba(59,47,99,0.05) 0%, transparent 60%)"}} />
-            </div>
-          </div>
+            ))}
+          </dl>
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-1 border-t border-white/15 pt-5 text-sm text-white/80">
+            {FEATURES.map((f) => <li key={f}>{f}</li>)}
+          </ul>
         </div>
       </section>
 
-      {/* ── FEATURE BAR ─────────────────────────────────────────── */}
-      <div className="border-y border-stone-border bg-white z-20 relative">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-6 overflow-x-auto no-scrollbar py-3">
-            {FEATURES.map((f, i) => (
-              <Fragment key={f.label}>
-                {i > 0 && <div className="w-px h-4 bg-stone-border flex-shrink-0" />}
-                <div className="flex items-center gap-2 text-[0.8125rem] font-semibold text-plum-deep/80 whitespace-nowrap flex-shrink-0">
-                  <span className="material-symbols-outlined text-coral-accent text-lg">{f.icon}</span>
-                  {f.label}
-                </div>
-              </Fragment>
-            ))}
+      {/* ── CORE SERVICES ── */}
+      <section id="services" className="vd-wrap vd-section grid gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+            <h2 className="vd-h2">Our Core Services</h2>
+            <p className="vd-lede mt-3">Specialized printing solutions for every need.</p>
+            <Link to="/products" className="vd-link mt-4 inline-block text-[0.9375rem]">View All</Link>
           </div>
         </div>
-      </div>
-
-      {/* ── TRUST SIGNALS ───────────────────────────────────────── */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-white border-b border-stone-border z-10 relative">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 stagger-children">
-            {[
-              { icon: "groups",         stat: "500+",   label: "Happy Businesses",   sub: "Across Hyderabad"    },
-              { icon: "local_shipping", stat: "24–48h", label: "Turnaround Time",    sub: "Print to delivery"   },
-              { icon: "receipt_long",   stat: "GST",    label: "Tax Invoice",        sub: "On every order"      },
-              { icon: "verified_user",  stat: "100%",   label: "Quality Guaranteed", sub: "Or we reprint free"  },
-            ].map(t => (
-              /* Card Standard: p-6, rounded-xl, hover:shadow-md */
-              <div key={t.label} className="flex items-center gap-3 sm:gap-4 p-5 lg:p-6 rounded-xl bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-md transition-all duration-200">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-plum-deep/5 flex items-center justify-center flex-shrink-0">
-                  <span className="material-symbols-outlined text-plum-deep text-xl sm:text-2xl">{t.icon}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  {/* H3: 18px mobile → 20.48px desktop */}
-                  <span className="text-[1.125rem] lg:text-[1.28rem] font-black text-plum-deep tracking-tight leading-none block mb-1.5">{t.stat}</span>
-                  {/* Body Small: 13px mobile → 14px desktop */}
-                  <span className="text-[0.8125rem] lg:text-[0.875rem] font-semibold text-text-dark leading-tight block">{t.label}</span>
-                  {/* Caption: 12px */}
-                  <span className="text-xs text-text-hint leading-tight hidden sm:block mt-1">{t.sub}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <ul className="border-t border-line lg:col-span-8">
+          {SERVICES.map((s) => (
+            <li key={s.title} className="border-b border-line">
+              <Link to={s.to} className="group flex items-start gap-4 py-5 sm:items-center sm:gap-6 lg:py-7" aria-label={`View ${s.title}`}>
+                <span className="material-symbols-outlined text-3xl text-ink-2 transition-colors group-hover:text-accent">{s.icon}</span>
+                <span className="min-w-0 flex-1 sm:grid sm:grid-cols-5 sm:items-baseline sm:gap-6">
+                  <span className="vd-h3 block sm:col-span-2">{s.title}</span>
+                  <span className="mt-1 block text-[0.9375rem] leading-snug text-ink-2 sm:col-span-3 sm:mt-0">{s.desc}</span>
+                </span>
+                <span className="material-symbols-outlined text-xl text-ink-3 transition-transform group-hover:translate-x-1">arrow_forward</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* ── CORE SERVICES ───────────────────────────────────────── */}
-      <section className="py-6 sm:py-8 lg:py-14 bg-white z-10 relative">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-6 lg:mb-10">
+      {/* ── POPULAR PRODUCTS ── */}
+      <section className="bg-surface">
+        <div className="vd-wrap vd-section">
+          <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              {/* H1: 28px mobile → 32px desktop (per design system H1 spec) */}
-              <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-2 leading-[1.25] tracking-[-0.01em]">Our Core Services</h2>
-              {/* Body: 14px mobile → 16px desktop */}
-              <p className="text-sm lg:text-base text-text-dark/70 font-medium">Specialized printing solutions for every need.</p>
+              <h2 className="vd-h2">Popular Products</h2>
+              <p className="mt-2 text-ink-2">Our most-ordered items by Hyderabad businesses.</p>
             </div>
-            {/* Body Small with proper hover */}
-            <Link to="/products" className="hidden sm:flex items-center gap-1 text-coral-accent font-bold text-sm lg:text-[0.875rem] hover:gap-2 transition-all duration-200 whitespace-nowrap">
-              View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </Link>
-          </div>
-          {/* Card Standard: p-6, rounded-xl, shadow-sm hover:shadow-md */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
-            {SERVICES.map(svc => (
-              <div key={svc.title} onClick={() => navigate("/products")}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && navigate("/products")}
-                aria-label={`View ${svc.title}`}
-                className="coral-top-border bg-white p-5 lg:p-6 rounded-xl shadow-sm hover:shadow-md border border-stone-border/60 cursor-pointer transition-all duration-200 active:scale-[0.98] group min-h-[140px]">
-                <div className="w-11 h-11 bg-plum-deep/6 rounded-xl flex items-center justify-center mb-4 flex-shrink-0 transition-colors duration-200 group-hover:bg-plum-deep">
-                  <span className="material-symbols-outlined text-[1.375rem] transition-colors duration-200 text-plum-deep group-hover:text-white">{svc.icon}</span>
-                </div>
-                {/* H3: 18px mobile → 20.48px desktop */}
-                <h3 className="text-[1.125rem] lg:text-[1.28rem] font-bold text-plum-deep mb-2 leading-[1.25]">{svc.title}</h3>
-                {/* Caption: 12px mobile → 12.8px desktop */}
-                <p className="text-xs lg:text-[0.8rem] text-text-dark/70 leading-[1.5] line-clamp-2">{svc.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── POPULAR PRODUCTS ────────────────────────────────────── */}
-      <section className="py-8 sm:py-10 lg:py-14 bg-[#fbf9f4] z-10 relative">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-8">
-            <div>
-              {/* H1: 28px mobile → 32px desktop */}
-              <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-2 leading-[1.25] tracking-[-0.01em]">Popular Products</h2>
-              {/* Body: 14px mobile → 16px desktop */}
-              <p className="text-sm lg:text-base text-text-muted">Our most-ordered items by Hyderabad businesses.</p>
-            </div>
-            <Link to="/products" className="hidden sm:flex items-center gap-1 text-coral-accent font-bold text-sm lg:text-[0.875rem] hover:gap-2 transition-all duration-200 whitespace-nowrap">
-              View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </Link>
+            <Link to="/products" className="vd-link hidden whitespace-nowrap text-[0.9375rem] sm:inline-block">View All</Link>
           </div>
           <ProductCarousel products={popular} loading={loading} count={4} />
-
-          <div className="text-center mt-8">
-            {/* Button: h-11 mobile, h-12 desktop */}
-            <Link
-              to="/products"
-              className="inline-flex items-center justify-center h-11 sm:h-12 px-8 sm:px-10 lg:px-12 bg-plum-deep hover:bg-plum-light text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
-            >
-              Explore All Products
-            </Link>
+          <div className="mt-10 text-center">
+            <Link to="/products" className="vd-btn vd-btn-outline vd-btn-lg w-full sm:w-auto">Explore All Products</Link>
           </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ────────────────────────────────────────── */}
-      <section className="py-8 sm:py-10 lg:py-14 bg-white border-y border-stone-border z-10 relative">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            {/* H1: 28px mobile → 32px desktop */}
-            <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-3 leading-[1.25] tracking-[-0.01em]">How It Works</h2>
-            {/* Body: 14px mobile → 16px desktop */}
-            <p className="text-sm lg:text-base text-text-muted max-w-xl mx-auto leading-[1.65]">Order your prints in 4 simple steps — from design to delivery.</p>
+      {/* ── HOW IT WORKS ── */}
+      <section className="vd-wrap vd-section">
+        <h2 className="vd-h2">How It Works</h2>
+        <p className="vd-lede mt-3 max-w-xl">Order your prints in 4 simple steps, from design to delivery.</p>
+        <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="border-t-2 border-ink pt-4">
+              <span className="vd-price text-sm font-semibold text-accent">0{i + 1}</span>
+              <h3 className="vd-h3 mt-2">{s.title}</h3>
+              <p className="mt-2 text-[0.9375rem] leading-snug text-ink-2">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* ── BULK / CORPORATE ── */}
+      <section className="bg-shade">
+        <div className="vd-wrap vd-section grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <p className="vd-kicker mb-3">For Business</p>
+            <h2 className="vd-h2">Bulk Orders &amp; Corporate Accounts</h2>
+            <p className="vd-lede mt-4">
+              Streamline your procurement with a dedicated business account. Get exclusive pricing, priority support, and easy reordering.
+            </p>
+            <ul className="vd-rows mt-6 border-y border-line-strong/60">
+              {BULK_POINTS.map((item) => (
+                <li key={item.title} className="!block sm:!flex">
+                  <strong className="block font-semibold">{item.title}</strong>
+                  <span className="text-[0.9375rem] text-ink-2 sm:text-right">{item.desc}</span>
+                </li>
+              ))}
+            </ul>
+            <Link to="/register" className="vd-btn vd-btn-ink vd-btn-lg mt-7 w-full sm:w-auto">Open Business Account</Link>
           </div>
-          {/* Card Standard: p-6, rounded-xl, hover:shadow-md */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
-            {[
-              { step: "01", icon: "inventory_2",    title: "Choose Product",   desc: "Browse our catalog and select the product that fits your need." },
-              { step: "02", icon: "tune",           title: "Customise",        desc: "Pick size, material, quantity and upload your artwork or design." },
-              { step: "03", icon: "payments",       title: "Pay Securely",     desc: "Pay online via UPI, card or net banking. GST invoice auto-generated." },
-              { step: "04", icon: "local_shipping", title: "Fast Delivery",    desc: "We print and deliver to your doorstep within 24–48 hours." },
-            ].map((s, i) => (
-              <div key={s.step} className="relative flex flex-col items-start gap-3 p-5 lg:p-6 rounded-xl bg-warm-white border border-stone-border/60 hover:border-plum-deep/20 hover:shadow-md transition-all duration-200">
-                {/* Connector arrow — desktop only */}
-                {i < 3 && (
-                  <div className="hidden lg:flex absolute top-7 -right-3 z-10 items-center">
-                    <div className="w-6 h-px bg-stone-border" />
-                    <span className="material-symbols-outlined text-stone-border/80 text-sm -ml-1">chevron_right</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  {/* Tiny: 11px */}
-                  <span className="text-[0.6875rem] font-black text-coral-accent tracking-widest">{s.step}</span>
-                  <div className="w-9 h-9 rounded-xl bg-plum-deep/5 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-plum-deep text-lg">{s.icon}</span>
-                  </div>
-                </div>
-                <div>
-                  {/* H4: 16px mobile → 18px desktop */}
-                  <h3 className="text-base lg:text-[1.125rem] font-semibold text-plum-deep mb-1.5 leading-[1.25]">{s.title}</h3>
-                  {/* Caption: 12px */}
-                  <p className="text-xs text-text-muted leading-[1.5] hidden sm:block">{s.desc}</p>
-                </div>
+          <figure>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="vd-frame col-span-2 aspect-[2/1]">
+                <img src="/products/flex-printing.png" alt="Large format flex print" width="600" height="300" loading="lazy" />
+                <figcaption className="vd-chip absolute bottom-2 right-2 !bg-surface">Event banner, 6ft × 3ft</figcaption>
               </div>
+              <div className="vd-frame aspect-[4/3]">
+                <img src="/products/letterhead-printing.jpg" alt="Printed letterheads" width="300" height="225" loading="lazy" />
+                <span className="vd-chip absolute bottom-2 right-2 !bg-surface">Letterhead</span>
+              </div>
+              <div className="vd-frame aspect-[4/3]">
+                <img src="/products/catalogue-printing.jpg" alt="Printed catalogues" width="300" height="225" loading="lazy" />
+                <span className="vd-chip absolute bottom-2 right-2 !bg-surface">Catalogues</span>
+              </div>
+            </div>
+            <p className="mt-4 text-[0.9375rem] text-ink-2">
+              <strong className="font-semibold text-ink">Trusted by 40+ Corporates</strong> for brand consistency.
+            </p>
+          </figure>
+        </div>
+      </section>
+
+      {/* ── WHAT CUSTOMERS SAY ── */}
+      <section className="vd-wrap vd-section">
+        <div className="flex items-end justify-between gap-4">
+          <h2 className="vd-h2">Rated 4.6★ on JustDial</h2>
+          <Link to="/about" className="vd-link hidden whitespace-nowrap text-[0.9375rem] sm:inline-block">More reviews</Link>
+        </div>
+        <ul className="mt-8 grid gap-8 md:grid-cols-3">
+          {QUOTES.map((q) => (
+            <li key={q.name} className="border-t border-line-strong pt-5">
+              <blockquote className="text-[1.0625rem] leading-relaxed">“{q.text}”</blockquote>
+              <p className="mt-4 text-sm"><span className="font-semibold">{q.name}</span> <span className="text-ink-2">· {q.role}</span></p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── BRANCHES ── */}
+      <section aria-labelledby="branches-home" className="bg-surface">
+        <div className="vd-wrap py-12 lg:py-16">
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 id="branches-home" className="vd-h3">Visit a branch</h2>
+            <p className="text-sm text-ink-2">{BUSINESS.hours}</p>
+          </div>
+          <ul className="mt-5 grid gap-6 md:grid-cols-3">
+            {BRANCHES.map((b) => (
+              <li key={b.id} className="border-t border-line pt-4">
+                <p className="font-semibold">{b.name}{b.tag ? <span className="font-normal text-ink-2"> · {b.tag}</span> : null}</p>
+                <p className="mt-1 text-[0.9375rem] leading-snug text-ink-2">{b.address}</p>
+                <a href={mapsLink(b)} target="_blank" rel="noopener noreferrer" className="vd-link mt-2 inline-block text-sm">Get directions</a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* ── BULK / CORPORATE ────────────────────────────────────── */}
-      <section className="py-8 sm:py-10 lg:py-14 bg-beige-warm relative overflow-hidden z-10">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 w-full text-center">
-          <span className="text-[80px] md:text-[160px] font-black text-plum-deep opacity-[0.04] blur-[3px] whitespace-nowrap uppercase tracking-widest">
-            Corporate Printing
-          </span>
-        </div>
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div>
-              {/* Caption: 12px mobile → 12.8px desktop */}
-              <span className="text-coral-accent font-bold tracking-widest uppercase text-xs lg:text-[0.8rem] mb-3 block">For Business</span>
-              {/* H1: 28px mobile → 32px desktop */}
-              <h2 className="text-[1.75rem] lg:text-[2rem] font-bold text-plum-deep mb-5 leading-[1.25] tracking-[-0.01em]">Bulk Orders &amp; Corporate Accounts</h2>
-              {/* Body: 14px mobile → 16px desktop */}
-              <p className="text-sm lg:text-base text-text-dark/80 mb-6 leading-[1.65]">
-                Streamline your procurement with a dedicated business account. Get exclusive pricing, priority support, and easy reordering.
-              </p>
-              <ul className="space-y-4 mb-6">
-                {[
-                  { title: "Volume Discounts",         desc: "Save up to 30% on bulk printing orders." },
-                  { title: "Dedicated Design Support", desc: "Access to our professional design team for adjustments." },
-                  { title: "GST Invoicing",            desc: "Compliant billing for easy input credit claims." },
-                ].map(item => (
-                  <li key={item.title} className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-coral-accent mt-0.5 text-xl flex-shrink-0">check_circle</span>
-                    <div>
-                      {/* H4: 16px mobile → 18px desktop */}
-                      <strong className="text-plum-deep block text-base lg:text-[1.125rem] font-semibold">{item.title}</strong>
-                      {/* Body Small: 13px mobile → 14px desktop */}
-                      <span className="text-[0.8125rem] lg:text-[0.875rem] text-text-muted">{item.desc}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              {/* Button: h-11 mobile, h-12 desktop */}
-              <Link
-                to="/register"
-                className="inline-flex items-center justify-center h-11 sm:h-12 px-6 sm:px-8 lg:px-10 bg-plum-deep text-white font-bold rounded-xl shadow-md hover:bg-plum-light hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-sm sm:text-base whitespace-nowrap"
-              >
-                Open Business Account
-              </Link>
-            </div>
-
-            <div className="relative hidden lg:block">
-              <div className="bg-white p-7 rounded-[12px] shadow-architectural-lg relative z-10 overflow-hidden hover:scale-[1.01] transition-transform duration-300">
-                <div className="absolute top-0 right-0 w-28 h-28 bg-coral-accent/5 rounded-bl-[80px]" />
-                <div className="flex items-center gap-4 mb-7">
-                  <div className="w-11 h-11 rounded-full bg-plum-deep flex items-center justify-center text-white font-bold text-lg">V</div>
-                  <div>
-                    <h4 className="font-bold text-plum-deep text-[0.9375rem]">Corporate Brand Kit</h4>
-                    <p className="text-[0.75rem] text-text-muted">Unified branding across all assets</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 mb-5">
-                  <div className="col-span-2 h-28 rounded-[8px] bg-stone-light relative overflow-hidden">
-                    <div className="absolute inset-0 bg-plum-deep/10 flex items-center justify-center">
-                      <span className="font-bold text-plum-deep/40 text-lg tracking-widest">EVENT BANNER</span>
-                    </div>
-                    <div className="absolute bottom-2 right-2 bg-white px-2 py-0.5 rounded text-[10px] font-bold text-plum-deep shadow-sm">6ft × 3ft</div>
-                  </div>
-                  <div className="h-20 rounded-[8px] bg-stone-light relative overflow-hidden">
-                    <div className="absolute inset-0 bg-coral-accent/10 flex items-center justify-center">
-                      <span className="font-bold text-coral-accent/40 text-xs">LETTERHEAD</span>
-                    </div>
-                  </div>
-                  <div className="h-20 rounded-[8px] bg-stone-light relative overflow-hidden">
-                    <div className="absolute inset-0 bg-plum-deep/5 flex items-center justify-center">
-                      <div className="w-10 h-7 bg-white shadow-sm border border-stone-200" />
-                    </div>
-                    <div className="absolute bottom-2 right-2 text-[10px] text-text-muted">Biz Cards</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-stone-light/40 rounded-[8px] border border-stone-border/50">
-                  <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-gray-300 border-2 border-white" />
-                    <div className="w-7 h-7 rounded-full bg-gray-400 border-2 border-white" />
-                    <div className="w-7 h-7 rounded-full bg-gray-500 border-2 border-white flex items-center justify-center text-[9px] text-white font-bold">+40</div>
-                  </div>
-                  <p className="text-[0.75rem] text-text-muted"><strong>Trusted by 40+ Corporates</strong> for brand consistency.</p>
-                </div>
-              </div>
-              <div className="absolute -top-5 -right-5 w-20 h-20 bg-coral-accent/20 rounded-full blur-xl" />
-              <div className="absolute -bottom-5 -left-5 w-28 h-28 bg-plum-deep/10 rounded-full blur-xl" />
-            </div>
+      {/* ── FINAL CTA ── */}
+      <section className="bg-accent text-white">
+        <div className="vd-wrap flex flex-col gap-7 py-12 lg:flex-row lg:items-center lg:justify-between lg:py-16">
+          <div className="max-w-2xl">
+            <h2 className="vd-h2">Ready to Print at Scale?</h2>
+            <p className="mt-3 text-[1.0625rem] leading-relaxed text-white/90">
+              Join 500+ businesses who trust Vijetha Digital for their printing needs. Quality guaranteed, every order.
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ───────────────────────────────────────────── */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-plum-deep text-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 cta-glow-bg pointer-events-none" />
-        <div className="max-w-[800px] mx-auto relative z-10">
-          {/* Display L: 32px mobile → 40px desktop */}
-          <h2 className="text-[2rem] md:text-[2.5rem] font-bold text-white mb-5 leading-[1.2] tracking-[-0.02em]">Ready to Print at Scale?</h2>
-          {/* Body Large: 16px mobile → 18px desktop */}
-          <p className="text-white/70 text-base md:text-[1.125rem] mb-8 max-w-xl mx-auto leading-[1.65]">
-            Join 500+ businesses who trust Vijetha Digital for their printing needs. Quality guaranteed, every order.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            {/* Button xl: h-12 mobile, h-13 desktop (hero CTA) */}
-            <Link
-              to="/products"
-              className="inline-flex items-center justify-center h-12 sm:h-13 px-8 sm:px-10 lg:px-12 bg-coral-accent hover:bg-coral-dark text-white text-base sm:text-lg font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] whitespace-nowrap"
-            >
-              Start Your Order
-            </Link>
-            <a
-              href="tel:+917942643004"
-              className="inline-flex items-center justify-center h-12 sm:h-13 px-8 sm:px-10 lg:px-12 bg-white border-2 border-white/30 text-plum-deep font-bold rounded-2xl hover:bg-white/90 hover:border-white/50 shadow-md hover:shadow-lg transition-all duration-200 text-base sm:text-lg whitespace-nowrap"
-            >
-              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 text-plum-deep">call</span>
-              <span className="text-plum-deep">+91 79426 43004</span>
+          <div className="flex flex-col gap-3 sm:flex-row lg:flex-shrink-0">
+            <Link to="/products" className="vd-btn vd-btn-lg bg-white text-ink hover:bg-paper">Start Your Order</Link>
+            <a href={BUSINESS.phoneHref} className="vd-btn vd-btn-lg vd-btn-on-dark vd-price">
+              <span className="material-symbols-outlined text-xl">call</span>
+              {BUSINESS.phone}
             </a>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

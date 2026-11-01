@@ -11,6 +11,19 @@ export default {
   theme: {
     extend: {
       colors: {
+        // ── STOREFRONT TOKENS (see DESIGN.md) ──
+        "paper":        "#F7F5F0",
+        "shade":        "#EEEBE4",
+        "line":         "#DEDAD0",
+        "line-strong":  "#B9B4A8",
+        "ink":          "#14181F",
+        "ink-2":        "#4A5261",
+        "ink-3":        "#667080",
+        "night":        "#1A2332",
+        "accent":       "#C0392B",
+        "accent-dark":  "#A93226",
+        "ok":           "#1F7A4D",
+
         // ── PRIMARY — Deep Charcoal ──
         "brand-navy":    "#1A2332",   // deep charcoal-navy (primary)
         "brand-navy-2":  "#22304A",   // slightly lighter
@@ -48,7 +61,7 @@ export default {
       },
 
       fontFamily: {
-        display: ["Manrope", "sans-serif"],
+        display: ["var(--font-ui, Manrope)", "sans-serif"],
       },
 
       boxShadow: {
@@ -78,17 +91,6 @@ export default {
         "h3":         ["1.375rem",{ lineHeight: "1.4",  letterSpacing: "-0.005em", fontWeight: "600" }],
         "body":       ["1rem",    { lineHeight: "1.65" }],
         "caption":    ["0.8125rem",{ lineHeight: "1.5" }],
-      },
-
-      spacing: {
-        "4":  "4px",
-        "8":  "8px",
-        "12": "12px",
-        "16": "16px",
-        "24": "24px",
-        "32": "32px",
-        "48": "48px",
-        "64": "64px",
       },
 
       maxWidth: {
