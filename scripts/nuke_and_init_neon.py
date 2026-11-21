@@ -35,8 +35,9 @@ import app.models.token_blacklist
 import app.models.user
 
 # Neon database URL - DIRECT (non-pooled) endpoint
-DATABASE_URL = "postgresql://neondb_owner:npg_BD9tgcHrxvm1@ep-icy-forest-az3dzjjc.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
-
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    sys.exit("Set DATABASE_URL in your environment or .env before running this script.")
 def nuke_and_init():
     """Drop everything and reinitialize."""
     print("=" * 60)

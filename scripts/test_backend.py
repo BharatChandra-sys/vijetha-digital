@@ -3,6 +3,7 @@
 Test the backend locally to ensure it works before deployment.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -12,8 +13,9 @@ import requests
 from app.core.config import settings
 
 # Use Neon database
-DATABASE_URL = "postgresql://neondb_owner:npg_BD9tgcHrxvm1@ep-icy-forest-az3dzjjc.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
-
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    sys.exit("Set DATABASE_URL in your environment or .env before running this script.")
 def test_database_connection():
     """Test direct database connection."""
     print("🔍 Testing database connection...")

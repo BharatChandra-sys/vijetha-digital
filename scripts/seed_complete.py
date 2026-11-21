@@ -4,6 +4,7 @@ Complete seeding script for Neon database.
 Creates demo users, products, and sample data.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -19,8 +20,9 @@ from app.models.user import User, UserRole, UserStatus
 from app.models.iam import Role, Permission, RoleType, PermissionCategory, ResourceType, ActionType
 from app.core.security import hash_password
 
-DATABASE_URL = "postgresql://neondb_owner:npg_BD9tgcHrxvm1@ep-icy-forest-az3dzjjc.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
-
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    sys.exit("Set DATABASE_URL in your environment or .env before running this script.")
 def seed_products(db: Session):
     """Seed products."""
     print("🌱 Seeding products...")
