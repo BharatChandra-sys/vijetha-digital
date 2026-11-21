@@ -125,3 +125,6 @@ Thumbs.db
 # Vercel
 .vercel/
 .233512
+
+# Reference material kept locally, not in the repo
+*.pdf

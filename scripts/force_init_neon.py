@@ -100,7 +100,7 @@ def force_init():
         print("=" * 60)
         print()
         print("Next steps:")
-        print("1. Run: seed_neon_database.bat")
+        print("1. Run: python scripts/seed_products.py (with DATABASE_URL set)")
         print("   OR: py scripts\\seed_products.py")
         print("2. Test backend: https://vijetha-digital-backend.onrender.com/products")
         print()

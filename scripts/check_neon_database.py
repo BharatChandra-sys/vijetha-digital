@@ -45,7 +45,7 @@ def check_database():
             print("⚠️  No tables found in database!")
             print()
             print("🔧 Recommendation:")
-            print("   Run: run_neon_migrations.bat")
+            print("   Run: alembic upgrade head (with DATABASE_URL set)")
             print()
         else:
             print(f"✅ Found {len(tables)} tables:")
@@ -88,13 +88,13 @@ def check_database():
                 print(f"   - {table}")
             print()
             print("🔧 Recommendation:")
-            print("   Run: run_neon_migrations.bat")
+            print("   Run: alembic upgrade head (with DATABASE_URL set)")
             print()
         else:
             print("✅ All expected tables exist!")
             print()
             print("🎉 Database is ready!")
-            print("   Next step: Run seed_neon_database.bat to add demo data")
+            print("   Next step: Run python scripts/seed_products.py to add demo data")
             print()
         
         return True

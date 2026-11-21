@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.services.brevo_email_service import brevo_email_service
 from app.core.config import settings

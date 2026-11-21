@@ -365,14 +365,9 @@ npm run dev
 
 Available at: http://localhost:3000
 
-### Default Admin Credentials
+### Admin Account
 
-```
-Email:     admin@vijetha.com
-Password:  admin123
-```
-
-Change the admin password immediately after the first login.
+The first admin is created from `ADMIN_EMAIL` and `ADMIN_PASSWORD` in your `.env`. Use a strong, unique password; never commit it.
 
 ---
 
@@ -593,7 +588,7 @@ docker-compose -f docker-compose.prod.yml down
 ./scripts/rollback.sh
 ```
 
-Refer to `COMPLETE_DEPLOYMENT_MANUAL.md` for full server provisioning, SSL certificate setup, and post-deploy verification steps.
+Refer to `docs/deployment/COMPLETE_DEPLOYMENT_MANUAL.md` for full server provisioning, SSL certificate setup, and post-deploy verification steps.
 
 ---
 
@@ -614,7 +609,7 @@ pytest tests/unit/ -v
 pytest tests/integration/ -v
 
 # Test Brevo email connectivity
-python test_email_service.py
+python scripts/test_email_service.py
 ```
 
 ### Manual Smoke Tests
@@ -737,14 +732,18 @@ Pull request titles must follow Conventional Commits: `feat:`, `fix:`, `docs:`, 
 
 ## Documentation Index
 
-| Document                        | Purpose                                          |
-|---------------------------------|--------------------------------------------------|
-| `README.md`                     | This file — project overview and quick reference |
-| `COMPLETE_DEPLOYMENT_MANUAL.md` | Step-by-step production server setup             |
-| `DEPLOYMENT_GUIDE.md`           | Concise deployment reference                     |
-| `BREVO_OAUTH_SETUP_GUIDE.md`    | Email service and Google OAuth configuration     |
-| `SECURITY_REMINDER.md`          | Pre-deployment security checklist                |
-| `DEPLOYMENT_STATUS.md`          | Current live environment status                  |
+| Document | Purpose |
+|---|---|
+| `README.md` | This file — project overview and quick reference |
+| `docs/deployment/COMPLETE_DEPLOYMENT_MANUAL.md` | Step-by-step production server setup |
+| `docs/deployment/DEPLOYMENT_GUIDE.md` | Concise deployment reference |
+| `docs/deployment/DEPLOYMENT_INSTRUCTIONS.md` | Render + Vercel deployment steps |
+| `docs/deployment/RENDER_CORS_SETUP.md` | CORS settings for the Render backend |
+| `docs/setup/BREVO_OAUTH_SETUP_GUIDE.md` | Email service and Google OAuth configuration |
+| `docs/setup/SECURITY_REMINDER.md` | Pre-deployment security checklist |
+| `docs/seo/` | Sitelinks audit and product media strategy |
+| `frontend1/docs/` | Notes for the Next.js site (SEO, performance, Search Console) |
+| `scripts/windows/` | Windows helpers for local dev and backend health checks |
 
 ---
 
