@@ -4,7 +4,7 @@ import Footer from '@/components/layout/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import StructuredContent from '@/components/seo/StructuredContent';
 
-import { WA_URL } from '@/lib/constants';
+
 import { JUSTDIAL_URL } from '@/lib/reviews';
 
 // Brand entity page — the single authoritative source for "Vijetha Digital" as a named entity.

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import BrandMark from '@/components/brand/BrandMark';
 import { CmykRule } from '@/components/brand/CmykStrip';
-import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
+import { WA_URL, PHONE, PHONE_RAW } from '@/lib/constants';
 import { JUSTDIAL_URL } from '@/lib/reviews';
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";

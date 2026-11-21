@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import JsonLd from './JsonLd';
 import { generateBreadcrumbSchema } from '@/lib/seo-utils';
 
@@ -40,7 +41,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
           }}
         >
           <li>
-            <a
+            <Link
               href="/"
               style={{
                 color: 'rgb(85,78,78)',
@@ -48,7 +49,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
               }}
             >
               Home
-            </a>
+            </Link>
           </li>
           {items.map((item, index) => (
             <li key={item.url} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -56,7 +57,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
               {index === items.length - 1 ? (
                 <span style={{ color: '#000', fontWeight: 500 }}>{item.name}</span>
               ) : (
-                <a
+                <Link
                   href={item.url}
                   style={{
                     color: 'rgb(85,78,78)',
@@ -64,7 +65,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
                   }}
                 >
                   {item.name}
-                </a>
+                </Link>
               )}
             </li>
           ))}

@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import { useState } from 'react';
 import type { Product } from '@/lib/products-data';
@@ -74,9 +75,9 @@ export default function ProductDetail({
       <div style={{ backgroundColor: '#f9f9f7', borderBottom: '1px solid #e8e8e4', paddingTop: '88px' }}>
         <div className="wix-container" style={{ padding: '12px 0' }}>
           <p style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)', margin: 0 }}>
-            <a href="/" style={{ color: 'rgb(85,78,78)', textDecoration: 'none' }}>Home</a>
+            <Link href="/" style={{ color: 'rgb(85,78,78)', textDecoration: 'none' }}>Home</Link>
             {' / '}
-            <a href="/products" style={{ color: 'rgb(85,78,78)', textDecoration: 'none' }}>Products</a>
+            <Link href="/products" style={{ color: 'rgb(85,78,78)', textDecoration: 'none' }}>Products</Link>
             {' / '}
             <span style={{ color: '#000' }}>{product.name}</span>
           </p>

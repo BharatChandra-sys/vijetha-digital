@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import BrandMark from '@/components/brand/BrandMark';
-import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
+import { WA_URL } from '@/lib/constants';
 
 const MENU_BG = '#ffedc9';
 

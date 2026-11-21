@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,12 +15,12 @@ export default function NotFound() {
           The page you are looking for may have moved. Return to the homepage or explore our services.
         </p>
         <div style={{ marginTop: '32px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="/" style={{ backgroundColor: '#000', color: '#fff', padding: '12px 28px', textDecoration: 'none', fontSize: '14px' }}>
+          <Link href="/" style={{ backgroundColor: '#000', color: '#fff', padding: '12px 28px', textDecoration: 'none', fontSize: '14px' }}>
             Go to Homepage
-          </a>
-          <a href="/services" style={{ backgroundColor: 'transparent', color: '#000', padding: '12px 28px', textDecoration: 'none', fontSize: '14px', border: '1px solid #000' }}>
+          </Link>
+          <Link href="/services" style={{ backgroundColor: 'transparent', color: '#000', padding: '12px 28px', textDecoration: 'none', fontSize: '14px', border: '1px solid #000' }}>
             View Services
-          </a>
+          </Link>
         </div>
       </div>
     </div>
