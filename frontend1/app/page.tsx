@@ -7,6 +7,9 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import ClientsSection from '@/components/sections/ClientsSection';
 import TrustBadges from '@/components/sections/TrustBadges';
+import QuoteSection from '@/components/sections/QuoteSection';
+import ReviewsSection from '@/components/sections/ReviewsSection';
+import BranchFinder from '@/components/sections/BranchFinder';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import JsonLd from '@/components/seo/JsonLd';
 import StickyContactBar from '@/components/conversion/StickyContactBar';
@@ -68,7 +71,7 @@ const homeFaqSchema = {
       name: 'Which is the best signage company in Hyderabad?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vijetha Digital is one of Hyderabad\'s leading signage companies, established in 2009, with 15+ years of experience serving 1,000+ clients including Samsung, Reliance Digital, Airtel, Jio, SBI, and Telangana Tourism. The company operates a 10,000 sq.ft in-house production facility in Nacharam IDA with advanced CNC routing, LED fabrication, and large-format printing capabilities. Rated 4.8/5 by clients.',
+        text: 'Vijetha Digital is one of Hyderabad\'s leading signage companies, established in 2009, with 15+ years of experience serving 1,000+ clients including Samsung, Reliance Digital, Airtel, Jio, SBI, and Telangana Tourism. The company operates a 10,000 sq.ft in-house production facility in Nacharam IDA with advanced CNC routing, LED fabrication, and large-format printing capabilities.',
       },
     },
     {
@@ -199,7 +202,10 @@ export default function Home() {
         <div style={{ position: 'relative', zIndex: 10 }}>
           <ServicesSection />
           <TrustBadges />
+          <QuoteSection />
           <ClientsSection />
+          <ReviewsSection />
+          <BranchFinder />
         </div>
       </main>
       <Footer />

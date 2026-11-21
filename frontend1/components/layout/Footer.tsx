@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 
+import BrandMark from '@/components/brand/BrandMark';
+import { CmykRule } from '@/components/brand/CmykStrip';
 import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
+import { JUSTDIAL_URL } from '@/lib/reviews';
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -10,6 +13,7 @@ const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-ser
 export default function Footer() {
   return (
     <footer style={{ backgroundColor: '#1c1d20', color: '#fff', width: '100%' }}>
+      <CmykRule />
 
       {/* ── MAIN GRID ── */}
       <div className="wix-container" style={{ paddingTop: '72px', paddingBottom: '56px' }}>
@@ -17,9 +21,13 @@ export default function Footer() {
 
           {/* ── COL 1: Brand ── */}
           <div className="footer-brand-col">
-            <p style={{ fontFamily: fontBold, fontSize: '20px', color: '#fff', letterSpacing: '0.02em', marginBottom: '16px' }}>
-              Vijetha Digital
-            </p>
+            <div className="vd-footer-brand">
+              <BrandMark size={56} />
+              <div>
+                <p className="vd-footer-name">Vijetha Digital</p>
+                <p className="vd-footer-telugu" lang="te">విజేత డిజిటల్</p>
+              </div>
+            </div>
             <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgba(255,255,255,0.65)', marginBottom: '28px', maxWidth: '260px' }}>
               Established 2009. Hyderabad&apos;s trusted print partner for sign boards, flex printing, banner stands &amp; promotional tents. Serving 1,000+ businesses across Telangana.
             </p>
@@ -47,6 +55,10 @@ export default function Footer() {
               {/* IndiaMart */}
               <a href="https://www.indiamart.com/vijethadigital/" target="_blank" rel="noopener noreferrer" className="social-icon social-icon--im" title="IndiaMart">
                 <span style={{ fontSize: '9px', fontFamily: fontBold, fontWeight: 900, letterSpacing: '-0.02em' }}>IM</span>
+              </a>
+              {/* Justdial */}
+              <a href={JUSTDIAL_URL} target="_blank" rel="noopener noreferrer" className="social-icon" title="Justdial reviews">
+                <span style={{ fontSize: '9px', fontFamily: fontBold, fontWeight: 900, letterSpacing: '-0.02em' }}>JD</span>
               </a>
             </div>
           </div>
@@ -80,6 +92,7 @@ export default function Footer() {
                 ['Services',       '/services'],
                 ['Products',       '/products'],
                 ['Contact',        '/contact'],
+                ['Artwork Guide',  '/artwork-guide'],
                 ['Privacy Policy', '/privacy'],
                 ['Sitemap',        '/sitemap'],
               ].map(([label, href]) => (

@@ -5,6 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import StructuredContent from '@/components/seo/StructuredContent';
 
 import { WA_URL } from '@/lib/constants';
+import { JUSTDIAL_URL } from '@/lib/reviews';
 
 // Brand entity page — the single authoritative source for "Vijetha Digital" as a named entity.
 // This page is what Google's Knowledge Graph crawls to populate the Knowledge Panel.
@@ -78,12 +79,9 @@ const entitySchema = {
   },
   sameAs: [
     'https://www.facebook.com/vijethadigital',
-    'https://www.instagram.com/vijethadigital',
-    'https://www.linkedin.com/company/vijetha-digital',
-    'https://twitter.com/vijethadigital',
     'https://www.indiamart.com/vijethadigital/',
-    'https://www.youtube.com/@vijetha_print_signs',
-    'https://www.justdial.com/Hyderabad/Vijetha-Digital',
+    'https://www.kompass.com/z/in/c/vijetha-digital/in447237/',
+    JUSTDIAL_URL,
   ],
   knowsAbout: [
     'Commercial Printing', 'Signage Manufacturing', 'LED Sign Boards', 'ACP Cladding',
@@ -91,12 +89,6 @@ const entitySchema = {
     'Flex Printing', 'Screen Printing', 'Exhibition Displays', 'Corporate Branding',
     'Retail Branding', 'Office Branding', 'Outdoor Advertising', 'Trade Show Booths',
   ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '127',
-    bestRating: '5',
-  },
 };
 
 export default function VijethaDigitalPage() {

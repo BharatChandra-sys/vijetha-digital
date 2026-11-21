@@ -173,73 +173,16 @@ export const CLIENT_PORTFOLIO = [
   },
 ];
 
-export const CLIENT_TESTIMONIALS = [
-  {
-    name: 'Rajesh Kumar',
-    role: 'Marketing Manager',
-    company: 'Retail Chain',
-    rating: 5,
-    text: 'Vijetha Digital delivered all 18 store signage sets in under 10 days. The ACP cladding and LED fascia have completely transformed our storefronts. Quality was impeccable and the team handled everything from design to installation.',
-    date: 'March 2025',
-    verified: true,
-  },
-  {
-    name: 'Priya Sharma',
-    role: 'Brand Manager',
-    company: 'FMCG Brand',
-    rating: 5,
-    text: 'We ve been working with Vijetha Digital for 4 years now for all our product launch events and outdoor campaigns. Their print quality is consistently excellent and they always deliver on time. Truly reliable partner.',
-    date: 'January 2025',
-    verified: true,
-  },
-  {
-    name: 'Mohammed Aziz',
-    role: 'Director',
-    company: 'Telecom Franchise',
-    rating: 5,
-    text: 'Got all 40 franchise stores rebranded in one go. The team handled everything — from design to installation. Professional, efficient and the best pricing in Hyderabad. Highly recommend for multi-location projects.',
-    date: 'November 2024',
-    verified: true,
-  },
-  {
-    name: 'Sujatha Reddy',
-    role: 'Operations Head',
-    company: 'Healthcare Group',
-    rating: 5,
-    text: 'Hospital interior branding was exactly what we envisioned — clean, professional and durable. The wayfinding system they designed has significantly improved patient navigation. Excellent project management.',
-    date: 'October 2024',
-    verified: true,
-  },
-  {
-    name: 'Venkat Patel',
-    role: 'Founder',
-    company: 'D2C Brand',
-    rating: 5,
-    text: 'Used them for our trade show booth at Hyderabad Expo. The fabric light boxes and standees looked stunning. Multiple visitors asked where we got them done. Will definitely work with them again.',
-    date: 'September 2024',
-    verified: true,
-  },
-  {
-    name: 'Anitha Das',
-    role: 'General Manager',
-    company: 'Hotel Chain',
-    rating: 5,
-    text: 'Vehicle fleet branding done for 35 vehicles — all wrapped in 3 days. Quality finish, UV-resistant vinyl. Still looking perfect after 8 months. Exceptional turnaround time and service quality.',
-    date: 'August 2024',
-    verified: true,
-  },
-];
-
 export const OPERATIONAL_PRINCIPLES = [
   {
     number: '01',
     title: 'Quality Assurance',
-    desc: 'ISO-standard quality control at every production stage. Multi-point inspection ensures zero-defect delivery on critical installations.',
+    desc: 'Quality checks at every production stage, with a final inspection before dispatch and installation.',
   },
   {
     number: '02',
     title: 'Technical Expertise',
-    desc: '50+ certified professionals across design, printing, fabrication and installation. Average team experience: 8+ years in signage industry.',
+    desc: 'In-house teams across design, printing, fabrication and installation, working on the same project from start to finish.',
   },
   {
     number: '03',

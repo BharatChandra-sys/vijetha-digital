@@ -34,6 +34,7 @@ const groups = [
       { label: 'Products', href: '/products', desc: '30+ branding products catalog' },
       { label: 'Projects', href: '/projects', desc: 'Completed signage projects' },
       { label: 'Contact', href: '/contact', desc: 'Get a free quote — 3 branches' },
+      { label: 'Artwork Guide', href: '/artwork-guide', desc: 'File formats, bleed and resolution by job' },
     ],
   },
   {
@@ -105,7 +106,7 @@ const groups = [
     links: [
       { label: 'Company Profile', href: '/about', desc: '15+ years of printing expertise' },
       { label: 'Our Clients', href: '/about#clients', desc: 'Trusted by 1000+ businesses' },
-      { label: 'Testimonials', href: '/about#testimonials', desc: 'Client reviews and feedback' },
+      { label: 'Customer Reviews', href: '/about#testimonials', desc: 'Public rating and where to read reviews' },
       { label: 'Branches', href: '/contact', desc: '3 locations in Hyderabad' },
       { label: 'Privacy Policy', href: '/privacy', desc: 'Data protection and privacy' },
     ],

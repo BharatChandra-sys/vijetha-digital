@@ -210,13 +210,13 @@ const organizationSchema = {
     // Add URLs here ONLY after the profile/listing is live and verified.
     // Pointing sameAs at non-existent profiles hurts entity confidence —
     // Google crawls these and a 404 is worse than omitting the entry.
-    // 'https://www.facebook.com/vijethadigital',       // add when live
+    'https://www.facebook.com/vijethadigital', // ✅ confirmed live
     // 'https://www.instagram.com/vijethadigital',      // add when live
     // 'https://www.linkedin.com/company/vijetha-digital', // add when live
     // 'https://twitter.com/vijethadigital',            // add when live
     // 'https://www.youtube.com/@vijetha_print_signs',  // add when live
-    // 'https://www.indiamart.com/vijethadigital/',     // add when live
-    // 'https://www.justdial.com/Hyderabad/Vijetha-Digital', // add when live
+    'https://www.indiamart.com/vijethadigital/', // ✅ confirmed live
+    'https://www.justdial.com/Hyderabad/Vijetha-Digitals-Opp-Ntr-Stadium-Indira-Park/040PXX40-XX40-101021152838-U3B2_BZDET', // ✅ confirmed live
     'https://www.kompass.com/z/in/c/vijetha-digital/in447237/', // ✅ confirmed live
   ],
   contactPoint: [
@@ -271,7 +271,8 @@ const organizationSchema = {
       },
     ],
   },
-  // aggregateRating removed — will be re-added with real review data from Google/Justdial
+  // No aggregateRating: self-serving and third-party ratings are ineligible for review
+  // snippets on a business's own LocalBusiness/Organization. See lib/reviews.ts.
 };
 
 export const metadata: Metadata = {

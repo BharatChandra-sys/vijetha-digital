@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { CmykChips } from '@/components/brand/CmykStrip';
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -83,7 +84,7 @@ export default function HeroSection() {
                       transform 0.8s cubic-bezier(0.87,0,0.13,1) 0.1s;
         }
         @media (max-width: 768px) {
-          .hero-label { font-size: 9px; margin-bottom: 10px; }
+          .hero-label { font-size: 11px; margin-bottom: 10px; }
         }
 
         .hero-h1 {
@@ -215,7 +216,7 @@ export default function HeroSection() {
         <div className="wix-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="hero-inner">
 
-            <p className="hero-label">Premium Printing Solutions</p>
+            <p className="hero-label"><CmykChips />Printing &amp; Signage, Since 2009</p>
 
             <h1 className="hero-h1">
               Commercial Printing<br />Hyderabad

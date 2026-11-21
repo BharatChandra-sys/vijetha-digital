@@ -39,8 +39,8 @@ export default function AboutSection() {
               we deliver precision and quality on every project — regardless of scale.
             </p>
             <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
-              With 500+ happy businesses and a decade of expertise, we combine modern printing
-              technology with skilled craftsmanship. Your brand deserves nothing less.
+              Since 2009, we have combined modern printing technology with skilled craftsmanship,
+              with production in-house at our Nacharam facility.
             </p>
 
             <a

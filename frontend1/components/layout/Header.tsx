@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+import BrandMark from '@/components/brand/BrandMark';
 import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
 
 const MENU_BG = '#ffedc9';
@@ -63,7 +64,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="font-bold text-[17px] leading-none tracking-tight transition-all duration-300 hover:opacity-60"
+            className="flex items-center gap-3 font-bold text-[17px] leading-none tracking-tight transition-all duration-300 hover:opacity-60"
             style={{
               fontFamily: "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif",
               color: (useDarkText || menuOpen) ? '#000' : heroTextColor,
@@ -71,6 +72,7 @@ export default function Header({ variant = 'default' }: HeaderProps) {
               visibility: menuOpen ? 'hidden' : 'visible',
             }}
           >
+            <BrandMark size={40} />
             Vijetha Digital
           </Link>
 
@@ -169,9 +171,10 @@ export default function Header({ variant = 'default' }: HeaderProps) {
           <Link
             href="/"
             onClick={() => setMenuOpen(false)}
-            className="font-bold text-[17px] text-black leading-none"
+            className="flex items-center gap-3 font-bold text-[17px] text-black leading-none"
             style={{ fontFamily: "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif" }}
           >
+            <BrandMark size={40} />
             Vijetha Digital
           </Link>
           <button onClick={() => setMenuOpen(false)} className="flex items-center justify-center w-10 h-10" aria-label="Close menu">

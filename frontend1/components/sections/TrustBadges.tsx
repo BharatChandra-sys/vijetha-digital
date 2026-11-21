@@ -6,7 +6,7 @@ const badges = [
   { label: '15+',       sublabel: 'Years Experience',   desc: 'Since 2009'      },
   { label: '1000+',     sublabel: 'Projects Delivered',  desc: 'Happy Clients'   },
   { label: 'Same Day',  sublabel: 'Printing Available',  desc: 'Under 500 sq.ft' },
-  { label: '85%',       sublabel: 'Client Retention',    desc: 'Rate'            },
+  { label: '3',         sublabel: 'Hyderabad Branches',  desc: 'Nacharam, Lakdikapool, Indira Park' },
 ];
 
 export default function TrustBadges() {
@@ -48,7 +48,7 @@ export default function TrustBadges() {
                 fontFamily: font,
                 fontSize:   '10px',
                 fontWeight: 400,
-                color:      'rgba(255,255,255,0.35)',
+                color:      'rgba(255,255,255,0.6)',
               }}>
                 {badge.desc}
               </div>

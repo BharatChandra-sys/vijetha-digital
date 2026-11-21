@@ -3,11 +3,11 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
+import ReviewsSection from '@/components/sections/ReviewsSection';
 import { WA_URL } from '@/lib/constants';
 import {
   COMPANY_STATS,
   CLIENT_PORTFOLIO,
-  CLIENT_TESTIMONIALS,
   OPERATIONAL_PRINCIPLES,
   CREDENTIALS,
   COMPANY_TIMELINE,
@@ -17,18 +17,6 @@ import {
 
 const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
 const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
-
-function StarRating({ count }: { count: number }) {
-  return (
-    <div style={{ display: 'flex', gap: '4px' }}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i < count ? '#000' : '#e8e8e4'}>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 export default function AboutPage() {
   return (
@@ -81,7 +69,7 @@ export default function AboutPage() {
                   Our 10,000 sq.ft production facility in Nacharam IDA houses seven specialized manufacturing systems covering wide-format printing, UV flatbed direct-to-substrate printing, precision vinyl cutting, digital fabric processing, and high-volume offset finishing.
                 </p>
                 <p>
-                  We serve clients across retail (Samsung, Reliance Digital), telecom (Airtel, Jio), FMCG (Pepsi, Heritage Foods), banking (SBI), technology (Microsoft, Vivo), government (GHMC, Telangana Tourism), and pharmaceuticals (Dr. Reddy's). Our client retention rate exceeds 85% — a testament to consistent quality and service reliability.
+                  We serve clients across retail (Samsung, Reliance Digital), telecom (Airtel, Jio), FMCG (Pepsi, Heritage Foods), banking (SBI), technology (Microsoft, Vivo), government (GHMC, Telangana Tourism), and pharmaceuticals (Dr. Reddy's).
                 </p>
                 <p>
                   Unlike print brokers or aggregators, we manufacture in-house. This vertical integration enables tighter quality control, faster turnaround, and direct cost advantages that we pass to our clients. Every project — whether 100 business cards or a 50-store rebranding campaign — receives the same engineering rigor.
@@ -184,54 +172,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CLIENT TESTIMONIALS ── */}
-      <section style={{ backgroundColor: '#fff', padding: '96px 0' }}>
-        <div className="wix-container">
-          <div className="wix-motion wix-fade-up" style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
-              Client Testimonials
-            </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '16px' }}>
-              What our clients say
-            </h2>
-            <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.7em' }}>
-              Real feedback from real projects — verified client reviews across 15+ years of operation.
-            </p>
-          </div>
-
-          <div className="testimonial-grid">
-            {CLIENT_TESTIMONIALS.map((review, i) => (
-              <div
-                key={i}
-                className="testimonial-card wix-motion wix-fade-up"
-                style={{ transitionDelay: `${(i % 3) * 80}ms` }}
-              >
-                <div style={{ marginBottom: '16px' }}>
-                  <StarRating count={review.rating} />
-                </div>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: '#000', marginBottom: '24px' }}>
-                  &ldquo;{review.text}&rdquo;
-                </p>
-                <div style={{ borderTop: '1px solid #e8e8e4', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                  <div>
-                    <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '4px' }}>{review.name}</p>
-                    <p style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)', marginBottom: '2px' }}>{review.role}</p>
-                    <p style={{ fontFamily: font, fontSize: '11px', color: 'rgb(85,78,78)' }}>{review.company}</p>
-                  </div>
-                  {review.verified && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgb(85,78,78)', fontFamily: font }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1d20">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                      </svg>
-                      Verified
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── CUSTOMER REVIEWS ── id kept so existing /about#testimonials links still work */}
+      <ReviewsSection id="testimonials" />
 
       {/* ── OPERATIONAL PRINCIPLES ── */}
       <section style={{ backgroundColor: '#f1f0eb', padding: '96px 0' }}>
@@ -504,17 +446,6 @@ export default function AboutPage() {
           line-height: 1.4;
         }
 
-        .testimonial-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-        }
-        .testimonial-card {
-          background: #f9f9f7;
-          padding: 32px;
-          border: 1px solid rgba(0,0,0,0.04);
-        }
-
         .values-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -593,14 +524,12 @@ export default function AboutPage() {
           .story-grid { grid-template-columns: 1fr; gap: 48px; }
           .machinery-grid { grid-template-columns: repeat(2, 1fr); }
           .timeline-item { grid-template-columns: 100px 1fr; gap: 24px; padding-left: 32px; }
-          .testimonial-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
           .client-premium-card { padding: 20px 16px; min-height: 160px; }
           .client-logo-wrapper { width: 64px; height: 64px; padding: 12px; }
         }
         @media (max-width: 768px) {
           .client-premium-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
           .hero-stats { gap: 32px; }
-          .testimonial-card { padding: 28px; }
         }
         @media (max-width: 600px) {
           .machinery-grid { grid-template-columns: 1fr; }
@@ -608,7 +537,6 @@ export default function AboutPage() {
           .hero-stats { gap: 24px; justify-content: space-between; }
           .hero-stat { min-width: calc(50% - 12px); text-align: center; }
           .timeline-item { grid-template-columns: 80px 1fr; gap: 20px; padding-left: 24px; }
-          .testimonial-grid { grid-template-columns: 1fr; gap: 20px; }
           .client-premium-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
           .client-premium-card { padding: 20px 14px; min-height: 150px; gap: 12px; }
           .client-logo-wrapper { width: 56px; height: 56px; padding: 10px; }

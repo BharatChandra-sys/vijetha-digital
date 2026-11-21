@@ -80,6 +80,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.92,
     },
+    {
+      url: `${baseUrl}/artwork-guide`,
+      lastModified: new Date('2026-11-01T12:00:00Z'),
+      changeFrequency: 'yearly',
+      priority: 0.6,
+    },
   ];
 
   // Service sub-pages — SITELINKS OPTIMIZATION
