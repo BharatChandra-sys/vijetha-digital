@@ -202,7 +202,7 @@ function MarqueeRow({ items, reverse = false, speed = 40 }: { items: Client[]; r
 
 export default function ClientsSection() {
   return (
-    <section style={{ backgroundColor: '#ffedc9', width: '100%', padding: '96px 0', overflow: 'hidden', position: 'relative', zIndex: 5 }}>
+    <section id="clients" style={{ backgroundColor: '#ffedc9', width: '100%', padding: '96px 0', overflow: 'hidden', position: 'relative', zIndex: 5 }}>
 
       <div className="wix-container" style={{ textAlign: 'center' }}>
         <div className="wix-motion wix-fade-up" style={{ marginBottom: '64px' }}>

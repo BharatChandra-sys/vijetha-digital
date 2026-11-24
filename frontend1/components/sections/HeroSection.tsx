@@ -43,7 +43,7 @@ export default function HeroSection() {
 
         <div className="vd-hero-print">
           <h1 id="hero-heading" className="vd-hero-title">
-            Commercial printing<br />and signage in Hyderabad
+            Commercial printing{' '}<br />and signage in Hyderabad
           </h1>
           <span className="vd-printhead" aria-hidden="true"><i /><i /><i /><i /></span>
         </div>

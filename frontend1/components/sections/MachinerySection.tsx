@@ -38,6 +38,7 @@ export default function MachinerySection() {
           )}
         </ul>
       </div>
+      <p className="wix-container vd-swipe-hint" aria-hidden="true">Swipe to see all {MACHINES.length} machines →</p>
     </section>
   );
 }
