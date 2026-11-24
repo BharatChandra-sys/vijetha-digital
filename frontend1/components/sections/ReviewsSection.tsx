@@ -1,6 +1,6 @@
 import { CmykChips } from '@/components/brand/CmykStrip';
 import { CUSTOMER_REVIEWS, PUBLIC_RATING } from '@/lib/reviews';
-import { BRANCHES, mapsUrl } from '@/lib/branches';
+import { BRANCHES, branchMapsUrl } from '@/lib/branches';
 
 function Stars({ value }: { value: number }) {
   const path = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
@@ -49,7 +49,7 @@ export default function ReviewsSection({ id = 'reviews' }: { id?: string }) {
                 Read reviews on {source}
               </a>
               <a
-                href={mapsUrl(BRANCHES[0].mapsQuery)}
+                href={branchMapsUrl(BRANCHES[0])}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="vd-text-link"

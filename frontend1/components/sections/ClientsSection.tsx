@@ -1,7 +1,7 @@
 'use client';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 // Use direct CDN URLs for reliable logos — only for brands with known stable assets
 // Everything else gets a clean initials badge
@@ -209,7 +209,7 @@ export default function ClientsSection() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Trusted By
           </p>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(28px, 3vw, 42px)', fontWeight: 400, lineHeight: 1.15, color: '#000' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.1vw, 29px)', fontWeight: 400, lineHeight: 1.15, color: '#000' }}>
             India&apos;s leading brands<br />choose Vijetha Digital.
           </h2>
         </div>

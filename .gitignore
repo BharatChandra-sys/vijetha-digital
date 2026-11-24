@@ -128,3 +128,6 @@ Thumbs.db
 
 # Reference material kept locally, not in the repo
 *.pdf
+
+# Raw photo shoot originals (optimised copies live in frontend1/public/images/vd)
+images for upgrade/

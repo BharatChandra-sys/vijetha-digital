@@ -11,7 +11,7 @@ export default function NotFound() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ maxWidth: '560px', textAlign: 'center' }}>
         <h1 style={{ fontSize: '32px', marginBottom: '12px' }}>Page not found</h1>
-        <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#555' }}>
+        <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#555' }}>
           The page you are looking for may have moved. Return to the homepage or explore our services.
         </p>
         <div style={{ marginTop: '32px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>

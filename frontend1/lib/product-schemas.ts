@@ -9,7 +9,7 @@ export const featuredProductSchemas = [
     name: 'LED Sign Board',
     description: 'Premium LED illuminated sign boards for 24/7 visibility with weatherproof construction and energy-efficient LED modules.',
     image: [
-      'https://vijethadigital.com/images/project-booklets.webp',
+      'https://vijethadigital.com/images/vd/k-tech-1325-cnc-router.jpg',
       'https://vijethadigital.com/vd-logo.jpeg'
     ],
     brand: {
@@ -109,7 +109,7 @@ export const featuredProductSchemas = [
     name: 'ACP Cladding Sign Board',
     description: 'Aluminium Composite Panel cladding signs with 3D lettering for professional corporate signage with durability and premium finish.',
     image: [
-      'https://vijethadigital.com/images/project-cards.webp',
+      'https://vijethadigital.com/images/vd/k-tech-1325-cnc-router.jpg',
       'https://vijethadigital.com/vd-logo.jpeg'
     ],
     brand: {
@@ -204,7 +204,7 @@ export const featuredProductSchemas = [
     name: 'Vehicle Branding & Wraps',
     description: 'Professional vehicle wrapping services for cars, vans, buses and fleet branding with UV-resistant 3M and Avery Dennison vinyl.',
     image: [
-      'https://vijethadigital.com/images/about-printing.webp',
+      'https://vijethadigital.com/images/vd/epson-surecolor-s80670l.jpg',
       'https://vijethadigital.com/vd-logo.jpeg'
     ],
     brand: {
@@ -304,7 +304,7 @@ export const featuredProductSchemas = [
     name: 'Flex & Vinyl Printing',
     description: 'High-resolution large format flex and vinyl printing using HP Latex 570 for banners, hoardings, and outdoor displays.',
     image: [
-      'https://vijethadigital.com/images/hero-banner-hq.webp',
+      'https://vijethadigital.com/images/vd/solvent-printer-3-2m-printing.jpg',
       'https://vijethadigital.com/vd-logo.jpeg'
     ],
     brand: {
@@ -404,7 +404,7 @@ export const featuredProductSchemas = [
     name: 'Offset Printing Services',
     description: 'Premium offset printing for brochures, catalogs, stationery, packaging with spot UV, foil stamping and die-cutting capabilities.',
     image: [
-      'https://vijethadigital.com/images/project-booklets.webp',
+      'https://vijethadigital.com/images/vd/office-cabin.jpg',
       'https://vijethadigital.com/vd-logo.jpeg'
     ],
     brand: {

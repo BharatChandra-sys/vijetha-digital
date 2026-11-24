@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
 
 interface FaqItem {
   question: string;
@@ -21,7 +21,7 @@ function Item({ q, a }: { q: string; a: string }) {
         alignItems: 'center', padding: '20px 0', gap: '24px',
       }}>
         <p style={{
-          fontFamily: font, fontSize: 'clamp(15px, 1.5vw, 17px)',
+          fontFamily: font, fontSize: 'clamp(13px, 1.05vw, 15px)',
           color: '#000', margin: 0, lineHeight: 1.4,
         }}>
           {q}
@@ -37,7 +37,7 @@ function Item({ q, a }: { q: string; a: string }) {
       </div>
       {open && (
         <p style={{
-          fontFamily: font, fontSize: '15px', lineHeight: '1.75em',
+          fontFamily: font, fontSize: '14px', lineHeight: '1.75em',
           color: 'rgb(85,78,78)', paddingBottom: '20px', margin: 0,
         }}>
           {a}
@@ -63,7 +63,7 @@ export default function FaqAccordion({
       <div className="wix-container" style={{ maxWidth }}>
         <h2 style={{
           fontFamily: font,
-          fontSize: 'clamp(22px, 2.5vw, 32px)',
+          fontSize: 'clamp(19px, 1.75vw, 22px)',
           fontWeight: 400, color: '#000', marginBottom: '40px',
         }}>
           {title}

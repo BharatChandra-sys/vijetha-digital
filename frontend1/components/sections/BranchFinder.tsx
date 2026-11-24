@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BRANCHES, HOURS_LABEL, getOpenStatus, mapsUrl } from '@/lib/branches';
+import { BRANCHES, HOURS_LABEL, getOpenStatus, branchMapsUrl } from '@/lib/branches';
 import { PHONE, PHONE_RAW } from '@/lib/constants';
 
 export default function BranchFinder() {
@@ -19,7 +19,7 @@ export default function BranchFinder() {
     <section id="branches" className="vd-section vd-section--cream" aria-labelledby="branches-heading">
       <div className="wix-container">
         <div className="vd-branches-head wix-motion wix-fade-up">
-          <h2 id="branches-heading" className="vd-h2">Three branches in Hyderabad</h2>
+          <h2 id="branches-heading" className="vd-h2">Two branches in Hyderabad</h2>
           <div>
             <p className="vd-open-status" data-open={status?.open ?? undefined}>
               {status ? status.label : ' '}
@@ -34,7 +34,7 @@ export default function BranchFinder() {
               <p className="vd-branch-role">{branch.role}</p>
               <h3 className="vd-branch-name">{branch.name}</h3>
               <address>{branch.lines[0]}<br />{branch.lines[1]}</address>
-              <a href={mapsUrl(branch.mapsQuery)} target="_blank" rel="noopener noreferrer" className="vd-text-link">
+              <a href={branchMapsUrl(branch)} target="_blank" rel="noopener noreferrer" className="vd-text-link">
                 Get directions
               </a>
             </div>

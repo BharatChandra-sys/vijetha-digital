@@ -12,7 +12,7 @@ interface BreadcrumbsProps {
   className?: string;
 }
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
 
 export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
   const schema = generateBreadcrumbSchema(items);

@@ -18,7 +18,7 @@ export default function QuoteSection() {
           <div className="wix-motion wix-fade-right">
             <h2 id="quote-heading" className="vd-h2">How long will your job take?</h2>
             <p className="vd-body">
-              Typical production times from our Nacharam facility. Rush production is available
+              Typical production times from our Chengicherla facility. Rush production is available
               for urgent work.
             </p>
             <table className="vd-table">

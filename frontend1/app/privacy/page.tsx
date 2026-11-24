@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 type Section = {
   id: string;
@@ -123,7 +123,7 @@ const sections: Section[] = [
 export default function PrivacyPage() {
   return (
     <>
-      <Header variant="home" />
+      <Header />
 
       {/* Hero */}
       <section style={{ backgroundColor: '#1c1d20', paddingTop: '140px', paddingBottom: '64px' }}>
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '14px' }}>
             Legal
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#fff' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#fff' }}>
             Privacy Policy
           </h1>
           <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.45)', marginTop: '16px' }}>
@@ -149,16 +149,16 @@ export default function PrivacyPage() {
                 <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                   <span style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)', paddingTop: '6px', minWidth: '28px' }}>{s.id}</span>
                   <div style={{ flex: 1 }}>
-                    <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
+                    <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(15px, 1.26vw, 20px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
                       {s.title}
                     </h2>
                     {s.body && (
-                      <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>{s.body}</p>
+                      <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>{s.body}</p>
                     )}
                     {s.subsections && s.subsections.map((sub) => (
                       <div key={sub.heading} style={{ marginBottom: '20px' }}>
                         <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{sub.heading}</p>
-                        <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', marginBottom: '8px' }}>{sub.intro}</p>
+                        <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginBottom: '8px' }}>{sub.intro}</p>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                           {sub.items.map((item) => (
                             <li key={item} style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', lineHeight: '1.8em', paddingLeft: '16px', position: 'relative' }}>
@@ -171,7 +171,7 @@ export default function PrivacyPage() {
                     ))}
                     {s.intro && (
                       <>
-                        <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', marginBottom: '10px' }}>{s.intro}</p>
+                        <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginBottom: '10px' }}>{s.intro}</p>
                         {s.items && (
                           <ul style={{ listStyle: 'none', padding: 0, margin: 0, marginBottom: s.footer ? '14px' : 0 }}>
                             {s.items.map((item: string) => (
@@ -183,7 +183,7 @@ export default function PrivacyPage() {
                           </ul>
                         )}
                         {s.footer && (
-                          <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', marginTop: '12px' }}>{s.footer}</p>
+                          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '12px' }}>{s.footer}</p>
                         )}
                       </>
                     )}
@@ -197,14 +197,14 @@ export default function PrivacyPage() {
               <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                 <span style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)', paddingTop: '6px', minWidth: '28px' }}>17</span>
                 <div style={{ flex: 1 }}>
-                  <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
+                  <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(15px, 1.26vw, 20px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
                     Contact Us & Data Protection Officer
                   </h2>
-                  <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
+                  <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
                     For privacy-related questions, data access requests, or DPDP Act compliance queries, contact our Data Protection Officer:
                   </p>
                   <div style={{ backgroundColor: '#f1f0eb', padding: '28px 32px', borderLeft: '3px solid #000', marginBottom: '20px' }}>
-                    <p style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '8px' }}>Vijetha Digital - Data Protection Officer</p>
+                    <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>Vijetha Digital - Data Protection Officer</p>
                     <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', lineHeight: '1.7em' }}>
                       H No. 11-5-456, Shop No. 5, Sanapride Complex<br />
                       Lakdikapool, Hyderabad, Telangana – 500004, India<br /><br />

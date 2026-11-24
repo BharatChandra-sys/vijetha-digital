@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const pageSchema = {
   '@context': 'https://schema.org',
@@ -106,7 +106,7 @@ const faqSchema = {
       name: 'How long does vehicle branding installation take in Hyderabad?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vehicle wrap installation at Vijetha Digital Hyderabad takes 1 day for 2-wheelers and partial car wraps, 1-2 days for full car wraps, and 2-3 days for vans and buses. The vehicle needs to be clean and available at our Nacharam production facility. Design and printing is completed 1-2 days before installation begins.',
+        text: 'Vehicle wrap installation at Vijetha Digital Hyderabad takes 1 day for 2-wheelers and partial car wraps, 1-2 days for full car wraps, and 2-3 days for vans and buses. The vehicle needs to be clean and available at our Chengicherla production facility. Design and printing is completed 1-2 days before installation begins.',
       },
     },
     {
@@ -130,10 +130,10 @@ export default function HyderabadVehicleBrandingPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Vehicle Branding · Hyderabad
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
             Professional vehicle branding and car wrapping in Hyderabad.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
             Turn your vehicles into moving brand media. Vijetha Digital delivers professional car wraps, bus branding, van graphics, fleet branding, and 2-wheeler decals in Hyderabad using 3M and Avery Dennison UV-resistant vinyl rated for 5-7 years.
           </p>
           <div style={{ display: 'flex', gap: '16px', marginTop: '32px', flexWrap: 'wrap' }}>
@@ -159,7 +159,7 @@ export default function HyderabadVehicleBrandingPage() {
       {/* Services */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
             Vehicle branding services in Hyderabad
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', background: '#e8e8e4', border: '1px solid #e8e8e4' }}>
@@ -172,7 +172,7 @@ export default function HyderabadVehicleBrandingPage() {
               { title: 'Promotional Vehicle Wraps', desc: 'Event and campaign vehicle wraps for product launches, promotions, and roadshow activations across Hyderabad.', detail: 'Rush available' },
             ].map(s => (
               <div key={s.title} style={{ backgroundColor: '#fff', padding: '32px' }}>
-                <h3 style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '10px' }}>{s.title}</h3>
+                <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>{s.title}</h3>
                 <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '12px' }}>{s.desc}</p>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>{s.detail}</p>
               </div>
@@ -184,19 +184,19 @@ export default function HyderabadVehicleBrandingPage() {
       {/* Process */}
       <section style={{ backgroundColor: '#f1f0eb', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
             How vehicle branding works at Vijetha Digital
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px' }}>
             {[
               { step: '01', title: 'Design & Mockup', desc: 'Your brand applied to a 3D vehicle mockup for approval before printing.' },
-              { step: '02', title: 'Vinyl Printing', desc: 'Printed on 3M or Avery vinyl with UV lamination at our Nacharam facility.' },
+              { step: '02', title: 'Vinyl Printing', desc: 'Printed on 3M or Avery vinyl with UV lamination at our Chengicherla facility.' },
               { step: '03', title: 'Surface Prep', desc: 'Vehicle cleaned, degreased, and inspected for optimal vinyl adhesion.' },
               { step: '04', title: 'Application & Seal', desc: 'Panel-by-panel vinyl application with heat sealing on all edges.' },
             ].map(p => (
               <div key={p.step}>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: '12px' }}>{p.step}</p>
-                <p style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '8px' }}>{p.title}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{p.title}</p>
                 <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{p.desc}</p>
               </div>
             ))}
@@ -207,14 +207,14 @@ export default function HyderabadVehicleBrandingPage() {
       {/* FAQ */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
             Vehicle branding Hyderabad — frequently asked questions
           </h2>
           <div style={{ display: 'grid', gap: '16px', maxWidth: '860px' }}>
             {faqSchema.mainEntity.map((item) => (
               <div key={item.name} style={{ backgroundColor: '#f9f9f7', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
               </div>
             ))}
           </div>

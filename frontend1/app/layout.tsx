@@ -1,9 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
+import { Montserrat, Roboto } from 'next/font/google';
 import JsonLd from '@/components/seo/JsonLd';
 import CookieConsent from '@/components/privacy/CookieConsent';
 import './globals.css';
+
+const montserrat = Montserrat({ subsets: ['latin'], weight: ['500', '600', '700'], display: 'swap', variable: '--font-montserrat' });
+const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500'], display: 'swap', variable: '--font-roboto' });
 
 // ─── GA4 MEASUREMENT ID ──────────────────────────────────────────────────────
 // Set your actual GA4 ID from Google Analytics → Admin → Data Streams
@@ -70,7 +74,7 @@ const websiteSchema = {
         '@type': 'SiteNavigationElement',
         position: 3,
         name: 'About Us',
-        description: '15+ years of printing and signage expertise. 1,000+ clients. 3 branches in Hyderabad.',
+        description: '15+ years of printing and signage expertise. 1,000+ clients. 2 branches in Hyderabad.',
         url: 'https://vijethadigital.com/about',
       },
       {
@@ -132,20 +136,20 @@ const organizationSchema = {
   ],
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'H No. 11-5-456, Shop No. 5, Sanapride Complex',
-    addressLocality: 'Lakdikapool',
-    addressRegion: 'Hyderabad',
-    postalCode: '500004',
+    streetAddress: 'Vijetha Digital Building, Chengicherla',
+    addressLocality: 'Secunderabad',
+    addressRegion: 'Telangana',
+    postalCode: '500092',
     addressCountry: 'IN',
   },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 17.385044,
-    longitude: 78.486671,
-  },
+  department: [
+    { '@id': 'https://vijethadigital.com/#branch-chengicherla' },
+    { '@id': 'https://vijethadigital.com/#branch-lakdikapool' },
+  ],
   areaServed: [
     { '@type': 'City', name: 'Hyderabad', '@id': 'https://www.wikidata.org/wiki/Q1361' },
     { '@type': 'City', name: 'Secunderabad' },
+    { '@type': 'City', name: 'Chengicherla' },
     { '@type': 'City', name: 'Nacharam' },
     { '@type': 'City', name: 'Kukatpally' },
     { '@type': 'City', name: 'Gachibowli' },
@@ -424,10 +428,10 @@ export const metadata: Metadata = {
     'yandex': 'index, follow',
     'slurp': 'index, follow',
     // Business identifiers
-    'business:contact_data:street_address': 'H No. 11-5-456, Shop No. 5, Sanapride Complex',
-    'business:contact_data:locality': 'Lakdikapool',
+    'business:contact_data:street_address': 'Vijetha Digital Building, Chengicherla',
+    'business:contact_data:locality': 'Secunderabad',
     'business:contact_data:region': 'Telangana',
-    'business:contact_data:postal_code': '500004',
+    'business:contact_data:postal_code': '500092',
     'business:contact_data:country_name': 'India',
     'business:contact_data:phone_number': '+917942643004',
     'business:contact_data:website': 'https://vijethadigital.com',
@@ -443,47 +447,46 @@ export const viewport: Viewport = {
   themeColor: '#0f0f10',
 };
 
-// ─── MULTI-BRANCH LOCAL BUSINESS SCHEMA ─────────────────────────────────────
-// Three separate LocalBusiness entities — one per physical branch.
-// This signals to Google that each location is a real, distinct place,
-// which is critical for map pack visibility and local "near me" queries.
-const branchNacharamSchema = {
+// ─── BRANCH LOCAL BUSINESS SCHEMA ──────────────────────────────────────────
+// One LocalBusiness per physical branch. Keep in step with lib/branches.ts and
+// the Google Business Profiles. Add geo to Chengicherla once its pin is confirmed.
+const WEEKDAY_HOURS = [
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    opens: '09:00',
+    closes: '20:00',
+  },
+];
+
+const branchChengicherlaSchema = {
   '@context': 'https://schema.org',
   '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
-  '@id': 'https://vijethadigital.com/#branch-nacharam',
-  name: 'Vijetha Digital – Nacharam (Main Production)',
+  '@id': 'https://vijethadigital.com/#branch-chengicherla',
+  name: 'Vijetha Digital LLP – Chengicherla (Head Office and Production)',
   parentOrganization: { '@id': 'https://vijethadigital.com/#organization' },
-  url: 'https://vijethadigital.com/contact',
+  url: 'https://vijethadigital.com/machinery',
   telephone: '+917942643004',
   email: 'info@vijethadigital.com',
-  image: 'https://vijethadigital.com/vd-logo.jpeg',
+  image: [
+    'https://vijethadigital.com/images/vd/building-chengicherla-front.jpg',
+    'https://vijethadigital.com/images/vd/solvent-printer-3-2m.jpg',
+  ],
   priceRange: '₹₹',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '42/B, No. 16, IDA, Nacharam',
-    addressLocality: 'Hyderabad',
+    streetAddress: 'Vijetha Digital Building, Chengicherla',
+    addressLocality: 'Secunderabad',
     addressRegion: 'Telangana',
-    postalCode: '500076',
+    postalCode: '500092',
     addressCountry: 'IN',
   },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 17.4278,
-    longitude: 78.5603,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-      opens: '09:00',
-      closes: '20:00',
-    },
-  ],
-  description: 'Vijetha Digital main production facility in Nacharam IDA, Hyderabad. 10,000 sq.ft plant with HP Latex, Epson Surecolor, CNC router and screen printing systems.',
-  hasMap: 'https://maps.google.com/?q=Nacharam+IDA+Hyderabad',
+  openingHoursSpecification: WEEKDAY_HOURS,
+  description: 'Vijetha Digital head office and production floor in Chengicherla, Secunderabad: 3.2 m solvent and UV roll printers, UV flatbed, Epson SureColor, CNC router and CO2 laser cutter.',
+  hasMap: 'https://www.google.com/maps/search/?api=1&query=Vijetha%20Digital%20LLP%2C%20Chengicherla%2C%20Secunderabad%2C%20Telangana%20500092',
 };
 
-const branchLakdikaqoolSchema = {
+const branchLakdikapoolSchema = {
   '@context': 'https://schema.org',
   '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
   '@id': 'https://vijethadigital.com/#branch-lakdikapool',
@@ -497,68 +500,19 @@ const branchLakdikaqoolSchema = {
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'H No. 11-5-456, Shop No. 5, Sanapride Complex',
-    addressLocality: 'Lakdikapool',
-    addressRegion: 'Hyderabad',
+    addressLocality: 'Lakdikapool, Hyderabad',
+    addressRegion: 'Telangana',
     postalCode: '500004',
     addressCountry: 'IN',
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 17.3851,
-    longitude: 78.4867,
+    latitude: 17.4002014,
+    longitude: 78.4652187,
   },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-      opens: '09:00',
-      closes: '20:00',
-    },
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: 'Sunday',
-      opens: '10:00',
-      closes: '18:00',
-    },
-  ],
+  openingHoursSpecification: WEEKDAY_HOURS,
   description: 'Vijetha Digital branch at Lakdikapool, Hyderabad. Signage display, material samples, and project consultation for central Hyderabad clients.',
-  hasMap: 'https://maps.google.com/?q=Sanapride+Complex+Lakdikapool+Hyderabad',
-};
-
-const branchIndiraParkSchema = {
-  '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'PrintingService', 'SignShop'],
-  '@id': 'https://vijethadigital.com/#branch-indirapark',
-  name: 'Vijetha Digital – Indira Park',
-  parentOrganization: { '@id': 'https://vijethadigital.com/#organization' },
-  url: 'https://vijethadigital.com/contact',
-  telephone: '+919248195552',
-  email: 'info@vijethadigital.com',
-  image: 'https://vijethadigital.com/vd-logo.jpeg',
-  priceRange: '₹₹',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Shop No. 1-2-607/75, 76, Opp NTR Stadium, LIC Colony Rd',
-    addressLocality: 'Hyderabad',
-    addressRegion: 'Telangana',
-    postalCode: '500029',
-    addressCountry: 'IN',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 17.4110,
-    longitude: 78.4774,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-      opens: '09:00',
-      closes: '20:00',
-    },
-  ],
-  description: 'Vijetha Digital branch near Indira Park and NTR Stadium, Hyderabad. Signage consultation, material display, and client services.',
-  hasMap: 'https://maps.google.com/?q=NTR+Stadium+LIC+Colony+Road+Hyderabad',
+  hasMap: 'https://www.google.com/maps?q=17.4002014,78.4652187',
 };
 
 // ─── REVIEW SCHEMA REMOVED ────────────────────────────────────────────────────
@@ -572,7 +526,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" prefix="og: https://ogp.me/ns#">
+    <html lang="en" prefix="og: https://ogp.me/ns#" className={`${montserrat.variable} ${roboto.variable}`}>
       <head>
         {/* Preconnect to external domains for faster loading - with crossorigin for fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
@@ -582,15 +536,6 @@ export default function RootLayout({
         {/* LLMs.txt — structured context for AI crawlers (ChatGPT, Perplexity, Claude, Gemini) */}
         <link rel="llms" type="text/plain" href="https://vijethadigital.com/llms.txt" title="LLM Context" />
         <link rel="llms-full" type="text/plain" href="https://vijethadigital.com/llms-full.txt" title="LLM Full Reference" />
-        
-        {/* Preload critical hero image */}
-        <link
-          rel="preload"
-          as="image"
-          href="/images/hero-banner-hq.webp"
-          type="image/webp"
-          fetchPriority="high"
-        />
         
         {/* DNS prefetch for third-party resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
@@ -617,7 +562,7 @@ export default function RootLayout({
         
         {/* Inline critical CSS for instant render */}
         <style dangerouslySetInnerHTML={{__html: `
-          body{margin:0;font-family:helvetica-w01-roman,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;color:#000;background:#fff}
+          body{margin:0;font-family:var(--font-roboto),Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;color:#000;background:#fff}
           .wix-container{width:100%;max-width:1280px;margin:0 auto;padding:0 1.25rem}
           @media(min-width:768px){.wix-container{padding:0 2.5rem}}
         `}} />
@@ -651,9 +596,8 @@ export default function RootLayout({
         {/* Structured data - deferred for performance */}
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
-        <JsonLd data={branchNacharamSchema} />
-        <JsonLd data={branchLakdikaqoolSchema} />
-        <JsonLd data={branchIndiraParkSchema} />
+        <JsonLd data={branchChengicherlaSchema} />
+        <JsonLd data={branchLakdikapoolSchema} />
       </body>
     </html>
   );

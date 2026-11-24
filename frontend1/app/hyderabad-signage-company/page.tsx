@@ -9,7 +9,7 @@ import { WA_URL } from '@/lib/constants';
 export const metadata: Metadata = {
   title: 'Signage Company in Hyderabad | LED Signs, ACP Cladding & Acrylic | Vijetha Digital',
   description:
-    'Best signage company in Hyderabad. LED sign boards, ACP cladding, acrylic letters, fascia boards, pylon signs. 15+ years, 1,000+ clients, 3 branches.',
+    'Best signage company in Hyderabad. LED sign boards, ACP cladding, acrylic letters, fascia boards, pylon signs. 15+ years, 1,000+ clients, 2 branches.',
   keywords:
     'signage company Hyderabad, LED sign board Hyderabad, ACP cladding Hyderabad, acrylic letter sign Hyderabad, fascia sign Hyderabad, pylon sign Hyderabad, sign board Hyderabad, signage manufacturers Hyderabad, signage fabricators Hyderabad',
   alternates: {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const pageSchema = {
   '@context': 'https://schema.org',
@@ -118,10 +118,10 @@ export default function HyderabadSignageCompanyPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Signage Company · Hyderabad
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
             Premium signage company in Hyderabad — LED signs, ACP cladding, and acrylic letters.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
             Vijetha Digital manufactures and installs all types of signage in Hyderabad — LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, and flex hoardings for retail, corporate, hospitality, healthcare, and government clients.
           </p>
           <a href={WA_URL} target="_blank" rel="noopener noreferrer" style={{
@@ -137,7 +137,7 @@ export default function HyderabadSignageCompanyPage() {
       {/* Signage types */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
             Types of signage we make in Hyderabad
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#e8e8e4', border: '1px solid #e8e8e4' }}>
@@ -150,7 +150,7 @@ export default function HyderabadSignageCompanyPage() {
               { type: 'Flex Board Hoarding', price: 'From Rs 35/sq.ft', desc: 'High-resolution flex printing for hoardings, banners, and backdrops. HP Latex 570 quality. Same-day for under 500 sq.ft.' },
             ].map(s => (
               <div key={s.type} style={{ backgroundColor: '#fff', padding: '28px' }}>
-                <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '6px' }}>{s.type}</h3>
+                <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '6px' }}>{s.type}</h3>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.06em', color: 'rgba(0,0,0,0.5)', marginBottom: '12px', textTransform: 'uppercase' }}>{s.price}</p>
                 <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{s.desc}</p>
               </div>
@@ -162,14 +162,14 @@ export default function HyderabadSignageCompanyPage() {
       {/* FAQ */}
       <section style={{ backgroundColor: '#f7f5ef', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
             Signage in Hyderabad — common questions
           </h2>
           <div style={{ display: 'grid', gap: '16px', maxWidth: '860px' }}>
             {faqSchema.mainEntity.map((item) => (
               <div key={item.name} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
               </div>
             ))}
           </div>

@@ -199,13 +199,13 @@ export const OPERATIONAL_PRINCIPLES = [
 export const CREDENTIALS = [
   { label: 'GST Registered', value: '36AGBPC3175H1ZP', sublabel: 'Seamless B2B billing' },
   { label: 'Business Type', value: 'Sole Proprietorship', sublabel: 'Established 2009' },
-  { label: 'Production Capacity', value: '10,000+ sq.ft', sublabel: 'Nacharam facility' },
+  { label: 'Production Capacity', value: '10,000+ sq.ft', sublabel: 'Chengicherla facility' },
   { label: 'Service Coverage', value: 'Pan-India', sublabel: 'Installation teams available' },
 ];
 
 export const COMPANY_TIMELINE = [
   { year: '2009', title: 'Foundation', desc: 'Vijetha Digital established by Krishnam Raju in Lakdikapool, Hyderabad.' },
-  { year: '2012', title: 'Facility Expansion', desc: 'Opened 10,000 sq.ft manufacturing facility in Nacharam IDA with advanced machinery.' },
+  { year: '2012', title: 'Facility Expansion', desc: 'Opened a 10,000 sq.ft manufacturing facility with advanced machinery.' },
   { year: '2017', title: 'GST Registration', desc: 'Formalized operations under GST framework, enabling enterprise-scale B2B partnerships.' },
   { year: '2020', title: '500+ Clients Milestone', desc: 'Crossed 500 active business clients across Telangana, Andhra Pradesh and Karnataka.' },
   { year: '2024', title: 'Technology Upgrade', desc: 'Invested in HP Latex 570 and Zünd digital cutting systems for enhanced capability.' },

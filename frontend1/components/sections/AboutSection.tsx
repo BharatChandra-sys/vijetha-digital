@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 export default function AboutSection() {
   return (
@@ -13,10 +13,10 @@ export default function AboutSection() {
 
           {/* Image */}
           <div className="wix-motion wix-fade-right">
-            <div className="wix-img-wrap" style={{ aspectRatio: '4/3' }}>
+            <div className="wix-img-wrap" style={{ aspectRatio: '4/5' }}>
               <img
-                src="/images/about-printing.webp"
-                alt="Vijetha Digital printing facility — Hyderabad"
+                src="/images/vd/building-chengicherla-front.jpg"
+                alt="Vijetha Digital LLP building in Chengicherla, Secunderabad"
                 loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
@@ -29,18 +29,18 @@ export default function AboutSection() {
               About Us
             </p>
 
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 400, lineHeight: 1.25, color: '#000', marginBottom: '22px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 25px)', fontWeight: 400, lineHeight: 1.25, color: '#000', marginBottom: '22px' }}>
               Hyderabad&apos;s trusted<br />printing partner
             </h2>
 
-            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Vijetha Digital is a full-service printing and signage company based in Hyderabad,
               Telangana. From sign boards and flex printing to banner stands and branded tents,
               we deliver precision and quality on every project — regardless of scale.
             </p>
-            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
               Since 2009, we have combined modern printing technology with skilled craftsmanship,
-              with production in-house at our Nacharam facility.
+              with production in-house at our own building in Chengicherla.
             </p>
 
             <a

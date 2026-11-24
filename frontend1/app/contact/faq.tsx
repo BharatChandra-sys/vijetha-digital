@@ -2,7 +2,7 @@ export const contactFaqContent = [
   {
     question: 'How can I contact Vijetha Digital for printing and signage services in Hyderabad?',
     answer:
-      'You can reach Vijetha Digital through multiple channels: Call us at +91 92481 95552 (Mon-Sat, 9 AM to 8 PM), WhatsApp for instant quotes and project discussions, Email at info@vijethadigital.com for detailed inquiries and specifications, or visit our branches at Nacharam IDA (main production facility), Lakdikapool, or Indira Park. For urgent requirements, WhatsApp is the fastest way to get a response within 1-2 hours during business hours. Our team provides free consultations, site visits for large projects, material samples, and technical guidance.',
+      'You can reach Vijetha Digital through multiple channels: Call us at +91 92481 95552 (Mon-Sat, 9 AM to 8 PM), WhatsApp for instant quotes and project discussions, Email at info@vijethadigital.com for detailed inquiries and specifications, or visit our head office and production floor in Chengicherla, Secunderabad, or our Lakdikapool branch. For urgent requirements, WhatsApp is the fastest way to get a response within 1-2 hours during business hours. Our team provides free consultations, site visits for large projects, material samples, and technical guidance.',
   },
   {
     question: 'What information do I need to provide to get an accurate quote?',
@@ -22,7 +22,7 @@ export const contactFaqContent = [
   {
     question: 'Can I visit your facility to see samples and production capabilities?',
     answer:
-      'Absolutely. We welcome facility visits and encourage clients to see our production setup, machinery, material samples, and quality standards firsthand. Our main facility is located at 42/B, No. 16, IDA, Nacharam, Hyderabad – 500076 (10,000 sq.ft production floor with all major printing and fabrication equipment). To schedule a visit, please call or WhatsApp ahead so we can arrange: 1) Facility tour with production manager, 2) Material sample viewing (acrylics, ACP sheets, vinyl grades, printing substrates), 3) Live production demos (subject to ongoing projects), 4) Previous work portfolio viewing, 5) Technical consultation with our specialists. Visit duration typically 45-60 minutes. We also maintain sample displays at our Lakdikapool and Indira Park branches for quick material reference.',
+      'Absolutely. We welcome facility visits and encourage clients to see our production setup, machinery, material samples, and quality standards firsthand. Our main facility is located at Vijetha Digital Building, Chengicherla, Secunderabad, Telangana 500092 (10,000 sq.ft production floor with all major printing and fabrication equipment). To schedule a visit, please call or WhatsApp ahead so we can arrange: 1) Facility tour with production manager, 2) Material sample viewing (acrylics, ACP sheets, vinyl grades, printing substrates), 3) Live production demos (subject to ongoing projects), 4) Previous work portfolio viewing, 5) Technical consultation with our specialists. Visit duration typically 45-60 minutes. We also maintain sample displays at our Chengicherla head office and Lakdikapool branch for quick material reference.',
   },
   {
     question: 'Do you provide installation services for signage and branding projects?',

@@ -1,12 +1,12 @@
 'use client';
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
 
 const badges = [
   { label: '15+',       sublabel: 'Years Experience',   desc: 'Since 2009'      },
   { label: '1000+',     sublabel: 'Projects Delivered',  desc: 'Happy Clients'   },
   { label: 'Same Day',  sublabel: 'Printing Available',  desc: 'Under 500 sq.ft' },
-  { label: '3',         sublabel: 'Hyderabad Branches',  desc: 'Nacharam, Lakdikapool, Indira Park' },
+  { label: '3.2 m',     sublabel: 'Widest Print',        desc: 'Seamless flex and vinyl, printed in-house' },
 ];
 
 export default function TrustBadges() {

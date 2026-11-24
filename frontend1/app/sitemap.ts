@@ -81,6 +81,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.92,
     },
     {
+      url: `${baseUrl}/machinery`,
+      lastModified: new Date('2026-11-24T12:00:00Z'),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/artwork-guide`,
       lastModified: new Date('2026-11-01T12:00:00Z'),
       changeFrequency: 'yearly',

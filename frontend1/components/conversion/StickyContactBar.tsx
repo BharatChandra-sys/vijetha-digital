@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PHONE, WA_URL } from '@/lib/constants';
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
 
 export default function StickyContactBar() {
   const [isVisible, setIsVisible] = useState(false);

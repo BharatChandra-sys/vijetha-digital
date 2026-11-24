@@ -37,7 +37,7 @@ export const homepageFAQSchema = {
       name: 'What areas does Vijetha Digital serve?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vijetha Digital serves Hyderabad, Secunderabad, Nacharam, Kukatpally, Gachibowli, Madhapur, Banjara Hills, and all areas across Telangana and Andhra Pradesh. We also provide services across South India including Bangalore, Chennai, Vijayawada, and Visakhapatnam with pan-India installation support.',
+        text: 'Vijetha Digital serves Hyderabad, Secunderabad, Chengicherla, Nacharam, Kukatpally, Gachibowli, Madhapur, Banjara Hills, and all areas across Telangana and Andhra Pradesh. We also provide services across South India including Bangalore, Chennai, Vijayawada, and Visakhapatnam with pan-India installation support.',
       },
     },
     {
@@ -179,7 +179,7 @@ export const printingFAQSchema = {
       name: 'Do you provide paper and material samples?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, Vijetha Digital provides physical samples of paper stocks, vinyl materials, ACP finishes, acrylic colors, and fabric options at our Lakdikapool and Indira Park showrooms. We also offer material swatches for client approval before production begins.',
+        text: 'Yes, Vijetha Digital provides physical samples of paper stocks, vinyl materials, ACP finishes, acrylic colors, and fabric options at our Chengicherla head office and Lakdikapool branch. We also offer material swatches for client approval before production begins.',
       },
     },
   ],

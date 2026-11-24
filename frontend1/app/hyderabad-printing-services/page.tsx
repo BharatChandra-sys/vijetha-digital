@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const pageSchema = {
   '@context': 'https://schema.org',
@@ -76,7 +76,7 @@ const faqSchema = {
       name: 'Do you offer same-day printing in Hyderabad?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. Vijetha Digital offers same-day printing in Hyderabad for flex banners, vinyl banners, roll-up standee graphics, and digital prints under 500 sq.ft when files are submitted before 12 PM. The production facility at Nacharam IDA operates till 8 PM allowing for urgent same-day dispatch.',
+        text: 'Yes. Vijetha Digital offers same-day printing in Hyderabad for flex banners, vinyl banners, roll-up standee graphics, and digital prints under 500 sq.ft when files are submitted before 12 PM. The production facility in Chengicherla operates till 8 PM allowing for urgent same-day dispatch.',
       },
     },
     {
@@ -100,11 +100,11 @@ export default function HyderabadPrintingServicesPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Printing Services · Hyderabad
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
             Professional printing services in Hyderabad — offset, digital, flex, UV, and screen printing.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
-            Vijetha Digital operates a 10,000 sq.ft production facility in Nacharam IDA with HP Latex 570, Epson Surecolor, and 5 other advanced machines delivering 1 lakh sq.ft per day with same-day service available.
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '700px', lineHeight: '1.7em' }}>
+            Vijetha Digital operates a 10,000 sq.ft production facility in Chengicherla with HP Latex 570, Epson Surecolor, and 5 other advanced machines delivering 1 lakh sq.ft per day with same-day service available.
           </p>
           <a href={WA_URL} target="_blank" rel="noopener noreferrer" style={{
             display: 'inline-flex', alignItems: 'center', marginTop: '32px',
@@ -119,7 +119,7 @@ export default function HyderabadPrintingServicesPage() {
       {/* Printing services */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '40px' }}>
             Printing services available in Hyderabad
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', background: '#e8e8e4', border: '1px solid #e8e8e4' }}>
@@ -146,7 +146,7 @@ export default function HyderabadPrintingServicesPage() {
               },
             ].map(s => (
               <div key={s.title} style={{ backgroundColor: '#fff', padding: '32px' }}>
-                <h3 style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '6px' }}>{s.title}</h3>
+                <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '6px' }}>{s.title}</h3>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.06em', color: 'rgba(0,0,0,0.45)', marginBottom: '16px', textTransform: 'uppercase' }}>{s.price}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                   {s.items.map(item => (
@@ -170,7 +170,7 @@ export default function HyderabadPrintingServicesPage() {
               { value: '7 Systems', label: 'Advanced printing machines' },
             ].map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
-                <p style={{ fontFamily: fontBold, fontSize: 'clamp(20px, 2.5vw, 32px)', color: '#fff', marginBottom: '8px' }}>{s.value}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(17px, 1.75vw, 22px)', color: '#fff', marginBottom: '8px' }}>{s.value}</p>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{s.label}</p>
               </div>
             ))}
@@ -181,14 +181,14 @@ export default function HyderabadPrintingServicesPage() {
       {/* FAQ */}
       <section style={{ backgroundColor: '#f7f5ef', padding: '80px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '36px' }}>
             Printing services Hyderabad — frequently asked questions
           </h2>
           <div style={{ display: 'grid', gap: '16px', maxWidth: '860px' }}>
             {faqSchema.mainEntity.map((item) => (
               <div key={item.name} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{item.name}</p>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.acceptedAnswer.text}</p>
               </div>
             ))}
           </div>
@@ -202,7 +202,7 @@ export default function HyderabadPrintingServicesPage() {
               'Digital printing Hyderabad: HP Latex 570, Epson Surecolor S80670, 64-inch wide format, 1440 dpi, 1 lakh sq.ft per day capacity, same-day for under 500 sq.ft.',
               'Flex printing Hyderabad: frontlit flex, backlit flex, vinyl, mesh, canvas, eco-solvent. Rs 35 per sq.ft starting price.',
               'Screen printing Hyderabad: regulatory boards, no parking boards, government boards, UV print, 3D print, pole boards, flute boards.',
-              'Printing areas Hyderabad: Nacharam IDA, Secunderabad, Madhapur, Gachibowli, Banjara Hills, Kukatpally, Ameerpet, Lakdikapool.',
+              'Printing areas Hyderabad: Chengicherla, Nacharam, Uppal, Boduppal, Secunderabad, Madhapur, Gachibowli, Banjara Hills, Kukatpally, Ameerpet, Lakdikapool.',
             ]}
           />
         </div>

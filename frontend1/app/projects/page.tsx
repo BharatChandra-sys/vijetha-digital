@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const projects = [
   {
@@ -29,7 +29,7 @@ const projects = [
     category: 'Signage',
     description: 'Multi-store LED fascia sign board rollout for a retail chain across 12 Hyderabad locations. Aluminium frame, acrylic face, IP65-rated LED modules with 2-year warranty.',
     tag: 'Signage',
-    image: '/images/project-booklets.webp',
+    image: '/images/vd/k-tech-1325-cnc-router.jpg',
   },
   {
     id: 2,
@@ -37,7 +37,7 @@ const projects = [
     category: 'Vehicle Branding',
     description: '50-vehicle fleet wrap using 3M cast vinyl for a leading FMCG delivery brand in Telangana. Full wrap with contact details, QR codes, and brand identity across bikes, vans, and trucks.',
     tag: 'Vehicle Branding',
-    image: '/images/project-cards.webp',
+    image: '/images/vd/eco-solvent-printer.jpg',
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ const projects = [
     category: 'Office Branding',
     description: 'Complete office interior branding for a Hyderabad-based technology company — reception wall mural, wayfinding system, glass film graphics, and conference room branding.',
     tag: 'Office Branding',
-    image: '/images/about-printing.webp',
+    image: '/images/vd/office-cabin.jpg',
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ const projects = [
     category: 'Signage',
     description: 'Premium ACP cladding with acrylic 3D letter signs for a multi-specialty hospital in Hyderabad. Goldplus 4mm ACP with brushed finish, precision CNC-cut letters, and directional signage system.',
     tag: 'ACP Cladding',
-    image: '/images/project-booklets.webp',
+    image: '/images/vd/k-tech-1325-cnc-router.jpg',
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const projects = [
     category: 'Exhibition',
     description: 'Custom 20x20 ft modular exhibition booth for a pharmaceutical company at a national medical conference in Hyderabad. Fabric light boxes, demo counters, and branded graphics throughout.',
     tag: 'Exhibition',
-    image: '/images/project-cards.webp',
+    image: '/images/vd/uv-flatbed-printer.jpg',
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ const projects = [
     category: 'Offset Printing',
     description: 'Luxury product catalogue on 170gsm art paper with spot UV on cover, foil stamping on brand logo, and die-cut inserts. 5,000-copy run completed in 5 working days.',
     tag: 'Print',
-    image: '/images/about-printing.webp',
+    image: '/images/vd/office-cabin.jpg',
   },
   {
     id: 7,
@@ -77,7 +77,7 @@ const projects = [
     category: 'Signage',
     description: 'Freestanding 25-ft double-sided pylon sign for a commercial complex in Gachibowli, Hyderabad. Structural steel base, aluminium cladding, full-color digital print faces with LED backlit modules.',
     tag: 'Signage',
-    image: '/images/project-booklets.webp',
+    image: '/images/vd/marksys-laser-cutter.jpg',
   },
   {
     id: 8,
@@ -85,7 +85,7 @@ const projects = [
     category: 'Signage',
     description: 'Complete campus signage system for a CBSE school — entry gate sign, department identification boards, corridor wayfinding, sports ground display boards, and motivational wall graphics.',
     tag: 'Education',
-    image: '/images/project-cards.webp',
+    image: '/images/vd/epson-surecolor-s80670l.jpg',
   },
   {
     id: 9,
@@ -93,7 +93,7 @@ const projects = [
     category: 'Digital Printing',
     description: 'Large-scale flex banner printing campaign for a telecom brand across 200+ retail outlets in Hyderabad. HP Latex 570 printing on frontlit flex with weather-resistant lamination.',
     tag: 'Digital Print',
-    image: '/images/about-printing.webp',
+    image: '/images/vd/solvent-printer-3-2m-printing.jpg',
   },
 ];
 
@@ -134,10 +134,10 @@ export default function ProjectsPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Work
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
             1,000+ printing and branding projects delivered across Hyderabad and South India.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '680px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '680px', lineHeight: '1.7em' }}>
             From LED sign boards and vehicle fleets to exhibition booths and offset catalogues — Vijetha Digital has delivered high-quality branding solutions for retail, corporate, healthcare, government, and hospitality clients since 2009.
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function ProjectsPage() {
           <div className="stats-strip">
             {stats.map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
-                <p style={{ fontFamily: fontBold, fontSize: 'clamp(22px, 2.5vw, 34px)', color: '#fff', marginBottom: '4px' }}>{s.value}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(19px, 1.75vw, 24px)', color: '#fff', marginBottom: '4px' }}>{s.value}</p>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{s.label}</p>
               </div>
             ))}
@@ -164,7 +164,7 @@ export default function ProjectsPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '10px' }}>
               Project Portfolio
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.5vw, 36px)', fontWeight: 400, color: '#000', maxWidth: '600px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.75vw, 25px)', fontWeight: 400, color: '#000', maxWidth: '600px' }}>
               Featured projects across signage, printing, branding, and exhibition
             </h2>
           </div>
@@ -190,7 +190,7 @@ export default function ProjectsPage() {
                   {p.category}
                 </p>
                 {/* Title */}
-                <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(14px, 1.4vw, 17px)', fontWeight: 400, letterSpacing: '0.03em', color: '#000', marginBottom: '10px', lineHeight: '1.4' }}>
+                <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(12px, 0.98vw, 15px)', fontWeight: 400, letterSpacing: '0.03em', color: '#000', marginBottom: '10px', lineHeight: '1.4' }}>
                   {p.title}
                 </h2>
                 {/* Description */}
@@ -226,10 +226,10 @@ export default function ProjectsPage() {
       <section style={{ backgroundColor: '#1c1d20', padding: '80px 0' }}>
         <div className="wix-container" style={{ textAlign: 'center' }}>
           <div className="wix-motion wix-fade-up">
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 3vw, 40px)', fontWeight: 400, color: '#fff', marginBottom: '18px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.1vw, 28px)', fontWeight: 400, color: '#fff', marginBottom: '18px' }}>
               Have a project in mind?
             </h2>
-            <p style={{ fontFamily: font, fontSize: '16px', color: 'rgba(255,255,255,0.55)', marginBottom: '32px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '32px' }}>
               Tell us what you need — free quote within 4–6 hours.
             </p>
             <a href="https://wa.me/919248195552?text=Hi%21%20I%20would%20like%20to%20get%20a%20quote%20for%20printing%20services." target="_blank" rel="noopener noreferrer" style={{

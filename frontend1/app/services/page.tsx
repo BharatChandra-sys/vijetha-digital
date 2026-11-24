@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const services = [
   {
@@ -111,10 +111,10 @@ export default function ServicesPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Capabilities
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
             Printing, signage, vehicle branding, and exhibition solutions for modern businesses.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
             Vijetha Digital delivers signage solutions, digital printing, vehicle branding, offset printing, screen printing, and display services for retail, corporate, hospitality, healthcare, and government projects.
           </p>
           <div style={{ marginTop: '24px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -132,7 +132,7 @@ export default function ServicesPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '10px' }}>
               Why businesses choose us
             </p>
-            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
               Our team combines in-house manufacturing, modern machinery, and a production-first approach to deliver reliable signage, branding, and print solutions for projects of every scale.
             </p>
           </div>
@@ -157,10 +157,10 @@ export default function ServicesPage() {
                 </p>
                 {/* Title + description */}
                 <div>
-                  <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(18px, 1.8vw, 24px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '14px' }}>
+                  <h2 style={{ fontFamily: fontBold, fontSize: 'clamp(15px, 1.26vw, 22px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '14px' }}>
                     {s.title}
                   </h2>
-                  <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>
+                  <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>
                     {s.description}
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function ServicesPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Infrastructure
           </p>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '48px', maxWidth: '600px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.82vw, 25px)', fontWeight: 400, color: '#000', marginBottom: '48px', maxWidth: '600px' }}>
             World-class machinery behind every job.
           </h2>
           <div className="machinery-grid">
@@ -201,7 +201,7 @@ export default function ServicesPage() {
             ].map((m, i) => (
               <div key={m.num} className={`wix-motion wix-fade-up`} style={{ transitionDelay: `${i * 60}ms` }}>
                 <p style={{ fontFamily: font, fontSize: '11px', color: 'rgb(85,78,78)', marginBottom: '10px' }}>{m.num}</p>
-                <p style={{ fontFamily: fontBold, fontSize: 'clamp(14px, 1.4vw, 17px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '8px' }}>{m.name}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(12px, 0.98vw, 15px)', fontWeight: 400, letterSpacing: '0.04em', color: '#000', marginBottom: '8px' }}>{m.name}</p>
                 <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.6em', color: 'rgb(85,78,78)' }}>{m.desc}</p>
               </div>
             ))}
@@ -215,14 +215,14 @@ export default function ServicesPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Frequently asked questions
           </p>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.82vw, 25px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
             Clear answers for the questions buyers ask before they choose a printing partner.
           </h2>
           <div style={{ display: 'grid', gap: '16px' }}>
             {serviceFaqContent.map((item) => (
               <div key={item.question} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
               </div>
             ))}
           </div>
@@ -232,44 +232,44 @@ export default function ServicesPage() {
       {/* Complete Service Information — SEO-rich visible content */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0', borderTop: '1px solid #e8e8e4' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(17px, 1.54vw, 20px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
             Complete printing and signage capabilities in Hyderabad
           </h2>
           <div style={{ display: 'grid', gap: '24px', maxWidth: '900px' }}>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Signage Manufacturing</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Signage Manufacturing</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 LED sign boards, ACP cladding, acrylic letter signs, fascia boards, pylon signs, flex boards, glass film graphics, and modular display systems manufactured in Hyderabad. Complete in-house fabrication with CNC precision cutting.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Solutions</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Solutions</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 2-wheeler to heavy transport vehicle branding with UV-resistant 3M and Avery Dennison vinyl wraps. Design visualisation mockups provided. Nationwide fleet support available for multi-city operations.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Digital Printing Infrastructure</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Digital Printing Infrastructure</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
-                HP Latex 570 and Epson Surecolor S80670 wide-format printers delivering flex, vinyl, canvas, UV print, 3D print, and eco-solvent output. Production capacity: 1 lakh sq.ft per day from our Nacharam facility.
+                HP Latex 570 and Epson Surecolor S80670 wide-format printers delivering flex, vinyl, canvas, UV print, 3D print, and eco-solvent output. Production capacity: 1 lakh sq.ft per day from our Chengicherla facility.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Offset Printing Services</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Offset Printing Services</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Brochures, flyers, corporate stationery, packaging, and gift boxes with premium finishing options including spot UV, foil stamping, die-cutting, and embossing. High-volume bulk runs supported.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Exhibition & Display Products</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Exhibition & Display Products</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Roll-up standees, demo tents, fabric light boxes, trade show booths, and easel stands for exhibitions, conferences, and promotional events across Hyderabad and South India.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Production Facility</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Production Facility</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
-                10,000 sq.ft manufacturing facility at Nacharam IDA, Hyderabad with 7 specialized systems: HP Latex 570, Epson Surecolor, Roland Soljet, K Tech CNC Router, laser engraving, 4-pillar screen printer, and Graphtec plotter.
+                10,000 sq.ft manufacturing facility at Chengicherla, Secunderabad with 7 specialized systems: HP Latex 570, Epson Surecolor, Roland Soljet, K Tech CNC Router, laser engraving, 4-pillar screen printer, and Graphtec plotter.
               </p>
             </div>
           </div>
@@ -280,10 +280,10 @@ export default function ServicesPage() {
       <section style={{ backgroundColor: '#ffedc9', padding: '80px 0' }}>
         <div className="wix-container" style={{ textAlign: 'center' }}>
           <div className="wix-motion wix-fade-up">
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: '#000', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.45vw, 31px)', fontWeight: 400, color: '#000', marginBottom: '20px' }}>
               Ready to make your brand unforgettable?
             </h2>
-            <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginBottom: '36px' }}>
               Talk to our team today and get a custom quote for your project.
             </p>
             <a href={WA_URL} target="_blank" rel="noopener noreferrer" style={{
@@ -311,7 +311,7 @@ export default function ServicesPage() {
               'Offset Printing: Brochures, flyers, stationery, packaging, spot UV, foil stamping, die-cutting, high-volume bulk runs.',
               'Display and Exhibition: Standees, demo tents, fabric light boxes, trade show booths, easel stands in Hyderabad.',
               'Outdoor Advertising: Flags, backdrops, stickers, decals, canopies, tents, posters across South India.',
-              'Infrastructure: 10000 sq.ft production facility Nacharam IDA Hyderabad, 7 specialized manufacturing systems.',
+              'Infrastructure: 10000 sq.ft production facility Chengicherla Secunderabad, 7 specialized manufacturing systems.',
             ]}
           />
         </div>

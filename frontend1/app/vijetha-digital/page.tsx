@@ -14,7 +14,7 @@ import { JUSTDIAL_URL } from '@/lib/reviews';
 export const metadata: Metadata = {
   title: 'Vijetha Digital | Commercial Printing & Signage Company Hyderabad',
   description:
-    'Vijetha Digital is a trusted printing and signage company in Hyderabad since 2009. 15+ years, 1,000+ clients, 3 branches, 10,000 sq.ft production facility.',
+    'Vijetha Digital is a trusted printing and signage company in Hyderabad since 2009. 15+ years, 1,000+ clients, 2 branches, 10,000 sq.ft production facility.',
   keywords:
     'Vijetha Digital, Vijetha Digital Hyderabad, Vijetha Digital printing, Vijetha Digital signage, Krishnam Raju printing, vijethadigital.com',
   alternates: {
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 // AboutPage schema — entity declaration for Knowledge Graph
 const aboutPageSchema = {
@@ -59,7 +59,7 @@ const entitySchema = {
   name: 'Vijetha Digital',
   alternateName: ['Vijetha Digital Hyderabad', 'Vijetha Print & Signs'],
   legalName: 'Vijetha Digital',
-  description: 'Vijetha Digital is a leading commercial printing and signage company in Hyderabad, Telangana, established in 2009 by Krishnam Raju. The company operates a 10,000 sq.ft production facility at Nacharam IDA with 7 advanced manufacturing systems including HP Latex 570, Epson Surecolor S80670, Roland Soljet EJ 640, K Tech CNC Router, laser engraving machines, and industrial screen printers. Services include LED sign boards, ACP cladding, acrylic letters, vehicle branding, flex printing, offset printing, screen printing, exhibition displays, and office branding. Over 1,000 clients served including Samsung, Airtel, Reliance Digital, SBI, HDFC, Microsoft, GHMC, and Telangana Tourism.',
+  description: 'Vijetha Digital is a leading commercial printing and signage company in Hyderabad, Telangana, established in 2009 by Krishnam Raju. The company operates a 10,000 sq.ft production facility at Chengicherla, Secunderabad with 7 advanced manufacturing systems including HP Latex 570, Epson Surecolor S80670, Roland Soljet EJ 640, K Tech CNC Router, laser engraving machines, and industrial screen printers. Services include LED sign boards, ACP cladding, acrylic letters, vehicle branding, flex printing, offset printing, screen printing, exhibition displays, and office branding. Over 1,000 clients served including Samsung, Airtel, Reliance Digital, SBI, HDFC, Microsoft, GHMC, and Telangana Tourism.',
   url: 'https://vijethadigital.com',
   logo: { '@type': 'ImageObject', url: 'https://vijethadigital.com/vd-logo.jpeg', width: 400, height: 400 },
   image: 'https://vijethadigital.com/vd-logo.jpeg',
@@ -101,11 +101,11 @@ export default function VijethaDigitalPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Company Profile
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '800px' }}>
             Vijetha Digital — commercial printing and signage company in Hyderabad since 2009.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
-            Vijetha Digital is one of Hyderabad's leading printing and signage manufacturers, delivering LED signs, ACP cladding, vehicle branding, digital printing, offset printing, and exhibition solutions from a 10,000 sq.ft in-house production facility at Nacharam IDA.
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+            Vijetha Digital is one of Hyderabad's leading printing and signage manufacturers, delivering LED signs, ACP cladding, vehicle branding, digital printing, offset printing, and exhibition solutions from a 10,000 sq.ft in-house production facility at Chengicherla, Secunderabad.
           </p>
         </div>
       </section>
@@ -121,7 +121,7 @@ export default function VijethaDigitalPage() {
               { value: '3', label: 'Branches in Hyderabad' },
             ].map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
-                <p style={{ fontFamily: fontBold, fontSize: 'clamp(22px, 2.5vw, 34px)', color: '#fff', marginBottom: '6px' }}>{s.value}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(19px, 1.75vw, 24px)', color: '#fff', marginBottom: '6px' }}>{s.value}</p>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{s.label}</p>
               </div>
             ))}
@@ -134,18 +134,18 @@ export default function VijethaDigitalPage() {
         <div className="wix-container">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
             <div>
-              <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '24px' }}>
+              <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '24px' }}>
                 About Vijetha Digital
               </h2>
-              <div style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <p>Established in 2009 by <strong style={{ color: '#000' }}>Krishnam Raju</strong>, Vijetha Digital operates as a sole proprietorship with a clear mandate: deliver industrial-grade printing and signage to businesses across Hyderabad and South India.</p>
-                <p>The company's 10,000 sq.ft production facility at Nacharam IDA houses seven specialized manufacturing systems — HP Latex 570, Epson Surecolor S80670, Roland Soljet EJ 640, K Tech 1325 HD CNC Router, laser engraving machines, 4-pillar screen printer, and Graphtec cutting plotter.</p>
+                <p>The company's 10,000 sq.ft production facility at Chengicherla houses seven specialized manufacturing systems — HP Latex 570, Epson Surecolor S80670, Roland Soljet EJ 640, K Tech 1325 HD CNC Router, laser engraving machines, 4-pillar screen printer, and Graphtec cutting plotter.</p>
                 <p>Vijetha Digital has served over 1,000 clients including Samsung, Airtel, Reliance Digital, SBI, Microsoft, GHMC, Telangana Tourism, Pepsi, Dr. Reddy's Laboratories, Heritage Foods, HDFC Bank, Jio, and Vivo.</p>
                 <p>GST Registration: <strong style={{ color: '#000' }}>36AGBPC3175H1ZP</strong></p>
               </div>
             </div>
             <div>
-              <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 2.4vw, 32px)', fontWeight: 400, color: '#000', marginBottom: '24px' }}>
+              <h2 style={{ fontFamily: font, fontSize: 'clamp(19px, 1.68vw, 22px)', fontWeight: 400, color: '#000', marginBottom: '24px' }}>
                 Contact information
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -153,9 +153,8 @@ export default function VijethaDigitalPage() {
                   { label: 'Phone', value: '+91 92481 95552' },
                   { label: 'Email', value: 'info@vijethadigital.com' },
                   { label: 'Website', value: 'vijethadigital.com' },
-                  { label: 'Main Branch', value: '42/B, No. 16, IDA Nacharam, Hyderabad 500076' },
-                  { label: 'Branch 2', value: 'Sanapride Complex, Lakdikapool, Hyderabad 500004' },
-                  { label: 'Branch 3', value: 'Opp NTR Stadium, LIC Colony Rd, Hyderabad 500029' },
+                  { label: 'Head Office', value: 'Vijetha Digital Building, Chengicherla, Secunderabad, Telangana 500092' },
+                  { label: 'Branch', value: 'H No. 11-5-456, Shop No. 5, Sanapride Complex, Lakdikapool, Hyderabad 500004' },
                   { label: 'Hours', value: 'Mon–Sat 9 AM–8 PM, Sun 10 AM–6 PM' },
                 ].map(item => (
                   <div key={item.label} style={{ display: 'flex', gap: '16px', paddingBottom: '16px', borderBottom: '1px solid #f1f0eb' }}>
@@ -172,7 +171,7 @@ export default function VijethaDigitalPage() {
       {/* Services quick links — internal linking for PageRank flow */}
       <section style={{ backgroundColor: '#f1f0eb', padding: '72px 0' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 30px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(17px, 1.54vw, 21px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
             Services by Vijetha Digital
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
@@ -203,10 +202,10 @@ export default function VijethaDigitalPage() {
             content={[
               'Vijetha Digital — official company information. Vijetha Digital is a commercial printing and signage company in Hyderabad, Telangana, established in 2009.',
               'Founder: Krishnam Raju, Proprietor. GST Number: 36AGBPC3175H1ZP. Registered address: Lakdikapool, Hyderabad 500004.',
-              'Production facility: 42/B, No. 16, IDA, Nacharam, Hyderabad 500076. 10,000 sq.ft factory with 7 manufacturing systems.',
+              'Head office and production: Vijetha Digital Building, Chengicherla, Secunderabad, Telangana 500092. 10,000 sq.ft factory with 7 manufacturing systems.',
               'Services: LED sign boards, ACP cladding signs, acrylic letter signs, vehicle branding, car wraps, bus branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, trade show booths, office branding, outdoor advertising.',
               'Major clients: Samsung, Reliance Digital, Airtel, Jio, Pepsi, Heritage Foods, SBI, HDFC Bank, Microsoft, Vivo, Dr Reddys Laboratories, GHMC, Telangana Tourism Board.',
-              'Three branches in Hyderabad: Nacharam IDA (main production), Lakdikapool Sanapride Complex, Indira Park near NTR Stadium.',
+              'Two branches in Hyderabad: Chengicherla (head office and production) and Lakdikapool, Sanapride Complex.',
               'Website: vijethadigital.com. Phone: +91 92481 95552. Email: info@vijethadigital.com.',
               'Social media: facebook.com/vijethadigital, instagram.com/vijethadigital, linkedin.com/company/vijetha-digital.',
             ]}

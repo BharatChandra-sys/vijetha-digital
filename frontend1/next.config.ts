@@ -69,17 +69,11 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Long caching only in production: dev file names aren't hashed, so the
+      // browser would keep stale code. Next.js caches /_next/static by itself.
+      ...(process.env.NODE_ENV !== 'production' ? [] : [
       {
         source: '/fonts/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -107,6 +101,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      ]),
     ];
   },
 

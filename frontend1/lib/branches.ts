@@ -6,29 +6,38 @@ export interface Branch {
   name: string;
   role: string;
   lines: [string, string];
+  /** Coordinates from the Google Maps pin, when confirmed. */
+  geo?: { lat: number; lng: number };
   mapsQuery: string;
 }
 
+// Chengicherla has no confirmed map pin yet, so directions fall back to an
+// address search. Add `geo` once the Google Business Profile pin is shared.
 export const BRANCHES: Branch[] = [
   {
-    name: 'Indira Park',
-    role: 'Main branch',
-    lines: ['Shop No. 1-2-607/75, 76, Opp NTR Stadium,', 'LIC Colony Rd, Hyderabad 500029'],
-    mapsQuery: 'Vijetha Digital, Opp NTR Stadium, LIC Colony Road, Indira Park, Hyderabad 500029',
+    name: 'Chengicherla',
+    role: 'Head office and production',
+    lines: ['Vijetha Digital Building, Chengicherla,', 'Secunderabad, Telangana 500092'],
+    mapsQuery: 'Vijetha Digital LLP, Chengicherla, Secunderabad, Telangana 500092',
   },
   {
     name: 'Lakdikapool',
     role: 'City branch',
-    lines: ['H No. 11-5-456, Shop No. 5,', 'Sanapride Complex, Hyderabad 500004'],
+    lines: ['H No. 11-5-456, Shop No. 5, Sanapride Complex,', 'Lakdikapool, Hyderabad 500004'],
+    geo: { lat: 17.4002014, lng: 78.4652187 },
     mapsQuery: 'Vijetha Digital, Sanapride Complex, Lakdikapool, Hyderabad 500004',
   },
-  {
-    name: 'Nacharam',
-    role: 'Production facility',
-    lines: ['42/B, No. 16, IDA,', 'Nacharam, Hyderabad 500076'],
-    mapsQuery: 'Vijetha Digital, IDA Nacharam, Hyderabad 500076',
-  },
 ];
+
+export const MAIN_BRANCH = BRANCHES[0];
+
+export const branchMapsUrl = (b: Branch) =>
+  b.geo
+    ? `https://www.google.com/maps?q=${b.geo.lat},${b.geo.lng}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.mapsQuery)}`;
+
+export const branchEmbedUrl = (b: Branch) =>
+  `https://maps.google.com/maps?q=${encodeURIComponent(b.geo ? `${b.geo.lat},${b.geo.lng}` : b.mapsQuery)}&z=16&output=embed`;
 
 export const mapsUrl = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;

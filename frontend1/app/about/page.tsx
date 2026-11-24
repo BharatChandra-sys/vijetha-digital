@@ -15,14 +15,14 @@ import {
   FOUNDER_INFO,
 } from '@/lib/about-data';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 export default function AboutPage() {
   return (
     <>
       <ScrollAnimations />
-      <Header variant="home" />
+      <Header />
 
       {/* ── HERO ── */}
       <section style={{ backgroundColor: '#1c1d20', paddingTop: '140px', paddingBottom: '80px' }}>
@@ -30,10 +30,10 @@ export default function AboutPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '14px' }}>
             Company Profile
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 64px)', fontWeight: 400, lineHeight: 1.05, color: '#fff', maxWidth: '960px', marginBottom: '24px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 45px)', fontWeight: 400, lineHeight: 1.05, color: '#fff', maxWidth: '960px', marginBottom: '24px' }}>
             Trusted printing and signage company in Hyderabad for brands that need quality, speed, and scale.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgba(255,255,255,0.55)', maxWidth: '760px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.55)', maxWidth: '760px', lineHeight: '1.7em' }}>
             Vijetha Digital is a vertically integrated printing and signage manufacturer serving businesses across Hyderabad, Telangana, and South India. We deliver premium signage, vehicle branding, digital printing, offset printing, and exhibition solutions with dependable execution.
           </p>
 
@@ -41,7 +41,7 @@ export default function AboutPage() {
           <div className="hero-stats">
             {COMPANY_STATS.map(s => (
               <div key={s.label} className="hero-stat">
-                <p style={{ fontFamily: fontBold, fontSize: 'clamp(24px, 2.5vw, 36px)', color: '#fff', marginBottom: '4px' }}>{s.value}</p>
+                <p style={{ fontFamily: fontBold, fontSize: 'clamp(20px, 1.75vw, 25px)', color: '#fff', marginBottom: '4px' }}>{s.value}</p>
                 <p style={{ fontFamily: font, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{s.label}</p>
               </div>
             ))}
@@ -58,15 +58,15 @@ export default function AboutPage() {
               <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
                 Company Overview
               </p>
-              <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '24px' }}>
+              <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 29px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '24px' }}>
                 Manufacturer of choice for<br />India's leading enterprises
               </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 <p>
                   Established in 2009 by <strong style={{ color: '#000', fontFamily: fontBold }}>{FOUNDER_INFO.name}</strong>, Vijetha Digital operates as a sole proprietorship with a clear mandate: deliver industrial-grade printing and signage solutions that meet the exacting standards of corporate India.
                 </p>
                 <p>
-                  Our 10,000 sq.ft production facility in Nacharam IDA houses seven specialized manufacturing systems covering wide-format printing, UV flatbed direct-to-substrate printing, precision vinyl cutting, digital fabric processing, and high-volume offset finishing.
+                  Our 10,000 sq.ft production facility in our own building at Chengicherla houses seven specialized manufacturing systems covering wide-format printing, UV flatbed direct-to-substrate printing, precision vinyl cutting, digital fabric processing, and high-volume offset finishing.
                 </p>
                 <p>
                   We serve clients across retail (Samsung, Reliance Digital), telecom (Airtel, Jio), FMCG (Pepsi, Heritage Foods), banking (SBI), technology (Microsoft, Vivo), government (GHMC, Telangana Tourism), and pharmaceuticals (Dr. Reddy's).
@@ -85,16 +85,16 @@ export default function AboutPage() {
                     width: '72px', height: '72px', borderRadius: '50%',
                     backgroundColor: '#1c1d20', display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
-                    color: '#fff', fontFamily: fontBold, fontSize: '24px', flexShrink: 0,
+                    color: '#fff', fontFamily: fontBold, fontSize: '20px', flexShrink: 0,
                   }}>
                     {FOUNDER_INFO.initials}
                   </div>
                   <div>
-                    <p style={{ fontFamily: fontBold, fontSize: '18px', color: '#000', marginBottom: '4px' }}>{FOUNDER_INFO.name}</p>
+                    <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '4px' }}>{FOUNDER_INFO.name}</p>
                     <p style={{ fontFamily: font, fontSize: '13px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgb(85,78,78)' }}>{FOUNDER_INFO.title}</p>
                   </div>
                 </div>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', fontStyle: 'italic', marginBottom: '32px', paddingLeft: '20px', borderLeft: '3px solid #1c1d20' }}>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', fontStyle: 'italic', marginBottom: '32px', paddingLeft: '20px', borderLeft: '3px solid #1c1d20' }}>
                   &ldquo;{FOUNDER_INFO.quote}&rdquo;
                 </p>
               </div>
@@ -121,7 +121,7 @@ export default function AboutPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Client Portfolio
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 29px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '20px' }}>
               Trusted by market leaders<br />across 12+ industries
             </h2>
           </div>
@@ -182,10 +182,10 @@ export default function AboutPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Operational Framework
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '16px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 29px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '16px' }}>
               Core principles driving our operations
             </h2>
-            <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', maxWidth: '680px', margin: '0 auto', lineHeight: '1.7em' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', maxWidth: '680px', margin: '0 auto', lineHeight: '1.7em' }}>
               These operational standards govern every decision — from material procurement to final installation — ensuring consistent delivery excellence.
             </p>
           </div>
@@ -198,7 +198,7 @@ export default function AboutPage() {
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: '16px' }}>{v.number}</p>
-                <h3 style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '10px', letterSpacing: '0.02em' }}>
+                <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px', letterSpacing: '0.02em' }}>
                   {v.title}
                 </h3>
                 <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>
@@ -217,7 +217,7 @@ export default function AboutPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Company Timeline
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', maxWidth: '700px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 29px)', fontWeight: 400, lineHeight: 1.2, color: '#000', maxWidth: '700px' }}>
               15 years of consistent growth
             </h2>
           </div>
@@ -230,10 +230,10 @@ export default function AboutPage() {
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 <div className="timeline-year">
-                  <p style={{ fontFamily: fontBold, fontSize: '20px', color: '#000' }}>{m.year}</p>
+                  <p style={{ fontFamily: fontBold, fontSize: '18px', color: '#000' }}>{m.year}</p>
                 </div>
                 <div className="timeline-content">
-                  <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '8px', letterSpacing: '0.02em' }}>
+                  <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px', letterSpacing: '0.02em' }}>
                     {m.title}
                   </h3>
                   <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>
@@ -253,7 +253,7 @@ export default function AboutPage() {
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Manufacturing Capability
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 42px)', fontWeight: 400, lineHeight: 1.2, color: '#000', maxWidth: '700px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 29px)', fontWeight: 400, lineHeight: 1.2, color: '#000', maxWidth: '700px' }}>
               Industrial-grade production systems
             </h2>
           </div>
@@ -268,7 +268,7 @@ export default function AboutPage() {
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: '12px' }}>
                   {m.num}
                 </p>
-                <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px', letterSpacing: '0.02em' }}>
+                <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px', letterSpacing: '0.02em' }}>
                   {m.name}
                 </h3>
                 <p style={{ fontFamily: font, fontSize: '13px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>
@@ -284,10 +284,10 @@ export default function AboutPage() {
       <section style={{ backgroundColor: '#1c1d20', padding: '80px 0' }}>
         <div className="wix-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px' }}>
           <div className="wix-motion wix-fade-right">
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.5vw, 36px)', fontWeight: 400, color: '#fff', marginBottom: '8px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.75vw, 25px)', fontWeight: 400, color: '#fff', marginBottom: '8px' }}>
               Partner with us for your next project
             </h2>
-            <p style={{ fontFamily: font, fontSize: '15px', color: 'rgba(255,255,255,0.55)' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.55)' }}>
               Request technical specifications or schedule a facility tour — our team responds within 24 hours.
             </p>
           </div>
@@ -319,7 +319,7 @@ export default function AboutPage() {
           '@id': 'https://vijethadigital.com/about#webpage',
           url: 'https://vijethadigital.com/about',
           name: 'About Vijetha Digital | Trusted Printing & Signage Partner in Hyderabad',
-          description: '15+ years of printing and signage expertise in Hyderabad. World-class machinery, 500+ clients, 3 branches.',
+          description: '15+ years of printing and signage expertise in Hyderabad. World-class machinery, 500+ clients, 2 branches.',
           isPartOf: { '@id': 'https://vijethadigital.com/#website' },
           about: { '@id': 'https://vijethadigital.com/#organization' },
           breadcrumb: {

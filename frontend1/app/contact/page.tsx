@@ -7,14 +7,16 @@ import ScrollAnimations from '@/components/ui/ScrollAnimations';
 import { WA_URL, PHONE, PHONE_RAW, EMAIL } from '@/lib/constants';
 import JsonLd from '@/components/seo/JsonLd';
 import { contactFaqContent } from './faq';
+import Image from 'next/image';
+import { BRANCHES, branchMapsUrl, branchEmbedUrl } from '@/lib/branches';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
   fontFamily: font,
-  fontSize: '15px',
+  fontSize: '14px',
   color: '#000',
   backgroundColor: 'transparent',
   border: 'none',
@@ -23,27 +25,6 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
   display: 'block',
 };
-
-const BRANCHES = [
-  {
-    name: 'Nacharam (Main)',
-    address: '42/B, No. 16, IDA, Nacharam, Hyderabad – 500076',
-    maps: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.7!2d78.5647!3d17.4275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9971b6e4e3f3%3A0x4a39c8e3c2e3f3f3!2sNacharam%2C%20Hyderabad!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
-    mapsLink: 'https://maps.google.com/?q=Nacharam+IDA+Hyderabad',
-  },
-  {
-    name: 'Indira Park',
-    address: 'Shop No. 1-2-607/75, 76, Opp NTR Stadium, LIC Colony Rd, Hyderabad – 500029',
-    maps: null,
-    mapsLink: 'https://maps.google.com/?q=NTR+Stadium+LIC+Colony+Road+Hyderabad',
-  },
-  {
-    name: 'Lakdikapool',
-    address: 'H No. 11-5-456, Shop No. 5, Sanapride Complex, Hyderabad – 500004',
-    maps: null,
-    mapsLink: 'https://maps.google.com/?q=Sanapride+Complex+Lakdikapool+Hyderabad',
-  },
-];
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
@@ -80,10 +61,10 @@ export default function ContactPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Get in Touch
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
             Contact Vijetha Digital for printing, signage, and vehicle branding in Hyderabad.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
             Reach our team for signage boards, flex printing, exhibition displays, vehicle wraps, corporate branding, and large-format production across Hyderabad and nearby regions.
           </p>
         </div>
@@ -99,29 +80,29 @@ export default function ContactPage() {
               <p style={{ fontFamily: fontBold, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
                 Contact Details
               </p>
-              <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
                 Whether you need a quote for signage boards, flex printing, vehicle wraps, exhibition displays, or corporate branding, our team can help you choose the right material, finish, and production method for your project.
               </p>
-              <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
+              <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '24px' }}>
                 We work with clients from retail, healthcare, hospitality, education, government, and commercial sectors across Hyderabad and nearby regions.
               </p>
 
               {/* Phone */}
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '4px' }}>Phone</p>
-                <a href={`tel:+${PHONE_RAW}`} style={{ fontFamily: fontBold, fontSize: '18px', color: '#000', textDecoration: 'none' }}>{PHONE}</a>
+                <a href={`tel:+${PHONE_RAW}`} style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', textDecoration: 'none' }}>{PHONE}</a>
               </div>
 
               {/* Email */}
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '4px' }}>Email</p>
-                <a href={`mailto:${EMAIL}`} style={{ fontFamily: font, fontSize: '15px', color: '#000', textDecoration: 'none' }}>{EMAIL}</a>
+                <a href={`mailto:${EMAIL}`} style={{ fontFamily: font, fontSize: '14px', color: '#000', textDecoration: 'none' }}>{EMAIL}</a>
               </div>
 
               {/* Hours */}
               <div style={{ marginBottom: '32px' }}>
                 <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '4px' }}>Hours</p>
-                <p style={{ fontFamily: font, fontSize: '15px', color: '#000' }}>Mon – Sat, 9:00 AM – 8:00 PM</p>
+                <p style={{ fontFamily: font, fontSize: '14px', color: '#000' }}>Mon – Sat, 9:00 AM – 8:00 PM</p>
                 <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '8px', lineHeight: '1.6em' }}>
                   Fast response for quotes, production planning, and project consultations.
                 </p>
@@ -133,9 +114,9 @@ export default function ContactPage() {
               </p>
               {BRANCHES.map(b => (
                 <div key={b.name} style={{ marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid #e8e8e4' }}>
-                  <p style={{ fontFamily: fontBold, fontSize: '13px', color: '#000', marginBottom: '4px' }}>{b.name}</p>
-                  <p style={{ fontFamily: font, fontSize: '13px', color: 'rgb(85,78,78)', lineHeight: '1.6em', marginBottom: '6px' }}>{b.address}</p>
-                  <a href={b.mapsLink} target="_blank" rel="noopener noreferrer"
+                  <p style={{ fontFamily: fontBold, fontSize: '13px', color: '#000', marginBottom: '4px' }}>{b.name} <span style={{ fontFamily: font, color: 'rgb(85,78,78)' }}>· {b.role}</span></p>
+                  <p style={{ fontFamily: font, fontSize: '13px', color: 'rgb(85,78,78)', lineHeight: '1.6em', marginBottom: '6px' }}>{b.lines.join(' ')}</p>
+                  <a href={branchMapsUrl(b)} target="_blank" rel="noopener noreferrer"
                     style={{ fontFamily: font, fontSize: '12px', color: '#000', letterSpacing: '0.04em', textDecoration: 'underline' }}>
                     Open in Maps →
                   </a>
@@ -225,43 +206,53 @@ export default function ContactPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Frequently asked questions
           </p>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.82vw, 25px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
             Answers to common questions about printing, signage, and branding projects.
           </h2>
           <div style={{ display: 'grid', gap: '16px' }}>
             {contactFaqContent.map((item) => (
               <div key={item.question} style={{ backgroundColor: '#fff', padding: '24px 28px', border: '1px solid #e8e8e4' }}>
-                <p style={{ fontFamily: fontBold, fontSize: '16px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
-                <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
+                <p style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '8px' }}>{item.question}</p>
+                <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.65em', color: 'rgb(85,78,78)' }}>{item.answer}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── MAP: Nacharam ── */}
-      <section style={{ backgroundColor: '#f1f0eb', padding: '0' }}>
-        <div style={{ position: 'relative' }}>
-          {/* Label overlay */}
-          <div style={{
-            position: 'absolute', top: '24px', left: '50%', transform: 'translateX(-50%)',
-            backgroundColor: '#000', color: '#fff',
-            fontFamily: font, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase',
-            padding: '8px 20px', zIndex: 10, whiteSpace: 'nowrap',
-          }}>
-            Nacharam Main Branch
+      {/* ── BRANCHES: head office photo + Lakdikapool map ── */}
+      <section className="vd-contact-places" aria-label="Our branches">
+        <figure className="vd-contact-place">
+          <div className="vd-contact-place-media">
+            <Image
+              src="/images/vd/building-chengicherla-entrance.jpg"
+              alt="Entrance of the Vijetha Digital LLP building, Chengicherla"
+              fill
+              sizes="(max-width: 900px) 100vw, 50vw"
+              style={{ objectFit: 'cover', objectPosition: 'center 70%' }}
+            />
           </div>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.463043660484!2d78.56031497505163!3d17.42784518341956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9971b6e4e3f3%3A0x0!2sNacharam%20IDA%2C%20Hyderabad%2C%20Telangana%20500076!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-            width="100%"
-            height="420"
-            style={{ border: 0, display: 'block', filter: 'grayscale(20%)' }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Vijetha Digital – Nacharam Main Branch"
-          />
-        </div>
+          <figcaption>
+            <span>{BRANCHES[0].name} · {BRANCHES[0].role}</span>
+            <a href={branchMapsUrl(BRANCHES[0])} target="_blank" rel="noopener noreferrer">Get directions</a>
+          </figcaption>
+        </figure>
+        <figure className="vd-contact-place">
+          <div className="vd-contact-place-media">
+            <iframe
+              src={branchEmbedUrl(BRANCHES[1])}
+              style={{ border: 0, width: '100%', height: '100%', display: 'block', filter: 'grayscale(20%)' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title={`Vijetha Digital – ${BRANCHES[1].name} on Google Maps`}
+            />
+          </div>
+          <figcaption>
+            <span>{BRANCHES[1].name} · {BRANCHES[1].role}</span>
+            <a href={branchMapsUrl(BRANCHES[1])} target="_blank" rel="noopener noreferrer">Open in Maps</a>
+          </figcaption>
+        </figure>
       </section>
 
       <Footer />

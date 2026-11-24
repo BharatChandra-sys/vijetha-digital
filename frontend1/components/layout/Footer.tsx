@@ -6,9 +6,10 @@ import BrandMark from '@/components/brand/BrandMark';
 import { CmykRule } from '@/components/brand/CmykStrip';
 import { WA_URL, PHONE, PHONE_RAW } from '@/lib/constants';
 import { JUSTDIAL_URL } from '@/lib/reviews';
+import { BRANCHES, branchMapsUrl } from '@/lib/branches';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 export default function Footer() {
   return (
@@ -91,6 +92,7 @@ export default function Footer() {
                 ['Our Work',       '/projects'],
                 ['Services',       '/services'],
                 ['Products',       '/products'],
+                ['Machinery',      '/machinery'],
                 ['Contact',        '/contact'],
                 ['Artwork Guide',  '/artwork-guide'],
                 ['Privacy Policy', '/privacy'],
@@ -108,44 +110,21 @@ export default function Footer() {
             <p className="footer-col-heading">Contact Us</p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '18px' }}>
 
-              {/* Branch 1 */}
-              <li className="footer-contact-row">
-                <span className="footer-contact-icon">
+              {BRANCHES.map((b, i) => (
+                <li key={b.name} className="footer-contact-row">
+                  <span className="footer-contact-icon">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.9 }}>
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                   </svg>
-                </span>
-                <div>
-                  <p className="footer-branch-name">Indira Park (Main)</p>
-                  <p className="footer-contact-text">Shop No. 1-2-607/75, 76, Opp NTR Stadium,<br />LIC Colony Rd, Hyderabad – 500029</p>
-                </div>
-              </li>
-
-              {/* Branch 2 */}
-              <li className="footer-contact-row">
-                <span className="footer-contact-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.9 }}>
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                </span>
-                <div>
-                  <p className="footer-branch-name">Lakdikapool</p>
-                  <p className="footer-contact-text">H No. 11-5-456, Shop No. 5,<br />Sanapride Complex, Hyderabad – 500004</p>
-                </div>
-              </li>
-
-              {/* Branch 3 */}
-              <li className="footer-contact-row">
-                <span className="footer-contact-icon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.9 }}>
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                </span>
-                <div>
-                  <p className="footer-branch-name">Nacharam</p>
-                  <p className="footer-contact-text">42/B, No. 16, IDA,<br />Nacharam, Hyderabad – 500076</p>
-                </div>
-              </li>
+                  </span>
+                  <div>
+                    <p className="footer-branch-name">{b.name}{i === 0 ? ' (Main)' : ''}</p>
+                    <a href={branchMapsUrl(b)} target="_blank" rel="noopener noreferrer" className="footer-contact-text" style={{ textDecoration: 'none' }}>
+                      {b.lines[0]}<br />{b.lines[1]}
+                    </a>
+                  </div>
+                </li>
+              ))}
 
               {/* Phone */}
               <li className="footer-contact-row">
@@ -187,7 +166,7 @@ export default function Footer() {
         {/* ── CTA STRIP ── */}
         <div className="footer-cta-strip">
           <div>
-            <p style={{ fontFamily: fontBold, fontSize: 'clamp(18px, 2vw, 24px)', color: '#fff', marginBottom: '6px' }}>
+            <p style={{ fontFamily: fontBold, fontSize: 'clamp(15px, 1.4vw, 22px)', color: '#fff', marginBottom: '6px' }}>
               Ready to print? Let&apos;s talk.
             </p>
             <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.55)' }}>

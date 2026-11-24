@@ -288,7 +288,7 @@ export const howToChooseSignageBoardSchema = {
   '@type': 'HowTo',
   name: 'How to Choose the Right Signage Board for Your Business in Hyderabad',
   description: 'Expert guide to selecting the best signage type for your business from Vijetha Digital',
-  image: 'https://vijethadigital.com/images/project-booklets.webp',
+  image: 'https://vijethadigital.com/images/vd/solvent-printer-3-2m-printing.jpg',
   totalTime: 'PT30M',
   step: [
     {

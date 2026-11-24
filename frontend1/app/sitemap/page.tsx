@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const groups = [
   {
@@ -33,7 +33,8 @@ const groups = [
       { label: 'Services', href: '/services', desc: 'Complete printing and signage services' },
       { label: 'Products', href: '/products', desc: '30+ branding products catalog' },
       { label: 'Projects', href: '/projects', desc: 'Completed signage projects' },
-      { label: 'Contact', href: '/contact', desc: 'Get a free quote — 3 branches' },
+      { label: 'Contact', href: '/contact', desc: 'Get a free quote — 2 branches' },
+      { label: 'Machinery', href: '/machinery', desc: 'Our printers and cutters, with sizes' },
       { label: 'Artwork Guide', href: '/artwork-guide', desc: 'File formats, bleed and resolution by job' },
     ],
   },
@@ -195,10 +196,10 @@ export default function SitemapPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Site Navigation
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
             Complete Sitemap
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '720px', lineHeight: '1.7em' }}>
             Browse all pages, services, products, and resources on Vijetha Digital. Find printing, signage, vehicle branding, exhibition displays, and complete branding solutions across Hyderabad.
           </p>
         </div>
@@ -211,7 +212,7 @@ export default function SitemapPage() {
             {groups.map((group, idx) => (
               <article key={group.heading} className="sitemap-group">
                 <header style={{ marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid #e8e8e4' }}>
-                  <h2 style={{ fontFamily: fontBold, fontSize: '15px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#000', marginBottom: '6px' }}>
+                  <h2 style={{ fontFamily: fontBold, fontSize: '14px', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#000', marginBottom: '6px' }}>
                     {group.heading}
                   </h2>
                   <p style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)', lineHeight: '1.5em' }}>
@@ -275,7 +276,7 @@ export default function SitemapPage() {
                   <p style={{ fontFamily: font, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '8px' }}>
                     {item.label}
                   </p>
-                  <p style={{ fontFamily: fontBold, fontSize: '20px', color: '#000', marginBottom: '4px', letterSpacing: '-0.02em' }}>
+                  <p style={{ fontFamily: fontBold, fontSize: '18px', color: '#000', marginBottom: '4px', letterSpacing: '-0.02em' }}>
                     {item.value}
                   </p>
                   <p style={{ fontFamily: font, fontSize: '12px', color: 'rgb(85,78,78)' }}>
@@ -286,10 +287,10 @@ export default function SitemapPage() {
             </div>
 
             <div style={{ textAlign: 'center', paddingTop: '32px', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-              <h3 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
+              <h3 style={{ fontFamily: font, fontSize: 'clamp(17px, 1.54vw, 20px)', fontWeight: 400, color: '#000', marginBottom: '16px' }}>
                 Need help finding what you're looking for?
               </h3>
-              <p style={{ fontFamily: font, fontSize: '15px', color: 'rgb(85,78,78)', marginBottom: '28px', maxWidth: '560px', margin: '0 auto 28px', lineHeight: '1.65em' }}>
+              <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginBottom: '28px', maxWidth: '560px', margin: '0 auto 28px', lineHeight: '1.65em' }}>
                 Our team can guide you to the right signage, printing, or branding solution for your project.
               </p>
               <Link

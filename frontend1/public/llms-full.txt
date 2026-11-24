@@ -17,25 +17,25 @@
 
 ## Branch Locations
 
-### Indira Park (Main Branch)
-Shop No. 1-2-607/75, 76, Opp NTR Stadium, LIC Colony Rd, Hyderabad – 500029
+### Chengicherla (Head Office and Production)
+Vijetha Digital Building, Chengicherla, Secunderabad, Telangana 500092
+In-house printing, cutting and fabrication
 
 ### Lakdikapool Branch
-H No. 11-5-456, Shop No. 5, Sanapride Complex, Lakdikapool, Hyderabad – 500004
-
-### Nacharam Production Facility (Main Plant)
-42/B, No. 16, IDA, Nacharam, Hyderabad – 500076
-10,000 sq.ft in-house production plant
+H No. 11-5-456, Shop No. 5, Sanapride Complex, Lakdikapool, Hyderabad 500004
 
 ## Production Equipment
 
-- HP Latex 570 — large format water-based latex printing, up to 64 inches wide
-- Epson Surecolor S80670 — eco-solvent large format, 1440 dpi
-- Roland Soljet EJ 640 — eco-solvent printing for outdoor durability
-- K Tech 1325 HD CNC Router — precision acrylic and aluminium cutting
-- LED fabrication line — custom LED module assembly and sign board manufacturing
-- Screen printing press — bulk screen printing for textiles and substrates
-- UV flatbed printer — direct UV printing on rigid substrates
+Photographed at the Chengicherla production floor (details: https://vijethadigital.com/machinery). Sizes marked approx. are being confirmed.
+
+- 3.2 m solvent roll printer: flex hoardings and banners in one piece, approx. 3.2 m print width
+- Skytek UV roll printer: UV-LED roll-to-roll for backlit, wallpaper and vinyl, approx. 3.2 m print width
+- UV flatbed printer: direct printing on ACP, acrylic, sunboard, MDF and glass, approx. 2500 x 1300 mm bed
+- Epson SureColor SC-S80670L: eco-solvent, 1626 mm (64 inch) print width
+- Eco-solvent roll printer: vinyl, standees and one-way vision, approx. 1.8 m print width
+- K-Tech 1325 HD Pro servo CNC router: 1300 x 2500 mm (8 x 4 ft) bed, ACP, acrylic, MDF, PVC
+- Marksys CO2 laser cutter: acrylic cutting and engraving, approx. 1300 x 900 mm bed
+- Also: HP Latex 570, Roland Soljet EJ-640, Graphtec cutting plotter, 4-pillar screen printing press, LED module fabrication
 
 ## Service Categories & Products
 

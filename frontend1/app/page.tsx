@@ -10,9 +10,15 @@ import TrustBadges from '@/components/sections/TrustBadges';
 import QuoteSection from '@/components/sections/QuoteSection';
 import ReviewsSection from '@/components/sections/ReviewsSection';
 import BranchFinder from '@/components/sections/BranchFinder';
+import MachinerySection from '@/components/sections/MachinerySection';
+import VisitSection from '@/components/sections/VisitSection';
 import ScrollAnimations from '@/components/ui/ScrollAnimations';
+import StackPanel from '@/components/ui/StackPanel';
 import JsonLd from '@/components/seo/JsonLd';
 import StickyContactBar from '@/components/conversion/StickyContactBar';
+
+// Sticky quote bar is switched off for now; set to true to bring it back.
+const SHOW_STICKY_CONTACT_BAR = false;
 import FloatingWhatsApp from '@/components/conversion/FloatingWhatsApp';
 
 export const metadata: Metadata = {
@@ -47,7 +53,7 @@ const homeFaqSchema = {
       name: 'What commercial printing services does Vijetha Digital offer in Hyderabad?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vijetha Digital offers LED sign boards, ACP cladding signs, acrylic letter signs, vehicle branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, trade show booths, indoor office branding, and outdoor advertising across Hyderabad and South India. The company operates from three branches — Nacharam, Lakdikapool, and Indira Park — with a 10,000 sq.ft production facility.',
+        text: 'Vijetha Digital offers LED sign boards, ACP cladding signs, acrylic letter signs, vehicle branding, flex printing, offset printing, screen printing, UV printing, exhibition displays, trade show booths, indoor office branding, and outdoor advertising across Hyderabad and South India. The company operates from two branches, Chengicherla (head office and production) and Lakdikapool, with a 10,000 sq.ft production facility.',
       },
     },
     {
@@ -71,7 +77,7 @@ const homeFaqSchema = {
       name: 'Which is the best signage company in Hyderabad?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vijetha Digital is one of Hyderabad\'s leading signage companies, established in 2009, with 15+ years of experience serving 1,000+ clients including Samsung, Reliance Digital, Airtel, Jio, SBI, and Telangana Tourism. The company operates a 10,000 sq.ft in-house production facility in Nacharam IDA with advanced CNC routing, LED fabrication, and large-format printing capabilities.',
+        text: 'Vijetha Digital is one of Hyderabad\'s leading signage companies, established in 2009, with 15+ years of experience serving 1,000+ clients including Samsung, Reliance Digital, Airtel, Jio, SBI, and Telangana Tourism. The company operates a 10,000 sq.ft in-house production facility in Chengicherla, Secunderabad with advanced CNC routing, LED fabrication, and large-format printing capabilities.',
       },
     },
     {
@@ -186,30 +192,26 @@ export default function Home() {
   return (
     <>
       <ScrollAnimations />
-      <Header variant="home" />
+      <Header />
       <main>
-        <div style={{ position: 'relative', height: '300vh', isolation: 'isolate' }}>
-          <div style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-            <HeroSection />
-          </div>
-          <div style={{ position: 'sticky', top: 0, zIndex: 2 }}>
-            <AboutSection />
-          </div>
-          <div style={{ position: 'sticky', top: 0, zIndex: 3 }}>
-            <ProjectsSection />
-          </div>
+        <div style={{ position: 'relative', isolation: 'isolate' }}>
+          <StackPanel z={1}><HeroSection /></StackPanel>
+          <StackPanel z={2}><AboutSection /></StackPanel>
+          <StackPanel z={3}><ProjectsSection /></StackPanel>
         </div>
         <div style={{ position: 'relative', zIndex: 10 }}>
           <ServicesSection />
+          <MachinerySection />
           <TrustBadges />
           <QuoteSection />
           <ClientsSection />
           <ReviewsSection />
           <BranchFinder />
+          <VisitSection tone="white" />
         </div>
       </main>
       <Footer />
-      <StickyContactBar />
+      {SHOW_STICKY_CONTACT_BAR && <StickyContactBar />}
       <FloatingWhatsApp />
       <JsonLd data={homeFaqSchema} />
       <JsonLd data={homePageSchema} />

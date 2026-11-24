@@ -17,7 +17,7 @@ export const serviceFaqContent = [
   {
     question: 'What is your service area and do you deliver outside Hyderabad?',
     answer:
-      'While our production facility is located in Hyderabad (Nacharam IDA), we serve clients across Telangana, Andhra Pradesh, Karnataka, and other South Indian states. We provide pan-India delivery for printing projects and have successfully executed branding campaigns across 50+ cities. Our services include production, packaging, logistics coordination, and installation support (where applicable). For large projects outside Hyderabad, we work with verified local installation partners to ensure consistent quality. Typical delivery timelines: Hyderabad (1-2 days), Telangana (2-3 days), South India (3-5 days), Pan-India (5-7 days).',
+      'While our production facility is located in Chengicherla, Secunderabad, we serve clients across Telangana, Andhra Pradesh, Karnataka, and other South Indian states. We provide pan-India delivery for printing projects and have successfully executed branding campaigns across 50+ cities. Our services include production, packaging, logistics coordination, and installation support (where applicable). For large projects outside Hyderabad, we work with verified local installation partners to ensure consistent quality. Typical delivery timelines: Hyderabad (1-2 days), Telangana (2-3 days), South India (3-5 days), Pan-India (5-7 days).',
   },
   {
     question: 'What industries and sectors do you primarily work with?',

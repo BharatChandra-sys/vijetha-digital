@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 interface FAQItem {
   question: string;
@@ -56,7 +56,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
               <p
                 style={{
                   fontFamily: fontBold,
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: '#000',
                   lineHeight: '1.4',
                   paddingRight: '16px',

@@ -1,7 +1,7 @@
 'use client';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 // Google favicon service — free, no auth, reliable
 const gLogo = (domain: string) =>
@@ -37,7 +37,7 @@ export default function ClientLogos() {
           </p>
           <h2 style={{
             fontFamily: font,
-            fontSize: 'clamp(24px, 3vw, 36px)',
+            fontSize: 'clamp(20px, 2.1vw, 25px)',
             fontWeight: 400,
             lineHeight: 1.2,
             color: '#000',
@@ -47,7 +47,7 @@ export default function ClientLogos() {
           </h2>
           <p style={{
             fontFamily: font,
-            fontSize: '15px',
+            fontSize: '14px',
             color: 'rgb(85,78,78)',
             maxWidth: '560px',
             margin: '0 auto',
@@ -74,7 +74,7 @@ export default function ClientLogos() {
               />
               <div style={{
                 fontFamily: fontBold,
-                fontSize: '15px',
+                fontSize: '14px',
                 color: '#000',
                 marginBottom: '3px',
               }}>

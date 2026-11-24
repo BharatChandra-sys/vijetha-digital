@@ -14,7 +14,7 @@ export const PUBLIC_RATING = {
   url: JUSTDIAL_URL,
   value: 4.1,
   count: 73,
-  listing: 'Indira Park branch',
+  listing: 'our earlier Indira Park listing',
   checked: 'November 2026',
 };
 

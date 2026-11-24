@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 export default function ProductsPage() {
   const productsFaqSchema = {
@@ -52,10 +52,10 @@ export default function ProductsPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Our Catalogue
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(31px, 3.15vw, 41px)', fontWeight: 400, lineHeight: 1.1, color: '#000', maxWidth: '760px' }}>
             Premium printing products and branding materials for Hyderabad businesses.
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '620px', lineHeight: '1.65em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '20px', maxWidth: '620px', lineHeight: '1.65em' }}>
             Explore high-quality signage boards, vehicle branding wraps, flex printing, exhibition displays, banners, stickers, and promotional materials designed for retail, corporate, hospitality, healthcare, and government projects.
           </p>
           <p style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', marginTop: '16px', maxWidth: '620px', lineHeight: '1.65em' }}>
@@ -70,42 +70,42 @@ export default function ProductsPage() {
       {/* Product Categories — SEO-rich visible content */}
       <section style={{ backgroundColor: '#fff', padding: '80px 0', borderTop: '1px solid #e8e8e4' }}>
         <div className="wix-container">
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(17px, 1.54vw, 20px)', fontWeight: 400, color: '#000', marginBottom: '32px' }}>
             Complete product catalogue — manufactured in-house at Hyderabad
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Signage Solutions</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Signage Solutions</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
-                LED boards, ACP cladding, acrylic letters, fascia boards, pylon signs manufactured at our 10,000 sq.ft Nacharam facility. Custom sizing, bulk order discounts, professional installation included.
+                LED boards, ACP cladding, acrylic letters, fascia boards, pylon signs manufactured at our 10,000 sq.ft Chengicherla facility. Custom sizing, bulk order discounts, professional installation included.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Internal Branding Products</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Internal Branding Products</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Office wall branding, reception area displays, retail store graphics, hospital wayfinding systems. Premium materials with fire-retardant certifications for indoor applications.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Range</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Vehicle Branding Range</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Car wraps, bus branding, bike graphics, fleet solutions using 3M vinyl for vehicle wraps and Goldplus ACP sheets. 24-72 hour production, same-day quotes available.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Digital Printing Products</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Digital Printing Products</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Flex, vinyl, UV, eco-solvent, 3D canvas printing for outdoor durability. High-grade materials with Asian Paints acrylics for letters. Pan-India delivery supported.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Offset Printing Range</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Offset Printing Range</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Brochures, catalogs, stationery, packaging for retail chains, corporate offices, healthcare facilities, hospitality venues, educational institutions, and real estate projects.
               </p>
             </div>
             <div style={{ backgroundColor: '#f9f9f7', padding: '24px', border: '1px solid #e8e8e4' }}>
-              <h3 style={{ fontFamily: fontBold, fontSize: '15px', color: '#000', marginBottom: '10px' }}>Exhibition Displays</h3>
+              <h3 style={{ fontFamily: fontBold, fontSize: '14px', color: '#000', marginBottom: '10px' }}>Exhibition Displays</h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)' }}>
                 Standees, tents, light boxes, trade show booths for automobile dealerships, FMCG brands, government departments across Hyderabad, Telangana, and South India.
               </p>
@@ -120,7 +120,7 @@ export default function ProductsPage() {
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
             Product Information
           </p>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 36px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.82vw, 25px)', fontWeight: 400, color: '#000', marginBottom: '36px', maxWidth: '680px' }}>
             Common questions about our printing and signage products
           </h2>
           <FAQAccordion items={productsFaqContent} />

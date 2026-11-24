@@ -2,23 +2,23 @@
 
 import Link from 'next/link';
 
-const font     = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font     = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 const projects = [
   {
     id: 1,
-    title: 'BOOKLETS & CATALOGUES',
-    description: 'Saddle-stitched and perfect-bound booklets for product catalogues, annual reports and corporate brochures. Delivered on 130gsm gloss art paper.',
-    image: '/images/project-booklets.webp',
-    href: '/products/brochure-catalogue',
+    title: 'LARGE-FORMAT PRINTING',
+    description: 'Flex, vinyl and banners printed in one piece up to 3.2 metres wide on our solvent and UV roll printers, in Telugu, English or any script.',
+    image: '/images/vd/solvent-printer-3-2m-printing.jpg',
+    href: '/products/flex-vinyl-printing',
   },
   {
     id: 2,
-    title: 'VISITING CARDS',
-    description: 'High-impact cards with spot UV, matte laminate, foil and custom die-cuts. Standard 85×55mm or custom size, single or double-sided.',
-    image: '/images/project-cards.webp',
-    href: '/products/corporate-stationery',
+    title: 'CNC & LASER-CUT SIGNAGE',
+    description: 'Acrylic letters, ACP panels and MDF shapes cut in-house on an 8 x 4 ft CNC router and a CO2 laser, ready for LED sign boards and fascias.',
+    image: '/images/vd/k-tech-1325-cnc-router.jpg',
+    href: '/products/acrylic-letter-sign',
   },
 ];
 
@@ -29,7 +29,7 @@ export default function ProjectsSection() {
 
         {/* Header */}
         <div className="wix-motion wix-fade-up" style={{ marginBottom: '48px' }}>
-          <h2 style={{ fontFamily: font, fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '12px' }}>
+          <h2 style={{ fontFamily: font, fontSize: 'clamp(22px, 1.96vw, 25px)', fontWeight: 400, lineHeight: 1.2, color: '#000', marginBottom: '12px' }}>
             Our Work
           </h2>
           <Link href="/products" style={{ fontFamily: font, fontSize: '14px', color: 'rgb(85,78,78)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
@@ -53,7 +53,7 @@ export default function ProjectsSection() {
                 <img src={p.image} alt={p.title} loading="lazy"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               </div>
-              <h3 style={{ fontFamily: fontBold, fontSize: 'clamp(14px, 1.5vw, 17px)', fontWeight: 400, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#000', marginBottom: '10px' }}>
+              <h3 style={{ fontFamily: fontBold, fontSize: 'clamp(12px, 1.05vw, 15px)', fontWeight: 400, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#000', marginBottom: '10px' }}>
                 {p.title}
               </h3>
               <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.6em', color: 'rgb(85,78,78)' }}>

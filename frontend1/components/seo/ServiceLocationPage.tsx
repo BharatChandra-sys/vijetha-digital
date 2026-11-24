@@ -16,8 +16,8 @@ type ServiceLocationPageProps = {
   relatedLinks?: Array<{ href: string; label: string }>;
 };
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
-const fontBold = "'helvetica-w01-bold','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
+const fontBold = 'var(--font-wix-bold)';
 
 export default function ServiceLocationPage({
   title,
@@ -60,10 +60,10 @@ export default function ServiceLocationPage({
           <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '14px' }}>
             {heroLabel}
           </p>
-          <h1 style={{ fontFamily: font, fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, lineHeight: 1.1, color: '#fff', maxWidth: '780px', marginBottom: '20px' }}>
+          <h1 style={{ fontFamily: font, fontSize: 'clamp(27px, 2.8vw, 39px)', fontWeight: 400, lineHeight: 1.1, color: '#fff', maxWidth: '780px', marginBottom: '20px' }}>
             {heroTitle}
           </h1>
-          <p style={{ fontFamily: font, fontSize: '16px', color: 'rgba(255,255,255,0.62)', maxWidth: '720px', lineHeight: '1.7em' }}>
+          <p style={{ fontFamily: font, fontSize: '14px', color: 'rgba(255,255,255,0.62)', maxWidth: '720px', lineHeight: '1.7em' }}>
             {heroIntro}
           </p>
         </div>
@@ -75,16 +75,16 @@ export default function ServiceLocationPage({
             <p style={{ fontFamily: font, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgb(85,78,78)', marginBottom: '14px' }}>
               Why it works
             </p>
-            <h2 style={{ fontFamily: font, fontSize: 'clamp(24px, 2.6vw, 34px)', fontWeight: 400, color: '#000', marginBottom: '20px' }}>
+            <h2 style={{ fontFamily: font, fontSize: 'clamp(20px, 1.82vw, 24px)', fontWeight: 400, color: '#000', marginBottom: '20px' }}>
               {title}
             </h2>
-            <p style={{ fontFamily: font, fontSize: '16px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
               {description}
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '12px' }}>
               {keyPoints.map((point) => (
-                <li key={point} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontFamily: font, fontSize: '15px', lineHeight: '1.6em', color: '#000' }}>
-                  <span style={{ color: '#1c1d20', fontFamily: fontBold, fontSize: '16px' }}>•</span>
+                <li key={point} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', fontFamily: font, fontSize: '14px', lineHeight: '1.6em', color: '#000' }}>
+                  <span style={{ color: '#1c1d20', fontFamily: fontBold, fontSize: '14px' }}>•</span>
                   <span>{point}</span>
                 </li>
               ))}
@@ -98,11 +98,11 @@ export default function ServiceLocationPage({
             {serviceAreas.length > 0 && (
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px 0', display: 'grid', gap: '8px' }}>
                 {serviceAreas.map((area) => (
-                  <li key={area} style={{ fontFamily: font, fontSize: '15px', color: '#000' }}>{area}</li>
+                  <li key={area} style={{ fontFamily: font, fontSize: '14px', color: '#000' }}>{area}</li>
                 ))}
               </ul>
             )}
-            <p style={{ fontFamily: font, fontSize: '15px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
+            <p style={{ fontFamily: font, fontSize: '14px', lineHeight: '1.7em', color: 'rgb(85,78,78)', marginBottom: '20px' }}>
               Need a tailored recommendation for your project? Our team can help you choose the right material, finish, and production method.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
@@ -125,7 +125,7 @@ export default function ServiceLocationPage({
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {relatedLinks.map((link) => (
-                <Link key={link.href} href={link.href} style={{ color: '#000', textDecoration: 'underline', fontFamily: font, fontSize: '15px' }}>
+                <Link key={link.href} href={link.href} style={{ color: '#000', textDecoration: 'underline', fontFamily: font, fontSize: '14px' }}>
                   {link.label}
                 </Link>
               ))}

@@ -4,13 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import type { Product } from '@/lib/products-data';
 
-const font = "'helvetica-w01-roman','Helvetica Neue',Helvetica,Arial,sans-serif";
+const font = 'var(--font-wix)';
 
 const GALLERY_POOL = [
-  '/images/project-booklets.webp',
-  '/images/project-cards.webp',
-  '/images/about-printing.webp',
-  '/images/hero-banner-hq.webp',
+  '/images/vd/solvent-printer-3-2m-printing.jpg',
+  '/images/vd/uv-flatbed-printer.jpg',
+  '/images/vd/k-tech-1325-cnc-router.jpg',
+  '/images/vd/marksys-laser-cutter.jpg',
+  '/images/vd/epson-surecolor-s80670l.jpg',
 ];
 
 function getGallery(productImage: string): string[] {
@@ -29,11 +30,11 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', padding: '18px 0', gap: '16px',
       }}>
-        <p style={{ fontFamily: font, fontSize: '15px', color: '#000', margin: 0, lineHeight: 1.4 }}>
+        <p style={{ fontFamily: font, fontSize: '14px', color: '#000', margin: 0, lineHeight: 1.4 }}>
           {q}
         </p>
         <span style={{
-          fontFamily: font, fontSize: '20px', color: 'rgb(85,78,78)',
+          fontFamily: font, fontSize: '18px', color: 'rgb(85,78,78)',
           flexShrink: 0, display: 'inline-block', userSelect: 'none',
           transition: 'transform 0.2s',
           transform: open ? 'rotate(45deg)' : 'none',
@@ -158,18 +159,18 @@ export default function ProductDetail({
                 {product.category}
               </p>
               <h1 style={{
-                fontFamily: font, fontSize: 'clamp(26px, 3.2vw, 42px)',
+                fontFamily: font, fontSize: 'clamp(22px, 2.24vw, 29px)',
                 fontWeight: 400, lineHeight: 1.1, color: '#000', marginBottom: '14px',
               }}>
                 {product.name}
               </h1>
               <p style={{
-                fontFamily: font, fontSize: '15px', lineHeight: '1.7em',
+                fontFamily: font, fontSize: '14px', lineHeight: '1.7em',
                 color: 'rgb(85,78,78)', marginBottom: '20px',
               }}>
                 {product.longDesc}
               </p>
-              <p style={{ fontFamily: font, fontSize: '20px', color: '#000', marginBottom: '28px' }}>
+              <p style={{ fontFamily: font, fontSize: '18px', color: '#000', marginBottom: '28px' }}>
                 {product.price}
               </p>
 
@@ -221,7 +222,7 @@ export default function ProductDetail({
         <section style={{ backgroundColor: '#f9f9f7', padding: '64px 0', borderTop: '1px solid #e8e8e4' }}>
           <div className="wix-container">
             <h2 style={{
-              fontFamily: font, fontSize: 'clamp(18px, 2vw, 24px)',
+              fontFamily: font, fontSize: 'clamp(15px, 1.4vw, 22px)',
               fontWeight: 400, color: '#000', marginBottom: '32px',
             }}>
               Related products
@@ -255,7 +256,7 @@ export default function ProductDetail({
                     }}>
                       {p.category}
                     </p>
-                    <p style={{ fontFamily: font, fontSize: '15px', color: '#000', marginBottom: '6px' }}>
+                    <p style={{ fontFamily: font, fontSize: '14px', color: '#000', marginBottom: '6px' }}>
                       {p.name}
                     </p>
                     <p style={{
@@ -280,7 +281,7 @@ export default function ProductDetail({
         <section style={{ backgroundColor: '#fff', padding: '72px 0', borderTop: '1px solid #e8e8e4' }}>
           <div className="wix-container" style={{ maxWidth: '800px' }}>
             <h2 style={{
-              fontFamily: font, fontSize: 'clamp(20px, 2.2vw, 28px)',
+              fontFamily: font, fontSize: 'clamp(17px, 1.54vw, 20px)',
               fontWeight: 400, color: '#000', marginBottom: '32px',
             }}>
               Frequently asked questions
@@ -302,7 +303,7 @@ export default function ProductDetail({
         }}>
           <div>
             <h2 style={{
-              fontFamily: font, fontSize: 'clamp(18px, 2vw, 26px)',
+              fontFamily: font, fontSize: 'clamp(15px, 1.4vw, 18px)',
               fontWeight: 400, color: '#fff', marginBottom: '6px',
             }}>
               Get a quote for {product.name} in Hyderabad
